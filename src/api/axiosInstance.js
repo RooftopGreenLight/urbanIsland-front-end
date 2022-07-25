@@ -3,11 +3,7 @@ import axios from "axios"
 // HTTPS 통신에 쓰이는 Axios 인스턴스 생성
 // 공통으로 사용하는 baseURL을 설정하면, 추후 인스턴스 활용 시 나머지 URL만 기술하면 됨.
 const axiosInstance = axios.create({
-<<<<<<< HEAD
   baseURL: process.env.REACT_APP_BASE_URL,
-=======
-  baseURL: process.env.BASE_URL,
->>>>>>> 6443b488f8d2174e6cadd56ebf33f8f044eb10ac
   timeout: 3000,
 })
 
@@ -32,18 +28,10 @@ axiosInstance.interceptors.response.use(
     const res = response.data
     return res
   },
-<<<<<<< HEAD
   // 응답 실패 시 Promise Error 객체를 return 하도록 설정.
-=======
->>>>>>> 6443b488f8d2174e6cadd56ebf33f8f044eb10ac
   error => {
     console.log(error)
     return Promise.reject(error)
   },
 )
-
-<<<<<<< HEAD
 export default axiosInstance
-=======
-export default axiosInstance;
->>>>>>> 6443b488f8d2174e6cadd56ebf33f8f044eb10ac
