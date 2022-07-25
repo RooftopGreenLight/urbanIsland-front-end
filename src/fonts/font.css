@@ -1,0 +1,47 @@
+@font-face {
+    font-family: 'nanumsquare';
+    src: url('./list/NanumSquareL.ttf');
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: 'nanumsquare';
+    src: url('./list/NanumSquareR.ttf');
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: 'nanumsquare';
+    src: url('./list/NanumSquareB.ttf');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'nanumsquare';
+    src: url('./list/NanumSquareEB.ttf');
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: 'gmarketsans';
+    src: url('./list/GmarketSansLight.otf');
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: 'gmarketsans';
+    src: url('./list/GmarketSansMedium.otf');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'gmarketsans';
+    src: url('./list/GmarketSansBold.otf');
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: 'bebas';
+    src: url('./list/Bebas.otf');
+    font-weight: 700;
+}
