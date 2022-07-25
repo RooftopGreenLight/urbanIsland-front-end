@@ -4,7 +4,7 @@ import App from "./App"
 
 import { ThemeProvider } from "styled-components"
 import { defalutTheme as theme } from "styles/Theme"
-import GlobalStyle from "./styles/GlobalStyle"
+import GlobalStyle from "styles/GlobalStyle"
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
