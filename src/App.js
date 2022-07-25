@@ -1,5 +1,7 @@
+import MainPage from "pages/MainPage"
+
 function App() {
-  return <h1>메인페이지</h1>
+  return <MainPage />
 }
 
 export default App
