@@ -42,12 +42,11 @@ const SocialIcon = styled(FontAwesomeIcon)`
   ${({ theme }) => {
     const { colors, fonts } = theme
     return css`
-      width: 3vw;
-      height: 3vw;
+      width: 4vw;
+      height: 4vw;
 
-      background-color: #ffffff;
-
-      color: #4b4b4b;
+      border-radius: 200px;
+      color: #d9d9d9;
     `
   }}
 `
