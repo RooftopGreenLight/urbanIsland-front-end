@@ -1,4 +1,4 @@
-import { keyframes } from 'styled-components';
+import { keyframes } from "styled-components"
 
 export const raiseText = keyframes`
   0% {
@@ -7,7 +7,7 @@ export const raiseText = keyframes`
   100% {
     visibility: visible;
   }
-`;
+`
 
 export const shakeText = keyframes`
   0% {
@@ -25,4 +25,4 @@ export const shakeText = keyframes`
   100% {
     transform: translateX(0px);
   }
-`;
+`
