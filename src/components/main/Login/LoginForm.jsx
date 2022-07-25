@@ -51,20 +51,10 @@ const LoginForm = () => {
   return (
     <Wrapper>
       <LoginInput name="login-id">
-        <input
-          name="id"
-          placeholder="이메일을 입력해주세요."
-          onChange={insertInput}
-          value={loginInput.id}
-        />
+        <input name="id" placeholder="이메일을 입력해주세요." onChange={insertInput} value={id} />
       </LoginInput>
       <LoginInput name="login-id">
-        <input
-          name="pw"
-          placeholder="비밀번호를 입력해주세요."
-          onChange={insertInput}
-          value={loginInput.pw}
-        />
+        <input name="pw" placeholder="비밀번호를 입력해주세요." onChange={insertInput} value={pw} />
       </LoginInput>
       <LoginFeedBack ref={feedbackMsg}>ID / PW 를 입력해주세요.</LoginFeedBack>
       <LoginBtn onClick={submitLogin}>로그인 하기</LoginBtn>
