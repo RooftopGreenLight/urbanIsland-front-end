@@ -1,24 +1,27 @@
 import styled, { css } from "styled-components"
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faArrowCircleDown } from "@fortawesome/free-solid-svg-icons"
+
 const LoginSocial = () => {
   return (
     <Wrapper>
       <p>간편 로그인</p>
       <SocialIconList>
-        <SocialIcon>1</SocialIcon>
-        <SocialIcon>2</SocialIcon>
-        <SocialIcon>3</SocialIcon>
+        <SocialIcon icon={faArrowCircleDown} />
+        <SocialIcon icon={faArrowCircleDown} />
+        <SocialIcon icon={faArrowCircleDown} />
       </SocialIconList>
     </Wrapper>
   )
 }
 
-const Wrapper = styled.form`
+const Wrapper = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins } = theme
     return css`
-      width: 40%;
-      margin: 2vw auto;
+      width: 30%;
+      margin: ${margins.base} auto 0vw auto;
       text-align: center;
 
       p {
@@ -35,16 +38,16 @@ const SocialIconList = styled.div`
   justify-content: space-evenly;
 `
 
-const SocialIcon = styled.div`
+const SocialIcon = styled(FontAwesomeIcon)`
   ${({ theme }) => {
-    const { colors } = theme
+    const { colors, fonts } = theme
     return css`
-      width: 4vw;
-      height: 4vw;
+      width: 3vw;
+      height: 3vw;
 
-      border-radius: 3vw;
-      background-color: #d9d9d9;
-      color: #ffffff;
+      background-color: #ffffff;
+
+      color: #4b4b4b;
     `
   }}
 `

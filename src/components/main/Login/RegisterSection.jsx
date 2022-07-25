@@ -14,7 +14,7 @@ const Wrapper = styled.div`
     const { colors, fonts, margins } = theme
     return css`
       width: 37.5%;
-      margin: ${margins.lg} auto;
+      margin: ${margins.sm} auto ${margins.xl} auto;
 
       background-color: ${colors.white};
       text-align: center;
