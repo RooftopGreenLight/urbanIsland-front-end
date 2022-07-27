@@ -1,4 +1,4 @@
-import React, { createContext } from "react"
+import { createContext, useEffect } from "react"
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom"
 
 import BaseTemplate from "components/template/BaseTemplate"
@@ -19,7 +19,8 @@ const reducer = (state, action) => {
       return state
   }
 }
-export const AuthContext = React.createContext()
+// JWT Access Token을 담는 Context API 생성
+export const AuthContext = createContext()
 
 // 오직 로그인이 되었을때만 접근이 가능하도록 하는 Route
 const PrivateRoute = ({ isLogin }) => {
@@ -34,7 +35,19 @@ const RestrictedRoute = ({ isLogin }) => {
 const MainPage = () => {
   const [authState, authDispatch] = useReducer(reducer, initialState)
   const { authenticated } = authState
-  console.log(authenticated)
+
+  // 화면이 새로 로딩될 때, localStorage에 access_token이 있는지를 체크.
+  useEffect(() => {
+    const accessToken = localStorage.getItem("access_token")
+    console.log(accessToken)
+    if (accessToken) {
+      authDispatch({
+        type: "SET_TOKEN",
+        token: accessToken,
+      })
+    }
+  }, [])
+
   return (
     <AuthContext.Provider value={{ authState, authDispatch }}>
       <BrowserRouter>
@@ -44,6 +57,9 @@ const MainPage = () => {
             <Route element={<RestrictedRoute />} isLogin={authenticated}>
               <Route path="/login" element={<LoginContainer />} />
               <Route path="/signup" element={<SignupContainer />} />
+            </Route>
+            <Route element={<PrivateRoute />} isLogin={authenticated}>
+              <Route path="/logout" />
             </Route>
           </Routes>
         </BaseTemplate>

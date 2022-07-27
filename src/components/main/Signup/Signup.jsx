@@ -70,9 +70,9 @@ const Signup = () => {
       //코드 일치시
       setSignupInput({ ...signupInput, verifiedEmail: email })
       closeModal()
-    } else {
-      alert("인증번호 재확인")
+      return
     }
+    feedbackMsg.current.innerText = "인증번호 재확인"
   }
 
   return (
