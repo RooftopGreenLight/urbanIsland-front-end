@@ -61,7 +61,7 @@ const Signup = () => {
       //중복아니면
       try {
         feedbackMsg.current.innerText = ""
-        const result2 = await accountControl.postEmailInfo(email) //이메일인증으로
+        const result2 = await accountControl.postVerifyEmail(email) //이메일인증으로
         setSignupInput({ ...signupInput, code: result2.data })
       } catch (err) {
         feedbackMsg.current.innerText = err.message

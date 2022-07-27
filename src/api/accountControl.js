@@ -78,7 +78,7 @@ export const accountControl = {
       })
       const { accessToken, refreshToken } = response.data
       addTokenToLocalStorage(accessToken, refreshToken)
-      return response
+      return accessToken
     } catch (err) {
       const errorMessage = err.response.data.data.errorMessage
       throw new Error(errorMessage)
@@ -87,12 +87,10 @@ export const accountControl = {
   getLogOut: () => {
     localStorage.removeItem("access_token")
     localStorage.removeItem("refresh_token")
-    delete axiosInstance.defaults.headers.common["Authorization"]
   },
 }
 
 const addTokenToLocalStorage = (access, refresh) => {
   localStorage.setItem("access_token", JSON.stringify(access))
   localStorage.setItem("refresh_token", JSON.stringify(refresh))
-  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${access}`
 }
