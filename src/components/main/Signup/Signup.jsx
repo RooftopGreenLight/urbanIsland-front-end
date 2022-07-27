@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom"
 import { Modal } from "./Modal"
 import { getSignupEmail } from "api/getSignupEmail"
 import { sendEmailInfo } from "api/sendEmailInfo"
+
 const MainWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -46,12 +47,11 @@ const Signup = () => {
     }
     if (pwd !== repwd) {
       return alert("비밀번호 불일치")
-    } else {
-      const result = await sendSignupInfo(verifiedEmail, pwd, username, number)
-      if (result) {
-        if (result.success) {
-          navigate("/login")
-        }
+    }
+    const result = await sendSignupInfo(verifiedEmail, pwd, username, number)
+    if (result) {
+      if (result.success) {
+        navigate("/login")
       }
     }
   }
