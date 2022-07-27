@@ -1,5 +1,6 @@
 import React from "react"
 import styled from "styled-components"
+import "fonts/font.css"
 
 const BoxWrapper = styled.input`
   color: black;
@@ -13,6 +14,7 @@ const BoxWrapper = styled.input`
   font-weight: 500;
   text-align: center;
   margin-bottom: 5px;
+  font-family: "gmarketsans";
 `
 const InputBox = ({ ...data }) => {
   return <BoxWrapper {...data} />
