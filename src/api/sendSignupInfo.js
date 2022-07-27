@@ -3,7 +3,7 @@ export const sendSignupInfo = async (email, pwd, name, number) => {
   try {
     const result = await axiosInstance({
       method: "POST",
-      url: "/api/v1/auth/join",
+      url: "/auth/join",
       data: {
         email: email,
         password: pwd,
@@ -11,8 +11,9 @@ export const sendSignupInfo = async (email, pwd, name, number) => {
         phoneNumber: number,
       },
     })
-    return result
+    return result.data
   } catch (err) {
+    console.log(err.response.data.data.errors[0].errorMessage)
     throw new Error(err)
   }
 }

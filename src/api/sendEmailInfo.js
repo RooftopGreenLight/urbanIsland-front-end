@@ -3,7 +3,7 @@ export const sendEmailInfo = async email => {
   try {
     const result = await axiosInstance({
       method: "POST",
-      url: "/api/v1/auth/verify-email",
+      url: "/auth/verify-email",
       params: {
         email: email,
       },
