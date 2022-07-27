@@ -4,15 +4,16 @@ export const accountControl = {
   getSignUpEmail: async email => {
     try {
       const response = await axiosInstance({
-        method: "GET",
-        url: "auth/check-email",
+        method: "get",
+        url: "/auth/check-email",
         params: {
           email,
         },
       })
       return response
     } catch (err) {
-      throw new Error(err)
+      const errorMessage = err.response.data.data.errorMessage
+      throw new Error(errorMessage)
     }
   },
   postSignupData: async (email, password, name) => {
@@ -59,7 +60,8 @@ export const accountControl = {
       })
       return response
     } catch (err) {
-      throw new Error(err)
+      const errorMessage = err.response.data.data.errorMessage
+      throw new Error(errorMessage)
     }
   },
 }
