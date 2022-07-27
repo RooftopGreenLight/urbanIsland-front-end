@@ -1,8 +1,8 @@
 import React from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import InputBox from "./InputBox"
 import Button from "./Button"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { Modal } from "./Modal"
 import { accountControl } from "api/accountControl"
@@ -13,6 +13,7 @@ const MainWrapper = styled.div`
   flex-direction: column;
 `
 const Signup = () => {
+  const feedbackMsg = useRef()
   const [modalOpen, setModalOpen] = useState(false)
   const [signupInput, setSignupInput] = useState({
     email: "",
@@ -41,16 +42,16 @@ const Signup = () => {
 
   const onClickSubmit = async () => {
     if (verifiedEmail * pwd * repwd * number * username === 0) {
-      return alert("필수정보를 다 기입해주세요")
+      feedbackMsg.current.innerText = "필수정보를 다 기입해주세요"
+      return
     }
     if (pwd !== repwd) {
-      return alert("비밀번호 불일치")
+      feedbackMsg.current.innerText = "비밀번호 불일치"
+      return
     }
     const result = await accountControl.postSignupData(verifiedEmail, pwd, username)
-    if (result) {
-      if (result.success) {
-        navigate("/login")
-      }
+    if (result && result.success) {
+      navigate("/login")
     }
   }
 
@@ -61,7 +62,7 @@ const Signup = () => {
       const result2 = await accountControl.postEmailInfo(email) //이메일인증으로
       setSignupInput({ ...signupInput, code: result2.data })
     } else {
-      alert("이미 있는 이메일")
+      feedbackMsg.current.innerText = "이미 있는 이메일"
     }
   }
   const onClickVerifiedCodeCheck = () => {
@@ -113,7 +114,23 @@ const Signup = () => {
       <InputBox name="username" placeholder="이름" onChange={onChangeInput} />
       <InputBox name="number" placeholder="전화번호" onChange={onChangeInput} />
       <Button name={"회원가입"} onClick={onClickSubmit} />
+      <SignUpFeedback ref={feedbackMsg}>회원가입 정보를 입력해주세요.</SignUpFeedback>
     </MainWrapper>
   )
 }
+
+const SignUpFeedback = styled.p`
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      margin: ${margins.sm} 0vw;
+
+      text-align: center;
+      color: ${colors.blue.secondary};
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
+    `
+  }}
+`
+
 export default Signup

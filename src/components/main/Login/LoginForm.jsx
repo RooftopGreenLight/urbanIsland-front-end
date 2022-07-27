@@ -32,8 +32,7 @@ const LoginForm = () => {
         type: "SET_TOKEN",
         token: accessToken,
       })
-
-      navigateHome()
+      setTimeout(() => navigate("/"), 750)
     } catch (err) {
       throw new Error(err)
     }
