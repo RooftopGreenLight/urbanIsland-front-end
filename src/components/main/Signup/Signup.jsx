@@ -59,7 +59,7 @@ const Signup = () => {
     if (result) {
       //중복아니면
       const result2 = await accountControl.postEmailInfo(email) //이메일인증으로
-      setSignupInput({ ...signupInput, code: result2 })
+      setSignupInput({ ...signupInput, code: result2.data })
     } else {
       alert("이미 있는 이메일")
     }

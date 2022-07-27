@@ -1,7 +1,8 @@
 import styled, { css } from "styled-components"
-import { useState, useRef } from "react"
+import { useState, useRef, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 
+import { AuthContext } from "pages/MainPage"
 import { accountControl } from "api/accountControl"
 
 const LoginForm = () => {
@@ -12,27 +13,30 @@ const LoginForm = () => {
   })
   const { id, pw } = loginInput
   const navigate = useNavigate()
+  const authDispatch = useContext(AuthContext)
 
   const submitLogin = async event => {
     event.preventDefault()
+    resetInput()
 
     // ID 혹은 PW 둘 중 하나라도 입력하지 않았다면, 에러 메세지 출력
     if (id.length * pw.length === 0) {
       feedbackMsg.current.innerText = "ID/PW를 입력하지 않았습니다."
-      resetInput()
       return
     }
 
-    const response = await accountControl.sendLoginInfo(id, pw)
+    try {
+      const response = await accountControl.postLoginData(id, pw)
+      const { accessToken } = response.data
+      authDispatch({
+        type: "SET_TOKEN",
+        token: accessToken,
+      })
 
-    //만약 입력한 계정 정보가 존재하지 않는다면, 에러 메세지 출력
-    if (response.status === "fail") {
-      feedbackMsg.current.innerText = "입력하신 계정 정보가 존재하지 않습니다."
-      resetInput()
-      return
+      navigateHome()
+    } catch (err) {
+      throw new Error(err)
     }
-
-    navigateHome()
   }
 
   const insertInput = event => {
@@ -53,8 +57,14 @@ const LoginForm = () => {
       <LoginInput name="login-id">
         <input name="id" placeholder="이메일을 입력해주세요." onChange={insertInput} value={id} />
       </LoginInput>
-      <LoginInput name="login-id">
-        <input name="pw" placeholder="비밀번호를 입력해주세요." onChange={insertInput} value={pw} />
+      <LoginInput name="login-pw">
+        <input
+          name="pw"
+          placeholder="비밀번호를 입력해주세요."
+          onChange={insertInput}
+          value={pw}
+          type="password"
+        />
       </LoginInput>
       <LoginFeedBack ref={feedbackMsg}>ID / PW 를 입력해주세요.</LoginFeedBack>
       <LoginBtn onClick={submitLogin}>로그인 하기</LoginBtn>

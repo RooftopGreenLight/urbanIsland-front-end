@@ -4,10 +4,10 @@ export const accountControl = {
   getSignUpEmail: async email => {
     try {
       const response = await axiosInstance({
-        method: "get",
+        method: "GET",
         url: "auth/check-email",
         params: {
-          email: email,
+          email,
         },
       })
       return response
