@@ -3,11 +3,9 @@ import styled from "styled-components"
 import InputBox from "./InputBox"
 import Button from "./Button"
 import { useState } from "react"
-import { sendSignupInfo } from "api/sendSignupInfo"
 import { useNavigate } from "react-router-dom"
 import { Modal } from "./Modal"
-import { getSignupEmail } from "api/getSignupEmail"
-import { sendEmailInfo } from "api/sendEmailInfo"
+import { accountControl } from "api/accountControl"
 
 const MainWrapper = styled.div`
   display: flex;
@@ -48,7 +46,7 @@ const Signup = () => {
     if (pwd !== repwd) {
       return alert("비밀번호 불일치")
     }
-    const result = await sendSignupInfo(verifiedEmail, pwd, username, number)
+    const result = await accountControl.postSignupData(verifiedEmail, pwd, username)
     if (result) {
       if (result.success) {
         navigate("/login")
@@ -57,10 +55,10 @@ const Signup = () => {
   }
 
   const onClickEmailCheck = async () => {
-    const result = await getSignupEmail(email) //중복체크
+    const result = await accountControl.getSignUpEmail(email) //중복체크
     if (result) {
       //중복아니면
-      const result2 = await sendEmailInfo(email) //이메일인증으로
+      const result2 = await accountControl.postEmailInfo(email) //이메일인증으로
       setSignupInput({ ...signupInput, code: result2 })
     } else {
       alert("이미 있는 이메일")

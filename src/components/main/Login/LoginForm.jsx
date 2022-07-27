@@ -2,7 +2,7 @@ import styled, { css } from "styled-components"
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 
-import { sendLoginInfo } from "api/sendLoginInfo.js"
+import { accountControl } from "api/accountControl"
 
 const LoginForm = () => {
   const feedbackMsg = useRef()
@@ -23,7 +23,7 @@ const LoginForm = () => {
       return
     }
 
-    const response = await sendLoginInfo(id, pw)
+    const response = await accountControl.sendLoginInfo(id, pw)
 
     //만약 입력한 계정 정보가 존재하지 않는다면, 에러 메세지 출력
     if (response.status === "fail") {

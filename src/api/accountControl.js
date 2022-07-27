@@ -47,7 +47,7 @@ export const accountControl = {
       throw new Error(err)
     }
   },
-  sendEmailInfo: async email => {
+  postEmailInfo: async email => {
     try {
       const response = await axiosInstance({
         method: "POST",
