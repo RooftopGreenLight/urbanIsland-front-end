@@ -2,6 +2,8 @@ import { createContext, useEffect, useReducer } from "react"
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom"
 import jwt_decode from "jwt-decode"
 
+import axiosInstance from "api/axiosInstance"
+
 import { accountControl } from "api/accountControl"
 import BaseTemplate from "components/template/BaseTemplate"
 import { HomeContainer } from "pages/Container/HomeContainer"
@@ -39,16 +41,20 @@ const MainPage = () => {
   /* 화면이 새로 로딩될 때, localStorage에 access_token이 있는지를 체크.
      만약 토큰이 있다면 이를 자동으로 Context API에 추가하도록 설정. */
   useEffect(() => {
-    const getNewestToken = async () => {
+    const accessToken = localStorage.getItem("access_token")
+
+    const setNewestToken = async () => {
       const refreshToken = localStorage.getItem("refresh_token")
-      const newAccessToken = await accountControl.getRefreshToken(refreshToken)
+      const response = await accountControl.getRefreshToken(refreshToken)
+      const { accessToken: newAccessToken } = response.data
       authDispatch({
         type: "SET_TOKEN",
         token: newAccessToken,
       })
     }
 
-    const setCurrentToken = accessToken => {
+    const setCurrentToken = () => {
+      axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
       authDispatch({
         type: "SET_TOKEN",
         token: accessToken,
@@ -56,12 +62,11 @@ const MainPage = () => {
     }
 
     // 먼저, accessToken 이 존재하는지를 파악해야 함.
-    const accessToken = localStorage.getItem("access_token")
     if (accessToken) {
       const decoded = jwt_decode(accessToken)
       // 만약 토큰 만료 기간까지 1시간 가량 남았다면, 새로운 토큰 발급.
       if (Date.now() - decoded.exp < 1000 * 60 * 60) {
-        getNewestToken()
+        setNewestToken()
       }
       // 그렇지 않을 경우, 기존의 토큰을 사용하여 Context API 초기화
       else {

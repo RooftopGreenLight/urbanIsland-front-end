@@ -78,7 +78,7 @@ export const accountControl = {
       })
       const { accessToken, refreshToken } = response.data
       addTokenToLocalStorage(accessToken, refreshToken)
-      return accessToken
+      return response
     } catch (err) {
       const errorMessage = err.response.data.data.errorMessage
       throw new Error(errorMessage)

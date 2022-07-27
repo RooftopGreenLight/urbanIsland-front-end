@@ -32,6 +32,7 @@ const LoginForm = () => {
         type: "SET_TOKEN",
         token: accessToken,
       })
+      feedbackMsg.current.innerText = "로그인에 성공했습니다. 잠시만 기다려주세요.."
       setTimeout(() => navigate("/"), 750)
     } catch (err) {
       feedbackMsg.current.innerText = err.message
@@ -45,10 +46,6 @@ const LoginForm = () => {
 
   const resetInput = () => {
     setLoginInput({ id: "", pw: "" })
-  }
-
-  const navigateHome = () => {
-    navigate("/")
   }
 
   return (
