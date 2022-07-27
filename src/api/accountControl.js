@@ -31,24 +31,7 @@ export const accountControl = {
       throw new Error(err)
     }
   },
-  postLoginData: async (email, password) => {
-    let response
-    try {
-      response = await axiosInstance({
-        method: "POST",
-        url: "/auth/login",
-        data: {
-          email,
-          password,
-        },
-      })
-      return response
-    } catch (err) {
-      const errorMessage = err.response.data.data.errorMessage
-      throw new Error(errorMessage)
-    }
-  },
-  postEmailInfo: async email => {
+  postVerifyEmail: async email => {
     try {
       const response = await axiosInstance({
         method: "POST",
@@ -60,6 +43,25 @@ export const accountControl = {
       return response
     } catch (err) {
       throw new Error(err)
+    }
+  },
+  postLoginData: async (email, password) => {
+    let response
+    try {
+      response = await axiosInstance({
+        method: "POST",
+        url: "/auth/login",
+        data: {
+          email,
+          password,
+        },
+      })
+      const accessToken = { response }
+      axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
+      return response
+    } catch (err) {
+      const errorMessage = err.response.data.data.errorMessage
+      throw new Error(errorMessage)
     }
   },
 }

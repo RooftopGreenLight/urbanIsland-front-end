@@ -34,6 +34,7 @@ const RestrictedRoute = ({ isLogin }) => {
 const MainPage = () => {
   const [authState, authDispatch] = useReducer(reducer, initialState)
   const { authenticated } = authState
+  console.log(authenticated)
   return (
     <AuthContext.Provider value={{ authState, authDispatch }}>
       <BrowserRouter>
