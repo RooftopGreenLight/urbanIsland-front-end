@@ -1,14 +1,14 @@
 import axiosInstance from "./axiosInstance"
-export const sendSignupInfo = async (id, pwd, name, number) => {
+export const sendSignupInfo = async (email, pwd, name, number) => {
   try {
     const result = await axiosInstance({
       method: "POST",
-      url: "/signup",
+      url: "/api/v1/auth/join",
       data: {
-        id: id,
-        pwd: pwd,
+        email: email,
+        password: pwd,
         name: name,
-        number: number,
+        phoneNumber: number,
       },
     })
     return result
