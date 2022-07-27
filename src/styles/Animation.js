@@ -1,5 +1,22 @@
 import { keyframes } from "styled-components"
+export const modalShow = keyframes`
+ from {
+  opacity: 0;
+  margin-top: -50px;
+}
+to {
+  opacity: 1;
+  margin-top: 0;
+}`
 
+export const modalBgShow = keyframes`
+from {
+  opacity: 0;
+}
+to {
+  opacity: 1;
+}
+}`
 export const raiseText = keyframes`
   0% {
     visibility: hidden
