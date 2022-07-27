@@ -59,30 +59,26 @@ export const accountControl = {
       })
       // 로그인에 성공했을 경우, 추후 access_token 만료를 대비하여 header 설정.
       const { accessToken, refreshToken } = response.data
-      localStorage.setItem("access_token", JSON.stringify(accessToken))
-      localStorage.setItem("refresh_token", JSON.stringify(refreshToken))
-      axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
+      addTokenToLocalStorage(accessToken, refreshToken)
       return response
     } catch (err) {
       const errorMessage = err.response.data.data.errorMessage
       throw new Error(errorMessage)
     }
   },
-  getRefreshToken: async email => {
+  getRefreshToken: async refresh => {
     let response
     try {
       response = await axiosInstance({
         method: "POST",
         url: "auth/refresh_token",
         data: {
-          email,
+          refreshToken: refresh,
         },
       })
       const { accessToken, refreshToken } = response.data
-      localStorage.setItem("access_token", JSON.stringify(accessToken))
-      localStorage.setItem("refresh_token", JSON.stringify(refreshToken))
-      axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
-      return response
+      addTokenToLocalStorage(accessToken, refreshToken)
+      return accessToken
     } catch (err) {
       const errorMessage = err.response.data.data.errorMessage
       throw new Error(errorMessage)
@@ -91,6 +87,12 @@ export const accountControl = {
   getLogOut: () => {
     localStorage.removeItem("access_token")
     localStorage.removeItem("refresh_token")
-    axiosInstance.defaults.headers.common["Authorization"] = null
+    delete axiosInstance.defaults.headers.common["Authorization"]
   },
+}
+
+const addTokenToLocalStorage = (access, refresh) => {
+  localStorage.setItem("access_token", JSON.stringify(access))
+  localStorage.setItem("refresh_token", JSON.stringify(refresh))
+  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${access}`
 }
