@@ -32,6 +32,20 @@ export const accountControl = {
       throw new Error(err)
     }
   },
+  postVerifyEmail: async email => {
+    try {
+      const response = await axiosInstance({
+        method: "POST",
+        url: "/auth/verify-email",
+        params: {
+          email,
+        },
+      })
+      return response
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
   postLoginData: async (email, password) => {
     let response
     try {
@@ -43,25 +57,40 @@ export const accountControl = {
           password,
         },
       })
+      // 로그인에 성공했을 경우, 추후 access_token 만료를 대비하여 header 설정.
+      const { accessToken, refreshToken } = response.data
+      localStorage.setItem("access_token", JSON.stringify(accessToken))
+      localStorage.setItem("refresh_token", JSON.stringify(refreshToken))
+      axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
       return response
     } catch (err) {
       const errorMessage = err.response.data.data.errorMessage
       throw new Error(errorMessage)
     }
   },
-  postEmailInfo: async email => {
+  getRefreshToken: async email => {
+    let response
     try {
-      const response = await axiosInstance({
+      response = await axiosInstance({
         method: "POST",
-        url: "/auth/verify-email",
-        params: {
+        url: "auth/refresh_token",
+        data: {
           email,
         },
       })
+      const { accessToken, refreshToken } = response.data
+      localStorage.setItem("access_token", JSON.stringify(accessToken))
+      localStorage.setItem("refresh_token", JSON.stringify(refreshToken))
+      axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
       return response
     } catch (err) {
       const errorMessage = err.response.data.data.errorMessage
       throw new Error(errorMessage)
     }
+  },
+  getLogOut: () => {
+    localStorage.removeItem("access_token")
+    localStorage.removeItem("refresh_token")
+    axiosInstance.defaults.headers.common["Authorization"] = null
   },
 }
