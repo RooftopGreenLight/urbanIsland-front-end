@@ -13,7 +13,7 @@ const LoginForm = () => {
   })
   const { id, pw } = loginInput
   const navigate = useNavigate()
-  const authDispatch = useContext(AuthContext)
+  const { authDispatch } = useContext(AuthContext)
 
   const submitLogin = async event => {
     event.preventDefault()
@@ -34,7 +34,7 @@ const LoginForm = () => {
       })
       setTimeout(() => navigate("/"), 750)
     } catch (err) {
-      throw new Error(err)
+      feedbackMsg.current.innerText = err.message
     }
   }
 

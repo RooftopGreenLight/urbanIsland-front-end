@@ -32,10 +32,10 @@ const RestrictedRoute = ({ isLogin }) => {
 }
 
 const MainPage = () => {
-  const [state, authDispatch] = useReducer(reducer, initialState)
-  const { authenticated } = state
+  const [authState, authDispatch] = useReducer(reducer, initialState)
+  const { authenticated } = authState
   return (
-    <AuthContext.Provider value={authDispatch}>
+    <AuthContext.Provider value={{ authState, authDispatch }}>
       <BrowserRouter>
         <BaseTemplate>
           <Routes>

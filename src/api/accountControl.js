@@ -44,7 +44,8 @@ export const accountControl = {
       })
       return response
     } catch (err) {
-      throw new Error(err)
+      const errorMessage = err.response.data.data.errorMessage
+      throw new Error(errorMessage)
     }
   },
   postEmailInfo: async email => {

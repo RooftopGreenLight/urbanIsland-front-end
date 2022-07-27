@@ -1,12 +1,21 @@
 import styled, { css } from "styled-components"
+import { useContext } from "react"
 import { Link } from "react-router-dom"
 
+import { AuthContext } from "pages/MainPage"
+
 const Navbar = () => {
+  const { authState } = useContext(AuthContext)
+  const { authenticated } = authState
   return (
     <NavbarLayout>
       <LinkElement to="/">Main</LinkElement>
-      <LinkElement to="/login">Login</LinkElement>
-      <LinkElement to="/signup">Register</LinkElement>
+      {authenticated || (
+        <>
+          <LinkElement to="/login">Login</LinkElement>
+          <LinkElement to="/signup">Register</LinkElement>
+        </>
+      )}
     </NavbarLayout>
   )
 }
