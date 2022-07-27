@@ -1,14 +1,14 @@
 import axiosInstance from "./axiosInstance"
 export const getSignupEmail = async email => {
   try {
-    const result = await axiosInstance({
+    const response = await axiosInstance({
       method: "get",
       url: "auth/check-email",
       params: {
         email: email,
       },
     })
-    return result
+    return response
   } catch (err) {
     console.log(err.data.errorMessage)
     throw new Error(err)
