@@ -4,11 +4,11 @@ import { Link } from "react-router-dom"
 
 import { AuthContext } from "pages/MainPage"
 
-const Navbar = () => {
+const Navbar = ({ textColor }) => {
   const { authState } = useContext(AuthContext)
   const { authenticated } = authState
   return (
-    <NavbarLayout>
+    <NavbarLayout textColor={textColor}>
       <LinkElement to="/">Main</LinkElement>
       {authenticated || (
         <>
@@ -21,42 +21,46 @@ const Navbar = () => {
 }
 
 const NavbarLayout = styled.ul`
-  width: 50vw;
-  height: 3vw;
+  ${({ textColor }) => {
+    return css`
+      width: 40vw;
+      height: 3vw;
 
-  margin: 0vw auto;
+      margin: 0vw auto;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
-  text-align: center;
+      text-align: center;
+      color: ${textColor};
+    `
+  }}
 `
 
 const LinkElement = styled(Link)`
   ${({ theme }) => {
     const { colors, fonts } = theme
     return css`
-      color: ${colors.blue.tertiary};
       font-family: ${fonts.family.detail};
-      font-size: ${fonts.size.sm};
+      font-size: ${fonts.size.xsm};
 
       vertical-align: middle;
       transform: 0.5s all cubic-bezier(0.21, 0.76, 0.81, 0.31);
 
       &:hover {
-        color: ${colors.blue.tertiary};
+        color: ${colors.white};
 
         &::after {
-          border-bottom: 2px solid ${colors.blue.tertiary};
+          border-bottom: 2px solid ${colors.white};
         }
       }
 
       &::after {
         content: "";
         display: block;
-        margin: auto;
-        border-bottom: 2px solid ${colors.blue.tertiary};
+        margin: 0.1vw auto;
+        border-bottom: 2px solid ${colors.white};
         width: ${fonts.size.sm};
       }
     `

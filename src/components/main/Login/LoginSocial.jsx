@@ -6,7 +6,6 @@ import { faArrowCircleDown } from "@fortawesome/free-solid-svg-icons"
 const LoginSocial = () => {
   return (
     <Wrapper>
-      <p>간편 로그인</p>
       <SocialIconList>
         <SocialIcon icon={faArrowCircleDown} />
         <SocialIcon icon={faArrowCircleDown} />
@@ -20,15 +19,9 @@ const Wrapper = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins } = theme
     return css`
-      width: 30%;
-      margin: ${margins.base} auto 0vw auto;
+      width: 50%;
+      margin: ${margins.base} auto;
       text-align: center;
-
-      p {
-        margin: ${margins.sm} 0vw;
-        font-size: ${fonts.size.xsm};
-        color: #8d8d8d;
-      }
     `
   }}
 `

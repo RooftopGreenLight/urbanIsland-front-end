@@ -13,17 +13,17 @@ const Wrapper = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins } = theme
     return css`
-      width: 37.5%;
-      margin: ${margins.sm} auto ${margins.xl} auto;
+      width: 50%;
+      margin: ${margins.sm} auto 2.5vw auto;
 
       background-color: ${colors.white};
       text-align: center;
 
       p {
         margin: ${margins.sm} 0vw;
-        color: #8d8d8d;
+        color: #000000;
         font-size: ${fonts.size.xsm};
-        text-align: left;
+        font-weight: 100;
       }
     `
   }}
