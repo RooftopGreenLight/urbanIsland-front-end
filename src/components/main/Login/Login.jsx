@@ -21,6 +21,18 @@ const Wrapper = styled.div`
   width: 100vw;
   min-height: 100vh;
   background-color: #f2faff;
+
+  display: flex;
+  flex-direction: column;
+`
+
+const Logo = styled.div`
+  width: 7.5vw;
+  height: 7.5vw;
+  margin: 0vw auto;
+
+  background-color: #d9d9d9;
+  border-radius: 25px;
 `
 
 const LoginSection = styled.div`
@@ -37,15 +49,6 @@ const LoginSection = styled.div`
       flex-direction: column;
     `
   }}
-`
-
-const Logo = styled.div`
-  width: 7.5vw;
-  height: 7.5vw;
-  margin: 0vw auto;
-
-  background-color: #d9d9d9;
-  border-radius: 25px;
 `
 
 export default Login

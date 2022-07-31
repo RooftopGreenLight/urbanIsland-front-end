@@ -71,7 +71,7 @@ export const accountControl = {
     try {
       response = await axiosInstance({
         method: "POST",
-        url: "auth/refresh_token",
+        url: "auth/check-refresh-token",
         data: {
           refreshToken: refresh,
         },
@@ -80,8 +80,11 @@ export const accountControl = {
       addTokenToLocalStorage(accessToken, refreshToken)
       return accessToken
     } catch (err) {
-      const errorMessage = err.response.data.data.errorMessage
-      throw new Error(errorMessage)
+      const errorCode = err.response.data.data.errorCode
+      if (errorCode === 461) {
+        this.getLogOut()
+      }
+      throw new Error(errorCode)
     }
   },
   getLogOut: () => {

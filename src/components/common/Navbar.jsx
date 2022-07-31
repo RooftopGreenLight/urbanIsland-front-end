@@ -37,7 +37,7 @@ const LinkElement = styled(Link)`
   ${({ theme }) => {
     const { colors, fonts } = theme
     return css`
-      color: ${colors.blue.tertiary};
+      color: ${colors.white};
       font-family: ${fonts.family.detail};
       font-size: ${fonts.size.sm};
 
@@ -45,10 +45,10 @@ const LinkElement = styled(Link)`
       transform: 0.5s all cubic-bezier(0.21, 0.76, 0.81, 0.31);
 
       &:hover {
-        color: ${colors.blue.tertiary};
+        color: ${colors.white};
 
         &::after {
-          border-bottom: 2px solid ${colors.blue.tertiary};
+          border-bottom: 2px solid ${colors.white};
         }
       }
 
@@ -56,7 +56,7 @@ const LinkElement = styled(Link)`
         content: "";
         display: block;
         margin: auto;
-        border-bottom: 2px solid ${colors.blue.tertiary};
+        border-bottom: 2px solid ${colors.white};
         width: ${fonts.size.sm};
       }
     `
