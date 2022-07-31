@@ -1,8 +1,8 @@
 import styled, { css } from "styled-components"
 
-import { FadeIn, StretchToRight } from "styles/Animation"
+import { fadeIn, changeBackground } from "styles/Animation"
+import bgImg1 from "assets/img/background1.jpg"
 import { MainPageBtnText } from "constants/MainPageBtn"
-import bgImg from "assets/img/background1.jpg"
 
 const Home = () => {
   return (
@@ -32,8 +32,11 @@ const Wrapper = styled.div`
   width: 100vw;
   min-height: 100vh;
 
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${bgImg});
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${bgImg1});
   background-size: cover;
+
+  animation: ${changeBackground} 40s infinite;
+  animation-fill-mode: forwards;
 `
 
 const Background = styled.div`
@@ -92,7 +95,7 @@ const HomeBtn = styled.button`
 
       transition: 0.3s all ease-in-out;
 
-      animation: ${FadeIn} 2s 0.25s;
+      animation: ${fadeIn} 2s 0.25s;
       animation-fill-mode: forwards;
       animation-delay: ${`${delay * 0.2}s`};
 
@@ -114,9 +117,8 @@ const HomeBottomText = styled.div`
       color: ${colors.white};
       opacity: 0%;
 
-      animation: ${FadeIn} 2s 1s;
+      animation: ${fadeIn} 2s 1s;
       animation-fill-mode: forwards;
-      overflow: hidden;
 
       h5 {
         font-size: ${fonts.size.base};

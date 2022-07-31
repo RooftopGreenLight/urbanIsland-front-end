@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components"
 import bgImg from "assets/img/background1.jpg"
+import { fadeIn } from "styles/Animation"
 
 import LoginForm from "components/main/Login/LoginForm"
 import LoginSocial from "components/main/Login/LoginSocial"
@@ -32,7 +33,7 @@ const Wrapper = styled.div`
 const Logo = styled.div`
   width: 7.5vw;
   height: 7.5vw;
-  margin: 1vw auto;
+  margin: 2.5vw auto;
 
   background-color: #d9d9d9;
   border-radius: 25px;
@@ -51,6 +52,9 @@ const LoginSection = styled.div`
 
       display: flex;
       flex-direction: column;
+
+      animation: ${fadeIn} 2s 0s;
+      animation-fill-mode: forwards;
     `
   }}
 `
