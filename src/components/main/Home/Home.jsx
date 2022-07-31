@@ -76,7 +76,7 @@ const MainBtnList = styled.div`
 
 const MainBtn = styled.button`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { colors, fonts } = theme
     return css`
       width: 90%;
       height: 2.75vw;
@@ -104,14 +104,10 @@ const MainBtn = styled.button`
 
 const BottomText = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { colors, fonts, margins } = theme
     return css`
-      width: 95%;
-      margin: 0vw auto;
-
-      position: fixed;
-      left: 1vw;
-      bottom: 5vh;
+      width: 23.5%;
+      margin: ${margins.xl} auto;
 
       color: ${colors.white};
 

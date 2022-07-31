@@ -10,8 +10,8 @@ const Login = () => {
     <Wrapper>
       <LoginSection>
         <Logo />
-        <LoginForm />
         <LoginSocial />
+        <LoginForm />
         <RegisterSection />
       </LoginSection>
     </Wrapper>
@@ -32,7 +32,7 @@ const Wrapper = styled.div`
 const Logo = styled.div`
   width: 7.5vw;
   height: 7.5vw;
-  margin: 1vw auto 0vw auto;
+  margin: 1vw auto;
 
   background-color: #d9d9d9;
   border-radius: 25px;
@@ -42,12 +42,12 @@ const LoginSection = styled.div`
   ${({ theme }) => {
     const { colors } = theme
     return css`
-      width: 50%;
+      width: 45%;
       margin: auto;
 
       background-color: ${colors.white};
       opacity: 95%;
-      border-radius: 25px;
+      border-radius: 10px;
 
       display: flex;
       flex-direction: column;
