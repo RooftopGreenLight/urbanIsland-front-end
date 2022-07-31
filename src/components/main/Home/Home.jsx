@@ -1,24 +1,28 @@
 import styled, { css } from "styled-components"
+
+import { FadeIn, StretchToRight } from "styles/Animation"
+import { MainPageBtnText } from "constants/MainPageBtn"
 import bgImg from "assets/img/background1.jpg"
 
 const Home = () => {
   return (
     <Wrapper>
       <Background>
-        <MainText>
+        <HomeText>
           <h3>Urban Island</h3>
           <p>도심 속, 우리들의 숨겨진 쉼터</p>
-        </MainText>
-        <MainBtnList>
-          <MainBtn>옥상시설 예약</MainBtn>
-          <MainBtn>지원사업 열람</MainBtn>
-          <MainBtn>옥상지기 신청</MainBtn>
-          <MainBtn>마이 페이지</MainBtn>
-        </MainBtnList>
-        <BottomText>
+        </HomeText>
+        <HomeBtnList>
+          {MainPageBtnText.map((elm, idx) => (
+            <HomeBtn key={idx} delay={idx}>
+              {elm}
+            </HomeBtn>
+          ))}
+        </HomeBtnList>
+        <HomeBottomText>
           <h5>Soil Bank.</h5>
           <p>옥상녹화는 투수면적을 늘림으로 도시 홍수를 막을 수 있습니다.</p>
-        </BottomText>
+        </HomeBottomText>
       </Background>
     </Wrapper>
   )
@@ -37,7 +41,7 @@ const Background = styled.div`
   top: 10vw;
 `
 
-const MainText = styled.div`
+const HomeText = styled.div`
   ${({ theme }) => {
     const { colors, fonts } = theme
     return css`
@@ -59,30 +63,25 @@ const MainText = styled.div`
   }}
 `
 
-const MainBtnList = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      width: 25vw;
-      height: 15vw;
-      margin: 7.5vh auto;
+const HomeBtnList = styled.div`
+  width: 25vw;
+  height: 15vw;
+  margin: 7.5vh auto;
 
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-    `
-  }}
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 `
 
-const MainBtn = styled.button`
-  ${({ theme }) => {
+const HomeBtn = styled.button`
+  ${({ theme, delay }) => {
     const { colors, fonts } = theme
     return css`
       width: 90%;
       height: 2.75vw;
 
       margin: 0vw auto;
-      opacity: 90%;
+      opacity: 0%;
 
       border: 0;
       border-radius: 25px;
@@ -93,8 +92,11 @@ const MainBtn = styled.button`
 
       transition: 0.3s all ease-in-out;
 
+      animation: ${FadeIn} 2s 0.25s;
+      animation-fill-mode: forwards;
+      animation-delay: ${`${delay * 0.2}s`};
+
       &:hover {
-        opacity: 100%;
         width: 92.5%;
         height: 2.8vw;
       }
@@ -102,7 +104,7 @@ const MainBtn = styled.button`
   }}
 `
 
-const BottomText = styled.div`
+const HomeBottomText = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins } = theme
     return css`
@@ -110,6 +112,11 @@ const BottomText = styled.div`
       margin: ${margins.xl} auto;
 
       color: ${colors.white};
+      opacity: 0%;
+
+      animation: ${FadeIn} 2s 1s;
+      animation-fill-mode: forwards;
+      overflow: hidden;
 
       h5 {
         font-size: ${fonts.size.base};

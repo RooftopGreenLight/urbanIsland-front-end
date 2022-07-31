@@ -43,3 +43,23 @@ export const shakeText = keyframes`
     transform: translateX(0px);
   }
 `
+export const FadeIn = keyframes`
+  0% {
+    opacity: 0%;
+    transform: translate3d(0, 10%, 0);
+  }
+  100% {
+    opacity: 100%;
+    transform: translateZ(0);
+  }
+`
+export const StretchToRight = keyframes`
+  0% {
+    opacity: 0%;
+    transform: translate3d(50%, 0%, 0);
+  }
+  100% {
+    opacity: 100%;
+    transform: translateZ(0);
+  }
+`
