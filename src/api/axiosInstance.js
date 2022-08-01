@@ -14,6 +14,14 @@ const axiosInstance = axios.create({
 // 1. 요청 인터셉터 설정 (요청 성공 / 실패)
 axiosInstance.interceptors.request.use(
   config => {
+    // localStorage에 accessToken이 존재한다면, Header에 값을 넣어 전송.
+    const accessToken = JSON.parse(localStorage.getItem("access_token"))
+    if (accessToken) {
+      config.headers = {
+        ...config.headers,
+        Authorization: `Bearer ${accessToken}`,
+      }
+    }
     return config
   },
   error => {

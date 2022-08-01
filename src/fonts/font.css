@@ -39,3 +39,8 @@
   src: url("./list/GmarketSansBold.otf");
   font-weight: 700;
 }
+
+@font-face {
+  font-family: "bebas";
+  src: url("./list/Bebas.otf");
+}

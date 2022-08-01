@@ -1,8 +1,8 @@
 import React from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import InputBox from "./InputBox"
 import Button from "./Button"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { Modal } from "./Modal"
 import { accountControl } from "api/accountControl"
@@ -13,6 +13,7 @@ const MainWrapper = styled.div`
   flex-direction: column;
 `
 const Signup = () => {
+  const feedbackMsg = useRef()
   const [modalOpen, setModalOpen] = useState(false)
   const [signupInput, setSignupInput] = useState({
     email: "",
@@ -20,7 +21,6 @@ const Signup = () => {
     pwd: "",
     repwd: "",
     username: "",
-    number: "",
     verifiedCode: "",
     code: "",
   })
@@ -32,7 +32,7 @@ const Signup = () => {
     setModalOpen(false)
   }
   const navigate = useNavigate()
-  const { email, verifiedEmail, verifiedCode, pwd, repwd, number, username, code } = signupInput
+  const { email, verifiedEmail, verifiedCode, pwd, repwd, username, code } = signupInput
 
   const onChangeInput = e => {
     const { name, value } = e.target
@@ -40,28 +40,42 @@ const Signup = () => {
   }
 
   const onClickSubmit = async () => {
-    if (verifiedEmail * pwd * repwd * number * username === 0) {
-      return alert("필수정보를 다 기입해주세요")
+    if (verifiedEmail * pwd * repwd * username === 0) {
+      feedbackMsg.current.innerText = "필수정보를 다 기입해주세요"
+      return
     }
     if (pwd !== repwd) {
-      return alert("비밀번호 불일치")
+      feedbackMsg.current.innerText = "비밀번호 불일치"
+      return
     }
-    const result = await accountControl.postSignupData(verifiedEmail, pwd, username)
-    if (result) {
-      if (result.success) {
-        navigate("/login")
-      }
+    try {
+      await accountControl.postSignupData(verifiedEmail, pwd, username)
+      navigate("/login")
+    } catch (err) {
+      feedbackMsg.current.innerText = err.message
     }
   }
-
   const onClickEmailCheck = async () => {
-    const result = await accountControl.getSignUpEmail(email) //중복체크
-    if (result) {
+    const emailReg =
+      "/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/"
+    if (!emailReg.match(email)) {
+      feedbackMsg.current.innerText = "유효한 이메일 양식이 아닙니다."
+      return
+    }
+    try {
+      await accountControl.getSignUpEmail(email) //중복체크
       //중복아니면
-      const result2 = await accountControl.postEmailInfo(email) //이메일인증으로
-      setSignupInput({ ...signupInput, code: result2 })
-    } else {
-      alert("이미 있는 이메일")
+      try {
+        feedbackMsg.current.innerText = ""
+        const result2 = await accountControl.postVerifyEmail(email) //이메일인증으로
+        setSignupInput({ ...signupInput, code: result2.data })
+      } catch (err) {
+        feedbackMsg.current.innerText = err.message
+        console.log(feedbackMsg.current.innerText)
+      }
+    } catch (err) {
+      feedbackMsg.current.innerText = err.message
+      console.log(feedbackMsg.current.innerText)
     }
   }
   const onClickVerifiedCodeCheck = () => {
@@ -70,7 +84,7 @@ const Signup = () => {
       setSignupInput({ ...signupInput, verifiedEmail: email })
       closeModal()
     } else {
-      alert("인증번호 재확인")
+      feedbackMsg.current.innerText = "인증번호 재확인"
     }
   }
 
@@ -97,6 +111,7 @@ const Signup = () => {
             <button onClick={onClickVerifiedCodeCheck}>인증번호 확인</button>
           </>
         )}{" "}
+        <SignUpFeedback ref={feedbackMsg}></SignUpFeedback>
       </Modal>
       <InputBox
         name="pwd"
@@ -111,9 +126,24 @@ const Signup = () => {
         type="password"
       />
       <InputBox name="username" placeholder="이름" onChange={onChangeInput} />
-      <InputBox name="number" placeholder="전화번호" onChange={onChangeInput} />
       <Button name={"회원가입"} onClick={onClickSubmit} />
+      <SignUpFeedback ref={feedbackMsg}>회원가입 정보를 입력해주세요.</SignUpFeedback>
     </MainWrapper>
   )
 }
+
+const SignUpFeedback = styled.p`
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      margin: ${margins.sm} 0vw;
+
+      text-align: center;
+      color: ${colors.blue.secondary};
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
+    `
+  }}
+`
+
 export default Signup

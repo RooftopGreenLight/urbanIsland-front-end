@@ -1,7 +1,8 @@
 import styled, { css } from "styled-components"
-import { useState, useRef } from "react"
+import { useState, useRef, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 
+import { AuthContext } from "pages/MainPage"
 import { accountControl } from "api/accountControl"
 
 const LoginForm = () => {
@@ -12,27 +13,30 @@ const LoginForm = () => {
   })
   const { id, pw } = loginInput
   const navigate = useNavigate()
+  const { authDispatch } = useContext(AuthContext)
 
   const submitLogin = async event => {
     event.preventDefault()
+    resetInput()
 
     // ID 혹은 PW 둘 중 하나라도 입력하지 않았다면, 에러 메세지 출력
     if (id.length * pw.length === 0) {
       feedbackMsg.current.innerText = "ID/PW를 입력하지 않았습니다."
-      resetInput()
       return
     }
 
-    const response = await accountControl.sendLoginInfo(id, pw)
-
-    //만약 입력한 계정 정보가 존재하지 않는다면, 에러 메세지 출력
-    if (response.status === "fail") {
-      feedbackMsg.current.innerText = "입력하신 계정 정보가 존재하지 않습니다."
-      resetInput()
-      return
+    try {
+      const response = await accountControl.postLoginData(id, pw)
+      const { accessToken } = response.data
+      authDispatch({
+        type: "SET_TOKEN",
+        token: accessToken,
+      })
+      feedbackMsg.current.innerText = "로그인에 성공했습니다. 잠시만 기다려주세요.."
+      setTimeout(() => navigate("/"), 750)
+    } catch (err) {
+      feedbackMsg.current.innerText = err.message
     }
-
-    navigateHome()
   }
 
   const insertInput = event => {
@@ -44,17 +48,19 @@ const LoginForm = () => {
     setLoginInput({ id: "", pw: "" })
   }
 
-  const navigateHome = () => {
-    navigate("/")
-  }
-
   return (
     <Wrapper>
       <LoginInput name="login-id">
         <input name="id" placeholder="이메일을 입력해주세요." onChange={insertInput} value={id} />
       </LoginInput>
-      <LoginInput name="login-id">
-        <input name="pw" placeholder="비밀번호를 입력해주세요." onChange={insertInput} value={pw} />
+      <LoginInput name="login-pw">
+        <input
+          name="pw"
+          placeholder="비밀번호를 입력해주세요."
+          onChange={insertInput}
+          value={pw}
+          type="password"
+        />
       </LoginInput>
       <LoginFeedBack ref={feedbackMsg}>ID / PW 를 입력해주세요.</LoginFeedBack>
       <LoginBtn onClick={submitLogin}>로그인 하기</LoginBtn>
@@ -67,7 +73,7 @@ const Wrapper = styled.form`
     const { colors, margins } = theme
     return css`
       width: 50%;
-      margin: ${margins.lg} auto;
+      margin: ${margins.base} auto;
 
       background-color: ${colors.white};
       text-align: center;
@@ -82,14 +88,20 @@ const LoginInput = styled.div`
       margin: ${margins.sm} auto;
 
       input {
-        width: 75%;
+        width: 100%;
         padding: ${paddings.sm} ${paddings.base};
-        border: 1px solid #000000;
-        border-radius: 10px;
+
+        background-color: #d9d9d9;
+        border: 0;
+        border-radius: 5px;
 
         &::placeholder {
-          color: #8d8d8d;
+          color: #d9d9d9;
           text-align: center;
+        }
+
+        &::before {
+          background-color: #d9d9d9;
         }
       }
     `
@@ -102,7 +114,7 @@ const LoginFeedBack = styled.p`
       margin: ${margins.sm} 0vw;
 
       text-align: center;
-      color: ${colors.blue.secondary};
+      color: #3d3d3d;
       font-size: ${fonts.size.xsm};
       font-weight: 100;
     `
@@ -113,7 +125,7 @@ const LoginBtn = styled.button`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`
-      width: 75%;
+      width: 100%;
       padding: ${paddings.sm} ${paddings.base};
 
       background-color: #000000;
