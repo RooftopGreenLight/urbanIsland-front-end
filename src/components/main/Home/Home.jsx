@@ -6,7 +6,6 @@ import Information from "components/main/Home/Information/Information"
 
 import { changeBackground } from "styles/Animation"
 import bgImg1 from "assets/img/background1.jpg"
-import { MainPageBtnText } from "constants/MainPageBtn"
 
 const Home = () => {
   return (
@@ -58,72 +57,6 @@ const HomeText = styled.div`
       p {
         font-size: ${fonts.size.sm};
         font-weight: 100;
-      }
-    `
-  }}
-`
-
-const HomeBtnList = styled.div`
-  width: 25vw;
-  height: 15vw;
-  margin: 7.5vh auto;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-`
-
-const HomeBtn = styled.button`
-  ${({ theme, delay }) => {
-    const { colors, fonts } = theme
-    return css`
-      width: 90%;
-      height: 2.75vw;
-
-      margin: 0vw auto;
-      opacity: 0%;
-
-      border: 0;
-      border-radius: 25px;
-      background-color: ${colors.white};
-
-      font-size: ${fonts.size.sm};
-      mix-blend-mode: screen;
-
-      transition: 0.3s all ease-in-out;
-
-      animation: ${fadeIn} 2s 0.25s;
-      animation-fill-mode: forwards;
-      animation-delay: ${`${delay * 0.2}s`};
-
-      &:hover {
-        width: 92.5%;
-        height: 2.8vw;
-      }
-    `
-  }}
-`
-
-const HomeBottomText = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins } = theme
-    return css`
-      width: 23.5%;
-      margin: ${margins.xl} auto;
-
-      color: ${colors.white};
-      opacity: 0%;
-
-      animation: ${fadeIn} 2s 1s;
-      animation-fill-mode: forwards;
-
-      h5 {
-        font-size: ${fonts.size.base};
-      }
-
-      p {
-        font-weight: 100;
-        font-size: ${fonts.size.xsm};
       }
     `
   }}

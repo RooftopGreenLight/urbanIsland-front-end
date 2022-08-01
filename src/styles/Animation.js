@@ -62,6 +62,21 @@ export const fadeIn = keyframes`
   }
 `
 
+export const fadeInBottomText = keyframes`
+  0% {
+    opacity: 0%;
+    transform: translate3d(0, 10%, 0);
+  }
+  10% {
+    opacity: 100%;
+    transform: translateZ(0);
+  }
+  100% {
+    opacity: 100%;
+    transform: translateZ(0);
+  }
+`
+
 export const changeBackground = keyframes`
   0%, 100% {
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${bgImg1});
