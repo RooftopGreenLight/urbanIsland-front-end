@@ -1,19 +1,21 @@
 import React from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
-const ButtonWrapper = styled.button`
-  color: gray;
-  background-color: black;
-  border: 2px solid #000000;
-  border-radius: 10px;
-  width: 400px;
-  height: 40px;
-  padding: 0px 4px;
-  font-size: 17px;
-  font-weight: 500;
-  text-align: center;
+const Wrapper = styled.button`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.sm} ${paddings.base};
+      background-color: #000000;
+      border-radius: 10px;
+      text-align: center;
+      color: ${colors.white};
+      font-size: ${fonts.size.sm};
+    `
+  }}
 `
 const Button = ({ ...data }) => {
-  return <ButtonWrapper onClick={data.onClick}>{data.name}</ButtonWrapper>
+  return <Wrapper onClick={data.onClick}>{data.name}</Wrapper>
 }
 export default Button

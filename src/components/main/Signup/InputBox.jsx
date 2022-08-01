@@ -1,22 +1,38 @@
 import React from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import "fonts/font.css"
 
-const BoxWrapper = styled.input`
-  color: black;
-  background-color: white;
-  border: 2px solid #000000;
-  border-radius: 10px;
-  width: 400px;
-  height: 40px;
-  padding: 0px 4px;
-  font-size: 17px;
-  font-weight: 500;
-  text-align: center;
-  margin-bottom: 5px;
-  font-family: "gmarketsans";
+const Wrapper = styled.div`
+  ${({ theme }) => {
+    const { paddings, margins } = theme
+    return css`
+      margin: ${margins.sm} auto;
+      input {
+        width: 100%;
+        padding: ${paddings.sm} ${paddings.base};
+
+        font-family: "gmarketsans";
+        background-color: #d9d9d9;
+        border: 0;
+        border-radius: 5px;
+
+        &::placeholder {
+          color: black;
+          text-align: center;
+        }
+
+        &::before {
+          background-color: #d9d9d9;
+        }
+      }
+    `
+  }}
 `
 const InputBox = ({ ...data }) => {
-  return <BoxWrapper {...data} />
+  return (
+    <Wrapper>
+      <input {...data} />
+    </Wrapper>
+  )
 }
 export default InputBox
