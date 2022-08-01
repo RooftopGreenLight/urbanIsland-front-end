@@ -20,8 +20,11 @@ const Wrapper = styled.footer`
       min-height: 4vh;
       background-color: transparent;
 
+      position: relative;
+      bottom: 2vh;
+
       text-align: center;
-      color: ${colors.blue.secondary};
+      color: #000000;
       font-size: ${fonts.size.xsm};
     `
   }}

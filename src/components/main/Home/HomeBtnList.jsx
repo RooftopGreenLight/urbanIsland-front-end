@@ -51,6 +51,7 @@ const HomeBtn = styled.button`
       &:hover {
         width: 92.5%;
         height: 2.8vw;
+        font-weight: 700;
       }
     `
   }}

@@ -1,12 +1,24 @@
 import styled, { css } from "styled-components"
 
-import { fadeIn } from "styles/Animation"
+import { fadeInBottomText } from "styles/Animation"
+import { MainPageBottomText } from "constants/MainPageBottomText"
+import { useEffect, useRef, useState } from "react"
 
 const HomeBottomText = () => {
+  const textSection = useRef()
+  const [textIdx, setTextIdx] = useState(0)
+  useEffect(() => {
+    const changeTextIdx = () => {
+      setInterval(() => {
+        setTextIdx(prev => (prev === MainPageBottomText.length - 1 ? 0 : prev + 1))
+      }, 10000)
+    }
+    setTimeout(changeTextIdx, 1000)
+  }, [])
   return (
-    <Wrapper>
-      <h5>Soil Bank.</h5>
-      <p>옥상녹화는 투수면적을 늘림으로 도시 홍수를 막을 수 있습니다.</p>
+    <Wrapper ref={textSection}>
+      <h5>{MainPageBottomText[textIdx].title}</h5>
+      <p>{MainPageBottomText[textIdx].desc}</p>
     </Wrapper>
   )
 }
@@ -21,7 +33,7 @@ const Wrapper = styled.div`
       color: ${colors.white};
       opacity: 0%;
 
-      animation: ${fadeIn} 2s 1s;
+      animation: ${fadeInBottomText} 10s 1s infinite;
       animation-fill-mode: forwards;
 
       h5 {
