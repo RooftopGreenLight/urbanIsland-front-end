@@ -1,34 +1,35 @@
 import styled, { css } from "styled-components"
 
-import { fadeIn, changeBackground } from "styles/Animation"
+import HomeBtnList from "components/main/Home/HomeBtnList"
+import HomeBottomText from "components/main/Home/HomeBottomText"
+import Information from "components/main/Home/Information/Information"
+
+import { changeBackground } from "styles/Animation"
 import bgImg1 from "assets/img/background1.jpg"
 import { MainPageBtnText } from "constants/MainPageBtn"
 
 const Home = () => {
   return (
     <Wrapper>
-      <Background>
+      <Homepage>
         <HomeText>
           <h3>Urban Island</h3>
           <p>도심 속, 우리들의 숨겨진 쉼터</p>
         </HomeText>
-        <HomeBtnList>
-          {MainPageBtnText.map((elm, idx) => (
-            <HomeBtn key={idx} delay={idx}>
-              {elm}
-            </HomeBtn>
-          ))}
-        </HomeBtnList>
-        <HomeBottomText>
-          <h5>Soil Bank.</h5>
-          <p>옥상녹화는 투수면적을 늘림으로 도시 홍수를 막을 수 있습니다.</p>
-        </HomeBottomText>
-      </Background>
+        <HomeBtnList />
+        <HomeBottomText />
+      </Homepage>
+      <Information />
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
+  width: 100vw;
+  min-height: 100vh;
+`
+
+const Homepage = styled.div`
   width: 100vw;
   min-height: 100vh;
 
@@ -39,16 +40,12 @@ const Wrapper = styled.div`
   animation-fill-mode: forwards;
 `
 
-const Background = styled.div`
-  position: relative;
-  top: 10vw;
-`
-
 const HomeText = styled.div`
   ${({ theme }) => {
     const { colors, fonts } = theme
     return css`
       width: 100%;
+      padding-top: 10vw;
 
       color: ${colors.white};
       font-family: ${fonts.family.detail};
