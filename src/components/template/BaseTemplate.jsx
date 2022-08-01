@@ -18,14 +18,14 @@ const TemplateLayout = styled.div`
   flex-direction: column;
 
   & > .content {
-    min-height: 90vh;
+    min-height: 100vh;
 
-    position: absolute;
-    top: 0;
+    position: relative;
+    top: -3vw;
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
   }
 `
