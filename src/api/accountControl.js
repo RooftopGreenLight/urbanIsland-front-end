@@ -70,11 +70,11 @@ export const accountControl = {
     let response
     try {
       response = await axiosInstance({
+        headers: {
+          "refresh-token": `Bearer ${refresh}`,
+        },
         method: "POST",
         url: "auth/check-refresh-token",
-        data: {
-          refreshToken: refresh,
-        },
       })
       const { accessToken, refreshToken } = response.data
       addTokenToLocalStorage(accessToken, refreshToken)
@@ -90,6 +90,7 @@ export const accountControl = {
   getLogOut: () => {
     localStorage.removeItem("access_token")
     localStorage.removeItem("refresh_token")
+    window.location.reload()
   },
 }
 

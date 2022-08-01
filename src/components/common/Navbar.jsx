@@ -1,19 +1,30 @@
 import styled, { css } from "styled-components"
-import { useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import { Link } from "react-router-dom"
 
 import { AuthStateContext } from "module/Auth"
+import { accountControl } from "api/accountControl"
 
 const Navbar = () => {
   const authState = useContext(AuthStateContext)
-  const { authenticated } = authState
+  const [isLogin, setLogin] = useState(false)
+  useEffect(() => {
+    setLogin(authState.authenticated)
+  }, [authState])
   return (
     <NavbarLayout>
       <LinkElement to="/">Main</LinkElement>
-      {authenticated || (
+      {!isLogin ? (
         <>
           <LinkElement to="/login">Login</LinkElement>
           <LinkElement to="/signup">Register</LinkElement>
+        </>
+      ) : (
+        <>
+          <LinkElement to="/mypage">MyPage</LinkElement>
+          <LinkElement replace={true} to="/" onClick={accountControl.getLogOut}>
+            Log Out
+          </LinkElement>
         </>
       )}
     </NavbarLayout>
