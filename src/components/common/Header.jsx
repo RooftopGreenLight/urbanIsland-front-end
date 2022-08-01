@@ -4,7 +4,7 @@ import Navbar from "components/common/Navbar"
 const Header = () => {
   return (
     <Wrapper>
-      <Navbar textColor={"white"} />
+      <Navbar />
     </Wrapper>
   )
 }

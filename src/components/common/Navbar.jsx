@@ -1,19 +1,30 @@
 import styled, { css } from "styled-components"
-import { useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import { Link } from "react-router-dom"
 
-import { AuthContext } from "pages/MainPage"
+import { AuthStateContext } from "module/Auth"
+import { accountControl } from "api/accountControl"
 
-const Navbar = ({ textColor }) => {
-  const { authState } = useContext(AuthContext)
-  const { authenticated } = authState
+const Navbar = () => {
+  const authState = useContext(AuthStateContext)
+  const [isLogin, setLogin] = useState(false)
+  useEffect(() => {
+    setLogin(authState.authenticated)
+  }, [authState])
   return (
-    <NavbarLayout textColor={textColor}>
+    <NavbarLayout>
       <LinkElement to="/">Main</LinkElement>
-      {authenticated || (
+      {!isLogin ? (
         <>
           <LinkElement to="/login">Login</LinkElement>
           <LinkElement to="/signup">Register</LinkElement>
+        </>
+      ) : (
+        <>
+          <LinkElement to="/mypage">MyPage</LinkElement>
+          <LinkElement replace={true} to="/" onClick={accountControl.getLogOut}>
+            Log Out
+          </LinkElement>
         </>
       )}
     </NavbarLayout>
@@ -21,7 +32,7 @@ const Navbar = ({ textColor }) => {
 }
 
 const NavbarLayout = styled.ul`
-  ${({ textColor }) => {
+  ${({ theme }) => {
     return css`
       width: 40vw;
       height: 3vw;
@@ -33,7 +44,7 @@ const NavbarLayout = styled.ul`
       justify-content: space-between;
 
       text-align: center;
-      color: ${textColor};
+      color: ${theme.colors.white};
     `
   }}
 `

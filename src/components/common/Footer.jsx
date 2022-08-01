@@ -17,11 +17,14 @@ const Wrapper = styled.footer`
   ${({ theme }) => {
     const { colors, fonts } = theme
     return css`
-      min-height: 8vh;
-      background-color: ${colors.blue.quaternary};
+      min-height: 4vh;
+      background-color: transparent;
+
+      position: relative;
+      bottom: 2vh;
 
       text-align: center;
-      color: ${colors.blue.secondary};
+      color: #000000;
       font-size: ${fonts.size.xsm};
     `
   }}
@@ -29,10 +32,10 @@ const Wrapper = styled.footer`
 
 const FooterContent = styled.div`
   ${({ theme }) => {
-    const { fonts } = theme
+    const { fonts, margins } = theme
     return css`
       height: 4vh;
-      padding: 2vh 0vw;
+      margin: ${margins.base} 0vw;
 
       strong {
         font-weight: ${fonts.weight.bold};
