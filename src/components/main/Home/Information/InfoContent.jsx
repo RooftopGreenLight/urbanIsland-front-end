@@ -12,6 +12,7 @@ import { useEffect, useRef } from "react"
 const iconList = { faTree: faTree, faSeedling: faSeedling, faTent: faTent }
 const imgList = { img1: bgImg1, img2: bgImg2, img3: bgImg3 }
 
+// scroll 이벤트 최적화를 위한 debounce 함수 선언
 const debounce = (callback, delay) => {
   let timer
   return (...args) => {
@@ -28,6 +29,7 @@ const InfoContent = ({ content }) => {
     const currentScrollY = parseInt(window.scrollY + window.innerHeight)
     const contentYOffset = parseInt(contentRef.current.offsetTop)
     // 현재 viewport 하단이 해당 컴포넌트 상단 영역보다 아래인지를 체크.
+    // 만약 애니메이션이 실행되었다면 window에 할당된 이벤트 제거.
     if (contentYOffset < currentScrollY) {
       contentRef.current.style.animationPlayState = "running"
       window.removeEventListener("scroll", checkCurrentYOffset)
@@ -58,7 +60,7 @@ const InfoContent = ({ content }) => {
 
 const Wrapper = styled.div`
   width: 41.5vw;
-  height: 100vh;
+  height: 95vh;
 
   opacity: 0;
 
@@ -98,7 +100,7 @@ const IntroText = styled.div`
       }
 
       p {
-        width: 75%;
+        width: 80%;
         margin: 0;
         white-space: pre-wrap;
 
