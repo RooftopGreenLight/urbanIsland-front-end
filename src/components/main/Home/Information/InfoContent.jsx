@@ -26,7 +26,7 @@ const InfoContent = ({ content }) => {
   const contentRef = useRef()
 
   const runningAnimate = () => {
-    const currentScrollY = parseInt(window.scrollY + window.innerHeight)
+    const currentScrollY = parseInt(window.scrollY + window.innerHeight * 0.9)
     const contentYOffset = parseInt(contentRef.current.offsetTop)
     // 현재 viewport 하단이 해당 컴포넌트 상단 영역보다 아래인지를 체크.
     // 만약 애니메이션이 실행되었다면 window에 할당된 이벤트 제거.
