@@ -3,6 +3,7 @@ import styled, { css } from "styled-components"
 import bgImg from "assets/img/background1.jpg"
 import { fadeIn } from "styles/Animation"
 import SignupForm from "./SignupForm"
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;

@@ -62,7 +62,7 @@ const Wrapper = styled.div`
   .modal.openModal {
     display: flex;
     align-items: center;
-    animation: ${modalBgShow}0.3s;
+    animation: ${modalBgShow} 0.3s;
   }
 `
 

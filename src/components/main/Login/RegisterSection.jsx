@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom"
 import styled, { css } from "styled-components"
 
+import cardImg from "assets/img/logincard2.jpg"
+
 const RegisterSection = () => {
   return (
     <Wrapper>
-      <p>아직 회원이 아니시군요?</p>
-      <RegisterBtn to="/signup">회원가입하기</RegisterBtn>
+      {/* <p>아직 회원이 아니시군요?</p>
+      <RegisterBtn to="/signup">회원가입하기</RegisterBtn> */}
     </Wrapper>
   )
 }
@@ -14,10 +16,14 @@ const Wrapper = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins } = theme
     return css`
-      width: 50%;
-      margin: ${margins.sm} auto 2.5vw auto;
+      width: 42.5%;
+      height: 70vh;
+      margin: auto 0vw;
 
-      background-color: ${colors.white};
+      border-radius: 0px 25px 25px 0px;
+
+      background-image: linear-gradient(rgba(0, 76, 9, 0.1), rgba(0, 62, 9, 0.05)), url(${cardImg});
+      background-size: cover;
       text-align: center;
 
       p {
