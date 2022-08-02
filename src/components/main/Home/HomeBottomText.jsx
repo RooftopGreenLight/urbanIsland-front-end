@@ -34,7 +34,6 @@ const Wrapper = styled.div`
       position: relative;
       bottom: -12.5vw;
 
-      opacity: 0%;
       animation: ${fadeInBottomText} 10s infinite;
       animation-fill-mode: forwards;
       h5 {
