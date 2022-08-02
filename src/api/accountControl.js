@@ -90,6 +90,7 @@ export const accountControl = {
   getLogOut: () => {
     localStorage.removeItem("access_token")
     localStorage.removeItem("refresh_token")
+    window.location.reload()
   },
 }
 

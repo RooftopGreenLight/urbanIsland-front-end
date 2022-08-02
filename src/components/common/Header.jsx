@@ -1,18 +1,16 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import Navbar from "components/common/Navbar"
 
 const Header = () => {
-  return (
-    <Wrapper>
-      <Navbar textColor={"white"} />
-    </Wrapper>
-  )
+  return <Wrapper></Wrapper>
 }
 
 const Wrapper = styled.header`
-  position: sticky;
+  width: 100vw;
+  position: absolute;
   top: 0;
-  z-index: 1;
+
+  display: flex;
 `
 
 export default Header

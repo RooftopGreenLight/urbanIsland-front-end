@@ -1,10 +1,11 @@
+import { Link } from "react-router-dom"
 import styled, { css } from "styled-components"
 
 const RegisterSection = () => {
   return (
     <Wrapper>
       <p>아직 회원이 아니시군요?</p>
-      <RegisterBtn>회원가입하기</RegisterBtn>
+      <RegisterBtn to="/signup">회원가입하기</RegisterBtn>
     </Wrapper>
   )
 }
@@ -29,7 +30,7 @@ const Wrapper = styled.div`
   }}
 `
 
-const RegisterBtn = styled.button`
+const RegisterBtn = styled(Link)`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`

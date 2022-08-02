@@ -1,39 +1,46 @@
 import styled, { css } from "styled-components"
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
 import { AuthContext } from "pages/MainPage"
 
-const Navbar = ({ textColor }) => {
+const Navbar = () => {
   const { authState } = useContext(AuthContext)
   const { authenticated } = authState
+
   return (
-    <NavbarLayout textColor={textColor}>
+    <Wrapper>
       <LinkElement to="/">Main</LinkElement>
-      {authenticated || (
+      {!authenticated ? (
         <>
           <LinkElement to="/login">Login</LinkElement>
           <LinkElement to="/signup">Register</LinkElement>
         </>
+      ) : (
+        <>
+          <LinkElement to="/login">Mypage</LinkElement>
+          <LinkElement to="/signup">Logout</LinkElement>
+        </>
       )}
-    </NavbarLayout>
+    </Wrapper>
   )
 }
 
-const NavbarLayout = styled.ul`
-  ${({ textColor }) => {
+const Wrapper = styled.ul`
+  ${({ theme }) => {
+    const { colors } = theme
     return css`
-      width: 40vw;
+      width: 20vw;
       height: 3vw;
 
       margin: 0vw auto;
 
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: space-evenly;
 
       text-align: center;
-      color: ${textColor};
+      color: ${colors.white};
     `
   }}
 `

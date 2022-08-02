@@ -34,21 +34,14 @@ export const raiseText = keyframes`
   }
 `
 
-export const shakeText = keyframes`
+export const leftToRight = keyframes`
   0% {
-    transform: translateX(0px);
+    opacity: 0%;
+    transform: translate3d(-15%, 0, 0);
   }
-
-  50% {
-    transform: translateX(-100px);
-  }
-
-  75% {
-    transform: translateX(100px);
-  }
-
   100% {
-    transform: translateX(0px);
+    opacity: 100%;
+    transform: translate3d(0, 0, 0);
   }
 `
 export const fadeIn = keyframes`
@@ -62,18 +55,32 @@ export const fadeIn = keyframes`
   }
 `
 
-export const changeBackground = keyframes`
-  0%, 100% {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${bgImg1});
+export const fadeInBottomText = keyframes`
+  0% {
+    opacity: 0%;
+    transform: translate3d(0, 10%, 0);
   }
-  25% {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${bgImg2});
+  10% {
+    opacity: 100%;
+    transform: translate3d(0, 0, 0);
   }
-  50% {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${bgImg3});
+  90% {
+    opacity: 100%;
+    transform: translate3d(0, 0, 0);
   }
-  75% {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${bgImg4});
+  100% {
+    opacity: 0%;
+    transform: translate3d(0, 10%, 0);
   }
+`
 
+export const rightToLeft = keyframes`
+  0% {
+    opacity: 0%;
+    transform: translate3d(20%, 0, 0);
+  }
+  100% {
+    opacity: 100%;
+    transform: translate3d(0, 0, 0);
+  }
 `
