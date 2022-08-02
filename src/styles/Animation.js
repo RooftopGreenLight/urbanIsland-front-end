@@ -1,10 +1,5 @@
 import { keyframes } from "styled-components"
 
-import bgImg1 from "assets/img/background1.jpg"
-import bgImg2 from "assets/img/background2.jpg"
-import bgImg3 from "assets/img/background3.jpg"
-import bgImg4 from "assets/img/background4.jpg"
-
 export const modalShow = keyframes`
   from {
     opacity: 0;
@@ -22,7 +17,7 @@ export const modalBgShow = keyframes`
   }
   to {
     opacity: 1;
-  }
+  } 
 `
 
 export const raiseText = keyframes`
