@@ -7,10 +7,10 @@ import { fadeIn } from "styles/Animation"
 const CardSection = () => {
   return (
     <Wrapper>
-      <h5>Aren't you Join yet?</h5>
+      <h5>Already join our Land?</h5>
       <CardContent>
-        <p>아직 회원이 아니신가요?</p>
-        <CardBtn to="/signup">회원가입</CardBtn>
+        <p>이미 Urban Island의 회원이신가요?</p>
+        <CardBtn to="/login">로그인</CardBtn>
       </CardContent>
     </Wrapper>
   )

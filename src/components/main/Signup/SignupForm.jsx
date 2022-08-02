@@ -27,14 +27,14 @@ const SignupForm = () => {
   const navigate = useNavigate()
   const { email, verifiedEmail, verifiedCode, pwd, repwd, username, code } = signupInput
 
-  const onChangeInput = e => {
+  const insertInput = e => {
     const { name, value } = e.target
     if (name === email) {
     }
     setSignupInput({ ...signupInput, [name]: value })
   }
 
-  const onClickSubmit = async () => {
+  const submitRegister = async () => {
     if (verifiedEmail * pwd * repwd * username === 0) {
       feedbackMsg.current.innerText = "필수정보를 다 기입해주세요"
       return
@@ -58,7 +58,7 @@ const SignupForm = () => {
     return emailRegex.match(email)
   }
 
-  const onClickEmailCheck = async () => {
+  const checkEmailAddress = async () => {
     if (!isEmail(email)) {
       feedbackMsg.current.innerText = "유효한 이메일 양식이 아닙니다."
       return
@@ -72,7 +72,7 @@ const SignupForm = () => {
       feedbackMsg.current.innerText = err.message
     }
   }
-  const onClickVerifiedCodeCheck = () => {
+  const checkVerifiedCode = () => {
     if (verifiedCode === code) {
       //코드 일치시
       setSignupInput({ ...signupInput, verifiedEmail: email })
@@ -87,41 +87,36 @@ const SignupForm = () => {
       <SignupInput
         name="email"
         value={verifiedEmail}
-        placeholder="이메일을 입력해 주세요"
-        onChange={onChangeInput}
+        placeholder="Email Address"
+        onChange={insertInput}
         disabled
       />
       <EmailVerifiedBtn onClick={() => toggleModel(true)}>이메일 인증</EmailVerifiedBtn>
       <Modal open={modalOpen} close={() => toggleModel(false)}>
-        <InputBox name="email" placeholder="이메일을 입력해 주세요" onChange={onChangeInput} />
-        <button onClick={onClickEmailCheck}>이메일 인증</button>
+        <InputBox name="email" placeholder="이메일을 입력해 주세요" onChange={insertInput} />
+        <button onClick={checkEmailAddress}>이메일 인증</button>
         {code && (
           <>
             <InputBox
               name="verifiedCode"
-              placeholder="이메일을 인증코드를 입력해 주세요"
-              onChange={onChangeInput}
+              placeholder="전송된 인증코드를 입력해 주세요"
+              onChange={insertInput}
             />
-            <button onClick={onClickVerifiedCodeCheck}>인증번호 확인</button>
+            <button onClick={checkVerifiedCode}>인증번호 확인</button>
           </>
         )}{" "}
         <SignUpFeedback ref={feedbackMsg}></SignUpFeedback>
       </Modal>
-      <SignupInput name="username" placeholder="이름" onChange={onChangeInput} />
-      <SignupInput
-        name="pwd"
-        placeholder="비밀번호를 입력해 주세요"
-        onChange={onChangeInput}
-        type="password"
-      />
+      <SignupInput name="username" placeholder="Username" onChange={insertInput} />
+      <SignupInput name="pwd" placeholder="Password" onChange={insertInput} type="password" />
       <SignupInput
         name="repwd"
-        placeholder="비밀번호를 확인해 주세요"
-        onChange={onChangeInput}
+        placeholder="Verified Password"
+        onChange={insertInput}
         type="password"
       />
       <SignUpFeedback ref={feedbackMsg}>회원가입 정보를 입력해주세요.</SignUpFeedback>
-      <SignupBtn onClick={onClickSubmit}>회원가입</SignupBtn>
+      <SignupBtn onClick={submitRegister}>회원가입</SignupBtn>
     </Wrapper>
   )
 }
