@@ -7,32 +7,6 @@ import { useNavigate } from "react-router-dom"
 import { Modal } from "./Modal"
 import { accountControl } from "api/accountControl"
 
-const Wrapper = styled.div`
-  ${({ theme }) => {
-    const { colors, margins } = theme
-    return css`
-      width: 50%;
-      margin: ${margins.base} auto;
-
-      background-color: ${colors.white};
-      text-align: center;
-    `
-  }}
-`
-
-const SignUpFeedback = styled.p`
-  ${({ theme }) => {
-    const { colors, fonts, margins } = theme
-    return css`
-      margin: ${margins.sm} 0vw;
-      text-align: center;
-      color: ${colors.blue.secondary};
-      font-size: ${fonts.size.xsm};
-      font-weight: 100;
-    `
-  }}
-`
-
 const SignupForm = () => {
   const feedbackMsg = useRef()
   const [modalOpen, setModalOpen] = useState(false)
@@ -46,12 +20,10 @@ const SignupForm = () => {
     code: "",
   })
 
-  const openModal = () => {
-    setModalOpen(true)
+  const toggleModel = toggle => {
+    setModalOpen(toggle)
   }
-  const closeModal = () => {
-    setModalOpen(false)
-  }
+
   const navigate = useNavigate()
   const { email, verifiedEmail, verifiedCode, pwd, repwd, username, code } = signupInput
 
@@ -81,28 +53,21 @@ const SignupForm = () => {
 
   const isEmail = email => {
     const emailRegex =
-      /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i
+      "/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/"
 
-    return emailRegex.test(email)
+    return emailRegex.match(email)
   }
 
   const onClickEmailCheck = async () => {
-    const emailReg =
-      "/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/"
-    if (!emailReg.match(email)) {
+    if (!isEmail(email)) {
       feedbackMsg.current.innerText = "유효한 이메일 양식이 아닙니다."
       return
     }
     try {
       await accountControl.getSignUpEmail(email) //중복체크
-      //중복아니면
-      try {
-        feedbackMsg.current.innerText = ""
-        const result2 = await accountControl.postVerifyEmail(email) //이메일인증으로
-        setSignupInput({ ...signupInput, code: result2.data })
-      } catch (err) {
-        feedbackMsg.current.innerText = err.message
-      }
+      feedbackMsg.current.innerText = ""
+      const result2 = await accountControl.postVerifyEmail(email) //이메일인증으로
+      setSignupInput({ ...signupInput, code: result2.data })
     } catch (err) {
       feedbackMsg.current.innerText = err.message
     }
@@ -111,24 +76,23 @@ const SignupForm = () => {
     if (verifiedCode === code) {
       //코드 일치시
       setSignupInput({ ...signupInput, verifiedEmail: email })
-      closeModal()
-    } else {
-      feedbackMsg.current.innerText = "인증번호 재확인"
+      toggleModel(false)
+      return
     }
+    feedbackMsg.current.innerText = "인증번호 재확인"
   }
+
   return (
     <Wrapper>
-      <InputBox
+      <SignupInput
         name="email"
         value={verifiedEmail}
         placeholder="이메일을 입력해 주세요"
         onChange={onChangeInput}
         disabled
       />
-      <div>
-        <button onClick={openModal}>이메일 인증</button>
-      </div>
-      <Modal open={modalOpen} close={closeModal}>
+      <EmailVerifiedBtn onClick={() => toggleModel(true)}>이메일 인증</EmailVerifiedBtn>
+      <Modal open={modalOpen} close={() => toggleModel(false)}>
         <InputBox name="email" placeholder="이메일을 입력해 주세요" onChange={onChangeInput} />
         <button onClick={onClickEmailCheck}>이메일 인증</button>
         {code && (
@@ -143,22 +107,107 @@ const SignupForm = () => {
         )}{" "}
         <SignUpFeedback ref={feedbackMsg}></SignUpFeedback>
       </Modal>
-      <InputBox
+      <SignupInput name="username" placeholder="이름" onChange={onChangeInput} />
+      <SignupInput
         name="pwd"
         placeholder="비밀번호를 입력해 주세요"
         onChange={onChangeInput}
         type="password"
       />
-      <InputBox
+      <SignupInput
         name="repwd"
         placeholder="비밀번호를 확인해 주세요"
         onChange={onChangeInput}
         type="password"
       />
-      <InputBox name="username" placeholder="이름" onChange={onChangeInput} />
-      <Button name={"회원가입"} onClick={onClickSubmit} />
       <SignUpFeedback ref={feedbackMsg}>회원가입 정보를 입력해주세요.</SignUpFeedback>
+      <SignupBtn onClick={onClickSubmit}>회원가입</SignupBtn>
     </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  ${({ theme }) => {
+    const { colors, margins } = theme
+    return css`
+      width: 75%;
+      margin: ${margins.base} auto;
+
+      background-color: ${colors.white};
+      text-align: center;
+    `
+  }}
+`
+
+const SignUpFeedback = styled.p`
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      margin: ${margins.lg} auto ${margins.sm} auto;
+      text-align: center;
+      color: #000000;
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
+    `
+  }}
+`
+
+const SignupInput = styled.input`
+  ${({ theme, name }) => {
+    const { paddings, margins } = theme
+    return css`
+      width: ${name === "email" ? `70%` : `100%`};
+      padding: ${paddings.sm};
+      margin-bottom: ${margins.base};
+
+      background-color: transparent;
+      border: 0;
+      border-bottom: 1px solid #232323;
+
+      &::placeholder {
+        color: #3e3e3e;
+        text-align: left;
+        font-weight: 100;
+      }
+
+      &::before {
+        background-color: #d9d9d9;
+      }
+    `
+  }}
+`
+
+const EmailVerifiedBtn = styled.button`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 25%;
+      padding: ${paddings.sm};
+      margin-left: 5%;
+
+      background-color: #000000;
+      border-radius: 25px;
+      text-align: center;
+      color: ${colors.white};
+      font-size: ${fonts.size.xsm};
+    `
+  }}
+`
+
+const SignupBtn = styled.button`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.sm} ${paddings.base};
+
+      background-color: #000000;
+      border-radius: 25px;
+      text-align: center;
+      color: ${colors.white};
+      font-size: ${fonts.size.sm};
+    `
+  }}
+`
+
 export default SignupForm

@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { modalBgShow, modalShow } from "styles/Animation"
+
 const Wrapper = styled.div`
   .modal {
     display: none;
