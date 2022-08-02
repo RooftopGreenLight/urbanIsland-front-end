@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components"
 
 import { fadeInBottomText } from "styles/Animation"
-import { MainPageBottomText } from "constants/MainPageBottomText"
+import { MainPageBottomText } from "constants/MainPageInformation"
 import { useEffect, useRef, useState } from "react"
 
 const HomeBottomText = () => {
@@ -13,7 +13,7 @@ const HomeBottomText = () => {
         setTextIdx(prev => (prev === MainPageBottomText.length - 1 ? 0 : prev + 1))
       }, 10000)
     }
-    setTimeout(changeTextIdx, 1000)
+    changeTextIdx()
   }, [])
   return (
     <Wrapper ref={textSection}>
@@ -27,12 +27,15 @@ const Wrapper = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins } = theme
     return css`
-      width: 23.5%;
+      width: 27.5%;
       margin: ${margins.xl} auto;
       color: ${colors.white};
 
+      position: relative;
+      bottom: -12.5vw;
+
       opacity: 0%;
-      animation: ${fadeInBottomText} 10s 1s infinite;
+      animation: ${fadeInBottomText} 10s infinite;
       animation-fill-mode: forwards;
       h5 {
         font-size: ${fonts.size.base};

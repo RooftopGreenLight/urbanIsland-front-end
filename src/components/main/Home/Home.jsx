@@ -40,7 +40,7 @@ const HomeText = styled.div`
     const { colors, fonts } = theme
     return css`
       width: 100%;
-      padding-top: 10vw;
+      padding-top: 7.5vw;
 
       color: ${colors.white};
       font-family: ${fonts.family.detail};

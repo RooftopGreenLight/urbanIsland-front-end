@@ -1,15 +1,40 @@
 import styled, { css } from "styled-components"
+import { useContext } from "react"
 import { Link } from "react-router-dom"
 
-import { fadeIn } from "styles/Animation"
+import { AuthContext } from "pages/MainPage"
+import { leftToRight } from "styles/Animation"
+import { accountControl } from "api/accountControl"
 
 const HomeBtnList = () => {
+  const { authState } = useContext(AuthContext)
+  const { authenticated } = authState
   return (
     <Wrapper>
-      <HomeBtn>옥상시설 예약</HomeBtn>
-      <HomeBtn>지원사업 열람</HomeBtn>
-      <HomeBtn>옥상지기 신청</HomeBtn>
-      <HomeBtn>로그인</HomeBtn>
+      <HomeBtn to="/" delay={0}>
+        옥상시설 예약
+      </HomeBtn>
+      <HomeBtn to="/" delay={1}>
+        지원사업 열람
+      </HomeBtn>
+      <HomeBtn to="/" delay={2}>
+        옥상지기 신청
+      </HomeBtn>
+      {authenticated ? (
+        <>
+          {" "}
+          <HomeBtn to="/mypage" delay={3}>
+            마이페이지
+          </HomeBtn>
+          <HomeBtn to="/" delay={3} onClick={accountControl.getLogOut}>
+            로그아웃
+          </HomeBtn>
+        </>
+      ) : (
+        <HomeBtn to="/login" delay={3}>
+          로그인
+        </HomeBtn>
+      )}
     </Wrapper>
   )
 }
@@ -42,15 +67,14 @@ const HomeBtn = styled(Link)`
       font-weight: 100;
       mix-blend-mode: screen;
 
-      transition: 0.3s all ease-in-out;
-      animation: ${fadeIn} 2s 0.25s;
+      transition: 0.15s font-weight ease-in-out;
+      animation: ${leftToRight} 2s 0.25s;
       animation-fill-mode: forwards;
       animation-delay: ${`${delay * 0.2}s`};
 
       &:hover {
-        width: 92.5%;
-        height: 2.8vw;
-        font-weight: 700;
+        font-weight: 400;
+        text-shadow: 0 0 3px #fff;
       }
     `
   }}
