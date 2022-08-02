@@ -1,14 +1,15 @@
 import styled, { css } from "styled-components"
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
 import { AuthContext } from "pages/MainPage"
 
-const Navbar = ({ textColor }) => {
+const Navbar = () => {
   const { authState } = useContext(AuthContext)
   const { authenticated } = authState
+
   return (
-    <NavbarLayout textColor={textColor}>
+    <Wrapper>
       <LinkElement to="/">Main</LinkElement>
       {authenticated || (
         <>
@@ -16,12 +17,13 @@ const Navbar = ({ textColor }) => {
           <LinkElement to="/signup">Register</LinkElement>
         </>
       )}
-    </NavbarLayout>
+    </Wrapper>
   )
 }
 
-const NavbarLayout = styled.ul`
-  ${({ textColor }) => {
+const Wrapper = styled.ul`
+  ${({ theme }) => {
+    const { colors } = theme
     return css`
       width: 40vw;
       height: 3vw;
@@ -33,7 +35,7 @@ const NavbarLayout = styled.ul`
       justify-content: space-between;
 
       text-align: center;
-      color: ${textColor};
+      color: ${colors.white};
     `
   }}
 `

@@ -18,7 +18,7 @@ const Wrapper = styled.footer`
     const { colors, fonts } = theme
     return css`
       min-height: 8vh;
-      background-color: ${colors.blue.quaternary};
+      background-color: ${colors.white};
 
       text-align: center;
       color: ${colors.blue.secondary};

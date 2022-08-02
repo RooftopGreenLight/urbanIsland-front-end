@@ -4,8 +4,7 @@ import HomeBtnList from "components/main/Home/HomeBtnList"
 import HomeBottomText from "components/main/Home/HomeBottomText"
 import Information from "components/main/Home/Information/Information"
 
-import { changeBackground } from "styles/Animation"
-import bgImg1 from "assets/img/background1.jpg"
+import bgImg2 from "assets/img/background2.jpg"
 
 const Home = () => {
   return (
@@ -32,11 +31,8 @@ const Homepage = styled.div`
   width: 100vw;
   min-height: 100vh;
 
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${bgImg1});
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${bgImg2});
   background-size: cover;
-
-  animation: ${changeBackground} 40s infinite;
-  animation-fill-mode: forwards;
 `
 
 const HomeText = styled.div`

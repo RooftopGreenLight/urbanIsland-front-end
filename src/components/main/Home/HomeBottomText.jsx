@@ -30,6 +30,7 @@ const Wrapper = styled.div`
       width: 23.5%;
       margin: ${margins.xl} auto;
       color: ${colors.white};
+
       opacity: 0%;
       animation: ${fadeInBottomText} 10s 1s infinite;
       animation-fill-mode: forwards;

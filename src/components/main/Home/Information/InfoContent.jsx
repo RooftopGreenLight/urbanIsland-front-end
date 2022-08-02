@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import bgImg1 from "assets/img/background1.jpg"
+import bgImg2 from "assets/img/background2.jpg"
 
 const InfoContent = () => {
   return (
@@ -34,7 +34,7 @@ const IntroText = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins } = theme
     return css`
-      margin: ${margins.xl} 0vw;
+      margin-bottom: ${margins.lg};
 
       h5 {
         margin: ${margins.base} 0vw;
@@ -46,6 +46,7 @@ const IntroText = styled.div`
         width: 50%;
         font-size: ${fonts.size.xsm};
         font-weight: 100;
+        line-height: 1.25;
       }
     `
   }}
@@ -53,9 +54,9 @@ const IntroText = styled.div`
 
 const IntroImg = styled.div`
   width: 100%;
-  height: 50%;
+  height: 70%;
 
-  background-image: url(${bgImg1});
+  background-image: url(${bgImg2});
   background-size: cover;
 `
 
