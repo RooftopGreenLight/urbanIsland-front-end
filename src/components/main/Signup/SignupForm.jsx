@@ -1,10 +1,7 @@
-import React from "react"
 import styled, { css } from "styled-components"
-import InputBox from "./InputBox"
-import Button from "./Button"
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import { Modal } from "./Modal"
+import SignupModal from "components/main/Signup/SignupModal"
 import { accountControl } from "api/accountControl"
 
 const SignupForm = () => {
@@ -20,12 +17,12 @@ const SignupForm = () => {
     code: "",
   })
 
-  const toggleModel = toggle => {
-    setModalOpen(toggle)
-  }
-
   const navigate = useNavigate()
   const { email, verifiedEmail, verifiedCode, pwd, repwd, username, code } = signupInput
+
+  const toggleModal = () => {
+    setModalOpen(prev => !prev)
+  }
 
   const insertInput = e => {
     const { name, value } = e.target
@@ -34,7 +31,8 @@ const SignupForm = () => {
     setSignupInput({ ...signupInput, [name]: value })
   }
 
-  const submitRegister = async () => {
+  const submitRegister = async event => {
+    event.preventDefault()
     if (verifiedEmail * pwd * repwd * username === 0) {
       feedbackMsg.current.innerText = "필수정보를 다 기입해주세요"
       return
@@ -45,7 +43,8 @@ const SignupForm = () => {
     }
     try {
       await accountControl.postSignupData(verifiedEmail, pwd, username)
-      navigate("/login")
+      setTimeout(() => navigate("/login"), 750)
+      feedbackMsg.current.innerText = "회원가입이 완료되었습니다. 로그인 창으로 이동합니다."
     } catch (err) {
       feedbackMsg.current.innerText = err.message
     }
@@ -66,8 +65,8 @@ const SignupForm = () => {
     try {
       await accountControl.getSignUpEmail(email) //중복체크
       feedbackMsg.current.innerText = ""
-      const result2 = await accountControl.postVerifyEmail(email) //이메일인증으로
-      setSignupInput({ ...signupInput, code: result2.data })
+      const response = await accountControl.postVerifyEmail(email) //이메일인증으로
+      setSignupInput({ ...signupInput, code: response.data })
     } catch (err) {
       feedbackMsg.current.innerText = err.message
     }
@@ -76,7 +75,7 @@ const SignupForm = () => {
     if (verifiedCode === code) {
       //코드 일치시
       setSignupInput({ ...signupInput, verifiedEmail: email })
-      toggleModel(false)
+      toggleModal(false)
       return
     }
     feedbackMsg.current.innerText = "인증번호 재확인"
@@ -87,26 +86,11 @@ const SignupForm = () => {
       <SignupInput
         name="email"
         value={verifiedEmail}
-        placeholder="Email Address"
+        placeholder="Email Address (인증 필요)"
         onChange={insertInput}
         disabled
       />
-      <EmailVerifiedBtn onClick={() => toggleModel(true)}>이메일 인증</EmailVerifiedBtn>
-      <Modal open={modalOpen} close={() => toggleModel(false)}>
-        <InputBox name="email" placeholder="이메일을 입력해 주세요" onChange={insertInput} />
-        <button onClick={checkEmailAddress}>이메일 인증</button>
-        {code && (
-          <>
-            <InputBox
-              name="verifiedCode"
-              placeholder="전송된 인증코드를 입력해 주세요"
-              onChange={insertInput}
-            />
-            <button onClick={checkVerifiedCode}>인증번호 확인</button>
-          </>
-        )}{" "}
-        <SignUpFeedback ref={feedbackMsg}></SignUpFeedback>
-      </Modal>
+      <EmailVerifiedBtn onClick={() => toggleModal(true)}>이메일 인증</EmailVerifiedBtn>
       <SignupInput name="username" placeholder="Username" onChange={insertInput} />
       <SignupInput name="pwd" placeholder="Password" onChange={insertInput} type="password" />
       <SignupInput

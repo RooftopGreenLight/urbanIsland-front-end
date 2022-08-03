@@ -5,6 +5,7 @@ import { fadeIn } from "styles/Animation"
 
 import SignupForm from "components/main/Signup/SignupForm"
 import CardSection from "components/main/Signup/CardSection"
+import SignupModal from "./SignupModal"
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -55,15 +56,18 @@ const SignupSection = styled.div`
 
 const Signup = () => {
   return (
-    <Wrapper>
-      <SignupSection>
-        <SignupTitle>
-          <h5>{`Register\nour Service`}</h5>
-        </SignupTitle>
-        <SignupForm />
-      </SignupSection>
-      <CardSection />
-    </Wrapper>
+    <>
+      <Wrapper>
+        <SignupModal />
+        <SignupSection>
+          <SignupTitle>
+            <h5>{`Register\nour Service`}</h5>
+          </SignupTitle>
+          <SignupForm />
+        </SignupSection>
+        <CardSection />
+      </Wrapper>
+    </>
   )
 }
 

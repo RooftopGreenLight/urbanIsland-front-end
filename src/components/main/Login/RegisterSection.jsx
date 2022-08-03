@@ -30,7 +30,7 @@ const Wrapper = styled.div`
       background-size: cover;
       text-align: center;
 
-      animation: ${fadeIn} 2s 0s;
+      animation: ${fadeIn} 1s 0s;
       animation-fill-mode: forwards;
 
       h5 {

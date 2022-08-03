@@ -3,11 +3,11 @@ import { keyframes } from "styled-components"
 export const modalShow = keyframes`
   from {
     opacity: 0;
-    margin-top: -50px;
+    transform: translate3d(0, 10%, 0);
   }
   to {
     opacity: 1;
-    margin-top: 0;
+    transform: translate3d(0, 0, 0);
   }
 `
 
