@@ -25,7 +25,7 @@ const Wrapper = styled.div`
   width: 100vw;
   min-height: 100vh;
 
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${bgImg1});
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${bgImg2});
   background-size: cover;
 `
 

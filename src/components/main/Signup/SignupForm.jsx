@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import styled, { css } from "styled-components"
 
 import { accountControl } from "api/accountControl"
-import SignupModal from "./SignupModal"
+import SignupModal from "components/main/Signup/SignupModal"
 
 const SignupForm = () => {
   const feedbackMsg = useRef()
