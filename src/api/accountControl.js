@@ -62,7 +62,7 @@ export const accountControl = {
       addTokenToLocalStorage(accessToken, refreshToken)
       return response
     } catch (err) {
-      const errorMessage = err.response.data.data.errorMessage
+      const errorMessage = err.response.data.message
       throw new Error(errorMessage)
     }
   },

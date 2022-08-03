@@ -26,7 +26,7 @@ const HomeBtnList = () => {
           <HomeBtn to="/mypage" delay={3}>
             마이페이지
           </HomeBtn>
-          <HomeBtn to="/" delay={3} onClick={accountControl.getLogOut}>
+          <HomeBtn to="/" delay={4} onClick={accountControl.getLogOut}>
             로그아웃
           </HomeBtn>
         </>

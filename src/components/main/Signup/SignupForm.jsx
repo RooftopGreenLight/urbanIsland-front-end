@@ -75,6 +75,7 @@ const SignupForm = () => {
       return
     }
     setSignupInput({ ...signupInput, verifiedEmail: email })
+    setModalOn(false)
   }
 
   return (
