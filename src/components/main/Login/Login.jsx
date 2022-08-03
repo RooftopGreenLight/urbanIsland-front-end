@@ -65,7 +65,7 @@ const LoginSection = styled.div`
       display: flex;
       flex-direction: column;
 
-      animation: ${fadeIn} 2s 0s;
+      animation: ${fadeIn} 1s 0s;
       animation-fill-mode: forwards;
     `
   }}

@@ -4,14 +4,14 @@ import styled, { css } from "styled-components"
 import cardImg from "assets/img/logincard2.jpg"
 import { fadeIn } from "styles/Animation"
 
-const RegisterSection = () => {
+const CardSection = () => {
   return (
     <Wrapper>
-      <h5>Aren't you Join yet?</h5>
-      <RegisterContent>
-        <p>아직 회원이 아니신가요?</p>
-        <RegisterBtn to="/signup">회원가입</RegisterBtn>
-      </RegisterContent>
+      <h5>Already join our Land?</h5>
+      <CardContent>
+        <p>이미 Urban Island의 회원이신가요?</p>
+        <CardBtn to="/login">로그인</CardBtn>
+      </CardContent>
     </Wrapper>
   )
 }
@@ -30,7 +30,7 @@ const Wrapper = styled.div`
       background-size: cover;
       text-align: center;
 
-      animation: ${fadeIn} 1s 0s;
+      animation: ${fadeIn} 2s 0s;
       animation-fill-mode: forwards;
 
       h5 {
@@ -47,7 +47,7 @@ const Wrapper = styled.div`
   }}
 `
 
-const RegisterContent = styled.div`
+const CardContent = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins } = theme
     return css`
@@ -64,7 +64,7 @@ const RegisterContent = styled.div`
   }}
 `
 
-const RegisterBtn = styled(Link)`
+const CardBtn = styled(Link)`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`
@@ -81,4 +81,4 @@ const RegisterBtn = styled(Link)`
   }}
 `
 
-export default RegisterSection
+export default CardSection

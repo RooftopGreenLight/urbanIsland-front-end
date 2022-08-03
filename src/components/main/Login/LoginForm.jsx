@@ -21,7 +21,7 @@ const LoginForm = () => {
 
     // ID 혹은 PW 둘 중 하나라도 입력하지 않았다면, 에러 메세지 출력
     if (id.length * pw.length === 0) {
-      feedbackMsg.current.innerText = "ID/PW를 입력하지 않았습니다."
+      feedbackMsg.current.innerText = "ID 혹은 PW를 입력하지 않았습니다."
       return
     }
 
