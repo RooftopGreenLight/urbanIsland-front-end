@@ -23,7 +23,7 @@ const SignupForm = () => {
 
   const isEmail = email => {
     const emailRegex =
-      "/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/"
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/
 
     return emailRegex.test(email)
   }
@@ -38,17 +38,17 @@ const SignupForm = () => {
   const submitRegister = async event => {
     event.preventDefault()
     if (verifiedEmail * pwd * repwd * username === 0) {
-      feedbackMsg.current.innerText = "필수정보를 다 기입해주세요"
+      feedbackMsg.current.innerText = "가입에 필요한 필수 정보를 입력해주세요."
       return
     }
     if (pwd !== repwd) {
-      feedbackMsg.current.innerText = "비밀번호 불일치"
+      feedbackMsg.current.innerText = "작성한 비밀번호가 서로 일치하지 않습니다."
       return
     }
     try {
       await accountControl.postSignupData(verifiedEmail, pwd, username)
-      setTimeout(() => navigate("/login"), 750)
       feedbackMsg.current.innerText = "회원가입이 완료되었습니다. 로그인 창으로 이동합니다."
+      setTimeout(() => navigate("/login"), 750)
     } catch (err) {
       feedbackMsg.current.innerText = err.message
     }
@@ -61,35 +61,44 @@ const SignupForm = () => {
       return
     }
     try {
-      await accountControl.getSignUpEmail(email) //중복체크
-      feedbackMsg.current.innerText = ""
-      const response = await accountControl.postVerifyEmail(email) //이메일인증으로
-      setSignupInput({ ...signupInput, code: response.data })
+      await accountControl.getSignUpEmail(email)
+      const code = await accountControl.getVerifyEmail(email)
+      setSignupInput({ ...signupInput, code })
     } catch (err) {
       feedbackMsg.current.innerText = err.message
     }
   }
+
   const checkVerifiedCode = () => {
-    if (verifiedCode === code) {
-      //코드 일치시
-      setSignupInput({ ...signupInput, verifiedEmail: email })
+    if (verifiedCode !== code) {
+      feedbackMsg.current.innerText = "인증번호를 재확인해 주세요,"
       return
     }
-    feedbackMsg.current.innerText = "인증번호 재확인"
+    setSignupInput({ ...signupInput, verifiedEmail: email })
   }
 
   return (
     <Wrapper>
       <SignupModal status={modalOn} setModalOn={setModalOn}>
-        <p>인증 번호를 받을 이메일을 입력해주세요.</p>
-        <input name="email" placeholder="Enter your Email Address" onChange={insertInput} />
-        <button onClick={checkEmailAddress}>이메일 인증</button>
-        {code && (
+        {!code ? (
           <>
+            <p>인증 번호를 받을 이메일을 입력해주세요.</p>
+            <input
+              name="email"
+              placeholder="Enter your Email Address"
+              onChange={insertInput}
+              value={email}
+            />
+            <button onClick={checkEmailAddress}>이메일 인증</button>
+          </>
+        ) : (
+          <>
+            <p>이메일로 전송된 인증 코드를 입력해주세요.</p>
             <input
               name="verifiedCode"
-              placeholder="이메일을 인증코드를 입력해 주세요"
+              placeholder="XXXX-XXXX"
               onChange={insertInput}
+              value={verifiedCode}
             />
             <button onClick={checkVerifiedCode}>인증번호 확인</button>
           </>
