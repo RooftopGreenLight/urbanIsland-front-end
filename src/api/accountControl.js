@@ -12,7 +12,7 @@ export const accountControl = {
       })
       return response
     } catch (err) {
-      const errorMessage = err.response.data.data.errorMessage
+      const errorMessage = err.response.data.message
       throw new Error(errorMessage)
     }
   },
@@ -32,16 +32,16 @@ export const accountControl = {
       throw new Error(err)
     }
   },
-  postVerifyEmail: async email => {
+  getVerifyEmail: async email => {
     try {
       const response = await axiosInstance({
-        method: "POST",
+        method: "GET",
         url: "/auth/verify-email",
         params: {
           email,
         },
       })
-      return response
+      return response.data
     } catch (err) {
       throw new Error(err)
     }

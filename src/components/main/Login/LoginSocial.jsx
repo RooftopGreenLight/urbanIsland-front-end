@@ -1,15 +1,16 @@
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faArrowCircleDown } from "@fortawesome/free-solid-svg-icons"
+import { faGoogle } from "@fortawesome/free-brands-svg-icons"
 
 const LoginSocial = () => {
   return (
     <Wrapper>
+      <p>다른 소셜 계정으로 로그인</p>
       <SocialIconList>
-        <SocialIcon icon={faArrowCircleDown} />
-        <SocialIcon icon={faArrowCircleDown} />
-        <SocialIcon icon={faArrowCircleDown} />
+        <SocialIcon icon={faGoogle} />
+        <SocialIcon icon={faGoogle} />
+        <SocialIcon icon={faGoogle} />
       </SocialIconList>
     </Wrapper>
   )
@@ -19,27 +20,42 @@ const Wrapper = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins } = theme
     return css`
-      width: 50%;
-      margin: ${margins.base} auto;
+      width: 60%;
+      margin: ${margins.lg} auto;
       text-align: center;
+
+      p {
+        margin-bottom: ${margins.base};
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
     `
   }}
 `
 
 const SocialIconList = styled.div`
+  width: 100%;
+  margin: auto;
   display: flex;
   justify-content: space-evenly;
 `
 
 const SocialIcon = styled(FontAwesomeIcon)`
   ${({ theme }) => {
-    const { colors, fonts } = theme
+    const { colors, fonts, paddings } = theme
     return css`
-      width: 4vw;
-      height: 4vw;
+      width: 1.65vw;
+      height: 1.65vw;
 
-      border-radius: 200px;
-      color: #d9d9d9;
+      padding: ${paddings.sm};
+      border-radius: 100px;
+
+      background-color: #1d1d1d;
+      color: ${colors.white};
+
+      &:hover {
+        background-color: #004200;
+      }
     `
   }}
 `

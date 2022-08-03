@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import bgImg from "assets/img/background1.jpg"
+import bgImg from "assets/img/background2.jpg"
 import { fadeIn } from "styles/Animation"
 
 import LoginForm from "components/main/Login/LoginForm"
@@ -10,11 +10,16 @@ const Login = () => {
   return (
     <Wrapper>
       <LoginSection>
-        <Logo />
-        <LoginSocial />
+        <LoginTitle>
+          <h5>Join our Service</h5>
+        </LoginTitle>
         <LoginForm />
-        <RegisterSection />
+        <LoginSocial />
+        <ForgotPassword>
+          비밀번호를 잊으셨나요?<strong> 비밀번호 찾기</strong>
+        </ForgotPassword>
       </LoginSection>
+      <RegisterSection />
     </Wrapper>
   )
 }
@@ -27,34 +32,58 @@ const Wrapper = styled.div`
   background-size: cover;
 
   display: flex;
-  flex-direction: column;
+  justify-content: center;
 `
 
-const Logo = styled.div`
-  width: 7.5vw;
-  height: 7.5vw;
-  margin: 2.5vw auto;
+const LoginTitle = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      width: 75%;
+      margin: ${margins.xl} ${margins.xl};
 
-  background-color: #d9d9d9;
-  border-radius: 25px;
+      h5 {
+        font-size: ${fonts.size.xxl};
+        line-height: 3.75rem;
+      }
+    `
+  }}
 `
 
 const LoginSection = styled.div`
   ${({ theme }) => {
     const { colors } = theme
     return css`
-      width: 45%;
-      margin: auto;
+      width: 27.5%;
+      height: 70vh;
+      margin: auto 0vw;
 
       background-color: ${colors.white};
       opacity: 95%;
-      border-radius: 10px;
+      border-radius: 25px 0px 0px 25px;
 
       display: flex;
       flex-direction: column;
 
-      animation: ${fadeIn} 2s 0s;
+      animation: ${fadeIn} 1s 0s;
       animation-fill-mode: forwards;
+    `
+  }}
+`
+
+const ForgotPassword = styled.p`
+  ${({ theme }) => {
+    const { fonts, margins } = theme
+    return css`
+      margin: ${margins.base} auto;
+
+      color: #1f1f1f;
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
+
+      strong {
+        color: #000000;
+      }
     `
   }}
 `

@@ -17,11 +17,8 @@ const Wrapper = styled.footer`
   ${({ theme }) => {
     const { colors, fonts } = theme
     return css`
-      min-height: 4vh;
-      background-color: transparent;
-
-      position: relative;
-      bottom: 2vh;
+      min-height: 8vh;
+      background-color: ${colors.white};
 
       text-align: center;
       color: #000000;

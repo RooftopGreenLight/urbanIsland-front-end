@@ -1,57 +1,80 @@
 import styled, { css } from "styled-components"
+import { useContext } from "react"
+import { Link } from "react-router-dom"
 
-import { fadeIn } from "styles/Animation"
-import { MainPageBtnText } from "constants/MainPageBtn"
+import { AuthContext } from "pages/MainPage"
+import { leftToRight } from "styles/Animation"
+import { accountControl } from "api/accountControl"
 
 const HomeBtnList = () => {
+  const { authState } = useContext(AuthContext)
+  const { authenticated } = authState
   return (
     <Wrapper>
-      {MainPageBtnText.map((elm, idx) => (
-        <HomeBtn key={idx} delay={idx}>
-          {elm}
+      <HomeBtn to="/" delay={0}>
+        옥상시설 예약
+      </HomeBtn>
+      <HomeBtn to="/" delay={1}>
+        지원사업 열람
+      </HomeBtn>
+      <HomeBtn to="/" delay={2}>
+        옥상지기 신청
+      </HomeBtn>
+      {authenticated ? (
+        <>
+          {" "}
+          <HomeBtn to="/mypage" delay={3}>
+            마이페이지
+          </HomeBtn>
+          <HomeBtn to="/" delay={3} onClick={accountControl.getLogOut}>
+            로그아웃
+          </HomeBtn>
+        </>
+      ) : (
+        <HomeBtn to="/login" delay={3}>
+          로그인
         </HomeBtn>
-      ))}
+      )}
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 25vw;
-  height: 15vw;
-  margin: 7.5vh auto;
+  width: 12.5vw;
+  height: 10vw;
+  margin: 5vh 0vw;
 
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
 `
 
-const HomeBtn = styled.button`
+const HomeBtn = styled(Link)`
   ${({ theme, delay }) => {
     const { colors, fonts } = theme
     return css`
-      width: 90%;
+      width: 50%;
       height: 2.75vw;
 
       margin: 0vw auto;
       opacity: 0%;
 
       border: 0;
-      border-radius: 25px;
-      background-color: ${colors.white};
+      background-color: transparent;
 
-      font-size: ${fonts.size.sm};
+      color: ${colors.white};
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
       mix-blend-mode: screen;
 
-      transition: 0.3s all ease-in-out;
-
-      animation: ${fadeIn} 2s 0.25s;
+      transition: 0.15s font-weight ease-in-out;
+      animation: ${leftToRight} 2s 0.25s;
       animation-fill-mode: forwards;
       animation-delay: ${`${delay * 0.2}s`};
 
       &:hover {
-        width: 92.5%;
-        height: 2.8vw;
-        font-weight: 700;
+        font-weight: 400;
+        text-shadow: 0 0 3px #fff;
       }
     `
   }}

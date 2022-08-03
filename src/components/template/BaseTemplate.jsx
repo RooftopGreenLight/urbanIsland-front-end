@@ -19,10 +19,6 @@ const TemplateLayout = styled.div`
 
   & > .content {
     min-height: 100vh;
-
-    position: relative;
-    top: -3vw;
-
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

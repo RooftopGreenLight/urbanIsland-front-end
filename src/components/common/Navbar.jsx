@@ -1,50 +1,47 @@
 import styled, { css } from "styled-components"
-import { useState, useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
 import { AuthStateContext } from "module/Auth"
 import { accountControl } from "api/accountControl"
 
 const Navbar = () => {
-  const authState = useContext(AuthStateContext)
-  const [isLogin, setLogin] = useState(false)
-  useEffect(() => {
-    setLogin(authState.authenticated)
-  }, [authState])
+  const { authState } = useContext(AuthContext)
+  const { authenticated } = authState
+
   return (
-    <NavbarLayout>
+    <Wrapper>
       <LinkElement to="/">Main</LinkElement>
-      {!isLogin ? (
+      {!authenticated ? (
         <>
           <LinkElement to="/login">Login</LinkElement>
           <LinkElement to="/signup">Register</LinkElement>
         </>
       ) : (
         <>
-          <LinkElement to="/mypage">MyPage</LinkElement>
-          <LinkElement replace={true} to="/" onClick={accountControl.getLogOut}>
-            Log Out
-          </LinkElement>
+          <LinkElement to="/login">Mypage</LinkElement>
+          <LinkElement to="/signup">Logout</LinkElement>
         </>
       )}
-    </NavbarLayout>
+    </Wrapper>
   )
 }
 
-const NavbarLayout = styled.ul`
+const Wrapper = styled.ul`
   ${({ theme }) => {
+    const { colors } = theme
     return css`
-      width: 40vw;
+      width: 20vw;
       height: 3vw;
 
       margin: 0vw auto;
 
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: space-evenly;
 
       text-align: center;
-      color: ${theme.colors.white};
+      color: ${colors.white};
     `
   }}
 `
