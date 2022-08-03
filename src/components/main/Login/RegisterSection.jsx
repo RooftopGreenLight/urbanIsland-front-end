@@ -18,7 +18,7 @@ const RegisterSection = () => {
 
 const Wrapper = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins } = theme
+    const { colors, fonts } = theme
     return css`
       width: 42.5%;
       height: 70vh;
