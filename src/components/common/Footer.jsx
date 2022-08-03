@@ -21,7 +21,7 @@ const Wrapper = styled.footer`
       background-color: ${colors.white};
 
       text-align: center;
-      color: ${colors.blue.secondary};
+      color: #000000;
       font-size: ${fonts.size.xsm};
     `
   }}
@@ -29,10 +29,10 @@ const Wrapper = styled.footer`
 
 const FooterContent = styled.div`
   ${({ theme }) => {
-    const { fonts } = theme
+    const { fonts, margins } = theme
     return css`
       height: 4vh;
-      padding: 2vh 0vw;
+      margin: ${margins.base} 0vw;
 
       strong {
         font-weight: ${fonts.weight.bold};

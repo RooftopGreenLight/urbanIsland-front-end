@@ -2,7 +2,8 @@ import styled, { css } from "styled-components"
 import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
-import { AuthContext } from "pages/MainPage"
+import { AuthStateContext } from "module/Auth"
+import { accountControl } from "api/accountControl"
 
 const Navbar = () => {
   const { authState } = useContext(AuthContext)

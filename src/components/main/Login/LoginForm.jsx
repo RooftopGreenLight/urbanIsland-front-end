@@ -2,7 +2,7 @@ import styled, { css } from "styled-components"
 import { useState, useRef, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 
-import { AuthContext } from "pages/MainPage"
+import { AuthDispatchContext } from "module/Auth"
 import { accountControl } from "api/accountControl"
 
 const LoginForm = () => {
@@ -13,7 +13,7 @@ const LoginForm = () => {
   })
   const { id, pw } = loginInput
   const navigate = useNavigate()
-  const { authDispatch } = useContext(AuthContext)
+  const authDispatch = useContext(AuthDispatchContext)
 
   const submitLogin = async event => {
     event.preventDefault()

@@ -19,10 +19,9 @@ const TemplateLayout = styled.div`
 
   & > .content {
     min-height: 100vh;
-
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
   }
 `
