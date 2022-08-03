@@ -5,6 +5,7 @@ import BaseTemplate from "components/template/BaseTemplate"
 import { HomeContainer } from "pages/Container/HomeContainer"
 import { LoginContainer } from "pages/Container/LoginContainer"
 import { SignupContainer } from "pages/Container/SignupContainer"
+import { MypageContainer } from "./Container/MypageContainer"
 
 // JWT Token 관련 reducer 함수, initialState 객체 선언.
 const initialState = { token: null, authenticated: false }
@@ -52,10 +53,14 @@ const MainPage = () => {
         <BaseTemplate>
           <Routes>
             <Route path="/" element={<HomeContainer />} />
+            <Route path="/mypage/:section" element={<MypageContainer />} />
             <Route element={<RestrictedRoute />} isLogin={authenticated}>
               <Route path="/login" element={<LoginContainer />} />
               <Route path="/signup" element={<SignupContainer />} />
             </Route>
+            {/* <Route element={<PrivateRoute />} isLogin={authenticated}>
+              <Route path="/mypage" element={<MypageContainer />} />
+            </Route> */}
           </Routes>
         </BaseTemplate>
       </BrowserRouter>
