@@ -1,12 +1,13 @@
-import styled, { css } from "styled-components"
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import SignupModal from "components/main/Signup/SignupModal"
+import styled, { css } from "styled-components"
+
 import { accountControl } from "api/accountControl"
+import SignupModal from "./SignupModal"
 
 const SignupForm = () => {
   const feedbackMsg = useRef()
-  const [modalOpen, setModalOpen] = useState(false)
+  const [modalOn, setModalOn] = useState(false)
   const [signupInput, setSignupInput] = useState({
     email: "",
     verifiedEmail: "",
@@ -20,8 +21,11 @@ const SignupForm = () => {
   const navigate = useNavigate()
   const { email, verifiedEmail, verifiedCode, pwd, repwd, username, code } = signupInput
 
-  const toggleModal = () => {
-    setModalOpen(prev => !prev)
+  const isEmail = email => {
+    const emailRegex =
+      "/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/"
+
+    return emailRegex.test(email)
   }
 
   const insertInput = e => {
@@ -50,14 +54,8 @@ const SignupForm = () => {
     }
   }
 
-  const isEmail = email => {
-    const emailRegex =
-      "/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/"
-
-    return emailRegex.match(email)
-  }
-
   const checkEmailAddress = async () => {
+    console.log(isEmail(email))
     if (!isEmail(email)) {
       feedbackMsg.current.innerText = "유효한 이메일 양식이 아닙니다."
       return
@@ -75,7 +73,6 @@ const SignupForm = () => {
     if (verifiedCode === code) {
       //코드 일치시
       setSignupInput({ ...signupInput, verifiedEmail: email })
-      toggleModal(false)
       return
     }
     feedbackMsg.current.innerText = "인증번호 재확인"
@@ -83,6 +80,22 @@ const SignupForm = () => {
 
   return (
     <Wrapper>
+      <SignupModal status={modalOn} setModalOn={setModalOn}>
+        <p>인증 번호를 받을 이메일을 입력해주세요.</p>
+        <input name="email" placeholder="Enter your Email Address" onChange={insertInput} />
+        <button onClick={checkEmailAddress}>이메일 인증</button>
+        {code && (
+          <>
+            <input
+              name="verifiedCode"
+              placeholder="이메일을 인증코드를 입력해 주세요"
+              onChange={insertInput}
+            />
+            <button onClick={checkVerifiedCode}>인증번호 확인</button>
+          </>
+        )}
+        <p className="feedback" ref={feedbackMsg}></p>
+      </SignupModal>
       <SignupInput
         name="email"
         value={verifiedEmail}
@@ -90,7 +103,7 @@ const SignupForm = () => {
         onChange={insertInput}
         disabled
       />
-      <EmailVerifiedBtn onClick={() => toggleModal(true)}>이메일 인증</EmailVerifiedBtn>
+      <EmailVerifiedBtn onClick={() => setModalOn(true)}>이메일 인증</EmailVerifiedBtn>
       <SignupInput name="username" placeholder="Username" onChange={insertInput} />
       <SignupInput name="pwd" placeholder="Password" onChange={insertInput} type="password" />
       <SignupInput

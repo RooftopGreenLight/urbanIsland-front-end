@@ -4,48 +4,33 @@ import styled, { css } from "styled-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
+import ModalPortal from "components/common/Modal/ModalPortal"
 import { modalShow } from "styles/Animation"
 
-const SignupModal = ({ status }) => {
-  const [modalStatus, setModalStatus] = useState(status)
-  const [inputValue, setInputValue] = useState({ email: "", verifiedCode: "" })
+const SignupModal = ({ children, status, setModalOn }) => {
   const modalRef = useRef()
-
-  // 현재 모달이 "열린" 상태라면 애니메이션을 재생하도록 조정.
-  const closeModal = () => {
-    setModalStatus(false)
-  }
-
-  const insertInput = e => {
-    const { name, value } = e.target
-    setInputValue({ ...inputValue, [name]: value })
-  }
 
   useEffect(() => {
     if (status) {
       modalRef.current.style.animationPlayState = "running"
     }
   }, [status])
+
   return (
-    <Wrapper ref={modalRef}>
-      <ModalSection>
-        <header>
-          <ModalCloseBtn onClick={closeModal}>
-            <FontAwesomeIcon icon={faXmark} />
-          </ModalCloseBtn>
-        </header>
-        <ModalContent>
-          <>
-            <p>인증을 받을 이메일 주소를 입력해주세요.</p>
-            <input
-              name="username"
-              placeholder="이메일 주소를 입력해주세요."
-              onChange={insertInput}
-            />
-          </>
-        </ModalContent>
-      </ModalSection>
-    </Wrapper>
+    <ModalPortal>
+      {status && (
+        <Wrapper ref={modalRef}>
+          <ModalSection>
+            <header>
+              <ModalCloseBtn onClick={() => setModalOn(false)}>
+                <FontAwesomeIcon icon={faXmark} />
+              </ModalCloseBtn>
+            </header>
+            <ModalContent>{children}</ModalContent>
+          </ModalSection>
+        </Wrapper>
+      )}
+    </ModalPortal>
   )
 }
 
@@ -70,7 +55,6 @@ const ModalSection = styled.section`
     const { fonts, paddings } = theme
     return css`
       width: 30%;
-      height: 20%;
       margin: auto;
 
       border-radius: 0.3rem;
@@ -109,21 +93,31 @@ const ModalCloseBtn = styled.button`
 
 const ModalContent = styled.main`
   ${({ theme }) => {
-    const { fonts, paddings, margins } = theme
+    const { colors, fonts, paddings, margins } = theme
     return css`
-      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      padding: ${paddings.sm};
       border-top: 1px solid #dee2e6;
+      background-color: ${colors.white};
 
       p {
-        margin-bottom: ${margins.base};
+        margin: ${margins.base};
         font-size: ${fonts.size.sm};
         text-align: center;
+
+        &.feedback {
+          font-size: ${fonts.size.xsm};
+          font-weight: 100;
+        }
       }
 
       input {
-        width: 100%;
+        width: 90%;
         padding: ${paddings.sm};
-        margin-bottom: ${margins.base};
+        margin: 0vw auto ${margins.base} auto;
 
         background-color: transparent;
         border: 0;
@@ -138,6 +132,18 @@ const ModalContent = styled.main`
         &::before {
           background-color: #d9d9d9;
         }
+      }
+
+      button {
+        width: 25%;
+        padding: ${paddings.sm};
+        margin: ${margins.base} auto;
+
+        background-color: #000000;
+        border-radius: 25px;
+        text-align: center;
+        color: ${colors.white};
+        font-size: ${fonts.size.xsm};
       }
     `
   }}
