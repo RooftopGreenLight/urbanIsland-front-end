@@ -56,8 +56,12 @@ const SignupForm = () => {
 
   const submitRegister = async event => {
     event.preventDefault()
-    if (verifiedEmail * password * verifiedPassword * username === 0) {
+    if (email * password * verifiedPassword * username === 0) {
       feedbackMsg.current.innerText = "가입에 필요한 필수 정보를 입력해주세요."
+      return
+    }
+    if (!is_verified) {
+      feedbackMsg.current.innerText = "이메일 인증이 완료되지 않았습니다."
       return
     }
     if (password !== verifiedPassword) {
