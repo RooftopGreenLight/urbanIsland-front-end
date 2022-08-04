@@ -1,38 +1,71 @@
-import { useContext, useRef } from "react"
+import { useContext, useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import styled, { css } from "styled-components"
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons"
 
 import { accountControl } from "api/accountControl"
 import { ModalContext } from "module/Modal"
 
 import SignupModal from "components/main/Signup/SignupModal"
-import useSignInput from "hook/useSignInput"
 
 const SignupForm = () => {
   const feedbackMsg = useRef()
   const { openModal } = useContext(ModalContext)
   const navigate = useNavigate()
 
-  const { inputValue, changeSignupInput } = useSignInput()
-  const { verifiedEmail, pwd, repwd, username } = inputValue
+  const [inputValue, setInputValue] = useState({
+    email: "",
+    password: "",
+    verifiedPassword: "",
+    username: "",
+    is_verified: false,
+  })
+  const { email, password, verifiedPassword, username, is_verified } = inputValue
 
-  const insertInput = e => {
+  const changeInput = e => {
     const { name, value } = e.target
-    changeSignupInput(name, value)
+    // 이미 이메일이 인증된 상태에서 수정하려고 할 시, 차단.
+    if (is_verified && name === "email") {
+      return
+    }
+    setInputValue({ ...inputValue, [name]: value })
+  }
+
+  const verifiedEmail = () => {
+    setInputValue({ ...inputValue, is_verified: true })
+  }
+
+  const checkEmailAddress = async () => {
+    const emailRegex =
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/
+    if (!emailRegex.test(email)) {
+      feedbackMsg.current.innerText = "유효한 이메일 양식이 아닙니다."
+      return
+    }
+    try {
+      await accountControl.getSignUpEmail(email)
+      const code = await accountControl.getVerifyEmail(email)
+      setInputValue({ ...inputValue, code })
+      openModal(<SignupModal code={code} verifiedEmail={verifiedEmail} />)
+    } catch (err) {
+      feedbackMsg.current.innerText = err.message
+    }
   }
 
   const submitRegister = async event => {
     event.preventDefault()
-    if (verifiedEmail * pwd * repwd * username === 0) {
+    if (verifiedEmail * password * verifiedPassword * username === 0) {
       feedbackMsg.current.innerText = "가입에 필요한 필수 정보를 입력해주세요."
       return
     }
-    if (pwd !== repwd) {
+    if (password !== verifiedPassword) {
       feedbackMsg.current.innerText = "작성한 비밀번호가 서로 일치하지 않습니다."
       return
     }
     try {
-      await accountControl.postSignupData(verifiedEmail, pwd, username)
+      await accountControl.postSignupData(email, password, username)
       feedbackMsg.current.innerText = "회원가입이 완료되었습니다. 로그인 창으로 이동합니다."
       setTimeout(() => navigate("/login"), 750)
     } catch (err) {
@@ -42,36 +75,24 @@ const SignupForm = () => {
 
   return (
     <Wrapper>
-      <SignupInput
-        name="verifiedEmail"
-        value={verifiedEmail}
-        placeholder="Email Address (인증 필요)"
-        disabled
-      />
-      <EmailVerifiedBtn
-        onClick={() =>
-          openModal(
-            <SignupModal
-              inputValue={inputValue}
-              changeSignupInput={changeSignupInput}></SignupModal>,
-          )
-        }>
-        이메일 인증
+      <SignupInput name="email" placeholder="Email Address" onChange={changeInput} value={email} />
+      <EmailVerifiedBtn is_verified={is_verified} onClick={checkEmailAddress}>
+        {is_verified ? <FontAwesomeIcon icon={faCircleCheck} /> : "이메일 인증"}
       </EmailVerifiedBtn>
-      <SignupInput name="username" placeholder="Username" onChange={insertInput} value={username} />
+      <SignupInput name="username" placeholder="Username" onChange={changeInput} value={username} />
       <SignupInput
-        name="pwd"
+        name="password"
         placeholder="Password"
         type="password"
-        onChange={insertInput}
-        value={pwd}
+        onChange={changeInput}
+        value={password}
       />
       <SignupInput
-        name="repwd"
+        name="verifiedPassword"
         placeholder="Verified Password"
         type="password"
-        onChange={insertInput}
-        value={repwd}
+        onChange={changeInput}
+        value={verifiedPassword}
       />
       <SignUpFeedback ref={feedbackMsg}>회원가입 정보를 입력해주세요.</SignUpFeedback>
       <SignupBtn onClick={submitRegister}>회원가입</SignupBtn>
@@ -109,7 +130,7 @@ const SignupInput = styled.input`
   ${({ theme, name }) => {
     const { paddings, margins } = theme
     return css`
-      width: ${name === "verifiedEmail" ? `70%` : `100%`};
+      width: ${name === "email" ? `70%` : `100%`};
       padding: ${paddings.sm};
       margin-bottom: ${margins.base};
 
@@ -122,23 +143,19 @@ const SignupInput = styled.input`
         text-align: left;
         font-weight: 100;
       }
-
-      &::before {
-        background-color: #d9d9d9;
-      }
     `
   }}
 `
 
 const EmailVerifiedBtn = styled.button`
-  ${({ theme }) => {
+  ${({ theme, is_verified }) => {
     const { colors, fonts, paddings } = theme
     return css`
       width: 25%;
       padding: ${paddings.sm};
       margin-left: 5%;
 
-      background-color: #000000;
+      background-color: ${is_verified ? "#0fb100" : "#000000"};
       border-radius: 25px;
       text-align: center;
       color: ${colors.white};
