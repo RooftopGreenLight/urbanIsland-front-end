@@ -1,38 +1,24 @@
-import { useState, useRef } from "react"
+import { useContext, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import styled, { css } from "styled-components"
 
 import { accountControl } from "api/accountControl"
+import { ModalContext } from "module/Modal"
+
 import SignupModal from "components/main/Signup/SignupModal"
+import useSignInput from "hook/useSignInput"
 
 const SignupForm = () => {
   const feedbackMsg = useRef()
-  const [modalOn, setModalOn] = useState(false)
-  const [signupInput, setSignupInput] = useState({
-    email: "",
-    verifiedEmail: "",
-    pwd: "",
-    repwd: "",
-    username: "",
-    verifiedCode: "",
-    code: "",
-  })
-
+  const { openModal } = useContext(ModalContext)
   const navigate = useNavigate()
-  const { email, verifiedEmail, verifiedCode, pwd, repwd, username, code } = signupInput
 
-  const isEmail = email => {
-    const emailRegex =
-      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/
-
-    return emailRegex.test(email)
-  }
+  const { inputValue, changeSignupInput } = useSignInput()
+  const { verifiedEmail, pwd, repwd, username } = inputValue
 
   const insertInput = e => {
     const { name, value } = e.target
-    if (name === email) {
-    }
-    setSignupInput({ ...signupInput, [name]: value })
+    changeSignupInput(name, value)
   }
 
   const submitRegister = async event => {
@@ -54,73 +40,38 @@ const SignupForm = () => {
     }
   }
 
-  const checkEmailAddress = async () => {
-    console.log(isEmail(email))
-    if (!isEmail(email)) {
-      feedbackMsg.current.innerText = "유효한 이메일 양식이 아닙니다."
-      return
-    }
-    try {
-      await accountControl.getSignUpEmail(email)
-      const code = await accountControl.getVerifyEmail(email)
-      setSignupInput({ ...signupInput, code })
-    } catch (err) {
-      feedbackMsg.current.innerText = err.message
-    }
-  }
-
-  const checkVerifiedCode = () => {
-    if (verifiedCode !== code) {
-      feedbackMsg.current.innerText = "인증번호를 재확인해 주세요,"
-      return
-    }
-    setSignupInput({ ...signupInput, verifiedEmail: email })
-    setModalOn(false)
-  }
-
   return (
     <Wrapper>
-      <SignupModal status={modalOn} setModalOn={setModalOn}>
-        {!code ? (
-          <>
-            <p>인증 번호를 받을 이메일을 입력해주세요.</p>
-            <input
-              name="email"
-              placeholder="Enter your Email Address"
-              onChange={insertInput}
-              value={email}
-            />
-            <button onClick={checkEmailAddress}>이메일 인증</button>
-          </>
-        ) : (
-          <>
-            <p>이메일로 전송된 인증 코드를 입력해주세요.</p>
-            <input
-              name="verifiedCode"
-              placeholder="XXXX-XXXX"
-              onChange={insertInput}
-              value={verifiedCode}
-            />
-            <button onClick={checkVerifiedCode}>인증번호 확인</button>
-          </>
-        )}
-        <p className="feedback" ref={feedbackMsg}></p>
-      </SignupModal>
       <SignupInput
-        name="email"
+        name="verifiedEmail"
         value={verifiedEmail}
         placeholder="Email Address (인증 필요)"
-        onChange={insertInput}
         disabled
       />
-      <EmailVerifiedBtn onClick={() => setModalOn(true)}>이메일 인증</EmailVerifiedBtn>
-      <SignupInput name="username" placeholder="Username" onChange={insertInput} />
-      <SignupInput name="pwd" placeholder="Password" onChange={insertInput} type="password" />
+      <EmailVerifiedBtn
+        onClick={() =>
+          openModal(
+            <SignupModal
+              inputValue={inputValue}
+              changeSignupInput={changeSignupInput}></SignupModal>,
+          )
+        }>
+        이메일 인증
+      </EmailVerifiedBtn>
+      <SignupInput name="username" placeholder="Username" onChange={insertInput} value={username} />
+      <SignupInput
+        name="pwd"
+        placeholder="Password"
+        type="password"
+        onChange={insertInput}
+        value={pwd}
+      />
       <SignupInput
         name="repwd"
         placeholder="Verified Password"
-        onChange={insertInput}
         type="password"
+        onChange={insertInput}
+        value={repwd}
       />
       <SignUpFeedback ref={feedbackMsg}>회원가입 정보를 입력해주세요.</SignUpFeedback>
       <SignupBtn onClick={submitRegister}>회원가입</SignupBtn>
@@ -158,7 +109,7 @@ const SignupInput = styled.input`
   ${({ theme, name }) => {
     const { paddings, margins } = theme
     return css`
-      width: ${name === "email" ? `70%` : `100%`};
+      width: ${name === "verifiedEmail" ? `70%` : `100%`};
       padding: ${paddings.sm};
       margin-bottom: ${margins.base};
 
