@@ -14,7 +14,7 @@ const SignupModal = ({ code, verifiedEmail }) => {
 
   const checkVerifiedCode = () => {
     if (verifiedCode !== code) {
-      feedbackMsg.current.innerText = "인증번호를 재확인해 주세요,"
+      feedbackMsg.current.innerText = "인증번호를 재확인해 주세요"
       return
     }
     verifiedEmail()

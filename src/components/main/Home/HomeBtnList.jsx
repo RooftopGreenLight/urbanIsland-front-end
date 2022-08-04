@@ -22,7 +22,9 @@ const HomeBtnList = () => {
       </HomeBtn>
       {authenticated ? (
         <>
-          {" "}
+          <HomeBtn to="/chat" delay={2}>
+            테스트 채팅 목록
+          </HomeBtn>
           <HomeBtn to="/mypage" delay={3}>
             마이페이지
           </HomeBtn>
