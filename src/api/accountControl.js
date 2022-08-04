@@ -59,6 +59,7 @@ export const accountControl = {
       })
       // 로그인에 성공했을 경우, 추후 access_token 만료를 대비하여 header 설정.
       const { accessToken, refreshToken } = response.data
+      console.log(response)
       addTokenToLocalStorage(accessToken, refreshToken)
       return response
     } catch (err) {

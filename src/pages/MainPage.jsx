@@ -7,6 +7,9 @@ import { LoginContainer } from "pages/Container/LoginContainer"
 import { SignupContainer } from "pages/Container/SignupContainer"
 import { AuthDispatchContext, AuthStateContext } from "module/Auth"
 
+// 채팅 시스템을 위해 임시로 import 한 Component
+import ChatRoom from "components/main/Chat/ChatRoom"
+
 // 오직 로그인이 되었을때만 접근이 가능하도록 하는 Route
 const PrivateRoute = ({ isLogin }) => {
   return isLogin ? <Outlet /> : <Navigate to="/" replace />
@@ -14,6 +17,7 @@ const PrivateRoute = ({ isLogin }) => {
 
 // 로그인이 되지 않았을 경우에만 접근이 가능하도록 하는 Route
 const RestrictedRoute = ({ isLogin }) => {
+  console.log(isLogin)
   return isLogin ? <Navigate to="/" replace /> : <Outlet />
 }
 
@@ -32,15 +36,20 @@ const MainPage = () => {
     }
   }, [])
 
+  const isLogin = authState.authenticated
+
   return (
     <BrowserRouter>
       <BaseTemplate>
         <Routes>
-          <Route path="/" element={<HomeContainer />} />
-          <Route element={<RestrictedRoute />} isLogin={authState.authenticated}>
+          <Route element={<RestrictedRoute isLogin={isLogin} />}>
             <Route path="/login" element={<LoginContainer />} />
             <Route path="/signup" element={<SignupContainer />} />
           </Route>
+          <Route element={<PrivateRoute isLogin={isLogin} />}>
+            <Route path="/chat" element={<ChatRoom />} />
+          </Route>
+          <Route path="/" element={<HomeContainer />} />
         </Routes>
       </BaseTemplate>
     </BrowserRouter>

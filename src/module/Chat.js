@@ -3,7 +3,7 @@ import { Client } from "stompjs"
 
 // 서버 간 연결을 위해 WebSocket과 통신하는 Client 객체 생성
 export const stompClient = new Client({
-  brokerURL: "ws://localhost:15674/ws",
+  brokerURL: `/ws/api/v1/chat`,
   connectHeaders: {
     login: "user",
     passcode: "password",
@@ -20,9 +20,9 @@ export const stompClient = new Client({
 
 // Client 가 성공적으로 서버와 연결되었을 때 실행될 함수
 // 재연결 시에도 실행되는 콜백 함수이며, subscribe도 이곳에서 진행.
-stompClient.onConnect = function (frame) {
+stompClient.onConnect = function (roomId) {
   console.log("successfully connected!")
-  const subscription = stompClient.subscribe("chat/general", msg => {
+  stompClient.subscribe(`/queue/${roomId}`, msg => {
     const payload = JSON.parse(msg.body)
     console.log(payload.user, payload.message)
   })
@@ -38,6 +38,11 @@ stompClient.onDisconnect = function (frame) {
 stompClient.onStompError = function (frame) {
   console.log("Broker reported error: " + frame.headers["message"])
   console.log("Additional details: " + frame.body)
+}
+
+// 클라이언트에서 메세지를 전송하기 위한 메소드
+stompClient.sendMessage = function (msg) {
+  stompClient.publish({ destination: "/app/inquiry/room", body: msg })
 }
 
 // Client 활성화
