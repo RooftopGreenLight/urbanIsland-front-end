@@ -1,56 +1,91 @@
-import { useEffect, useRef } from "react"
+import { useContext, useEffect, useRef } from "react"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
-import ModalPortal from "components/common/Modal/ModalPortal"
+import { accountControl } from "api/accountControl"
 import { modalShow } from "styles/Animation"
+import { ModalContext } from "module/Modal"
 
-const SignupModal = ({ children, status, setModalOn }) => {
-  const modalRef = useRef()
+const SignupModal = ({ inputValue, changeSignupInput }) => {
+  const feedbackMsg = useRef()
+  const { closeModal } = useContext(ModalContext)
+  const { email, code, verifiedCode } = inputValue
 
-  useEffect(() => {
-    if (status) {
-      modalRef.current.style.animationPlayState = "running"
+  const insertInput = e => {
+    const { name, value } = e.target
+    changeSignupInput(name, value)
+    console.log(inputValue)
+  }
+
+  const isEmail = email => {
+    const emailRegex =
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/
+    return emailRegex.test(email)
+  }
+
+  const checkEmailAddress = async () => {
+    if (!isEmail(email)) {
+      feedbackMsg.current.innerText = "유효한 이메일 양식이 아닙니다."
+      return
     }
-  }, [status])
+    try {
+      await accountControl.getSignUpEmail(email)
+      const code = await accountControl.getVerifyEmail(email)
+      changeSignupInput("code", code)
+    } catch (err) {
+      feedbackMsg.current.innerText = err.message
+    }
+  }
+
+  const checkVerifiedCode = () => {
+    if (verifiedCode !== code) {
+      feedbackMsg.current.innerText = "인증번호를 재확인해 주세요,"
+      return
+    }
+    changeSignupInput("verifiedEmail", email)
+    closeModal()
+  }
 
   return (
-    <ModalPortal>
-      {status && (
-        <Wrapper ref={modalRef}>
-          <ModalSection>
-            <header>
-              <ModalCloseBtn onClick={() => setModalOn(false)}>
-                <FontAwesomeIcon icon={faXmark} />
-              </ModalCloseBtn>
-            </header>
-            <ModalContent>{children}</ModalContent>
-          </ModalSection>
-        </Wrapper>
-      )}
-    </ModalPortal>
+    <Wrapper>
+      <header>
+        <ModalCloseBtn onClick={closeModal}>
+          <FontAwesomeIcon icon={faXmark} />
+        </ModalCloseBtn>
+      </header>
+      <ModalContent>
+        {!code ? (
+          <>
+            <p>인증 번호를 받을 이메일을 입력해주세요.</p>
+            <input
+              name="email"
+              placeholder="Enter your Email Address"
+              onChange={insertInput}
+              value={email}
+            />
+            <button onClick={checkEmailAddress}>이메일 인증</button>
+          </>
+        ) : (
+          <>
+            <p>이메일로 전송된 인증 코드를 입력해주세요.</p>
+            <input
+              name="verifiedCode"
+              placeholder="XXXX-XXXX"
+              onChange={insertInput}
+              value={verifiedCode}
+            />
+            <button onClick={checkVerifiedCode}>인증번호 확인</button>
+          </>
+        )}
+        <p className="feedback" ref={feedbackMsg}></p>
+      </ModalContent>
+    </Wrapper>
   )
 }
 
-const Wrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
-
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 99;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  background-color: rgba(0, 0, 0, 0.6);
-`
-
-const ModalSection = styled.section`
+const Wrapper = styled.section`
   ${({ theme }) => {
     const { fonts, paddings } = theme
     return css`
