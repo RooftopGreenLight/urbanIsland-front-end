@@ -8,13 +8,16 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { ModalContext } from "module/Modal"
 import { modalShow } from "styles/Animation"
 
-const ChatModal = ({ roomId }) => {
+const ChatModal = ({ roomId, memberId }) => {
   const { closeModal } = useContext(ModalContext)
   const [chatMessages, setChatMessages] = useState([])
-  const [message, setMessage] = useState("")
+  const [content, setContent] = useState("")
 
   const feedbackMsg = useRef()
   const client = useRef({})
+
+  const accessToken = JSON.parse(localStorage.getItem("access_token"))
+  const jwtHeader = { Authorization: `Bearer ${accessToken}` }
 
   useEffect(() => {
     connect()
@@ -24,6 +27,7 @@ const ChatModal = ({ roomId }) => {
   const connect = () => {
     client.current = new Client({
       brokerURL: "ws://192.168.219.103:8080/ws/api/v1/chat/websocket", // websocket 뒤에다가 왜 붙이는 건지 모르겠음.
+      connectHeaders: jwtHeader,
 
       debug: function (log) {
         console.log(log)
@@ -60,27 +64,28 @@ const ChatModal = ({ roomId }) => {
   }
 
   const subscribe = () => {
-    if (client && client.current.connected) {
-      client.current.subscribe(`/queue/${roomId}`, ({ body }) => {
-        setChatMessages(prevMessages => [...prevMessages, JSON.parse(body)])
-      })
-    }
+    client.current.subscribe(
+      `/queue/${roomId}`,
+      ({ body }) => {
+        const { memberId, content, sendTime } = JSON.parse(body)
+        console.log({ memberId, content, sendTime })
+        setChatMessages(prevMsgList => [...prevMsgList, { memberId, content, sendTime }])
+      },
+      jwtHeader,
+    )
   }
 
-  const publish = message => {
-    if (!client.current.connected) {
-      return
-    }
-
-    if (message.length < 13) {
+  const publish = () => {
+    if (content.length === 0) {
       return
     }
 
     client.current.publish({
-      destination: "/app/inquiry/room",
-      body: JSON.stringify({ roomId, message }),
+      destination: `/app/inquiry/room`,
+      body: JSON.stringify({ roomId, content, memberId }),
+      headers: jwtHeader,
     })
-    setMessage("")
+    setContent("")
   }
 
   return (
@@ -91,28 +96,39 @@ const ChatModal = ({ roomId }) => {
         </ModalCloseBtn>
       </header>
       <ModalContent>
-        <h5>테스트 채팅방 목록</h5>
+        <h5>테스트 채팅 목록</h5>
         <div>
-          {chatMessages && chatMessages.length > 0 && (
+          {chatMessages.length > 0 ? (
             <ul>
-              {chatMessages.map((_chatMessage, index) => (
-                <li key={index}>{_chatMessage.message}</li>
+              {chatMessages.slice(-10).map((chatElm, idx) => (
+                <ChatContent chatElm={chatElm} key={idx} />
               ))}
             </ul>
+          ) : (
+            <h5>채팅 로그 없음</h5>
           )}
           <div>
             <input
               type={"text"}
               placeholder={"message"}
-              value={message}
-              onChange={e => setMessage(e.target.value)}
+              value={content}
+              onChange={e => setContent(e.target.value)}
             />
-            <button onClick={() => publish(message)}>메세지 전송</button>
+            <button onClick={publish}>메세지 전송</button>
+            <button onClick={disconnect}>채팅 종료</button>
           </div>
         </div>
         <ChatFeedbackMsg ref={feedbackMsg}></ChatFeedbackMsg>
       </ModalContent>
     </Wrapper>
+  )
+}
+
+const ChatContent = ({ chatElm }) => {
+  return (
+    <li>
+      {chatElm.memberId} {chatElm.content} {chatElm.sendTime}
+    </li>
   )
 }
 

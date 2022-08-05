@@ -10,7 +10,7 @@ export const chattingControl = {
           rooftopId,
         },
       })
-      const roomId = response.data
+      const { roomId } = response.data
       return roomId
     } catch (err) {
       const errorMessage = err.response.data.message
@@ -24,7 +24,6 @@ export const chattingControl = {
         method: "GET",
         url: "/chat/inquiry/response",
       })
-      console.log(response)
       return response.data
     } catch (err) {
       const errorMessage = err.response.data.message
@@ -32,7 +31,7 @@ export const chattingControl = {
     }
   },
 
-  getChatRoom: async roomId => {
+  getChatRoomLog: async roomId => {
     try {
       const response = await axiosInstance({
         method: "GET",

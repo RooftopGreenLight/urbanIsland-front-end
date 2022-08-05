@@ -1,19 +1,44 @@
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import styled, { css } from "styled-components"
 
 import { ModalContext } from "module/Modal"
+import { AuthStateContext } from "module/Auth"
 import ChatModal from "components/main/Chat/ChatModal"
 
 import { chattingControl } from "api/chattingControl"
 
 const ChatRoomPage = () => {
   const { openModal } = useContext(ModalContext)
+  const { memberId } = useContext(AuthStateContext)
+
+  const [currentRooms, setCurrentRooms] = useState([])
+
+  useEffect(() => {
+    const loadChatRoomList = async () => {
+      try {
+        const loadedRoomList = await chattingControl.getChatRoomList()
+        setCurrentRooms(loadedRoomList)
+        console.log(currentRooms)
+      } catch (err) {
+        console.log(err.message)
+      }
+    }
+    loadChatRoomList()
+  }, [])
 
   const createNewChatRoom = async () => {
     try {
       const roomId = await chattingControl.getReservationChat(1111111111)
-      console.log(roomId)
-      openModal(<ChatModal roomId={roomId} />)
+      openModal(<ChatModal roomId={roomId} memberId={memberId} />)
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
+  const getChatRoomLog = async roomId => {
+    try {
+      const response = await chattingControl.getChatRoomLog(roomId)
+      console.log(response)
     } catch (err) {
       console.log(err.message)
     }
@@ -21,7 +46,14 @@ const ChatRoomPage = () => {
 
   return (
     <Wrapper>
-      <ChatStartBtn onClick={createNewChatRoom}>채팅 시작</ChatStartBtn>
+      <h5>테스트 채팅 목록</h5>
+      {currentRooms.map((chatRoomInfo, idx) => (
+        <ChatStartBtn
+          key={idx}
+          onClick={() =>
+            getChatRoomLog(chatRoomInfo.roomId)
+          }>{`채팅방 ${chatRoomInfo.roomId} 번`}</ChatStartBtn>
+      ))}
     </Wrapper>
   )
 }
