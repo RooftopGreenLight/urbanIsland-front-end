@@ -1,47 +1,42 @@
 import axiosInstance from "api/axiosInstance"
 
 export const chattingControl = {
-  getReservationChat: async (rooftopId, memberId) => {
+  getReservationChat: async rooftopId => {
     try {
       const response = await axiosInstance({
-        method: "get",
-        url: `/chat/inquiry/room/${rooftopId}/${memberId}`,
+        method: "GET",
+        url: `/chat/inquiry/join/room/${rooftopId}`,
         params: {
           rooftopId,
-          memberId,
         },
       })
-      return response
-    } catch (err) {
-      const errorMessage = err.response.data.message
-      throw new Error(errorMessage)
-    }
-  },
-  getChatRoomList: async memberId => {
-    try {
-      const response = await axiosInstance({
-        method: "get",
-        url: "/chat/inquiry/response",
-        params: {
-          memberId,
-        },
-      })
-      return response
+      const roomId = response.data
+      return roomId
     } catch (err) {
       const errorMessage = err.response.data.message
       throw new Error(errorMessage)
     }
   },
 
-  getChatRoom: async (roomId, memberId) => {
+  getChatRoomList: async () => {
     try {
       const response = await axiosInstance({
-        method: "get",
+        method: "GET",
+        url: "/chat/inquiry/response",
+      })
+      console.log(response)
+      return response.data
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
+
+  getChatRoom: async roomId => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
         url: `/chat/inquiry/room/${roomId}`,
-        params: {
-          roomId,
-          memberId,
-        },
       })
       return response
     } catch (err) {

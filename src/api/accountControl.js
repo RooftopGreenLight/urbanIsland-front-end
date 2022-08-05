@@ -12,6 +12,7 @@ export const accountControl = {
       })
       return response
     } catch (err) {
+      console.log(err)
       const errorMessage = err.response.data.message
       throw new Error(errorMessage)
     }
@@ -73,20 +74,21 @@ export const accountControl = {
     try {
       response = await axiosInstance({
         headers: {
-          "refresh-token": `Bearer ${refresh}`,
+          "refresh-token": `${refresh}`,
         },
-        method: "POST",
+        method: "GET",
         url: "auth/check-refresh-token",
       })
       const { accessToken, refreshToken } = response.data
       addTokenToLocalStorage(accessToken, refreshToken)
       return accessToken
     } catch (err) {
-      const errorCode = err.response.data.data.errorCode
+      const { errorCode, message } = err.response.data
       if (errorCode === 461) {
         this.getLogOut()
+        return
       }
-      throw new Error(errorCode)
+      throw new Error(message)
     }
   },
   getLogOut: () => {

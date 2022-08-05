@@ -1,4 +1,5 @@
 import axios from "axios"
+import { accountControl } from "./accountControl"
 
 // HTTPS 통신에 쓰이는 Axios 인스턴스 생성
 // 공통으로 사용하는 baseURL을 설정하면, 추후 인스턴스 활용 시 나머지 URL만 기술하면 됨.
@@ -39,6 +40,12 @@ axiosInstance.interceptors.response.use(
   },
   // 응답 실패 시 Promise Error 객체를 return 하도록 설정.
   error => {
+    // 만약 Access_token이 만료되어 생긴 문제라면, refresh_token을 재전송 해야 함
+    if (error.response?.data.errorCode === 460) {
+      const refreshToken = JSON.parse(localStorage.getItem("refresh_token"))
+      accountControl.getRefreshToken(refreshToken)
+      return
+    }
     console.log(error)
     return Promise.reject(error)
   },

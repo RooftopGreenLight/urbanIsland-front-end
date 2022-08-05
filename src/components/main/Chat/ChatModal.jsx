@@ -1,5 +1,6 @@
-import { useContext } from "react"
+import { useContext, useEffect, useState, useRef } from "react"
 import styled, { css } from "styled-components"
+import { Client } from "@stomp/stompjs"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
@@ -7,8 +8,81 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { ModalContext } from "module/Modal"
 import { modalShow } from "styles/Animation"
 
-const ChatModal = ({ chatRoomList }) => {
+const ChatModal = ({ roomId }) => {
   const { closeModal } = useContext(ModalContext)
+  const [chatMessages, setChatMessages] = useState([])
+  const [message, setMessage] = useState("")
+
+  const feedbackMsg = useRef()
+  const client = useRef({})
+
+  useEffect(() => {
+    connect()
+    return () => disconnect()
+  }, [])
+
+  const connect = () => {
+    client.current = new Client({
+      brokerURL: "ws://192.168.219.103:8080/ws/api/v1/chat/websocket", // websocket 뒤에다가 왜 붙이는 건지 모르겠음.
+
+      debug: function (log) {
+        console.log(log)
+      },
+
+      onStompError: function (frame) {
+        console.log("Broker reported error: " + frame.headers["message"])
+        console.log("Additional details: " + frame.body)
+      },
+
+      onWebSocketError: function (frame) {
+        console.log(frame)
+      },
+
+      onConnect: function (frame) {
+        console.log(frame)
+        subscribe()
+      },
+
+      onDisconnect: function () {
+        console.log("disconnect")
+      },
+
+      reconnectDelay: 0,
+      heartbeatIncoming: 5000,
+      heartbeatOutgoing: 5000,
+    })
+    client.current.activate()
+  }
+
+  const disconnect = () => {
+    console.log("disconnected")
+    client.current.deactivate()
+  }
+
+  const subscribe = () => {
+    if (client && client.current.connected) {
+      client.current.subscribe(`/queue/${roomId}`, ({ body }) => {
+        setChatMessages(prevMessages => [...prevMessages, JSON.parse(body)])
+      })
+    }
+  }
+
+  const publish = message => {
+    if (!client.current.connected) {
+      return
+    }
+
+    if (message.length < 13) {
+      return
+    }
+
+    client.current.publish({
+      destination: "/app/inquiry/room",
+      body: JSON.stringify({ roomId, message }),
+    })
+    setMessage("")
+  }
+
   return (
     <Wrapper>
       <header>
@@ -18,6 +92,25 @@ const ChatModal = ({ chatRoomList }) => {
       </header>
       <ModalContent>
         <h5>테스트 채팅방 목록</h5>
+        <div>
+          {chatMessages && chatMessages.length > 0 && (
+            <ul>
+              {chatMessages.map((_chatMessage, index) => (
+                <li key={index}>{_chatMessage.message}</li>
+              ))}
+            </ul>
+          )}
+          <div>
+            <input
+              type={"text"}
+              placeholder={"message"}
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+            />
+            <button onClick={() => publish(message)}>메세지 전송</button>
+          </div>
+        </div>
+        <ChatFeedbackMsg ref={feedbackMsg}></ChatFeedbackMsg>
       </ModalContent>
     </Wrapper>
   )
@@ -113,6 +206,15 @@ const ModalContent = styled.main`
         color: ${colors.white};
         font-size: ${fonts.size.xsm};
       }
+    `
+  }}
+`
+const ChatFeedbackMsg = styled.p`
+  ${({ theme }) => {
+    const { fonts } = theme
+    return css`
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
     `
   }}
 `
