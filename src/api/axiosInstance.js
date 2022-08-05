@@ -6,7 +6,7 @@ import { accountControl } from "./accountControl"
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
-  timeout: 60000,
+  timeout: 3000,
 })
 
 // 인터셉터 설정을 통해 HTTP 응답 관련 작업 모듈화.
