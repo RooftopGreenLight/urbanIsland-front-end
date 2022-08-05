@@ -27,11 +27,13 @@ const MainPage = () => {
   //  화면이 새로 로딩될 때, localStorage에 access_token이 있는지를 체크.
   //  만약 토큰이 있다면 이를 자동으로 Context API에 추가하도록 설정.
   useEffect(() => {
-    const accessToken = localStorage.getItem("access_token")
-    if (accessToken) {
+    const token = localStorage.getItem("access_token")
+    const memberId = localStorage.getItem("memberId")
+    if (token) {
       authDispatch({
         type: "SET_TOKEN",
-        token: accessToken,
+        token,
+        memberId,
       })
     }
   }, [])
