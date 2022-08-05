@@ -59,9 +59,10 @@ export const accountControl = {
         },
       })
       // 로그인에 성공했을 경우, 추후 access_token 만료를 대비하여 header 설정.
-      const { accessToken, refreshToken } = response.data
       console.log(response)
-      addTokenToLocalStorage(accessToken, refreshToken)
+      const { tokenDto, id } = response.data
+      const { accessToken, refreshToken } = tokenDto
+      addTokenToLocalStorage(accessToken, refreshToken, id)
       return response
     } catch (err) {
       console.log(err)
@@ -94,11 +95,15 @@ export const accountControl = {
   getLogOut: () => {
     localStorage.removeItem("access_token")
     localStorage.removeItem("refresh_token")
+    localStorage.removeItem("memberId")
     window.location.reload()
   },
 }
 
-const addTokenToLocalStorage = (access, refresh) => {
+const addTokenToLocalStorage = (access, refresh, id = false) => {
   localStorage.setItem("access_token", JSON.stringify(access))
   localStorage.setItem("refresh_token", JSON.stringify(refresh))
+  if (id) {
+    localStorage.setItem("memberId", JSON.stringify(id))
+  }
 }
