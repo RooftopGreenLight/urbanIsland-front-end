@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react"
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom"
 
 import { AuthDispatchContext, AuthStateContext } from "module/Auth"
-import KakaoAuth from "components/main/Auth/KakaoAuth"
+import SocialAuthConfirm from "components/main/Auth/SocialAuthConfirm"
 
 import BaseTemplate from "components/template/BaseTemplate"
 import { HomeContainer } from "pages/Container/HomeContainer"
@@ -19,7 +19,6 @@ const PrivateRoute = ({ isLogin }) => {
 
 // 로그인이 되지 않았을 경우에만 접근이 가능하도록 하는 Route
 const RestrictedRoute = ({ isLogin }) => {
-  console.log(isLogin)
   return isLogin ? <Navigate to="/" replace /> : <Outlet />
 }
 
@@ -54,7 +53,10 @@ const MainPage = () => {
             <Route path="/chat" element={<ChatRoomPage />} />
           </Route>
           <Route path="/chattest" element={<ChatRoomPage />} />
-          <Route path="/oauth2/kakao/login" element={<KakaoAuth />} />
+          <Route path="/oauth2/login/*">
+            <Route path=":kakao" element={<SocialAuthConfirm site={"KAKAO"} />} />
+            <Route path=":naver" element={<SocialAuthConfirm site={"NAVER"} />} />
+          </Route>
           <Route path="/" element={<HomeContainer />} />
         </Routes>
       </BaseTemplate>
