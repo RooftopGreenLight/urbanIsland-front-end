@@ -54,15 +54,10 @@ const ChatRoomPage = () => {
 }
 
 const Wrapper = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins } = theme
-    return css`
-      width: 100vw;
-      min-height: 100vh;
+  width: 100vw;
+  min-height: 100vh;
 
-      background-color: #cbcbcb;
-    `
-  }}
+  background-color: #cbcbcb;
 `
 
 const ChatRoomTitle = styled.div`

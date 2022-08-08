@@ -53,9 +53,10 @@ const MainPage = () => {
             <Route path="/chat" element={<ChatRoomPage />} />
           </Route>
           <Route path="/chattest" element={<ChatRoomPage />} />
-          <Route path="/oauth2/login/*">
-            <Route path=":kakao" element={<SocialAuthConfirm site={"kakao"} />} />
-            <Route path=":naver" element={<SocialAuthConfirm site={"naver"} />} />
+          <Route path="/oauth2/login/">
+            <Route path="google" element={<SocialAuthConfirm site={"google"} />} />
+            <Route path="naver" element={<SocialAuthConfirm site={"naver"} />} />
+            <Route path="kakao" element={<SocialAuthConfirm site={"kakao"} />} />
           </Route>
           <Route path="/" element={<HomeContainer />} />
         </Routes>

@@ -100,7 +100,7 @@ export const accountControl = {
   },
 }
 
-const addTokenToLocalStorage = (access, refresh, id = false) => {
+export const addTokenToLocalStorage = (access, refresh, id = false) => {
   localStorage.setItem("access_token", JSON.stringify(access))
   localStorage.setItem("refresh_token", JSON.stringify(refresh))
   if (id) {

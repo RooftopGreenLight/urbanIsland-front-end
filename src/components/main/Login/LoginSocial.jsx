@@ -10,7 +10,11 @@ const LoginSocial = () => {
     <Wrapper>
       <p>다른 소셜 계정으로 로그인</p>
       <SocialIconList>
-        <SocialIcon icon={faGoogle} color={"#006aff"} />
+        <SocialIcon
+          icon={faGoogle}
+          color={"#006aff"}
+          onClick={() => OAuthControl.getCodeFromSocial("google")}
+        />
         <SocialIcon
           icon={faGoogle}
           color={"#09ff00"}
