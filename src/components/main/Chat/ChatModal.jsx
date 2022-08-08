@@ -10,7 +10,9 @@ import { modalShow } from "styles/Animation"
 
 const ChatModal = ({ roomId, memberId }) => {
   const { closeModal } = useContext(ModalContext)
-  const [chatMessages, setChatMessages] = useState([])
+  const [chatMessages, setChatMessages] = useState([
+    { memberId: 1, content: "안녕하세요?", sendTime: [2022, 8, 5, 21, 57, 52, 825278000] },
+  ])
   const [content, setContent] = useState("")
 
   const feedbackMsg = useRef()
@@ -36,6 +38,7 @@ const ChatModal = ({ roomId, memberId }) => {
       onStompError: function (frame) {
         console.log("Broker reported error: " + frame.headers["message"])
         console.log("Additional details: " + frame.body)
+        // setTimeout(() => closeModal(), 500)
       },
 
       onWebSocketError: function (frame) {
@@ -60,6 +63,7 @@ const ChatModal = ({ roomId, memberId }) => {
 
   const disconnect = () => {
     client.current.deactivate()
+    closeModal()
   }
 
   const subscribe = () => {
@@ -67,7 +71,6 @@ const ChatModal = ({ roomId, memberId }) => {
       `/queue/${roomId}`,
       ({ body }) => {
         const { memberId, content, sendTime } = JSON.parse(body)
-        console.log({ memberId, content, sendTime })
         setChatMessages(prevMsgList => [...prevMsgList, { memberId, content, sendTime }])
       },
       jwtHeader,
@@ -89,45 +92,36 @@ const ChatModal = ({ roomId, memberId }) => {
 
   return (
     <Wrapper>
-      <header>
-        <ModalCloseBtn onClick={closeModal}>
+      <ModalHeader>
+        <span>테스트 채팅방</span>
+        <ModalCloseBtn onClick={disconnect}>
           <FontAwesomeIcon icon={faXmark} />
         </ModalCloseBtn>
-      </header>
+      </ModalHeader>
       <ModalContent>
-        <h5>테스트 채팅 목록</h5>
-        <div>
-          {chatMessages.length > 0 ? (
-            <ul>
-              {chatMessages.slice(-10).map((chatElm, idx) => (
-                <ChatContent chatElm={chatElm} key={idx} />
-              ))}
-            </ul>
-          ) : (
-            <h5>채팅 로그 없음</h5>
-          )}
-          <div>
-            <input
-              type={"text"}
-              placeholder={"message"}
-              value={content}
-              onChange={e => setContent(e.target.value)}
-            />
-            <button onClick={publish}>메세지 전송</button>
-            <button onClick={disconnect}>채팅 종료</button>
-          </div>
-        </div>
+        {chatMessages.length > 0 ? (
+          <ul>
+            {chatMessages.slice(-10).map(({ memberId, content, sendTime }, idx) => (
+              <li>
+                {memberId} {content} {sendTime}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <h5>채팅 로그 없음</h5>
+        )}
+        <ChatSend>
+          <input
+            type="text"
+            placeholder="Enter your Message"
+            value={content}
+            onChange={e => setContent(e.target.value)}
+          />
+          <button onClick={publish}>전송</button>
+        </ChatSend>
         <ChatFeedbackMsg ref={feedbackMsg}></ChatFeedbackMsg>
       </ModalContent>
     </Wrapper>
-  )
-}
-
-const ChatContent = ({ chatElm }) => {
-  return (
-    <li>
-      {chatElm.memberId} {chatElm.content} {chatElm.sendTime}
-    </li>
   )
 }
 
@@ -144,24 +138,32 @@ const Wrapper = styled.section`
       animation: ${modalShow} 0.3s;
       animation-fill-mode: forwards;
       overflow: hidden;
+    `
+  }}
+`
 
-      header {
-        display: flex;
-        flex-direction: row-reverse;
+const ModalHeader = styled.header`
+  ${({ theme }) => {
+    const { fonts, paddings } = theme
+    return css`
+      display: flex;
+      justify-content: space-between;
 
-        padding: ${paddings.sm} ${paddings.base};
-        background-color: #f1f1f1;
-        font-weight: 700;
+      padding: ${paddings.sm} ${paddings.base};
+      background-color: #f1f1f1;
+      font-weight: 700;
+
+      span {
+        font-weight: 100;
       }
     `
   }}
 `
+
 const ModalCloseBtn = styled.button`
   ${({ theme }) => {
     const { fonts } = theme
     return css`
-      margin: 0vw 0vw 0vw auto
-
       color: #999;
       background-color: transparent;
 
@@ -189,9 +191,16 @@ const ModalContent = styled.main`
         font-size: ${fonts.size.sm};
         text-align: center;
       }
+    `
+  }}
+`
 
+const ChatSend = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
       input {
-        width: 90%;
+        width: 75%;
         padding: ${paddings.sm};
         margin: 0vw auto ${margins.base} auto;
 
@@ -224,6 +233,7 @@ const ModalContent = styled.main`
     `
   }}
 `
+
 const ChatFeedbackMsg = styled.p`
   ${({ theme }) => {
     const { fonts } = theme

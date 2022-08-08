@@ -11,32 +11,24 @@ const ChatRoomPage = () => {
   const { openModal } = useContext(ModalContext)
   const { memberId } = useContext(AuthStateContext)
 
-  const [currentRoomList, setCurrentRoomList] = useState([
-    {
-      content:
-        "테스트 메세지입니다. 일단 이렇게 보내두면 알아서 처리하지 않을까요? 디자인 목적으로 만들긴 했습니다.",
-      memberId: 3,
-      roomId: 2,
-      sendTime: [2022, 8, 5, 21, 57, 52, 825278000],
-    },
-  ])
+  const [currentRoomList, setCurrentRoomList] = useState([])
 
-  // useEffect(() => {
-  //   const loadChatRoomList = async () => {
-  //     try {
-  //       const loadedRoomList = await chattingControl.getChatRoomList()
-  //       setCurrentRoomList(loadedRoomList)
-  //       console.log(currentRoomList)
-  //     } catch (err) {
-  //       console.log(err.message)
-  //     }
-  //   }
-  //   loadChatRoomList()
-  // }, [])
+  useEffect(() => {
+    const loadChatRoomList = async () => {
+      try {
+        const loadedRoomList = await chattingControl.getChatRoomList()
+        setCurrentRoomList(loadedRoomList)
+        console.log(currentRoomList)
+      } catch (err) {
+        console.log(err.message)
+      }
+    }
+    loadChatRoomList()
+  }, [])
 
   const enterChatRoom = async roomId => {
     try {
-      const roomId = await chattingControl.getChatRoomLog(roomId)
+      // const roomId = await chattingControl.getChatRoomLog(roomId)
       openModal(<ChatModal roomId={roomId} memberId={memberId} />)
     } catch (err) {
       console.log(err.message)
@@ -51,7 +43,7 @@ const ChatRoomPage = () => {
       <ChatRoomList>
         {currentRoomList.map(({ content, memberId, roomId, sendTime }, idx) => (
           <ChatRoomInfo key={idx} onClick={() => enterChatRoom(roomId)}>
-            <h5>{memberId == memberId ? "문의 내용" : "문의 응답"}</h5>
+            <h5>{memberId ? "문의 내용" : "문의 응답"}</h5>
             <span>{`${sendTime[0]}.${sendTime[1]}.${sendTime[2]} ${sendTime[3]}:${sendTime[4]}`}</span>
             <p>{content}</p>
           </ChatRoomInfo>
@@ -97,13 +89,15 @@ const ChatRoomTitle = styled.div`
 
 const ChatRoomList = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins } = theme
+    const { colors, paddings } = theme
     return css`
       width: 50vw;
       min-height: 70vh;
+      padding: ${paddings.xl};
       margin: auto;
 
-      background-color: #ffffff;
+      background-color: ${colors.white};
+      border-radius: 1vw;
 
       display: flex;
       justify-content: flex-start;
@@ -116,16 +110,23 @@ const ChatRoomInfo = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 90%;
-
       padding: ${paddings.lg} ${paddings.base};
-      margin: ${margins.sm} auto;
+      margin-bottom: ${margins.base};
 
       background-color: #d6d5d5;
-      border-radius: 2vw;
+      border-radius: 1vw;
 
       h5 {
-        font-size: ${fonts.size.base};
+        font-size: ${fonts.size.lg};
+      }
+
+      span {
+        text-align: right;
+        font-weight: 100;
+      }
+
+      p {
+        font-weight: 100;
       }
     `
   }}

@@ -58,23 +58,4 @@ const SocialIcon = styled(FontAwesomeIcon)`
   }}
 `
 
-const SocialIconSvg = styled.svg`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      width: 1.65vw;
-      height: 1.65vw;
-
-      padding: ${paddings.sm};
-      border-radius: 100px;
-
-      background-color: #1d1d1d;
-      color: ${colors.white};
-
-      &:hover {
-        background-color: #004200;
-      }
-    `
-  }}
-`
 export default LoginSocial
