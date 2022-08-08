@@ -26,7 +26,7 @@ const ChatModal = ({ roomId, memberId }) => {
 
   const connect = () => {
     client.current = new Client({
-      brokerURL: "ws://192.168.219.103:8080/ws/api/v1/chat/websocket", // websocket 뒤에다가 왜 붙이는 건지 모르겠음.
+      brokerURL: "ws://3.38.112.8:8080/ws/api/v1/chat/websocket", // websocket 뒤에다가 왜 붙이는 건지 모르겠음.
       connectHeaders: jwtHeader,
 
       debug: function (log) {
@@ -59,7 +59,6 @@ const ChatModal = ({ roomId, memberId }) => {
   }
 
   const disconnect = () => {
-    console.log("disconnected")
     client.current.deactivate()
   }
 

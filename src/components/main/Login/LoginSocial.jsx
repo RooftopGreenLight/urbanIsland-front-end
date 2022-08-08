@@ -3,14 +3,16 @@ import styled, { css } from "styled-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGoogle } from "@fortawesome/free-brands-svg-icons"
 
+import { OAuthControl } from "api/oAuth"
+
 const LoginSocial = () => {
   return (
     <Wrapper>
       <p>다른 소셜 계정으로 로그인</p>
       <SocialIconList>
-        <SocialIcon icon={faGoogle} />
-        <SocialIcon icon={faGoogle} />
-        <SocialIcon icon={faGoogle} />
+        <SocialIcon icon={faGoogle} color={"#006aff"} />
+        <SocialIcon icon={faGoogle} color={"#09ff00"} onClick={OAuthControl.getCodeFromNaver} />
+        <SocialIcon icon={faGoogle} color={"#dbd800"} onClick={OAuthControl.getCodeFromKakao} />
       </SocialIconList>
     </Wrapper>
   )
@@ -18,7 +20,7 @@ const LoginSocial = () => {
 
 const Wrapper = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins } = theme
+    const { fonts, margins } = theme
     return css`
       width: 60%;
       margin: ${margins.lg} auto;
@@ -41,6 +43,22 @@ const SocialIconList = styled.div`
 `
 
 const SocialIcon = styled(FontAwesomeIcon)`
+  ${({ theme, color }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 1.65vw;
+      height: 1.65vw;
+
+      padding: ${paddings.sm};
+      border-radius: 100px;
+
+      background-color: ${color};
+      color: ${colors.white};
+    `
+  }}
+`
+
+const SocialIconSvg = styled.svg`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`

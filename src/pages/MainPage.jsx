@@ -1,11 +1,13 @@
 import { useContext, useEffect } from "react"
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom"
 
+import { AuthDispatchContext, AuthStateContext } from "module/Auth"
+import KakaoAuth from "components/main/Auth/KakaoAuth"
+
 import BaseTemplate from "components/template/BaseTemplate"
 import { HomeContainer } from "pages/Container/HomeContainer"
 import { LoginContainer } from "pages/Container/LoginContainer"
 import { SignupContainer } from "pages/Container/SignupContainer"
-import { AuthDispatchContext, AuthStateContext } from "module/Auth"
 
 // 채팅 시스템을 위해 임시로 import 한 Component
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
@@ -51,6 +53,8 @@ const MainPage = () => {
           <Route element={<PrivateRoute isLogin={isLogin} />}>
             <Route path="/chat" element={<ChatRoomPage />} />
           </Route>
+          <Route path="/chattest" element={<ChatRoomPage />} />
+          <Route path="/oauth2/kakao/login" element={<KakaoAuth />} />
           <Route path="/" element={<HomeContainer />} />
         </Routes>
       </BaseTemplate>
