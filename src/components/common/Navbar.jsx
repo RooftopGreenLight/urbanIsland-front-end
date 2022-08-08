@@ -1,11 +1,12 @@
 import styled, { css } from "styled-components"
-import { useContext, useEffect, useState } from "react"
+import { useContext } from "react"
 import { Link } from "react-router-dom"
 
-import { AuthContext } from "pages/MainPage"
+import { AuthStateContext } from "module/Auth"
+import { accountControl } from "api/accountControl"
 
 const Navbar = () => {
-  const { authState } = useContext(AuthContext)
+  const { authState } = useContext(AuthStateContext)
   const { authenticated } = authState
 
   return (
@@ -19,7 +20,9 @@ const Navbar = () => {
       ) : (
         <>
           <LinkElement to="/login">Mypage</LinkElement>
-          <LinkElement to="/signup">Logout</LinkElement>
+          <LinkElement to="/" onClick={accountControl.getLogOut}>
+            Logout
+          </LinkElement>
         </>
       )}
     </Wrapper>
