@@ -70,11 +70,11 @@ export const accountControl = {
     let response
     try {
       response = await axiosInstance({
+        headers: {
+          "refresh-token": `Bearer ${refresh}`,
+        },
         method: "POST",
         url: "auth/check-refresh-token",
-        data: {
-          refreshToken: refresh,
-        },
       })
       const { accessToken, refreshToken } = response.data
       addTokenToLocalStorage(accessToken, refreshToken)

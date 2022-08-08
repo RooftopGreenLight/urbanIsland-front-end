@@ -2,12 +2,12 @@ import styled, { css } from "styled-components"
 import { useContext } from "react"
 import { Link } from "react-router-dom"
 
-import { AuthContext } from "pages/MainPage"
+import { AuthStateContext } from "module/Auth"
 import { leftToRight } from "styles/Animation"
 import { accountControl } from "api/accountControl"
 
 const HomeBtnList = () => {
-  const { authState } = useContext(AuthContext)
+  const authState = useContext(AuthStateContext)
   const { authenticated } = authState
   return (
     <Wrapper>

@@ -3,7 +3,6 @@ import styled, { css } from "styled-components"
 import HomeBtnList from "components/main/Home/HomeBtnList"
 import HomeBottomText from "components/main/Home/HomeBottomText"
 import Information from "components/main/Home/Information/Information"
-
 import bgImg2 from "assets/img/background2.jpg"
 
 const Home = () => {
@@ -25,6 +24,9 @@ const Home = () => {
 const Wrapper = styled.div`
   width: 100vw;
   min-height: 100vh;
+
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${bgImg2});
+  background-size: cover;
 `
 
 const Homepage = styled.div`

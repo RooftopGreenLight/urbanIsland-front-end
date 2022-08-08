@@ -39,6 +39,7 @@ export const leftToRight = keyframes`
     transform: translate3d(0, 0, 0);
   }
 `
+
 export const fadeIn = keyframes`
   0% {
     opacity: 0%;

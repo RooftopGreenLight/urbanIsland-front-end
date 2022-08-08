@@ -36,9 +36,11 @@ const Wrapper = styled.div`
 
       animation: ${fadeInBottomText} 10s infinite;
       animation-fill-mode: forwards;
+
       h5 {
         font-size: ${fonts.size.base};
       }
+
       p {
         font-weight: 100;
         font-size: ${fonts.size.xsm};
