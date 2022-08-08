@@ -127,13 +127,13 @@ const ChatModal = ({ roomId, memberId }) => {
 
 const Wrapper = styled.section`
   ${({ theme }) => {
-    const { fonts, paddings } = theme
+    const { colors } = theme
     return css`
       width: 30%;
       margin: auto;
 
       border-radius: 0.3rem;
-      background-color: #fff;
+      background-color: ${colors.white};
 
       animation: ${modalShow} 0.3s;
       animation-fill-mode: forwards;
@@ -144,7 +144,7 @@ const Wrapper = styled.section`
 
 const ModalHeader = styled.header`
   ${({ theme }) => {
-    const { fonts, paddings } = theme
+    const { paddings } = theme
     return css`
       display: flex;
       justify-content: space-between;

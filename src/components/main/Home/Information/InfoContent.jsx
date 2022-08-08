@@ -88,7 +88,7 @@ const MiniDot = styled(FontAwesomeIcon)`
 
 const IntroText = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins } = theme
+    const { fonts, margins } = theme
     return css`
       margin: 7.5vh auto ${margins.xl} auto;
 
