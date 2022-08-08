@@ -11,8 +11,16 @@ const LoginSocial = () => {
       <p>다른 소셜 계정으로 로그인</p>
       <SocialIconList>
         <SocialIcon icon={faGoogle} color={"#006aff"} />
-        <SocialIcon icon={faGoogle} color={"#09ff00"} onClick={OAuthControl.getCodeFromNaver} />
-        <SocialIcon icon={faGoogle} color={"#dbd800"} onClick={OAuthControl.getCodeFromKakao} />
+        <SocialIcon
+          icon={faGoogle}
+          color={"#09ff00"}
+          onClick={() => OAuthControl.getCodeFromSocial("naver")}
+        />
+        <SocialIcon
+          icon={faGoogle}
+          color={"#dbd800"}
+          onClick={() => OAuthControl.getCodeFromSocial("kakao")}
+        />
       </SocialIconList>
     </Wrapper>
   )
