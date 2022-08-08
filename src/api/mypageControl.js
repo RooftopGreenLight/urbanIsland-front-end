@@ -36,13 +36,16 @@ export const mypageControl = {
       throw new Error(err)
     }
   },
-  getProfile: async () => {
+  getProfile: async id => {
     try {
       const response = await axiosInstance({
         method: "get",
         url: "/profile",
+        params: {
+          id,
+        },
       })
-      return response
+      return response.data.fileUrl
     } catch (err) {
       throw new Error(err)
     }
@@ -52,16 +55,12 @@ export const mypageControl = {
       const response = await axiosInstance({
         method: "post",
         url: "/profile",
-        config: {
-          headers: {
-            "content-type": "multipart/form-data",
-          },
-        },
-        params: {
-          file,
+        data: file,
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
       })
-      return response
+      return response.data.fileUrl
     } catch (err) {
       throw new Error(err)
     }
