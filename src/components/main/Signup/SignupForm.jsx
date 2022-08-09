@@ -19,14 +19,13 @@ const SignupForm = () => {
     email: "",
     password: "",
     verifiedPassword: "",
-    username: "",
+    nickname: "",
     is_verified: false,
   })
-  const { email, password, verifiedPassword, username, is_verified } = inputValue
+  const { email, password, verifiedPassword, nickname, is_verified } = inputValue
 
   const changeInput = e => {
     const { name, value } = e.target
-    // 이미 이메일이 인증된 상태에서 수정하려고 할 시, 차단.
     if (is_verified && name === "email") {
       return
     }
@@ -56,7 +55,7 @@ const SignupForm = () => {
 
   const submitRegister = async event => {
     event.preventDefault()
-    if (email * password * verifiedPassword * username === 0) {
+    if (email * password * verifiedPassword * nickname === 0) {
       feedbackMsg.current.innerText = "가입에 필요한 필수 정보를 입력해주세요."
       return
     }
@@ -69,7 +68,7 @@ const SignupForm = () => {
       return
     }
     try {
-      await accountControl.postSignupData(email, password, username)
+      await accountControl.postSignupData(email, password, nickname)
       feedbackMsg.current.innerText = "회원가입이 완료되었습니다. 로그인 창으로 이동합니다."
       setTimeout(() => navigate("/login"), 750)
     } catch (err) {
@@ -83,7 +82,7 @@ const SignupForm = () => {
       <EmailVerifiedBtn is_verified={is_verified} onClick={checkEmailAddress}>
         {is_verified ? <FontAwesomeIcon icon={faCircleCheck} /> : "이메일 인증"}
       </EmailVerifiedBtn>
-      <SignupInput name="username" placeholder="Username" onChange={changeInput} value={username} />
+      <SignupInput name="nickname" placeholder="Nickname" onChange={changeInput} value={nickname} />
       <SignupInput
         name="password"
         placeholder="Password"
