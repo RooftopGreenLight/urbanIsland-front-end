@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import styled, { css } from "styled-components"
 
-import cardImg from "assets/img/logincard2.jpg"
+import cardImg from "assets/img/logincard.jpg"
 import { fadeIn } from "styles/Animation"
 
 const CardSection = () => {
@@ -18,7 +18,7 @@ const CardSection = () => {
 
 const Wrapper = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins } = theme
+    const { colors, fonts } = theme
     return css`
       width: 42.5%;
       height: 70vh;

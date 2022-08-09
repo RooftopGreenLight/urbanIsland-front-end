@@ -4,7 +4,6 @@ import Calendar from "react-calendar"
 import "react-calendar/dist/Calendar.css"
 import MypageList from "./MypageList"
 const Wrapper = styled.div`
-  background-color: ;
   width: 60vw;
   display: flex;
   flex-direction: column;

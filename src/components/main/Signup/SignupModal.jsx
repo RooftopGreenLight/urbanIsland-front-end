@@ -44,7 +44,7 @@ const SignupModal = ({ code, verifiedEmail }) => {
 
 const Wrapper = styled.section`
   ${({ theme }) => {
-    const { fonts, paddings } = theme
+    const { paddings } = theme
     return css`
       width: 30%;
       margin: auto;
