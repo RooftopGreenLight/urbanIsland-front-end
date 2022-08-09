@@ -1,8 +1,8 @@
 import styled, { css } from "styled-components"
+import { useEffect, useRef, useState } from "react"
 
 import { fadeInBottomText } from "styles/Animation"
 import { MainPageBottomText } from "constants/MainPageInformation"
-import { useEffect, useRef, useState } from "react"
 
 const HomeBottomText = () => {
   const textSection = useRef()

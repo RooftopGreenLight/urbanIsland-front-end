@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import styled, { css } from "styled-components"
 
-import cardImg from "assets/img/logincard2.jpg"
+import cardImg from "assets/img/logincard.jpg"
 import { fadeIn } from "styles/Animation"
 
 const RegisterSection = () => {

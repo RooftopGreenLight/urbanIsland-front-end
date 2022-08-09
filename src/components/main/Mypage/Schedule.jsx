@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons"
 
 const Wrapper = styled.div`
-  background-color: ;
   width: 60vw;
   display: flex;
   flex-direction: column;
