@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import styled from "styled-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons"
 import { mypageControl } from "api/mypageControl"
-import { AuthContext } from "pages/MainPage"
+import ProfileModal from "./Modals/ProfileModal"
+import { ModalContext } from "module/Modal"
 const Wrapper = styled.div`
   background-color: ;
   width: 60vw;
@@ -32,10 +33,9 @@ const Wrapper = styled.div`
   .box {
     padding: 0.6rem;
     border-bottom: 1px solid gray;
-    display: flex;
-    justify-content: space-between;
   }
   .title {
+    justify-content: space-between;
     font-size: large;
     font-weight: bold;
     padding: 0.6rem;
@@ -47,33 +47,28 @@ const Wrapper = styled.div`
 `
 const Profile = () => {
   const [data, setData] = useState()
-  const [editNum, setShowNum] = useState(false)
-  const [editPwd, setShowPwd] = useState(false)
-  const [editInput, setEditInput] = useState({
-    pwd: "",
-    phoneNum: "",
-  })
-  const { pwd, phoneNum } = editInput
-  const editPhoneNum = async () => {
+
+  const { openModal } = useContext(ModalContext)
+  const editPhoneNum = async phoneNum => {
     try {
       const result = await mypageControl.postMemberChangePhoneNum(phoneNum)
-      setShowNum(false)
     } catch (err) {
       console.log(err.message)
     }
   }
-  const editPassword = async () => {
+  const editPassword = async pwd => {
     try {
       const result = await mypageControl.postMemberChangePwd(pwd)
-      setShowPwd(false)
     } catch (err) {
       console.log(err.message)
     }
   }
-
-  const handleChange = e => {
-    const { name, value } = e.target
-    setEditInput({ ...editInput, [name]: value })
+  const editNickName = async name => {
+    try {
+      const result = await mypageControl.postMemberChangeNickname(name)
+    } catch (err) {
+      console.log(err.message)
+    }
   }
 
   useEffect(() => {
@@ -86,7 +81,7 @@ const Profile = () => {
       }
     }
     getProfile()
-  }, [editNum])
+  }, [editPhoneNum, editNickName, editPhoneNum])
 
   const listInput = ["그린비 등록하기", "옥상지기 등록하기"]
   return (
@@ -96,7 +91,15 @@ const Profile = () => {
           <div className="title">내 프로필 관리하기</div>
           <p>기본정보</p>
           <div className="profile-box">
-            <div className="title">{data.name}</div>
+            <div>
+              <span className="title">{data.name}</span>{" "}
+              <button
+                onClick={() => {
+                  openModal(<ProfileModal apiFunction={editNickName} placeholder="닉네임수정" />)
+                }}>
+                입력
+              </button>
+            </div>
             <ul>
               <li>
                 <div className="profile-line">
@@ -104,36 +107,30 @@ const Profile = () => {
                 </div>
               </li>
               <li>
-                {editNum ? (
-                  <div className="profile-line">
-                    <input
-                      type="text"
-                      value={phoneNum}
-                      onChange={handleChange}
-                      name="phoneNum"
-                      placeholder="xxx-xxxx-xxxx"
-                    />
-                    <button onClick={editPhoneNum}>입력</button>
-                  </div>
-                ) : (
-                  <div className="profile-line">
-                    <span>{data.phoneNumber}</span>
-                    <button onClick={e => setShowNum(true)}>수정</button>
-                  </div>
-                )}
+                <div className="profile-line">
+                  <span>{data.phoneNumber ? data.phoneNumber : <p>폰번호 입력</p>}</span>
+                  <button
+                    onClick={() => {
+                      openModal(
+                        <ProfileModal apiFunction={editPhoneNum} placeholder="XXX-XXXX-XXXX" />,
+                      )
+                    }}>
+                    입력
+                  </button>
+                </div>
               </li>
               <li>
-                {editPwd ? (
-                  <div className="profile-line">
-                    <input type="text" value={pwd} onChange={handleChange} name="pwd" />
-                    <button onClick={editPassword}>입력</button>
-                  </div>
-                ) : (
-                  <div className="profile-line">
-                    <span>비밀번호 변경</span>
-                    <button onClick={e => setShowPwd(true)}>수정</button>
-                  </div>
-                )}
+                <div className="profile-line">
+                  <span>비밀번호 변경</span>
+                  <button
+                    onClick={() =>
+                      openModal(
+                        <ProfileModal apiFunction={editPassword} placeholder="비밀번호 변경" />,
+                      )
+                    }>
+                    수정
+                  </button>
+                </div>
               </li>
             </ul>
           </div>

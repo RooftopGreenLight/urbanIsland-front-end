@@ -1,13 +1,13 @@
-import React, { useRef, useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import styled from "styled-components"
 import { NavLink } from "react-router-dom"
 import defaultProfile from "assets/img/defaultProfile.png"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPenToSquare, faSitemap } from "@fortawesome/free-solid-svg-icons"
 import { mypageControl } from "api/mypageControl"
-import SignupModal from "../Signup/SignupModal"
+import { ModalContext } from "module/Modal"
+import MypageBoxModal from "./Modals/MypageBoxModal"
 
-import axios from "axios"
 const Wrapper = styled.div`
   width: 20vw;
   height: 80vh;
@@ -73,37 +73,10 @@ const Wrapper = styled.div`
 `
 
 const MypageBox = () => {
-  const imageInput = useRef()
-  const onClickImageUpload = () => {
-    imageInput.current.click()
-  }
   const [data, setData] = useState()
+  const { openModal } = useContext(ModalContext)
   const [photo, setPhoto] = useState("")
-  const [DefaultProfile, setDefaultProfile] = useState(false)
-  const [modalOn, setModalOn] = useState(false)
-
-  const [files, setFiles] = useState()
-  const handleUpload = e => {
-    e.preventDefault()
-    setFiles(e.target.files)
-  }
-  const deleteProfile = async () => {
-    try {
-      const result = await mypageControl.deleteProfile()
-      setPhoto(defaultProfile)
-    } catch (err) {
-      console.log(err.message)
-    }
-  }
-
-  const onFinish = async () => {
-    const formData = new FormData()
-    formData.append("file", files[0]) //files[0] === upload file
-    const result = mypageControl.postProfile(formData)
-    console.log(result)
-    setPhoto(result)
-  }
-
+  const [refresh, setRefresh] = useState(false)
   useEffect(() => {
     const getData = async event => {
       try {
@@ -119,10 +92,8 @@ const MypageBox = () => {
       try {
         const result = await mypageControl.getProfile(id)
         setPhoto(result)
-        setDefaultProfile(false)
       } catch (err) {
-        setDefaultProfile(true)
-        console.log(err.message)
+        setPhoto(defaultProfile)
       }
     }
     getProfile()
@@ -132,22 +103,11 @@ const MypageBox = () => {
     <Wrapper>
       <div className="profile-area">
         <div className="profile-box">
-          {DefaultProfile ? (
-            <img className="profile" src={defaultProfile} />
-          ) : (
-            <img className="profile" src={photo} />
-          )}
-          <button className="profile-edit">
-            <FontAwesomeIcon onClick={() => setModalOn(true)} icon={faPenToSquare} />
-            <SignupModal status={modalOn} setModalOn={setModalOn}>
-              <form method="post" encType="multipart/form-data">
-                <input type="file" onChange={handleUpload} />
-              </form>
-              <button type="button" value="upload" onClick={onFinish}>
-                업로드
-              </button>
-              <button onClick={deleteProfile}>이미지 삭제</button>
-            </SignupModal>
+          <img className="profile" src={photo} />
+          <button
+            className="profile-edit"
+            onClick={() => openModal(<MypageBoxModal setPhoto={setPhoto} />)}>
+            <FontAwesomeIcon icon={faPenToSquare} />
           </button>
         </div>
         {data && <p>{data.name}</p>}

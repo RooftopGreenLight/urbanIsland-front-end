@@ -36,6 +36,18 @@ export const mypageControl = {
       throw new Error(err)
     }
   },
+  postMemberChangeNickname: async nickname => {
+    try {
+      const response = await axiosInstance({
+        method: "post",
+        url: "/members/change-nickname",
+        data: { nickname },
+      })
+      return response
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
   getProfile: async id => {
     try {
       const response = await axiosInstance({
