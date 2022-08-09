@@ -1,0 +1,46 @@
+import axiosInstance from "api/axiosInstance"
+
+export const chattingControl = {
+  getReservationChat: async rooftopId => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/chat/inquiry/join/room/${rooftopId}`,
+        params: {
+          rooftopId,
+        },
+      })
+      const { roomId } = response.data
+      return roomId
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
+
+  getChatRoomList: async () => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: "/chat/inquiry/response",
+      })
+      return response.data
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
+
+  getChatRoomLog: async roomId => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/chat/inquiry/room/${roomId}`,
+      })
+      return response
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
+}

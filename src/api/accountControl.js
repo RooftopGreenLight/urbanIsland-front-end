@@ -12,6 +12,7 @@ export const accountControl = {
       })
       return response
     } catch (err) {
+      console.log(err)
       const errorMessage = err.response.data.message
       throw new Error(errorMessage)
     }
@@ -58,11 +59,14 @@ export const accountControl = {
         },
       })
       // 로그인에 성공했을 경우, 추후 access_token 만료를 대비하여 header 설정.
-      const { accessToken, refreshToken } = response.data
-      addTokenToLocalStorage(accessToken, refreshToken)
+      console.log(response)
+      const { tokenDto, id } = response.data
+      const { accessToken, refreshToken } = tokenDto
+      addTokenToLocalStorage(accessToken, refreshToken, id)
       return response
     } catch (err) {
-      const errorMessage = err.response.data.data.errorMessage
+      console.log(err)
+      const errorMessage = err.response.data.message
       throw new Error(errorMessage)
     }
   },
@@ -71,30 +75,35 @@ export const accountControl = {
     try {
       response = await axiosInstance({
         headers: {
-          "refresh-token": `Bearer ${refresh}`,
+          "refresh-token": `${refresh}`,
         },
-        method: "POST",
+        method: "GET",
         url: "auth/check-refresh-token",
       })
       const { accessToken, refreshToken } = response.data
       addTokenToLocalStorage(accessToken, refreshToken)
       return accessToken
     } catch (err) {
-      const errorCode = err.response.data.data.errorCode
+      const { errorCode, message } = err.response.data
       if (errorCode === 461) {
         this.getLogOut()
+        return
       }
-      throw new Error(errorCode)
+      throw new Error(message)
     }
   },
   getLogOut: () => {
     localStorage.removeItem("access_token")
     localStorage.removeItem("refresh_token")
+    localStorage.removeItem("memberId")
     window.location.reload()
   },
 }
 
-const addTokenToLocalStorage = (access, refresh) => {
+export const addTokenToLocalStorage = (access, refresh, id = false) => {
   localStorage.setItem("access_token", JSON.stringify(access))
   localStorage.setItem("refresh_token", JSON.stringify(refresh))
+  if (id) {
+    localStorage.setItem("memberId", JSON.stringify(id))
+  }
 }

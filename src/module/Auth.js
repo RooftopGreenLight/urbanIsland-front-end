@@ -1,13 +1,13 @@
 import { createContext, useReducer } from "react"
 
 // JWT Token 관련 reducer 함수, initialState 객체 선언.
-const initialState = { token: null, authenticated: false }
+const initialState = { token: null, authenticated: false, memberId: null }
 const reducer = (state, action) => {
   switch (action.type) {
     case "SET_TOKEN":
-      return { ...state, token: action.token, authenticated: true }
+      return { ...state, token: action.token, memberId: action.memberId, authenticated: true }
     case "REMOVE_TOKEN":
-      return { ...state, token: null, authenticated: false }
+      return { ...state, token: null, memberId: null, authenticated: false }
     default:
       return state
   }

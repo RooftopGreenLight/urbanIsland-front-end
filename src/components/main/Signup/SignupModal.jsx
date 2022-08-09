@@ -1,56 +1,48 @@
-import { useEffect, useRef } from "react"
+import { useContext, useRef, useState } from "react"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
-import ModalPortal from "components/common/Modal/ModalPortal"
 import { modalShow } from "styles/Animation"
+import { ModalContext } from "module/Modal"
 
-const SignupModal = ({ children, status, setModalOn }) => {
-  const modalRef = useRef()
+const SignupModal = ({ code, verifiedEmail }) => {
+  const [verifiedCode, setVerifiedCode] = useState("")
+  const { closeModal } = useContext(ModalContext)
+  const feedbackMsg = useRef()
 
-  useEffect(() => {
-    if (status) {
-      modalRef.current.style.animationPlayState = "running"
+  const checkVerifiedCode = () => {
+    if (verifiedCode !== code) {
+      feedbackMsg.current.innerText = "인증번호를 재확인해 주세요"
+      return
     }
-  }, [status])
+    verifiedEmail()
+    closeModal()
+  }
+
+  const changeInput = e => {
+    setVerifiedCode(e.target.value)
+  }
 
   return (
-    <ModalPortal>
-      {status && (
-        <Wrapper ref={modalRef}>
-          <ModalSection>
-            <header>
-              <ModalCloseBtn onClick={() => setModalOn(false)}>
-                <FontAwesomeIcon icon={faXmark} />
-              </ModalCloseBtn>
-            </header>
-            <ModalContent>{children}</ModalContent>
-          </ModalSection>
-        </Wrapper>
-      )}
-    </ModalPortal>
+    <Wrapper>
+      <header>
+        <ModalCloseBtn onClick={closeModal}>
+          <FontAwesomeIcon icon={faXmark} />
+        </ModalCloseBtn>
+      </header>
+      <ModalContent>
+        <h5>이메일로 전송된 인증 코드를 입력해주세요.</h5>
+        <input placeholder="XXXX-XXXX" onChange={changeInput} value={verifiedCode} />
+        <button onClick={checkVerifiedCode}>인증번호 확인</button>
+        <ModalFeedbackMsg ref={feedbackMsg}></ModalFeedbackMsg>
+      </ModalContent>
+    </Wrapper>
   )
 }
 
-const Wrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
-
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 99;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  background-color: rgba(0, 0, 0, 0.6);
-`
-
-const ModalSection = styled.section`
+const Wrapper = styled.section`
   ${({ theme }) => {
     const { fonts, paddings } = theme
     return css`
@@ -103,15 +95,10 @@ const ModalContent = styled.main`
       border-top: 1px solid #dee2e6;
       background-color: ${colors.white};
 
-      p {
+      h5 {
         margin: ${margins.base};
         font-size: ${fonts.size.sm};
         text-align: center;
-
-        &.feedback {
-          font-size: ${fonts.size.xsm};
-          font-weight: 100;
-        }
       }
 
       input {
@@ -145,6 +132,16 @@ const ModalContent = styled.main`
         color: ${colors.white};
         font-size: ${fonts.size.xsm};
       }
+    `
+  }}
+`
+
+const ModalFeedbackMsg = styled.p`
+  ${({ theme }) => {
+    const { fonts } = theme
+    return css`
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
     `
   }}
 `
