@@ -105,7 +105,7 @@ const LoginInput = styled.div`
 `
 const LoginFeedBack = styled.p`
   ${({ theme }) => {
-    const { colors, fonts, margins } = theme
+    const { fonts, margins } = theme
     return css`
       margin: 0vw 0vw ${margins.sm} 0vw;
 

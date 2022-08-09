@@ -119,7 +119,7 @@ const Wrapper = styled.div`
 
 const SignUpFeedback = styled.p`
   ${({ theme }) => {
-    const { colors, fonts, margins } = theme
+    const { fonts, margins } = theme
     return css`
       margin: ${margins.lg} auto ${margins.sm} auto;
       text-align: center;

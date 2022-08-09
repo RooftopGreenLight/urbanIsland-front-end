@@ -1,5 +1,5 @@
 import axios from "axios"
-import { accountControl } from "./accountControl"
+import { accountControl } from "api/accountControl"
 
 // HTTPS 통신에 쓰이는 Axios 인스턴스 생성
 // 공통으로 사용하는 baseURL을 설정하면, 추후 인스턴스 활용 시 나머지 URL만 기술하면 됨.
