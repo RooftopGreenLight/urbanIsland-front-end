@@ -17,7 +17,7 @@ export const accountControl = {
       throw new Error(errorMessage)
     }
   },
-  postSignupData: async (email, password, name) => {
+  postSignupData: async (email, password, nickname) => {
     try {
       const response = await axiosInstance({
         method: "POST",
@@ -25,7 +25,7 @@ export const accountControl = {
         data: {
           email,
           password,
-          name,
+          nickname,
         },
       })
       return response
