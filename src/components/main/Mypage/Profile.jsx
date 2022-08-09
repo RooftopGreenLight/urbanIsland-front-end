@@ -1,61 +1,50 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useState, useCallback } from "react"
 import styled from "styled-components"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faAngleRight } from "@fortawesome/free-solid-svg-icons"
 import { mypageControl } from "api/mypageControl"
 import ProfileModal from "./Modals/ProfileModal"
 import { ModalContext } from "module/Modal"
+import MypageList from "./MypageList"
 const Wrapper = styled.div`
   background-color: ;
   width: 60vw;
   display: flex;
   flex-direction: column;
   margin-left: 10vw;
+`
+const PTag = styled.p`
+  color: gray;
+  padding-left: 0.6rem;
+`
 
-  .profile-box {
-    width: 65%;
-    background-color: white;
-    align-items: center;
-  }
-  .profile-line {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid gray;
-    padding: 0.6rem;
-    color: gray;
-  }
-
-  .list-box {
-    margin-top: 2rem;
-    border-top: 1px solid gray;
-    width: 65%;
-  }
-  .box {
-    padding: 0.6rem;
-    border-bottom: 1px solid gray;
-  }
-  .title {
-    justify-content: space-between;
-    font-size: large;
-    font-weight: bold;
-    padding: 0.6rem;
-  }
-  p {
-    color: gray;
-    padding-left: 0.6rem;
-  }
+const ProfileBox = styled.div`
+  width: 65%;
+  background-color: white;
+  align-items: center;
+`
+const ProfileLine = styled.div`
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid gray;
+  padding: 0.6rem;
+  color: gray;
+`
+const Title = styled.div`
+  justify-content: space-between;
+  font-size: large;
+  font-weight: bold;
+  padding: 0.6rem;
 `
 const Profile = () => {
   const [data, setData] = useState()
 
   const { openModal } = useContext(ModalContext)
-  const editPhoneNum = async phoneNum => {
+  const editPhoneNum = useCallback(async phoneNum => {
     try {
       const result = await mypageControl.postMemberChangePhoneNum(phoneNum)
     } catch (err) {
       console.log(err.message)
     }
-  }
+  })
   const editPassword = async pwd => {
     try {
       const result = await mypageControl.postMemberChangePwd(pwd)
@@ -63,13 +52,13 @@ const Profile = () => {
       console.log(err.message)
     }
   }
-  const editNickName = async name => {
+  const editNickName = useCallback(async name => {
     try {
       const result = await mypageControl.postMemberChangeNickname(name)
     } catch (err) {
       console.log(err.message)
     }
-  }
+  })
 
   useEffect(() => {
     const getProfile = async event => {
@@ -88,64 +77,43 @@ const Profile = () => {
     <Wrapper>
       {data && (
         <>
-          <div className="title">내 프로필 관리하기</div>
-          <p>기본정보</p>
-          <div className="profile-box">
-            <div>
-              <span className="title">{data.name}</span>{" "}
+          <Title>내 프로필 관리하기</Title>
+          <PTag>기본정보</PTag>
+          <ProfileBox>
+            <ProfileLine>
+              {data.name}{" "}
               <button
                 onClick={() => {
                   openModal(<ProfileModal apiFunction={editNickName} placeholder="닉네임수정" />)
                 }}>
                 입력
               </button>
-            </div>
-            <ul>
-              <li>
-                <div className="profile-line">
-                  <span>{data.email}</span>
-                </div>
-              </li>
-              <li>
-                <div className="profile-line">
-                  <span>{data.phoneNumber ? data.phoneNumber : <p>폰번호 입력</p>}</span>
-                  <button
-                    onClick={() => {
-                      openModal(
-                        <ProfileModal apiFunction={editPhoneNum} placeholder="XXX-XXXX-XXXX" />,
-                      )
-                    }}>
-                    입력
-                  </button>
-                </div>
-              </li>
-              <li>
-                <div className="profile-line">
-                  <span>비밀번호 변경</span>
-                  <button
-                    onClick={() =>
-                      openModal(
-                        <ProfileModal apiFunction={editPassword} placeholder="비밀번호 변경" />,
-                      )
-                    }>
-                    수정
-                  </button>
-                </div>
-              </li>
-            </ul>
-          </div>
+            </ProfileLine>
+            <ProfileLine>
+              <span>{data.email}</span>
+            </ProfileLine>
+            <ProfileLine>
+              <span>{data.phoneNumber ? data.phoneNumber : <p>폰번호 입력</p>}</span>
+              <button
+                onClick={() => {
+                  openModal(<ProfileModal apiFunction={editPhoneNum} placeholder="XXX-XXXX-XXXX" />)
+                }}>
+                입력
+              </button>
+            </ProfileLine>
+            <ProfileLine>
+              <span>비밀번호 변경</span>
+              <button
+                onClick={() =>
+                  openModal(<ProfileModal apiFunction={editPassword} placeholder="비밀번호 변경" />)
+                }>
+                수정
+              </button>
+            </ProfileLine>
+          </ProfileBox>
         </>
       )}
-      <ul className="list-box">
-        {listInput.map(d => (
-          <li>
-            <div className="box">
-              <span>{d}</span>
-              <FontAwesomeIcon icon={faAngleRight} />
-            </div>
-          </li>
-        ))}
-      </ul>
+      <MypageList props={listInput} />
     </Wrapper>
   )
 }
