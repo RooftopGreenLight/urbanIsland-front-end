@@ -17,7 +17,7 @@ export const accountControl = {
       throw new Error(errorMessage)
     }
   },
-  postSignupData: async (email, password, name) => {
+  postSignupData: async (email, password, nickname) => {
     try {
       const response = await axiosInstance({
         method: "POST",
@@ -25,7 +25,7 @@ export const accountControl = {
         data: {
           email,
           password,
-          name,
+          nickname,
         },
       })
       return response
@@ -47,7 +47,7 @@ export const accountControl = {
       throw new Error(err)
     }
   },
-  postLoginData: async (email, password, nickname) => {
+  postLoginData: async (email, password) => {
     let response
     try {
       response = await axiosInstance({
@@ -56,7 +56,6 @@ export const accountControl = {
         data: {
           email,
           password,
-          nickname,
         },
       })
       // 로그인에 성공했을 경우, 추후 access_token 만료를 대비하여 header 설정.
