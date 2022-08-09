@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 import ChatRoomInfo from "components/main/Chat/ChatRoomInfo"
-import NoticeEmptyChatRoom from "components/main/Chat/NoticeEmptyChatRoom"
+import NoticeEmptyChatRoom from "components/main/Chat/NoticeEmpty/NoticeEmptyChatRoom"
 
 import { ModalContext } from "module/Modal"
 import { AuthStateContext } from "module/Auth"
@@ -27,30 +27,24 @@ const ChatRoomPage = () => {
   const [currentRoomList, setCurrentRoomList] = useState([
     {
       content: "ㅎㅇ",
-      memberId: 1,
       roomId: 2,
-      sendTime: [2022, 8, 9, 19, 42, 21, 759444],
-    },
-    {
-      content: "ㅎㅇ",
       memberId: 1,
-      roomId: 2,
-      sendTime: [2022, 8, 9, 19, 42, 21, 759444],
+      sendTime: [2022, 8, 9, 21, 49, 21, 100000],
     },
   ])
   const isEmpty = currentRoomList.length === 0
 
-  // useEffect(() => {
-  //   const loadChatRoomList = async () => {
-  //     try {
-  //       const loadedRoomList = await chattingControl.getChatRoomList(memberId)
-  //       setCurrentRoomList(loadedRoomList)
-  //     } catch (err) {
-  //       console.log(err.message)
-  //     }
-  //   }
-  //   loadChatRoomList()
-  // }, [])
+  useEffect(() => {
+    const loadChatRoomList = async () => {
+      try {
+        const loadedRoomList = await chattingControl.getChatRoomList(memberId)
+        setCurrentRoomList(loadedRoomList)
+      } catch (err) {
+        console.log(err.message)
+      }
+    }
+    // loadChatRoomList()
+  }, [])
 
   return (
     <Wrapper>
@@ -61,7 +55,7 @@ const ChatRoomPage = () => {
       <ChatRoomList isEmpty={isEmpty}>
         {!isEmpty ? (
           currentRoomList.map((chatRoomElm, idx) => (
-            <ChatRoomInfo chatRoomElm={chatRoomElm} key={idx} />
+            <ChatRoomInfo chatRoomElm={chatRoomElm} currentMemberId={memberId} key={idx} />
           ))
         ) : (
           <NoticeEmptyChatRoom />

@@ -13,7 +13,9 @@ import { modalShow } from "styles/Animation"
 
 const ChatModal = ({ roomId, memberId }) => {
   const { openModal } = useContext(ModalContext)
-  const [chatMessages, setChatMessages] = useState([])
+  const [chatMessages, setChatMessages] = useState([
+    { memberId, content: "ㅎㅇ", sendTime: [2022, 8, 9, 21, 51, 10, 10000] },
+  ])
   const [content, setContent] = useState("")
   const client = useRef({})
 
@@ -103,9 +105,9 @@ const ChatModal = ({ roomId, memberId }) => {
         {chatMessages.length > 0 ? (
           <ChatMessageList>
             {chatMessages.slice(-10).map(({ memberId, content, sendTime }, idx) => (
-              <ChatMessage>
-                {memberId} {content}
-                {`${sendTime[0]}.${sendTime[1]}.${sendTime[2]} ${sendTime[3]}:${sendTime[4]}`}
+              <ChatMessage key={idx} memberId={memberId}>
+                <p>{content}</p>
+                <span>{`${sendTime[0]}.${sendTime[1]}.${sendTime[2]} ${sendTime[3]}:${sendTime[4]}`}</span>
               </ChatMessage>
             ))}
           </ChatMessageList>
@@ -183,9 +185,6 @@ const ModalContent = styled.main`
     const { colors, fonts, paddings, margins } = theme
     return css`
       min-height: 50vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
 
       padding: ${paddings.sm};
       border-top: 1px solid #dee2e6;
@@ -198,11 +197,12 @@ const ChatMessageList = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
+      height: 80%;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
 
-      span {
+      p {
         width: 70%;
         padding: ${paddings.sm};
 
@@ -216,19 +216,35 @@ const ChatMessage = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 70%;
+      width: 60%;
       padding: ${paddings.sm};
 
-      background-color: #d6d6d6;
+      display: flex;
+      flex-direction: column;
+
+      p {
+        width: 100%;
+        padding: ${paddings.base};
+
+        border-radius: 0.5vw;
+        background-color: #d6d6d6;
+      }
+
+      span {
+        text-align: right;
+        font-size: 0.8rem;
+        font-weight: 100;
+      }
     `
   }}
 `
 
 const ChatSend = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { margins } = theme
     return css`
       width: 100%;
+
       position: absolute;
       left: 0;
       bottom: 0;
@@ -250,7 +266,6 @@ const ChatSend = styled.div`
           color: #3e3e3e;
           text-align: left;
           font-weight: 100;
-          line-height: 10%;
         }
 
         &::before {
