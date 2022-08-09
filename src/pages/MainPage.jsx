@@ -46,13 +46,13 @@ const MainPage = () => {
       <BaseTemplate>
         <Routes>
           <Route path="/" element={<HomeContainer />} />
-          <Route path="/mypage/:section" element={<MypageContainer />} />
           <Route element={<RestrictedRoute isLogin={isLogin} />}>
             <Route path="/login" element={<LoginContainer />} />
             <Route path="/signup" element={<SignupContainer />} />
           </Route>
           <Route element={<PrivateRoute isLogin={isLogin} />}>
             <Route path="/chat" element={<ChatRoomPage />} />
+            <Route path="/mypage/:section" element={<MypageContainer />} />
           </Route>
           <Route path="/chattest" element={<ChatRoomPage />} />
           <Route path="/oauth2/login/">
