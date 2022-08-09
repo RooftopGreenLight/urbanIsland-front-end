@@ -11,27 +11,11 @@ import { ModalContext } from "module/Modal"
 import { AuthStateContext } from "module/Auth"
 import { chattingControl } from "api/chattingControl"
 
-export const ChatRoomTestPage = () => {
-  const { openModal } = useContext(ModalContext)
-  return (
-    <div>
-      <button onClick={() => openModal(<ChatRoomPage />)}>test</button>
-    </div>
-  )
-}
-
 const ChatRoomPage = () => {
   const { closeModal } = useContext(ModalContext)
   const { memberId } = useContext(AuthStateContext)
 
-  const [currentRoomList, setCurrentRoomList] = useState([
-    {
-      content: "ㅎㅇ",
-      roomId: 2,
-      memberId: 1,
-      sendTime: [2022, 8, 9, 21, 49, 21, 100000],
-    },
-  ])
+  const [currentRoomList, setCurrentRoomList] = useState([])
   const isEmpty = currentRoomList.length === 0
 
   useEffect(() => {
@@ -43,7 +27,7 @@ const ChatRoomPage = () => {
         console.log(err.message)
       }
     }
-    // loadChatRoomList()
+    loadChatRoomList()
   }, [])
 
   return (
