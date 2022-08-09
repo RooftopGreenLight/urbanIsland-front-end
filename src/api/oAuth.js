@@ -1,5 +1,5 @@
-import axiosInstance from "./axiosInstance"
-import { addTokenToLocalStorage } from "./accountControl"
+import axiosInstance from "api/axiosInstance"
+import { addTokenToLocalStorage } from "api/accountControl"
 
 const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID
 const KAKAO_REDIRECT_URL = process.env.REACT_APP_KAKAO_REDIRECT_URL

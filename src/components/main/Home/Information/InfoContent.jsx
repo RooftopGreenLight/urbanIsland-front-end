@@ -1,4 +1,6 @@
+import { useEffect, useRef } from "react"
 import styled, { css } from "styled-components"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTree, faSeedling, faTent } from "@fortawesome/free-solid-svg-icons"
 
@@ -7,7 +9,6 @@ import { rightToLeft } from "styles/Animation"
 import bgImg1 from "assets/img/background1.jpg"
 import bgImg2 from "assets/img/background2.jpg"
 import bgImg3 from "assets/img/background3.jpg"
-import { useEffect, useRef } from "react"
 
 const iconList = { faTree: faTree, faSeedling: faSeedling, faTent: faTent }
 const imgList = { img1: bgImg1, img2: bgImg2, img3: bgImg3 }
