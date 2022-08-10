@@ -5,13 +5,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 import { ModalContext } from "module/Modal"
+import { ApplyRoofTopFacilities } from "constants/ApplyRoofTopFacilities"
 
 const SetDetailInfoModal = () => {
   const { closeModal } = useContext(ModalContext)
 
-  const [detailInfoList, setDetailInfoList] = useState({
-    toilet: false,
-  })
+  const [detailInfoList, setDetailInfoList] = useState(ApplyRoofTopFacilities)
 
   const changeCheck = e => {
     const { name, checked } = e.target
@@ -22,6 +21,8 @@ const SetDetailInfoModal = () => {
     closeModal()
   }
 
+  console.log(ApplyRoofTopFacilities)
+
   return (
     <Wrapper>
       <ModalHeader>
@@ -30,38 +31,12 @@ const SetDetailInfoModal = () => {
       </ModalHeader>
       <ModalContent>
         <SetDetailSection>
-          <div className="select-section">
-            <p>건물 내 화장실</p>
-            <input
-              type="checkbox"
-              name="toilet"
-              checked={detailInfoList.toilet}
-              onChange={changeCheck}></input>
-          </div>
-          <div className="select-section">
-            <p>반려견 동반 가능</p>
-            <input
-              type="checkbox"
-              name="toilet"
-              checked={detailInfoList.toilet}
-              onChange={changeCheck}></input>
-          </div>
-          <div className="select-section">
-            <p>반려견 동반 가능</p>
-            <input
-              type="checkbox"
-              name="toilet"
-              checked={detailInfoList.toilet}
-              onChange={changeCheck}></input>
-          </div>
-          <div className="select-section">
-            <p>반려견 동반 가능</p>
-            <input
-              type="checkbox"
-              name="toilet"
-              checked={detailInfoList.toilet}
-              onChange={changeCheck}></input>
-          </div>
+          {Object.entries(detailInfoList).map(([facility, value], idx) => (
+            <div className="select-section" key={idx}>
+              <p>{facility}</p>
+              <input type="checkbox" name={facility} checked={value} onChange={changeCheck}></input>
+            </div>
+          ))}
         </SetDetailSection>
         <ApplyDetailSection>
           <ApplyDetailBtn onClick={confirmDetailList}>세부 정보 저장</ApplyDetailBtn>
@@ -72,7 +47,7 @@ const SetDetailInfoModal = () => {
 }
 
 const Wrapper = styled.div`
-  width: 33vw;
+  width: 30vw;
 
   margin: auto;
   background-color: #f5f5f5;
@@ -141,10 +116,10 @@ const SetDetailSection = styled.div`
       text-align: center;
 
       .select-section {
-        width: 33%;
+        width: 40%;
 
         display: flex;
-        justify-content: space-evenly;
+        justify-content: space-between;
 
         h5 {
           margin-bottom: ${margins.sm};
@@ -158,7 +133,7 @@ const SetDetailSection = styled.div`
         }
 
         input {
-          margin: 0vw auto;
+          margin-left: auto;
 
           text-align: center;
           font-size: ${fonts.size.sm};
@@ -182,7 +157,7 @@ const ApplyDetailBtn = styled.button`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 20%;
+      width: 25%;
       padding: ${paddings.sm};
       margin: ${margins.base} auto;
 

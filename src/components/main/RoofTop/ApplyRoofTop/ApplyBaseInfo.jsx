@@ -5,10 +5,11 @@ const ApplyBaseInfo = () => {
   const [applyInfo, setApplyInfo] = useState({
     phoneNumber: "",
     roofTopArea: 0,
+    roofTopCost: 0,
     detailMention: "",
   })
 
-  const { phoneNumber, roofTopArea, detailMention } = applyInfo
+  const { phoneNumber, roofTopArea, roofTopCost, detailMention } = applyInfo
 
   const changeInput = e => {
     const { name, value } = e.target
@@ -20,6 +21,11 @@ const ApplyBaseInfo = () => {
         <h5>세부사항 : 건물 넓이</h5>
         <p>등록하시려는 옥상의 넓이를 입력해주세요.</p>
         <input name="roofTopArea" value={roofTopArea} placeholder="넓이" onChange={changeInput} />
+      </ApplyInfoBox>
+      <ApplyInfoBox>
+        <h5>세부사항 : 이용 가격</h5>
+        <p>등록하시려는 옥상의 이용가를 입력해주세요.</p>
+        <input name="roofTopCost" value={roofTopCost} placeholder="가격" onChange={changeInput} />
       </ApplyInfoBox>
       <ApplyInfoBox>
         <h5>세부사항 : 연락처</h5>
@@ -45,13 +51,14 @@ const Wrapper = styled.div`
   margin: auto;
 
   display: flex;
+  flex-wrap: wrap;
 `
 
 const ApplyInfoBox = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 30%;
+      width: 40%;
       margin: auto;
       background-color: #ffffff;
       padding: ${paddings.base};
