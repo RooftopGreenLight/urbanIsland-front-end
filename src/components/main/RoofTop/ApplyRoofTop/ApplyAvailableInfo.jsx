@@ -4,16 +4,10 @@ import { useContext, useState } from "react"
 import { ModalContext } from "module/Modal"
 import SetAvailableTimeModal from "components/main/RoofTop/ApplyRoofTop/Modal/SetAvailableTimeModal"
 import SetAvailablePersonModal from "components/main/RoofTop/ApplyRoofTop/Modal/SetAvailablePersonModal"
+import SetDetailInfoModal from "components/main/RoofTop/ApplyRoofTop/Modal/SetDetailInfoModal"
 
 const ApplyAvailableInfo = () => {
   const { openModal } = useContext(ModalContext)
-  const [applyAvaliableInfo, setApplyAvaliableInfo] = useState({
-    avaliableTime: ["00:00", "23.59"],
-    avaliablePerson: { Adult: 0, Children: 0, Pet: 0 },
-    avaliableDetail: [],
-  })
-
-  const { avaliableTime, avaliablePerson, avaliableDetail } = applyAvaliableInfo
 
   return (
     <Wrapper>
@@ -34,7 +28,7 @@ const ApplyAvailableInfo = () => {
       <ApplyInfoBox>
         <h5>시설 정보 : 시설 세부 정보</h5>
         <p>등록하려는 옥상 시설에 대한 세부 정보를 설정하세요.</p>
-        <OpenModalBtn onClick={() => openModal(<SetAvailableTimeModal />)}>
+        <OpenModalBtn onClick={() => openModal(<SetDetailInfoModal />)}>
           세부 정보 설정하기
         </OpenModalBtn>
       </ApplyInfoBox>

@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react"
+import { useContext, useState } from "react"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -6,94 +6,66 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 import { ModalContext } from "module/Modal"
 
-const SetAvailablePersonModal = () => {
+const SetDetailInfoModal = () => {
   const { closeModal } = useContext(ModalContext)
-  const feedBackMsg = useRef()
 
-  const [banState, setBanState] = useState({
-    nokidzone: false,
-    preventpet: false,
+  const [detailInfoList, setDetailInfoList] = useState({
+    toilet: false,
   })
-
-  const [availablePerson, setAvailablePerson] = useState({
-    adult: 0,
-    children: 0,
-    pet: 0,
-  })
-
-  const { nokidzone, preventpet } = banState
-  const { adult, children, pet } = availablePerson
-
-  const changeTime = e => {
-    const { name, value } = e.target
-    if (value.length === 0) {
-      setAvailablePerson({ ...availablePerson, [name]: "0" })
-    }
-    if (isNaN(value)) {
-      feedBackMsg.current.innerText = "인원수는 숫자만 입력이 가능합니다."
-      return
-    }
-    if (value < -1) {
-      feedBackMsg.current.innerText = "인원수는 1명부터 설정 가능합니다."
-      return
-    }
-    setAvailablePerson({ ...availablePerson, [name]: value })
-  }
 
   const changeCheck = e => {
     const { name, checked } = e.target
-    setBanState({ ...banState, [name]: checked })
+    setDetailInfoList({ ...detailInfoList, [name]: checked })
   }
 
-  const confirmPerson = () => {
-    if (adult === 0) {
-      feedBackMsg.current.innerText = "성인 인원수는 반드시 1명 이상이어야 합니다."
-      return
-    }
+  const confirmDetailList = () => {
     closeModal()
   }
 
   return (
     <Wrapper>
       <ModalHeader>
-        <h5>인원 설정</h5>
+        <h5>세부 옵션 설정</h5>
         <ModalCloseBtn icon={faXmark} onClick={closeModal} />
       </ModalHeader>
       <ModalContent>
-        <h5>
-          현재 설정된 인원 수 :{" "}
-          {Object.values(availablePerson).reduce((acc, cur) => (acc += parseInt(cur)), 0)} 명
-        </h5>
-        <SetPersonSection>
-          <div className="input-section">
-            <h5>성인</h5>
-            <input name="adult" value={adult} onChange={changeTime} />
-          </div>
-          <div className="input-section">
-            <h5>어린이</h5>
-            <input name="children" value={children} onChange={changeTime} disabled={nokidzone} />
-            <p>노 키즈 존 여부</p>
+        <SetDetailSection>
+          <div className="select-section">
+            <p>건물 내 화장실</p>
             <input
               type="checkbox"
-              name="nokidzone"
-              checked={nokidzone}
+              name="toilet"
+              checked={detailInfoList.toilet}
               onChange={changeCheck}></input>
           </div>
-          <div className="input-section">
-            <h5>반려동물</h5>
-            <input name="pet" value={pet} onChange={changeTime} disabled={preventpet} />
-            <p>동물 출입 금지</p>
+          <div className="select-section">
+            <p>반려견 동반 가능</p>
             <input
               type="checkbox"
-              name="preventpet"
-              checked={preventpet}
+              name="toilet"
+              checked={detailInfoList.toilet}
               onChange={changeCheck}></input>
           </div>
-        </SetPersonSection>
-        <ApplyPersonSection>
-          <ApplyPersonBtn onClick={confirmPerson}>인원 설정</ApplyPersonBtn>
-          <ModalFeedback ref={feedBackMsg}>시설 사용 가능 인원을 설정해주세요.</ModalFeedback>
-        </ApplyPersonSection>
+          <div className="select-section">
+            <p>반려견 동반 가능</p>
+            <input
+              type="checkbox"
+              name="toilet"
+              checked={detailInfoList.toilet}
+              onChange={changeCheck}></input>
+          </div>
+          <div className="select-section">
+            <p>반려견 동반 가능</p>
+            <input
+              type="checkbox"
+              name="toilet"
+              checked={detailInfoList.toilet}
+              onChange={changeCheck}></input>
+          </div>
+        </SetDetailSection>
+        <ApplyDetailSection>
+          <ApplyDetailBtn onClick={confirmDetailList}>세부 정보 저장</ApplyDetailBtn>
+        </ApplyDetailSection>
       </ModalContent>
     </Wrapper>
   )
@@ -155,7 +127,7 @@ const ModalContent = styled.div`
   }}
 `
 
-const SetPersonSection = styled.div`
+const SetDetailSection = styled.div`
   ${({ theme }) => {
     const { fonts, margins } = theme
     return css`
@@ -164,11 +136,15 @@ const SetPersonSection = styled.div`
 
       display: flex;
       justify-content: space-evenly;
+      flex-wrap: wrap;
 
       text-align: center;
 
-      .input-section {
-        width: 25%;
+      .select-section {
+        width: 33%;
+
+        display: flex;
+        justify-content: space-evenly;
 
         h5 {
           margin-bottom: ${margins.sm};
@@ -182,7 +158,6 @@ const SetPersonSection = styled.div`
         }
 
         input {
-          width: 100%;
           margin: 0vw auto;
 
           text-align: center;
@@ -197,13 +172,13 @@ const SetPersonSection = styled.div`
   }}
 `
 
-const ApplyPersonSection = styled.div`
+const ApplyDetailSection = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 `
 
-const ApplyPersonBtn = styled.button`
+const ApplyDetailBtn = styled.button`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
@@ -222,15 +197,4 @@ const ApplyPersonBtn = styled.button`
   }}
 `
 
-const ModalFeedback = styled.p`
-  ${({ theme }) => {
-    const { fonts, paddings } = theme
-    return css`
-      text-align: center;
-      font-size: ${fonts.size.xsm};
-      font-weight: 100;
-    `
-  }}
-`
-
-export default SetAvailablePersonModal
+export default SetDetailInfoModal
