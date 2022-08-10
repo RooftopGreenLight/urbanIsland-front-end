@@ -8,7 +8,7 @@ const ApplyExtraOption = () => {
     cost: 0,
   })
 
-  const [option, cost] = newDetailOption
+  const { option, cost } = newDetailOption
 
   const changeInput = e => {
     const { name, value } = e.target
@@ -17,9 +17,16 @@ const ApplyExtraOption = () => {
 
   return (
     <Wrapper>
+      <OptionTitle>
+        <h5>옥상 부가 옵션</h5>
+        <p>등록하려는 부가 서비스 옵션을 작성해주세요.</p>
+      </OptionTitle>
       <DetailOptionList>
-        <input name="option" value={option} placeholder="새로운 옵션" />
-        <input name="cost" value={cost} placeholder="새로운 옵션 가격" />
+        <InsertNewOption>
+          <input name="option" value={option} placeholder="새로운 옵션" />
+          <input name="cost" value={cost} placeholder="새로운 옵션 가격" />
+          <button type="button">옵션 추가</button>
+        </InsertNewOption>
       </DetailOptionList>
     </Wrapper>
   )
@@ -34,6 +41,23 @@ const Wrapper = styled.div`
   background-color: #ffffff;
 `
 
+const OptionTitle = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, margins, paddings } = theme
+    return css`
+      margin: auto;
+
+      h5 {
+        font-size: ${fonts.size.lg};
+      }
+
+      p {
+        font-weight: 100;
+      }
+    `
+  }}
+`
+
 const DetailOptionList = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
@@ -45,6 +69,29 @@ const DetailOptionList = styled.div`
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+    `
+  }}
+`
+
+const InsertNewOption = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 100%;
+      background-color: ${colors.white};
+
+      display: flex;
+      justify-content: space-between;
+
+      input {
+        &[name="option"] {
+          width: 70%;
+        }
+
+        &[name="cost"] {
+          width: 20%;
+        }
+      }
     `
   }}
 `

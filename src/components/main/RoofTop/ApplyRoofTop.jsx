@@ -15,6 +15,7 @@ const ApplyRoofTop = () => {
       <ApplyBaseInfo />
       <ApplyAvailableInfo />
       <ApplyDetailInfo />
+      <ApplyExtraOption />
     </Wrapper>
   )
 }
