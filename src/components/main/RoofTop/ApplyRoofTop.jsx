@@ -1,10 +1,11 @@
-import styled, { css } from "styled-components"
-import { useState } from "react"
+import styled from "styled-components"
 
 import ApplyImgList from "components/main/RoofTop/ApplyRoofTop/ApplyImgList"
 import ApplyDetailView from "components/main/RoofTop/ApplyRoofTop/ApplyDetailView"
 import ApplyBaseInfo from "components/main/RoofTop/ApplyRoofTop/ApplyBaseInfo"
 import ApplyAvailableInfo from "components/main/RoofTop/ApplyRoofTop/ApplyAvailableInfo"
+import ApplyDetailInfo from "components/main/RoofTop/ApplyRoofTop/ApplyDetailInfo"
+import ApplyExtraOption from "components/main/RoofTop/ApplyRoofTop/ApplyExtraOption"
 
 const ApplyRoofTop = () => {
   return (
@@ -13,14 +14,15 @@ const ApplyRoofTop = () => {
       <ApplyDetailView />
       <ApplyBaseInfo />
       <ApplyAvailableInfo />
+      <ApplyDetailInfo />
     </Wrapper>
   )
 }
 
 const Wrapper = styled.form`
   width: 70vw;
-  height: 100vh;
   margin: auto;
+  padding: 1rem;
 
   display: flex;
   flex-wrap: wrap;

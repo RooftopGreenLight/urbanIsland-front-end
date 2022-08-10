@@ -8,17 +8,25 @@ const ApplyImgList = () => {
   // Blob 데이터를 추출하여 이미지를 띄우는 함수.
   const addRoofTopImgList = e => {
     const fileList = e.target.files
+    // 업로드 파일의 수량이 1~5개 사이임을 체크
+    if (fileList.length > 0 && fileList.length < 6) {
+      setImgBase64([])
+      setApplyImgFile(fileList)
+      Object.values(fileList).forEach(file => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onloadend = () => {
+          const base64Img = reader.result
+          const base64Sub = base64Img.toString()
+          setImgBase64(imgBase64 => [...imgBase64, base64Sub])
+        }
+      })
+    }
+  }
+
+  const removeRoofTopList = () => {
     setImgBase64([])
-    setApplyImgFile(fileList)
-    Object.values(fileList).forEach(file => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onloadend = () => {
-        const base64Img = reader.result
-        const base64Sub = base64Img.toString()
-        setImgBase64(imgBase64 => [...imgBase64, base64Sub])
-      }
-    })
+    setApplyImgFile(null)
   }
 
   return (
@@ -31,6 +39,9 @@ const ApplyImgList = () => {
         <label htmlFor="imgList">
           <FileUploadBtn>사진 업로드</FileUploadBtn>
         </label>
+        {imgBase64.length > 0 && (
+          <FileRemoveBtn onClick={removeRoofTopList}>사진 제거</FileRemoveBtn>
+        )}
         <input
           type="file"
           id="imgList"
@@ -57,7 +68,7 @@ const Wrapper = styled.div`
 
 const OptionTitle = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
+    const { fonts } = theme
     return css`
       margin: auto;
 
@@ -76,7 +87,7 @@ const FileUploadBtn = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 50%;
+      width: 25%;
       padding: ${paddings.sm};
       margin: 2vw auto;
 
@@ -96,6 +107,26 @@ const FileUploadBtn = styled.div`
       }
     `
   }}
+`
+
+const FileRemoveBtn = styled(FileUploadBtn)`
+  border: 1px solid rgb(77, 77, 77);
+  border-radius: 2.5vw;
+
+  background-color: rgb(77, 77, 77);
+  color: white;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 100;
+
+  &:hover {
+    background: rgb(255, 255, 255);
+    color: #313131;
+  }
 `
 
 const RoofTopImgList = styled.div`

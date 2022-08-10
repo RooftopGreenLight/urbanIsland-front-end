@@ -3,15 +3,42 @@ import { useState } from "react"
 
 const ApplyDetailInfo = () => {
   const [detailInfo, setDetailInfo] = useState({
-    explain: "",
-    refundInfo: "",
+    rule: "",
+    refund: "",
   })
+
+  const { rule, refund } = detailInfo
+
+  const changeInput = e => {
+    const { name, value } = e.target
+    setDetailInfo({ ...detailInfo, [name]: value })
+  }
+
   return (
     <Wrapper>
       <ApplyInfoBox>
-        <h5>세부사항 : 건물 넓이</h5>
-        <p>등록하시려는 옥상의 넓이를 입력해주세요.</p>
-        <input name="roofTopArea" value={roofTopArea} placeholder="넓이" onChange={changeInput} />
+        <h5>환불 규정</h5>
+        <p>등록하려는 옥상 시설의 환불 규정을 작성해주세요.</p>
+        <textarea
+          name="refund"
+          rows="4"
+          cols="50"
+          value={refund}
+          placeholder="자유롭게 환불 규정을 작성해주세요."
+          onChange={changeInput}
+        />
+      </ApplyInfoBox>
+      <ApplyInfoBox>
+        <h5>이용 규칙</h5>
+        <p>등록하려는 옥상 시설의 이용 규칙을 작성해주세요.</p>
+        <textarea
+          name="rule"
+          rows="4"
+          cols="50"
+          value={rule}
+          placeholder="자유롭게 이용 규칙을 작성해주세요."
+          onChange={changeInput}
+        />
       </ApplyInfoBox>
     </Wrapper>
   )
@@ -42,7 +69,7 @@ const ApplyInfoBox = styled.div`
         font-weight: 100;
       }
 
-      input {
+      textarea {
         width: 100%;
         padding: ${paddings.sm};
         margin: ${margins.sm} 0vw;

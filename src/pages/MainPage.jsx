@@ -14,7 +14,7 @@ import { MypageContainer } from "./Container/MypageContainer"
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
 
 // 테스트
-import ApplyRoofTop from "components/main/RoofTop/ApplyRoofTop/ApplyRoofTop"
+import ApplyRoofTop from "components/main/RoofTop/ApplyRoofTop"
 
 // 오직 로그인이 되었을때만 접근이 가능하도록 하는 Route
 const PrivateRoute = ({ isLogin }) => {

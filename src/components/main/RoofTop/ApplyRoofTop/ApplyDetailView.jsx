@@ -35,7 +35,7 @@ const ApplyDetailView = () => {
 }
 
 const Wrapper = styled.div`
-  width: 40%;
+  width: 33%;
   padding: 2.5%;
   margin: auto;
 
