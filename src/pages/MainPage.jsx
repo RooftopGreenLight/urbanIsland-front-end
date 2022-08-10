@@ -12,7 +12,9 @@ import { SignupContainer } from "pages/Container/SignupContainer"
 import { MypageContainer } from "./Container/MypageContainer"
 
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
-import { ChatRoomTestPage } from "components/main/Chat/ChatRoomPage"
+
+// 테스트
+import ApplyRoofTop from "components/main/RoofTop/ApplyRoofTop/ApplyRoofTop"
 
 // 오직 로그인이 되었을때만 접근이 가능하도록 하는 Route
 const PrivateRoute = ({ isLogin }) => {
@@ -61,6 +63,7 @@ const MainPage = () => {
             <Route path="naver" element={<SocialAuthConfirm site={"naver"} />} />
             <Route path="kakao" element={<SocialAuthConfirm site={"kakao"} />} />
           </Route>
+          <Route path="/apply" element={<ApplyRoofTop />} />
           <Route path="/" element={<HomeContainer />} />
         </Routes>
       </BaseTemplate>
