@@ -21,10 +21,6 @@ const ApplyImgList = () => {
     })
   }
 
-  const addRoofTopDetailView = e => {
-    const ImgFile = e.target.files
-  }
-
   return (
     <Wrapper>
       <RoofTopImgList>

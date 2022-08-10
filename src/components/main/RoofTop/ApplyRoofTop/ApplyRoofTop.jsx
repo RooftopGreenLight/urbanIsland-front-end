@@ -7,19 +7,6 @@ import ApplyBaseInfo from "components/main/RoofTop/ApplyRoofTop/ApplyBaseInfo"
 import ApplyAvailableInfo from "components/main/RoofTop/ApplyRoofTop/ApplyAvailableInfo"
 
 const ApplyRoofTop = () => {
-  const [applyInfo, setApplyInfo] = useState({
-    phoneNumber: "",
-    roofTopArea: 0,
-    detailMention: "",
-  })
-
-  const { phoneNumber, roofTopArea, detailMention } = applyInfo
-
-  const changeInput = e => {
-    const { name, value } = e.target
-    setApplyInfo({ ...applyInfo, [name]: value })
-  }
-
   return (
     <Wrapper>
       <ApplyImgList />

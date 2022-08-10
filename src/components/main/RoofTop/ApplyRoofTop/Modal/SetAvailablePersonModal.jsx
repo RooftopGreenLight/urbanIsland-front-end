@@ -6,59 +6,79 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 import { ModalContext } from "module/Modal"
 
-const SetAvailableTimeModal = () => {
+const SetAvailablePersonModal = () => {
   const { closeModal } = useContext(ModalContext)
   const feedBackMsg = useRef()
-  const [availableTime, setAvailableTime] = useState({
-    startTime: 0,
-    endTime: 23,
+
+  const [banState, setBanState] = useState({
+    nokidzone: false,
+    preventpet: false,
   })
 
-  const { startTime, endTime } = availableTime
+  const [availablePerson, setAvailablePerson] = useState({
+    adult: 0,
+    children: 0,
+    pet: 0,
+  })
+
+  const { nokidzone, preventpet } = banState
+  const { adult, children, pet } = availablePerson
 
   const changeTime = e => {
     const { name, value } = e.target
-    if (value < 0 || value > 23) {
-      feedBackMsg.current.innerText = "시간은 0시부터 23시까지 설정 가능합니다."
+    if (value < -1) {
+      feedBackMsg.current.innerText = "인원수는 1명부터 설정 가능합니다."
       return
     }
-    setAvailableTime({ ...availableTime, [name]: value })
+    setAvailablePerson({ ...availablePerson, [name]: value })
   }
 
-  const confirmTime = () => {
-    if (startTime >= endTime) {
-      feedBackMsg.current.innerText = "시작 시간이 종료 시간보다 늦어서는 안됩니다."
+  const changeCheck = e => {
+    const { name, value } = e.target
+    setBanState({ ...banState, [name]: value })
+    console.log(value)
+  }
+
+  const confirmPerson = () => {
+    if (adult * children * pet === 0) {
+      feedBackMsg.current.innerText = "인원수는 1명부터 설정 가능합니다."
       return
     }
-
-    if (endTime <= startTime) {
-      feedBackMsg.current.innerText = "종료 시간이 시작 시간보다 빨라서는 안됩니다."
-      return
-    }
-
     closeModal()
   }
 
   return (
     <Wrapper>
       <ModalHeader>
-        <h5>시간 설정</h5>
+        <h5>인원 설정</h5>
         <ModalCloseBtn icon={faXmark} onClick={closeModal} />
       </ModalHeader>
       <ModalContent>
-        <SetTimeSection>
+        <SetPersonSection>
           <div className="input-section">
-            <h5>시작 시간</h5>
-            <input name="startTime" value={startTime} onChange={changeTime} />
+            <h5>성인</h5>
+            <input name="adult" value={adult} onChange={changeTime} />
           </div>
           <div className="input-section">
-            <h5>종료 시간</h5>
-            <input name="endTime" value={endTime} onChange={changeTime} />
+            <h5>어린이</h5>
+            <input name="children" value={children} onChange={changeTime} />
+            <p>노 키즈 존 여부</p>
+            <input type="checkbox" name="xxx" value="yyy"></input>
           </div>
-        </SetTimeSection>
+          <div className="input-section">
+            <h5>반려동물</h5>
+            <input name="pet" value={pet} onChange={changeTime} />
+            <p>동물 출입 금지</p>
+            <input
+              type="checkbox"
+              name="preventpet"
+              value={preventpet}
+              onChange={changeCheck}></input>
+          </div>
+        </SetPersonSection>
         <ApplyTimeSection>
-          <ApplyTimeBtn onClick={confirmTime}>시간 설정</ApplyTimeBtn>
-          <ModalFeedback ref={feedBackMsg}>시작 시간과 종료 시간을 입력해주세요.</ModalFeedback>
+          <ApplyTimeBtn onClick={confirmPerson}>인원 설정</ApplyTimeBtn>
+          <ModalFeedback ref={feedBackMsg}>시설 사용 가능 인원을 설정해주세요.</ModalFeedback>
         </ApplyTimeSection>
       </ModalContent>
     </Wrapper>
@@ -115,7 +135,7 @@ const ModalContent = styled.div`
   }}
 `
 
-const SetTimeSection = styled.div`
+const SetPersonSection = styled.div`
   ${({ theme, timeType }) => {
     const { fonts, margins } = theme
     return css`
@@ -125,13 +145,20 @@ const SetTimeSection = styled.div`
       display: flex;
       justify-content: space-evenly;
 
+      text-align: center;
+
       .input-section {
-        width: 40%;
+        width: 25%;
 
         h5 {
           margin-bottom: ${margins.sm};
-          text-align: center;
           font-size: ${fonts.size.base};
+        }
+
+        p {
+          margin: ${margins.sm} 0vw;
+          font-size: ${fonts.size.xsm};
+          font-weight: 100;
         }
 
         input {
@@ -186,4 +213,4 @@ const ModalFeedback = styled.p`
   }}
 `
 
-export default SetAvailableTimeModal
+export default SetAvailablePersonModal
