@@ -1,4 +1,4 @@
-export const ApplyRoofTopFacilities = {
+export const RoofTopFacilities = {
   "가스레인지/인덕션": false,
   "간이 무대": false,
   "건물 내 무료주차": false,

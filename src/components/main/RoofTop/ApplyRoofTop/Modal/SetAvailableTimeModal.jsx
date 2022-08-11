@@ -1,18 +1,17 @@
 import { useContext, useRef, useState } from "react"
+import { useRecoilState } from "recoil"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
+import { applyRoofTopTime } from "module/ApplyRoofTop"
 import { ModalContext } from "module/Modal"
 
 const SetAvailableTimeModal = () => {
   const { closeModal } = useContext(ModalContext)
   const feedBackMsg = useRef()
-  const [availableTime, setAvailableTime] = useState({
-    startTime: 0,
-    endTime: 23,
-  })
+  const [availableTime, setAvailableTime] = useRecoilState(applyRoofTopTime)
 
   const { startTime, endTime } = availableTime
 
@@ -22,7 +21,7 @@ const SetAvailableTimeModal = () => {
       feedBackMsg.current.innerText = "시간은 0시부터 23시까지 설정 가능합니다."
       return
     }
-    setAvailableTime({ ...availableTime, [name]: value })
+    setAvailableTime({ ...availableTime, [name]: parseInt(value) })
   }
 
   const confirmTime = () => {
@@ -36,6 +35,7 @@ const SetAvailableTimeModal = () => {
       return
     }
 
+    setAvailableTime({ startTime, endTime })
     closeModal()
   }
 

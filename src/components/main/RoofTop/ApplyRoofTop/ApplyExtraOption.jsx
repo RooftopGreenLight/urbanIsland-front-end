@@ -23,8 +23,8 @@ const ApplyExtraOption = () => {
       </OptionTitle>
       <DetailOptionList>
         <InsertNewOption>
-          <input name="option" value={option} placeholder="새로운 옵션" />
-          <input name="cost" value={cost} placeholder="새로운 옵션 가격" />
+          <input name="option" value={option} placeholder="새로운 옵션" onChange={changeInput} />
+          <input name="cost" value={cost} placeholder="새로운 옵션 가격" onChange={changeInput} />
           <button type="button">옵션 추가</button>
         </InsertNewOption>
       </DetailOptionList>

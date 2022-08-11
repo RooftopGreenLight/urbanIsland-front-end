@@ -1,27 +1,46 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
+import { useRecoilState } from "recoil"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 import { ModalContext } from "module/Modal"
-import { ApplyRoofTopFacilities } from "constants/ApplyRoofTopFacilities"
+import { applyRoofTopFacilities } from "module/ApplyRoofTop"
+import { RoofTopFacilities } from "constants/RoofTopFacilities"
 
-const SetDetailInfoModal = () => {
+const SetFacilitiesModal = () => {
   const { closeModal } = useContext(ModalContext)
 
-  const [detailInfoList, setDetailInfoList] = useState(ApplyRoofTopFacilities)
+  const [detailNumList, setDetailNumList] = useRecoilState(applyRoofTopFacilities)
+  const [detailFacilities, setDetailFacilities] = useState(RoofTopFacilities)
+
+  useEffect(() => {
+    const preSetCheckBox = () => {
+      Object.keys(detailFacilities).forEach((option, idx) => {
+        detailFacilities[option] = detailNumList.includes(idx) ? true : false
+      })
+    }
+    preSetCheckBox()
+  }, [])
 
   const changeCheck = e => {
     const { name, checked } = e.target
-    setDetailInfoList({ ...detailInfoList, [name]: checked })
+    setDetailFacilities({ ...detailFacilities, [name]: checked })
   }
 
   const confirmDetailList = () => {
+    const newDetailNumList = []
+    const optionList = Object.keys(detailFacilities)
+    for (const [option, value] of Object.entries(detailFacilities)) {
+      if (value) {
+        newDetailNumList.push(optionList.indexOf(option))
+      }
+    }
+    setDetailNumList(newDetailNumList)
+    console.log(newDetailNumList)
     closeModal()
   }
-
-  console.log(ApplyRoofTopFacilities)
 
   return (
     <Wrapper>
@@ -31,10 +50,14 @@ const SetDetailInfoModal = () => {
       </ModalHeader>
       <ModalContent>
         <SetDetailSection>
-          {Object.entries(detailInfoList).map(([facility, value], idx) => (
-            <div className="select-section" key={idx}>
+          {Object.keys(detailFacilities).map(facility => (
+            <div className="select-section" key={facility}>
               <p>{facility}</p>
-              <input type="checkbox" name={facility} checked={value} onChange={changeCheck}></input>
+              <input
+                type="checkbox"
+                name={facility}
+                checked={detailFacilities[facility]}
+                onChange={changeCheck}></input>
             </div>
           ))}
         </SetDetailSection>
@@ -172,4 +195,4 @@ const ApplyDetailBtn = styled.button`
   }}
 `
 
-export default SetDetailInfoModal
+export default SetFacilitiesModal

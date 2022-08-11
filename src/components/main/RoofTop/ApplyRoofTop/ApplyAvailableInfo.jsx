@@ -1,10 +1,10 @@
 import styled, { css } from "styled-components"
-import { useContext, useState } from "react"
+import { useContext } from "react"
 
 import { ModalContext } from "module/Modal"
 import SetAvailableTimeModal from "components/main/RoofTop/ApplyRoofTop/Modal/SetAvailableTimeModal"
 import SetAvailablePersonModal from "components/main/RoofTop/ApplyRoofTop/Modal/SetAvailablePersonModal"
-import SetDetailInfoModal from "components/main/RoofTop/ApplyRoofTop/Modal/SetDetailInfoModal"
+import SetFacilitiesModal from "components/main/RoofTop/ApplyRoofTop/Modal/SetFacilitiesModal"
 
 const ApplyAvailableInfo = () => {
   const { openModal } = useContext(ModalContext)
@@ -28,7 +28,7 @@ const ApplyAvailableInfo = () => {
       <ApplyInfoBox>
         <h5>시설 정보 : 시설 세부 정보</h5>
         <p>등록하려는 옥상 시설에 대한 세부 정보를 설정하세요.</p>
-        <OpenModalBtn onClick={() => openModal(<SetDetailInfoModal />)}>
+        <OpenModalBtn onClick={() => openModal(<SetFacilitiesModal />)}>
           세부 정보 설정하기
         </OpenModalBtn>
       </ApplyInfoBox>

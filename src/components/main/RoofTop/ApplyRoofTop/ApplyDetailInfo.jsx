@@ -1,17 +1,14 @@
 import styled, { css } from "styled-components"
-import { useState } from "react"
+import { useRecoilState } from "recoil"
+import { applyRoofTopContent } from "module/ApplyRoofTop"
 
 const ApplyDetailInfo = () => {
-  const [detailInfo, setDetailInfo] = useState({
-    rule: "",
-    refund: "",
-  })
-
-  const { rule, refund } = detailInfo
+  const [applyContent, setApplyContent] = useRecoilState(applyRoofTopContent)
+  const { roleContent, refundContent } = applyContent
 
   const changeInput = e => {
     const { name, value } = e.target
-    setDetailInfo({ ...detailInfo, [name]: value })
+    setApplyContent({ name, value })
   }
 
   return (
@@ -20,10 +17,10 @@ const ApplyDetailInfo = () => {
         <h5>환불 규정</h5>
         <p>등록하려는 옥상 시설의 환불 규정을 작성해주세요.</p>
         <textarea
-          name="refund"
+          name="refundContent"
           rows="4"
           cols="50"
-          value={refund}
+          value={refundContent}
           placeholder="자유롭게 환불 규정을 작성해주세요."
           onChange={changeInput}
         />
@@ -32,10 +29,10 @@ const ApplyDetailInfo = () => {
         <h5>이용 규칙</h5>
         <p>등록하려는 옥상 시설의 이용 규칙을 작성해주세요.</p>
         <textarea
-          name="rule"
+          name="roleContent"
           rows="4"
           cols="50"
-          value={rule}
+          value={roleContent}
           placeholder="자유롭게 이용 규칙을 작성해주세요."
           onChange={changeInput}
         />

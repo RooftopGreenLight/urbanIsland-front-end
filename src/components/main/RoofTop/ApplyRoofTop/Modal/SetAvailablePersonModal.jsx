@@ -1,4 +1,6 @@
 import { useContext, useRef, useState } from "react"
+import { useRecoilValue, useRecoilState } from "recoil"
+import { applyRoofTopPerson, applyRoofTopState } from "module/ApplyRoofTop"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -9,25 +11,23 @@ import { ModalContext } from "module/Modal"
 const SetAvailablePersonModal = () => {
   const { closeModal } = useContext(ModalContext)
   const feedBackMsg = useRef()
+  const applyInfo = useRecoilValue(applyRoofTopState)
 
+  const [applyInfoPerson, setApplyInfoPerson] = useRecoilState(applyRoofTopPerson)
+  const [availablePerson, setAvailablePerson] = useState(applyInfoPerson)
   const [banState, setBanState] = useState({
-    nokidzone: false,
-    preventpet: false,
+    noKidZone: false,
+    preventPet: false,
   })
 
-  const [availablePerson, setAvailablePerson] = useState({
-    adult: 0,
-    children: 0,
-    pet: 0,
-  })
-
-  const { nokidzone, preventpet } = banState
-  const { adult, children, pet } = availablePerson
+  const { noKidZone, preventPet } = banState
+  const { adultCount, kidCount, petCount } = availablePerson
 
   const changeTime = e => {
     const { name, value } = e.target
     if (value.length === 0) {
-      setAvailablePerson({ ...availablePerson, [name]: "0" })
+      setAvailablePerson({ ...availablePerson, [name]: 0 })
+      return
     }
     if (isNaN(value)) {
       feedBackMsg.current.innerText = "인원수는 숫자만 입력이 가능합니다."
@@ -37,21 +37,35 @@ const SetAvailablePersonModal = () => {
       feedBackMsg.current.innerText = "인원수는 1명부터 설정 가능합니다."
       return
     }
-    setAvailablePerson({ ...availablePerson, [name]: value })
+    setAvailablePerson({ ...availablePerson, [name]: parseInt(value) })
   }
 
   const changeCheck = e => {
     const { name, checked } = e.target
     setBanState({ ...banState, [name]: checked })
+    switch (name) {
+      case "noKidZone":
+        setAvailablePerson({ ...availablePerson, kidCount: 0 })
+        return
+      case "preventPet":
+        setAvailablePerson({ ...availablePerson, petCount: 0 })
+        return
+      default:
+        return
+    }
   }
 
   const confirmPerson = () => {
-    if (adult === 0) {
+    if (adultCount === 0) {
       feedBackMsg.current.innerText = "성인 인원수는 반드시 1명 이상이어야 합니다."
       return
     }
+    const totalCount = adultCount + kidCount
+    setApplyInfoPerson({ adultCount, kidCount, petCount, totalCount })
     closeModal()
   }
+
+  console.log(applyInfo)
 
   return (
     <Wrapper>
@@ -60,33 +74,30 @@ const SetAvailablePersonModal = () => {
         <ModalCloseBtn icon={faXmark} onClick={closeModal} />
       </ModalHeader>
       <ModalContent>
-        <h5>
-          현재 설정된 인원 수 :{" "}
-          {Object.values(availablePerson).reduce((acc, cur) => (acc += parseInt(cur)), 0)} 명
-        </h5>
+        <h5>{`현재 설정된 인원 수 : ${adultCount + kidCount} 명`}</h5>
         <SetPersonSection>
           <div className="input-section">
             <h5>성인</h5>
-            <input name="adult" value={adult} onChange={changeTime} />
+            <input name="adultCount" value={adultCount} onChange={changeTime} />
           </div>
           <div className="input-section">
             <h5>어린이</h5>
-            <input name="children" value={children} onChange={changeTime} disabled={nokidzone} />
+            <input name="kidCount" value={kidCount} onChange={changeTime} disabled={noKidZone} />
             <p>노 키즈 존 여부</p>
             <input
               type="checkbox"
-              name="nokidzone"
-              checked={nokidzone}
+              name="noKidZone"
+              checked={noKidZone}
               onChange={changeCheck}></input>
           </div>
           <div className="input-section">
             <h5>반려동물</h5>
-            <input name="pet" value={pet} onChange={changeTime} disabled={preventpet} />
+            <input name="petCount" value={petCount} onChange={changeTime} disabled={preventPet} />
             <p>동물 출입 금지</p>
             <input
               type="checkbox"
-              name="preventpet"
-              checked={preventpet}
+              name="preventPet"
+              checked={preventPet}
               onChange={changeCheck}></input>
           </div>
         </SetPersonSection>
