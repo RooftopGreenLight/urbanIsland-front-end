@@ -1,7 +1,10 @@
 import styled, { css } from "styled-components"
 import { useState } from "react"
+import { useSetRecoilState } from "recoil"
+import { applyRoofTopImg } from "module/ApplyRoofTop"
 
 const ApplyDetailView = () => {
+  const setApplyInfoImg = useSetRecoilState(applyRoofTopImg)
   const [imgBase64, setImgBase64] = useState(null)
 
   // Blob 데이터를 추출하여 이미지를 띄우는 함수.
@@ -14,6 +17,7 @@ const ApplyDetailView = () => {
       const base64Img = reader.result
       const base64Sub = base64Img.toString()
       setImgBase64(base64Sub)
+      setApplyInfoImg({ name: "structFile", value: file })
     }
   }
 

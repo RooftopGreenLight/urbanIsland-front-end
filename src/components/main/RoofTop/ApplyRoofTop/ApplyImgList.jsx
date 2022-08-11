@@ -1,17 +1,19 @@
 import styled, { css } from "styled-components"
+
 import { useState } from "react"
+import { useSetRecoilState } from "recoil"
+import { applyRoofTopImg } from "module/ApplyRoofTop"
 
 const ApplyImgList = () => {
-  const [applyImgFile, setApplyImgFile] = useState(null)
+  const setApplyInfoImg = useSetRecoilState(applyRoofTopImg)
   const [imgBase64, setImgBase64] = useState([])
 
   // Blob 데이터를 추출하여 이미지를 띄우는 함수.
   const addRoofTopImgList = e => {
     const fileList = e.target.files
-    // 업로드 파일의 수량이 1~5개 사이임을 체크
     if (fileList.length > 0 && fileList.length < 6) {
       setImgBase64([])
-      setApplyImgFile(fileList)
+      setApplyInfoImg({ name: "normalFile", value: fileList })
       Object.values(fileList).forEach(file => {
         const reader = new FileReader()
         reader.readAsDataURL(file)
@@ -26,7 +28,7 @@ const ApplyImgList = () => {
 
   const removeRoofTopList = () => {
     setImgBase64([])
-    setApplyImgFile(null)
+    setApplyInfoImg({ name: "normalFile", value: [] })
   }
 
   return (
