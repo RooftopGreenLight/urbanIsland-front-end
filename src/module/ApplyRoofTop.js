@@ -16,8 +16,8 @@ export const applyRoofTopState = atom({
       ownerContent: "",
     },
     time: {
-      startTime: 0,
-      endTime: 23,
+      startTime: "00",
+      endTime: "23",
     },
     person: {
       adultCount: 0,
@@ -26,14 +26,14 @@ export const applyRoofTopState = atom({
       totalCount: 0,
     },
     location: {
-      country: "",
+      county: "",
       city: "",
       detail: "",
     },
-    detailNum: [],
+    detailInfoNum: [],
     img: {
       normalFile: [],
-      structFile: "",
+      structureFile: "",
     },
     option: {
       optionCount: 0,
@@ -73,12 +73,12 @@ export const applyRoofTopPerson = selector({
 export const applyRoofTopFacilities = selector({
   key: "applyInfo/Facilities",
   get: ({ get }) => {
-    const { detailNum } = get(applyRoofTopState)
-    return detailNum
+    const { detailInfoNum } = get(applyRoofTopState)
+    return detailInfoNum
   },
   set: ({ set }, newValue) => {
     set(applyRoofTopState, prevState => {
-      return { ...prevState, detailNum: newValue }
+      return { ...prevState, detailInfoNum: newValue }
     })
   },
 })

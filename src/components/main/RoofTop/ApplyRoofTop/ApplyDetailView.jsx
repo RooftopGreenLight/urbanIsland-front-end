@@ -10,7 +10,7 @@ const ApplyDetailView = () => {
   // Blob 데이터를 추출하여 이미지를 띄우는 함수.
   const addRoofTopDetailView = e => {
     const file = e.target.files[0]
-    handleImgData(file)
+    setApplyInfoImg({ name: "structureFile", value: file })
     setImgBase64(null)
     const reader = new FileReader()
     reader.readAsDataURL(file)
@@ -19,12 +19,6 @@ const ApplyDetailView = () => {
       const base64Sub = base64Img.toString()
       setImgBase64(base64Sub)
     }
-  }
-
-  const handleImgData = file => {
-    const fileData = new FormData()
-    fileData.append("structFile", file)
-    setApplyInfoImg({ name: "structFile", value: fileData })
   }
 
   return (

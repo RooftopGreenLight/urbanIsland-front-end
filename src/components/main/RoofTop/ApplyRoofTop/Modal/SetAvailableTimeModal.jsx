@@ -21,7 +21,7 @@ const SetAvailableTimeModal = () => {
       feedBackMsg.current.innerText = "시간은 0시부터 23시까지 설정 가능합니다."
       return
     }
-    setAvailableTime({ ...availableTime, [name]: parseInt(value) })
+    setAvailableTime({ ...availableTime, [name]: value.padStart(2, "0") })
   }
 
   const confirmTime = () => {
@@ -49,11 +49,11 @@ const SetAvailableTimeModal = () => {
         <SetTimeSection>
           <div className="input-section">
             <h5>시작 시간</h5>
-            <input name="startTime" value={startTime} onChange={changeTime} />
+            <input name="startTime" value={parseInt(startTime)} onChange={changeTime} />
           </div>
           <div className="input-section">
             <h5>종료 시간</h5>
-            <input name="endTime" value={endTime} onChange={changeTime} />
+            <input name="endTime" value={parseInt(endTime)} onChange={changeTime} />
           </div>
         </SetTimeSection>
         <ApplyTimeSection>

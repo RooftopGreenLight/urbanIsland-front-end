@@ -16,28 +16,28 @@ const ApplyRoofTop = () => {
   const applyRoofTop = useRecoilValue(applyRoofTopState)
   console.log(applyRoofTop)
 
-  const sendRoofTopData = async () => {
-    try {
-      const res = await roofTopControl.getRoofTopInfo(applyRoofTop)
-    } catch (err) {
-      throw new Error(err)
-    }
+  const sendRoofTopData = e => {
+    e.preventDefault()
+    console.log(e.target)
+    const roofTopData = new FormData(e.target)
+    console.log(roofTopData, roofTopData.values())
+    roofTopControl.postRoofTopInfo(applyRoofTop)
   }
 
   return (
-    <Wrapper>
+    <Wrapper method="post" encType="multipart/form-data" onSubmit={sendRoofTopData}>
       <ApplyImgList />
       <ApplyDetailView />
       <ApplyBaseInfo />
       <ApplyAvailableInfo />
       <ApplyDetailInfo />
       <ApplyExtraOption />
-      <ConfirmBtn onClick={sendRoofTopData}>옥상 신청하기</ConfirmBtn>
+      <ConfirmBtn type="submit">옥상 신청하기</ConfirmBtn>
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.form`
   width: 70vw;
   margin: auto;
   padding: 1rem;

@@ -11,10 +11,9 @@ const ApplyImgList = () => {
   // Blob 데이터를 추출하여 이미지를 띄우는 함수.
   const addRoofTopImgList = e => {
     const fileList = e.target.files
-    console.log(fileList)
     if (fileList.length > 0 && fileList.length < 6) {
       setImgBase64([])
-      handleImgData(fileList)
+      setApplyInfoImg({ name: "normalFile", value: fileList })
       Object.values(fileList).forEach(file => {
         const reader = new FileReader()
         reader.readAsDataURL(file)
@@ -25,14 +24,6 @@ const ApplyImgList = () => {
         }
       })
     }
-  }
-
-  const handleImgData = fileList => {
-    const fileData = new FormData()
-    Object.values(fileList).forEach(file => {
-      fileData.append("normalFile", file)
-    })
-    setApplyInfoImg({ name: "normalFile", value: fileData })
   }
 
   const removeRoofTopList = () => {

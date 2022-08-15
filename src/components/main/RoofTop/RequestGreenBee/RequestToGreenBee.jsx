@@ -1,9 +1,11 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import styled, { css } from "styled-components"
 
-import { RequiredRoofTopOption } from "constants/RequiredRoofTopOption"
+import { ModalContext } from "module/Modal"
+import SetRequiredOptionModal from "components/main/RoofTop/RequestGreenBee/Modal/SetRequiredOption"
 
 const RequesToGreenBee = () => {
+  const { openModal } = useContext(ModalContext)
   const [requiredInfo, setRequiredInfo] = useState({
     width: 0,
     widthPrice: 0,
@@ -60,9 +62,18 @@ const RequesToGreenBee = () => {
     optionPrice,
   } = requiredInfo
 
+  const deadLineList = ["1개월 이내", "2개월 이내", "3개월 이내", "6개월 이내", "제한 없음"]
+
   const changeInput = e => {
     const { name, value } = e.target
     setRequiredInfo({ ...requiredInfo, [name]: value })
+  }
+
+  const changeDeadLineCheck = e => {
+    const { name, checked } = e.target
+    if (checked) {
+      setRequiredInfo({ ...requiredInfo, deadLineNum: [...requiredInfo.deadLineNum] })
+    }
   }
 
   return (
@@ -90,12 +101,29 @@ const RequesToGreenBee = () => {
       <InputBox boxSize="lg">
         <h5>세부사항 : 필요 항목</h5>
         <p>옥상 녹화 단계에 필요한 시설을 체크해주세요.</p>
-        <input
-          name="totalPrice"
-          value={totalPrice}
-          placeholder="희망 가격"
-          onChange={changeInput}
-        />
+        <OpenModalBtn
+          onClick={() =>
+            openModal(
+              <SetRequiredOptionModal
+                requiredInfo={requiredInfo}
+                setRequiredInfo={setRequiredInfo}
+              />,
+            )
+          }>
+          수정하기
+        </OpenModalBtn>
+      </InputBox>
+      <InputBox boxSize="lg">
+        <h5>세부사항 : 필요 시공 기한</h5>
+        <p>옥상 녹화까지 소요될 시공 기한을 설정하세요.</p>
+        {deadLineList.forEach((elm, idx) => (
+          <input
+            type="checkbox"
+            name={deadLineList[idx]}
+            checked={deadLineNum.include(idx)}
+            onChange={changeDeadLineCheck}
+          />
+        ))}
       </InputBox>
     </Wrapper>
   )
@@ -137,6 +165,32 @@ const InputBox = styled.div`
         width: 100%;
         padding: ${paddings.sm};
         margin: ${margins.sm} 0vw;
+      }
+    `
+  }}
+`
+
+const OpenModalBtn = styled.div`
+  ${({ theme }) => {
+    const { colors, margins, paddings } = theme
+    return css`
+      width: 30%;
+      padding: ${paddings.sm};
+      margin: 0.75vw auto 0.25vw auto;
+
+      border: 1px solid rgb(77, 77, 77);
+      border-radius: 2.5vw;
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-weight: 100;
+
+      &:hover {
+        background: rgb(77, 77, 77);
+        color: #fff;
       }
     `
   }}
