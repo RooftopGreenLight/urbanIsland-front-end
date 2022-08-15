@@ -2,6 +2,8 @@ import { useContext, useState } from "react"
 import styled, { css } from "styled-components"
 
 import { ModalContext } from "module/Modal"
+
+import RequestDeadLine from "components/main/RoofTop/RequestGreenBee/RequestDeadLine"
 import SetRequiredOptionModal from "components/main/RoofTop/RequestGreenBee/Modal/SetRequiredOption"
 
 const RequesToGreenBee = () => {
@@ -62,18 +64,9 @@ const RequesToGreenBee = () => {
     optionPrice,
   } = requiredInfo
 
-  const deadLineList = ["1개월 이내", "2개월 이내", "3개월 이내", "6개월 이내", "제한 없음"]
-
   const changeInput = e => {
     const { name, value } = e.target
     setRequiredInfo({ ...requiredInfo, [name]: value })
-  }
-
-  const changeDeadLineCheck = e => {
-    const { name, checked } = e.target
-    if (checked) {
-      setRequiredInfo({ ...requiredInfo, deadLineNum: [...requiredInfo.deadLineNum] })
-    }
   }
 
   return (
@@ -113,24 +106,13 @@ const RequesToGreenBee = () => {
           수정하기
         </OpenModalBtn>
       </InputBox>
-      <InputBox boxSize="lg">
-        <h5>세부사항 : 필요 시공 기한</h5>
-        <p>옥상 녹화까지 소요될 시공 기한을 설정하세요.</p>
-        {deadLineList.forEach((elm, idx) => (
-          <input
-            type="checkbox"
-            name={deadLineList[idx]}
-            checked={deadLineNum.include(idx)}
-            onChange={changeDeadLineCheck}
-          />
-        ))}
-      </InputBox>
+      <RequestDeadLine requiredInfo={requiredInfo} setRequiredInfo={setRequiredInfo} />
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 70vw;
+  width: 50vw;
   margin: auto;
   padding: 1rem;
 
