@@ -24,9 +24,9 @@ const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
 
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: fixed;
+  top: -${window.scrollY}px;
+  overflow-y: scroll;
   z-index: 99;
 
   display: flex;
