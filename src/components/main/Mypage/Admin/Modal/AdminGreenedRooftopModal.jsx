@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
-const AdminRooftopModal = ({ id, photo, approve, disapprove }) => {
+const AdminGreenedRooftopModal = ({ id, phoneNum, photo, ment, approve, disapprove }) => {
   const { closeModal } = useContext(ModalContext)
 
   const onClickOk = () => {
@@ -24,6 +24,10 @@ const AdminRooftopModal = ({ id, photo, approve, disapprove }) => {
       </header>
       <ModalContent>
         <p>아이디:{id}</p>
+        <p>연락처: {phoneNum}</p>
+        <p>세부사항 : 옥상지기측 멘트</p>
+        <div>{ment}</div>
+        <p>조성/식생 상세도</p>
         <img src={photo} />
         <button onClick={onClickOk}>승인</button>
         <button onClick={onClickNo}>거절</button>
@@ -85,32 +89,6 @@ const ModalContent = styled.main`
       border-top: 1px solid #dee2e6;
       background-color: ${colors.white};
 
-      h5 {
-        margin: ${margins.base};
-        font-size: ${fonts.size.sm};
-        text-align: center;
-      }
-
-      input {
-        width: 90%;
-        padding: ${paddings.sm};
-        margin: 0vw auto ${margins.base} auto;
-
-        background-color: transparent;
-        border: 0;
-        border-bottom: 1px solid #232323;
-
-        &::placeholder {
-          color: #3e3e3e;
-          text-align: left;
-          font-weight: 100;
-        }
-
-        &::before {
-          background-color: #d9d9d9;
-        }
-      }
-
       button {
         width: 25%;
         padding: ${paddings.sm};
@@ -126,4 +104,4 @@ const ModalContent = styled.main`
   }}
 `
 
-export default AdminRooftopModal
+export default AdminGreenedRooftopModal
