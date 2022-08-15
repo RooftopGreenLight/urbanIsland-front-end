@@ -6,8 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons"
 import { mypageControl } from "api/mypageControl"
 import { ModalContext } from "module/Modal"
-import MypageBoxModal from "./Modals/MypageBoxModal"
-
+import MypageBoxModal from "./Modal/MypageBoxModal"
 const Wrapper = styled.div`
   width: 20vw;
   height: 80vh;
@@ -65,9 +64,10 @@ const NavStyle = styled(NavLink)`
   }
 `
 const MypageBox = () => {
-  const [data, setData] = useState()
+  const [users, setData] = useState()
   const { openModal } = useContext(ModalContext)
   const [photo, setPhoto] = useState("")
+
   useEffect(() => {
     const getData = async event => {
       try {
@@ -99,14 +99,14 @@ const MypageBox = () => {
             <FontAwesomeIcon icon={faPenToSquare} />
           </ProfileEditButton>
         </ProfileBox>
-        {data && <PTag>{data.name}</PTag>}
+        {users && <PTag>{users.name}</PTag>}
       </ProfileArea>
       <NavArea>
         <PTag>
-          <NavStyle to="/mypage/profile"> 내프로필</NavStyle>
+          <NavStyle to="/mypage/profile">내프로필</NavStyle>
         </PTag>
         <PTag>
-          <NavStyle to="/mypage/schedule"> 일정관리</NavStyle>
+          <NavStyle to="/mypage/schedule">일정관리</NavStyle>
         </PTag>
         <PTag>
           <NavStyle to="/mypage/greenbee">그린비</NavStyle>
@@ -114,6 +114,13 @@ const MypageBox = () => {
         <PTag>
           <NavStyle to="/mypage/rooftop">옥상지기</NavStyle>
         </PTag>
+        {users && users.authority === "ROLE_ADMIN" ? (
+          <PTag>
+            <NavStyle to="/mypage/admin">관리자</NavStyle>
+          </PTag>
+        ) : (
+          ""
+        )}
       </NavArea>
     </Wrapper>
   )

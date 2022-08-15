@@ -1,9 +1,23 @@
 import React, { useContext, useEffect, useState, useCallback } from "react"
 import styled from "styled-components"
 import { mypageControl } from "api/mypageControl"
-import ProfileModal from "./Modals/ProfileModal"
+import ProfileModal from "./Modal/ProfileModal"
 import { ModalContext } from "module/Modal"
-import MypageList from "./MypageList"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons"
+import ApplyModal from "./Modal/ApplyModal"
+import { Link } from "react-router-dom"
+const Box = styled.div`
+  padding: 0.6rem;
+  border-bottom: 1px solid gray;
+  display: flex;
+  justify-content: space-between;
+`
+const ListBox = styled.div`
+  margin-top: 2rem;
+  border-top: 1px solid gray;
+  width: 65%;
+`
 const Wrapper = styled.div`
   background-color: ;
   width: 60vw;
@@ -70,9 +84,8 @@ const Profile = () => {
       }
     }
     getProfile()
-  }, [editPhoneNum, editNickName, editPhoneNum])
+  }, [])
 
-  const listInput = ["그린비 등록하기", "옥상지기 등록하기"]
   return (
     <Wrapper>
       {data && (
@@ -113,7 +126,18 @@ const Profile = () => {
           </ProfileBox>
         </>
       )}
-      <MypageList props={listInput} />
+      <ListBox>
+        <Link to="/mypage/greenbeeapply">
+          <Box>
+            <span>그린비 등록하기</span>
+            <FontAwesomeIcon icon={faAngleRight} />
+          </Box>
+        </Link>
+        <Box onClick={() => openModal(<ApplyModal />)}>
+          <span>옥상지기 등록하기</span>
+          <FontAwesomeIcon icon={faAngleRight} />
+        </Box>
+      </ListBox>
     </Wrapper>
   )
 }

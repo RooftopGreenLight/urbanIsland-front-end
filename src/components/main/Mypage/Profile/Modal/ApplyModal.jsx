@@ -5,26 +5,15 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import { mypageControl } from "api/mypageControl"
-import defaultProfile from "assets/img/defaultProfile.png"
-const MypageBoxModal = ({ setPhoto }) => {
+const ApplyModal = ({}) => {
   const { closeModal } = useContext(ModalContext)
   const [files, setFiles] = useState()
 
-  const deleteProfile = async () => {
-    try {
-      const result = await mypageControl.deleteProfile()
-      setPhoto(defaultProfile)
-    } catch (err) {
-      console.log(err.message)
-    }
-  }
-
-  const onFinish = async () => {
+  const onClickSubmit = async () => {
     const formData = new FormData()
-    formData.append("file", files[0]) //files[0] === upload file
+    formData.append("confirmationFile", files[0]) //files[0] === upload file
     try {
-      const result = mypageControl.postProfile(formData)
-      setPhoto(result)
+      const result = mypageControl.postApplyRooftop(formData)
     } catch (err) {
       console.log(err)
     }
@@ -34,6 +23,7 @@ const MypageBoxModal = ({ setPhoto }) => {
     e.preventDefault()
     setFiles(e.target.files)
   }
+
   return (
     <Wrapper>
       <header>
@@ -42,14 +32,14 @@ const MypageBoxModal = ({ setPhoto }) => {
         </ModalCloseBtn>
       </header>
       <ModalContent>
-        {" "}
+        <h1>옥상지기 등록하기</h1>
+        <p>본인 명의 건축물대장 확인증</p>
         <form method="post" encType="multipart/form-data">
           <input type="file" onChange={handleUpload} />
         </form>
-        <button type="button" value="upload" onClick={onFinish}>
-          업로드
+        <button type="button" value="upload" onClick={onClickSubmit}>
+          옥상지기 신청하기
         </button>
-        <button onClick={deleteProfile}>이미지 삭제</button>
       </ModalContent>
     </Wrapper>
   )
@@ -59,7 +49,7 @@ const Wrapper = styled.section`
   ${({ theme }) => {
     const { paddings } = theme
     return css`
-      width: 30%;
+      width: 50%;
       margin: auto;
 
       border-radius: 0.3rem;
@@ -107,12 +97,7 @@ const ModalContent = styled.main`
       padding: ${paddings.sm};
       border-top: 1px solid #dee2e6;
       background-color: ${colors.white};
-
-      h5 {
-        margin: ${margins.base};
-        font-size: ${fonts.size.sm};
-        text-align: center;
-      }
+      text-align: center;
 
       input {
         width: 90%;
@@ -135,7 +120,7 @@ const ModalContent = styled.main`
       }
 
       button {
-        width: 25%;
+        width: 50%;
         padding: ${paddings.sm};
         margin: ${margins.base} auto;
 
@@ -149,4 +134,4 @@ const ModalContent = styled.main`
   }}
 `
 
-export default MypageBoxModal
+export default ApplyModal

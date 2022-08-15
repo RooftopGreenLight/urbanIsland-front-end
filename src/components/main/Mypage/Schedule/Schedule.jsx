@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import Calendar from "react-calendar"
 import "react-calendar/dist/Calendar.css"
-import MypageList from "./MypageList"
 const Wrapper = styled.div`
   width: 60vw;
   display: flex;
@@ -23,9 +22,13 @@ const Box = styled.div`
   display: flex;
   justify-content: space-between;
 `
+const ListBox = styled.div`
+  margin-top: 2rem;
+  border-top: 1px solid gray;
+  width: 65%;
+`
 const Schedule = () => {
   const [value, onChange] = useState(new Date())
-  const listInput = ["문의 응답 확인하기"]
   return (
     <Wrapper>
       <Calendar onChange={onChange} value={value} />
@@ -44,7 +47,9 @@ const Schedule = () => {
         </Box>
       </InnerBox>
       <InnerBox>쪽지내역</InnerBox>
-      <MypageList props={listInput} />
+      <ListBox>
+        <Box>문의 내역 확인하기</Box>
+      </ListBox>
     </Wrapper>
   )
 }

@@ -12,6 +12,13 @@ import { SignupContainer } from "pages/Container/SignupContainer"
 import { MypageContainer } from "./Container/MypageContainer"
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
 import { ChatRoomTestPage } from "components/main/Chat/ChatRoomPage"
+import Profile from "components/main/Mypage/Profile/Profile"
+import Schedule from "components/main/Mypage/Schedule/Schedule"
+import Admin from "components/main/Mypage/Admin/Admin"
+import Greenbee from "components/main/Mypage/Greenbee/Greenbee"
+import Rooftop from "components/main/Mypage/RooftopOwner/Rooftop"
+import MakeGreenbeeAccount from "components/main/Mypage/Profile/MakeGreenbeeAccount"
+
 // 오직 로그인이 되었을때만 접근이 가능하도록 하는 Route
 const PrivateRoute = ({ isLogin }) => {
   return isLogin ? <Outlet /> : <Navigate to="/" replace />
@@ -52,7 +59,12 @@ const MainPage = () => {
           </Route>
           <Route element={<PrivateRoute isLogin={isLogin} />}>
             <Route path="/chat" element={<ChatRoomPage />} />
-            <Route path="/mypage/:section" element={<MypageContainer />} />
+            <Route path="/mypage/profile" element={<MypageContainer props={<Profile />} />} />
+            <Route path="/mypage/schedule" element={<MypageContainer props={<Schedule />} />} />
+            <Route path="/mypage/greenbee" element={<MypageContainer props={<Greenbee />} />} />
+            <Route path="/mypage/rooftop" element={<MypageContainer props={<Rooftop />} />} />
+            <Route path="/mypage/admin" element={<MypageContainer props={<Admin />} />} />
+            <Route path="/mypage/greenbeeapply" element={<MakeGreenbeeAccount />} />
           </Route>
           <Route path="/oauth2/login/">
             <Route path="google" element={<SocialAuthConfirm site={"google"} />} />
