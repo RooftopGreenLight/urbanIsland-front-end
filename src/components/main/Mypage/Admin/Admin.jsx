@@ -96,17 +96,17 @@ const Admin = () => {
 
     const getAdminGreenedRooftop = async event => {
       const data = await adminControl.getAdminGreenedRooftop(grtPage)
-      setGRTList(data)
+      setGRTList(data.rooftopResponses)
       setGRTpageLimit(data.totalPages)
     }
     getAdminGreenedRooftop()
-  }, [rPage, gPage, grtList])
+  }, [rPage, gPage, grtPage])
 
   return (
     <Wrapper>
       <ListBox>
         <h1>대기중인 그린비</h1>
-        {gList.length != 0 ? (
+        {gList.length !== 0 ? (
           <div>
             {gList.map((d, index) => (
               <Box
@@ -129,11 +129,11 @@ const Admin = () => {
         ) : (
           <p>대기중인 그린비 없음</p>
         )}{" "}
-        <Pagination total={gPageLimit} page={gPage} setPage={setGpage} />
+        {gPageLimit !== 0 && <Pagination total={gPageLimit} page={gPage} setPage={setGpage} />}{" "}
       </ListBox>
       <ListBox>
         <h1>대기중인 옥상지기</h1>
-        {rList.length != 0 ? (
+        {rList.length !== 0 ? (
           <div>
             {rList.map((d, index) => (
               <Box
@@ -154,20 +154,21 @@ const Admin = () => {
         ) : (
           <p>대기중인 옥상지기 없음</p>
         )}{" "}
-        {rPageLimit != 0 && <Pagination total={rPageLimit} page={rPage} setPage={setRpage} />}
+        {rPageLimit !== 0 && <Pagination total={rPageLimit} page={rPage} setPage={setRpage} />}
       </ListBox>
       <ListBox>
         <h1>이미 녹화된 옥상 승인</h1>
-        {grtList.length != 0 ? (
+        {grtList.length !== 0 ? (
           <div>
             {grtList.map((d, index) => (
               <Box
                 onClick={() => {
                   openModal(
                     <AdminGreenedRooftopModal
-                      id={d.memberId}
-                      photo={d.파일URL}
-                      ment={d.파일멘트}
+                      id={d.rooftopId}
+                      photo={d.structureImage.fileUrl}
+                      phoneNum={d.phoneNumber}
+                      ment={d.ownerContent}
                       approve={AdminGreenedRooftopApprove}
                       disapprove={AdminGreenedRooftopDisapprove}
                     />,
@@ -180,7 +181,7 @@ const Admin = () => {
         ) : (
           <p>대기중인 이미 녹화된 옥상 없음</p>
         )}{" "}
-        {grtPageLimit != 0 && (
+        {grtPageLimit !== 0 && (
           <Pagination total={grtPageLimit} page={grtPage} setPage={setGRTpage} />
         )}
       </ListBox>

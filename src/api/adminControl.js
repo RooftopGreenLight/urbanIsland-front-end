@@ -32,7 +32,7 @@ export const adminControl = {
     try {
       const response = await axiosInstanceAdmin({
         method: "get",
-        url: `/api주소`,
+        url: `/rooftop/waits`,
         params: {
           page,
         },
@@ -72,7 +72,7 @@ export const adminControl = {
     try {
       const response = await axiosInstanceAdmin({
         method: "POST",
-        url: `/api주소/${id}`,
+        url: `/rooftop/accept/${id}`,
         withCredentials: true,
       })
       return response
@@ -84,7 +84,7 @@ export const adminControl = {
     try {
       const response = await axiosInstanceAdmin({
         method: "delete",
-        url: `/api주소/${id}`,
+        url: `/rooftop/reject//${id}`,
         withCredentials: true,
       })
       return response
