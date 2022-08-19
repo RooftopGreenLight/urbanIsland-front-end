@@ -17,7 +17,7 @@ export const accountControl = {
       throw new Error(errorMessage)
     }
   },
-  postSignupData: async (email, password, name) => {
+  postSignupData: async (email, password, nickname) => {
     try {
       const response = await axiosInstance({
         method: "POST",
@@ -25,7 +25,7 @@ export const accountControl = {
         data: {
           email,
           password,
-          name,
+          nickname,
         },
       })
       return response
@@ -93,9 +93,7 @@ export const accountControl = {
     }
   },
   getLogOut: () => {
-    localStorage.removeItem("access_token")
-    localStorage.removeItem("refresh_token")
-    localStorage.removeItem("memberId")
+    removeTokenFromLocalStorage()
     window.location.reload()
   },
 }
@@ -106,4 +104,10 @@ export const addTokenToLocalStorage = (access, refresh, id = false) => {
   if (id) {
     localStorage.setItem("memberId", JSON.stringify(id))
   }
+}
+
+export const removeTokenFromLocalStorage = () => {
+  localStorage.removeItem("access_token")
+  localStorage.removeItem("refresh_token")
+  localStorage.removeItem("memberId")
 }

@@ -3,7 +3,7 @@ import { useState, useRef, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { AuthDispatchContext } from "module/Auth"
-import { accountControl } from "api/accountControl"
+import { accountControl } from "api/controls/accountControl"
 
 const LoginForm = () => {
   const feedbackMsg = useRef()

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 
 import { AuthStateContext } from "module/Auth"
 import { leftToRight } from "styles/Animation"
-import { accountControl } from "api/accountControl"
+import { accountControl } from "api/controls/accountControl"
 
 const HomeBtnList = () => {
   const authState = useContext(AuthStateContext)
@@ -22,10 +22,7 @@ const HomeBtnList = () => {
       </HomeBtn>
       {authenticated ? (
         <>
-          <HomeBtn to="/chat" delay={2}>
-            테스트 채팅 목록
-          </HomeBtn>
-          <HomeBtn to="/mypage" delay={3}>
+          <HomeBtn to="/mypage/profile" delay={3}>
             마이페이지
           </HomeBtn>
           <HomeBtn to="/" delay={4} onClick={accountControl.getLogOut}>

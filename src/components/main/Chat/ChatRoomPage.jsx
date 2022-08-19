@@ -1,24 +1,28 @@
 import { useContext, useEffect, useState } from "react"
 import styled, { css } from "styled-components"
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faXmark } from "@fortawesome/free-solid-svg-icons"
+
+import ChatRoomInfo from "components/main/Chat/ChatRoomInfo"
+import NoticeEmptyChatRoom from "components/main/Chat/NoticeEmpty/NoticeEmptyChatRoom"
+
 import { ModalContext } from "module/Modal"
 import { AuthStateContext } from "module/Auth"
-import ChatModal from "components/main/Chat/ChatModal"
-
-import { chattingControl } from "api/chattingControl"
+import { chattingControl } from "api/controls/chattingControl"
 
 const ChatRoomPage = () => {
-  const { openModal } = useContext(ModalContext)
+  const { closeModal } = useContext(ModalContext)
   const { memberId } = useContext(AuthStateContext)
 
   const [currentRoomList, setCurrentRoomList] = useState([])
+  const isEmpty = currentRoomList.length === 0
 
   useEffect(() => {
     const loadChatRoomList = async () => {
       try {
-        const loadedRoomList = await chattingControl.getChatRoomList()
+        const loadedRoomList = await chattingControl.getChatRoomList(memberId)
         setCurrentRoomList(loadedRoomList)
-        console.log(currentRoomList)
       } catch (err) {
         console.log(err.message)
       }
@@ -26,55 +30,47 @@ const ChatRoomPage = () => {
     loadChatRoomList()
   }, [])
 
-  const enterChatRoom = async roomId => {
-    try {
-      // const roomId = await chattingControl.getChatRoomLog(roomId)
-      openModal(<ChatModal roomId={roomId} memberId={memberId} />)
-    } catch (err) {
-      console.log(err.message)
-    }
-  }
-
   return (
     <Wrapper>
-      <ChatRoomTitle>
+      <ChatRoomHeader>
         <h5>문의 내역 목록</h5>
-      </ChatRoomTitle>
-      <ChatRoomList>
-        {currentRoomList.map(({ content, memberId, roomId, sendTime }, idx) => (
-          <ChatRoomInfo key={idx} onClick={() => enterChatRoom(roomId)}>
-            <h5>{memberId ? "문의 내용" : "문의 응답"}</h5>
-            <span>{`${sendTime[0]}.${sendTime[1]}.${sendTime[2]} ${sendTime[3]}:${sendTime[4]}`}</span>
-            <p>{content}</p>
-          </ChatRoomInfo>
-        ))}
+        <ChatCloseBtn icon={faXmark} onClick={closeModal} />
+      </ChatRoomHeader>
+      <ChatRoomList isEmpty={isEmpty}>
+        {!isEmpty ? (
+          currentRoomList.map((chatRoomElm, idx) => (
+            <ChatRoomInfo chatRoomElm={chatRoomElm} currentMemberId={memberId} key={idx} />
+          ))
+        ) : (
+          <NoticeEmptyChatRoom />
+        )}
       </ChatRoomList>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 100vw;
-  min-height: 100vh;
+  width: 33vw;
 
-  background-color: #cbcbcb;
+  margin: auto;
+  background-color: #f5f5f5;
 `
 
-const ChatRoomTitle = styled.div`
+const ChatRoomHeader = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
+    const { colors, fonts, paddings } = theme
     return css`
-      width: 20vw;
-      padding: ${paddings.sm} ${paddings.base};
-      margin: ${margins.xl} auto;
+      width: 100%;
+      padding: ${paddings.base};
 
       background-color: #000000;
-      border-radius: 5vw;
+
+      display: flex;
+      justify-content: space-between;
 
       h5 {
-        margin: auto;
         color: ${colors.white};
-        font-size: ${fonts.size.lg};
+        font-size: ${fonts.size.base};
         text-align: center;
         vertical-align: center;
       }
@@ -82,47 +78,27 @@ const ChatRoomTitle = styled.div`
   }}
 `
 
-const ChatRoomList = styled.div`
+const ChatCloseBtn = styled(FontAwesomeIcon)`
   ${({ theme }) => {
-    const { colors, paddings } = theme
+    const { colors, fonts, paddings } = theme
     return css`
-      width: 50vw;
-      min-height: 70vh;
-      padding: ${paddings.xl};
-      margin: auto;
-
-      background-color: ${colors.white};
-      border-radius: 1vw;
-
-      display: flex;
-      justify-content: flex-start;
-      flex-direction: column;
+      padding: ${paddings.sm};
+      color: ${colors.white};
+      font-size: ${fonts.size.xsm};
     `
   }}
 `
 
-const ChatRoomInfo = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
+const ChatRoomList = styled.div`
+  ${({ theme, isEmpty }) => {
+    const { paddings } = theme
     return css`
-      padding: ${paddings.lg} ${paddings.base};
-      margin-bottom: ${margins.base};
+      padding: ${paddings.xl};
+      margin: auto;
 
-      background-color: #d6d5d5;
-      border-radius: 1vw;
-
-      h5 {
-        font-size: ${fonts.size.lg};
-      }
-
-      span {
-        text-align: right;
-        font-weight: 100;
-      }
-
-      p {
-        font-weight: 100;
-      }
+      display: flex;
+      justify-content: ${isEmpty ? "center" : "flex-start"};
+      flex-direction: column;
     `
   }}
 `
