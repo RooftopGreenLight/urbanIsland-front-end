@@ -9,9 +9,14 @@ import { HomeContainer } from "pages/Container/HomeContainer"
 import { LoginContainer } from "pages/Container/LoginContainer"
 import { SignupContainer } from "pages/Container/SignupContainer"
 
-import { MypageContainer } from "./Container/MypageContainer"
-
+import { MypageContainer } from "./Container/MypageContainer"\
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
+import Profile from "components/main/Mypage/Profile/Profile"
+import Schedule from "components/main/Mypage/Schedule/Schedule"
+import Admin from "components/main/Mypage/Admin/Admin"
+import Greenbee from "components/main/Mypage/Greenbee/Greenbee"
+import Rooftop from "components/main/Mypage/RooftopOwner/Rooftop"
+import MakeGreenbeeAccount from "components/main/Mypage/Profile/MakeGreenbeeAccount"
 
 // 테스트
 import ApplyRoofTop from "components/main/RoofTop/ApplyRoofTop"
@@ -51,13 +56,18 @@ const MainPage = () => {
       <BaseTemplate>
         <Routes>
           <Route path="/" element={<HomeContainer />} />
-          <Route path="/mypage/:section" element={<MypageContainer />} />
           <Route element={<RestrictedRoute isLogin={isLogin} />}>
             <Route path="/login" element={<LoginContainer />} />
             <Route path="/signup" element={<SignupContainer />} />
           </Route>
           <Route element={<PrivateRoute isLogin={isLogin} />}>
             <Route path="/chat" element={<ChatRoomPage />} />
+            <Route path="/mypage/profile" element={<MypageContainer props={<Profile />} />} />
+            <Route path="/mypage/schedule" element={<MypageContainer props={<Schedule />} />} />
+            <Route path="/mypage/greenbee" element={<MypageContainer props={<Greenbee />} />} />
+            <Route path="/mypage/rooftop" element={<MypageContainer props={<Rooftop />} />} />
+            <Route path="/mypage/admin" element={<MypageContainer props={<Admin />} />} />
+            <Route path="/mypage/greenbeeapply" element={<MakeGreenbeeAccount />} />
           </Route>
           <Route path="/oauth2/login/">
             <Route path="google" element={<SocialAuthConfirm site={"google"} />} />
