@@ -36,7 +36,6 @@ const SetRequiredOptionModal = ({ requiredInfo, setRequiredInfo }) => {
       }
     }
     setRequiredInfo(newDetailNumList)
-    console.log(newDetailNumList)
     closeModal()
   }
 

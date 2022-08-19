@@ -1,44 +1,64 @@
 import styled, { css } from "styled-components"
 import { useState } from "react"
-import { useRecoilValue } from "recoil"
-import { applyRoofTopState } from "module/ApplyRoofTop"
 
 import { roofTopControl } from "api/controls/roofTopControl"
 
-import ApplyImgList from "components/main/RoofTop/ApplyRoofTop/ApplyImgList"
-import ApplyDetailView from "components/main/RoofTop/ApplyRoofTop/ApplyDetailView"
 import ApplyBaseInfo from "components/main/RoofTop/ApplyRoofTop/ApplyBaseInfo"
+import ApplyImgList from "components/main/RoofTop/ApplyRoofTop/ApplyImgList"
 import ApplyAvailableInfo from "components/main/RoofTop/ApplyRoofTop/ApplyAvailableInfo"
+import ApplyDetailView from "components/main/RoofTop/ApplyRoofTop/ApplyDetailView"
 import ApplyDetailInfo from "components/main/RoofTop/ApplyRoofTop/ApplyDetailInfo"
 import ApplyExtraOption from "components/main/RoofTop/ApplyRoofTop/ApplyExtraOption"
 
 const ApplyRoofTop = () => {
-  const applyRoofTop = useRecoilValue(applyRoofTopState)
-  console.log(applyRoofTop)
+  const [applyRoofTopInfo, setApplyRoofTopInfo] = useState({
+    width: 0,
+    totalPrice: 0,
+    phoneNumber: "",
+    explainContent: "",
+    refundContent: "",
+    roleContent: "",
+    ownerContent: "",
+    startTime: "00",
+    endTime: "23",
+    adultCount: 0,
+    kidCount: 0,
+    petCount: 0,
+    totalCount: 0,
+    county: "",
+    city: "",
+    detail: "",
+    detailInfoNum: [],
+    normalFile: [],
+    structureFile: "",
+    optionCount: 0,
+    optionContent: [],
+    optionPrice: [],
+  })
 
   const sendRoofTopData = async () => {
     try {
-      const res = await roofTopControl.postRoofTopInfo(applyRoofTop)
+      const res = await roofTopControl.postRoofTopInfo(applyRoofTopInfo)
     } catch (err) {
       throw new Error(err)
     }
   }
 
   return (
-    <Wrapper method="post" encType="multipart/form-data">
-      <ApplyImgList />
-      <ApplyDetailView />
-      <ApplyBaseInfo />
-      <ApplyAvailableInfo />
-      <ApplyDetailInfo />
-      <ApplyExtraOption />
+    <Wrapper>
+      <ApplyBaseInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+      <ApplyImgList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+      <ApplyDetailView applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+      <ApplyAvailableInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+      <ApplyDetailInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+      <ApplyExtraOption applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
       <ConfirmBtn onClick={sendRoofTopData}>옥상 신청하기</ConfirmBtn>
     </Wrapper>
   )
 }
 
-const Wrapper = styled.form`
-  width: 70vw;
+const Wrapper = styled.div`
+  width: 50vw;
   margin: auto;
   padding: 1rem;
 
