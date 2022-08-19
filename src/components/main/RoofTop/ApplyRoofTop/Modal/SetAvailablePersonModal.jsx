@@ -1,6 +1,4 @@
 import { useContext, useRef, useState } from "react"
-import { useRecoilValue, useRecoilState } from "recoil"
-import { applyRoofTopPerson, applyRoofTopState } from "module/ApplyRoofTop"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -8,13 +6,15 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 import { ModalContext } from "module/Modal"
 
-const SetAvailablePersonModal = () => {
+const SetAvailablePersonModal = ({ applyInfo, changeInfo }) => {
   const { closeModal } = useContext(ModalContext)
   const feedBackMsg = useRef()
-  const applyInfo = useRecoilValue(applyRoofTopState)
 
-  const [applyInfoPerson, setApplyInfoPerson] = useRecoilState(applyRoofTopPerson)
-  const [availablePerson, setAvailablePerson] = useState(applyInfoPerson)
+  const [availablePerson, setAvailablePerson] = useState({
+    adultCount: applyInfo.adultCount,
+    kidCount: applyInfo.kidCount,
+    petCount: applyInfo.petCount,
+  })
   const [banState, setBanState] = useState({
     noKidZone: false,
     preventPet: false,
@@ -61,7 +61,7 @@ const SetAvailablePersonModal = () => {
       return
     }
     const totalCount = adultCount + kidCount
-    setApplyInfoPerson({ adultCount, kidCount, petCount, totalCount })
+    changeInfo({ ...applyInfo, adultCount, kidCount, petCount, totalCount })
     closeModal()
   }
 

@@ -14,7 +14,7 @@ export const RoofTopFacilities = {
   식기류: false,
   엘레베이터: false,
   오븐: false,
-  "음향/마이크": false,
+  "음향 / 마이크": false,
   "장애 편의시설": false,
   "저층 (5층 이하)": false,
   전자레인지: false,

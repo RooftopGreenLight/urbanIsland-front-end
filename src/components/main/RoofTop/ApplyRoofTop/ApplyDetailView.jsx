@@ -1,17 +1,13 @@
 import styled, { css } from "styled-components"
 import { useState } from "react"
-import { useSetRecoilState } from "recoil"
-import { applyRoofTopImg } from "module/ApplyRoofTop"
 
-const ApplyDetailView = () => {
-  const setApplyInfoImg = useSetRecoilState(applyRoofTopImg)
+const ApplyDetailView = ({ applyInfo, changeInfo }) => {
   const [imgBase64, setImgBase64] = useState(null)
 
   // Blob 데이터를 추출하여 이미지를 띄우는 함수.
   const addRoofTopDetailView = e => {
     const file = e.target.files[0]
-    setApplyInfoImg({ name: "structureFile", value: file })
-    setImgBase64(null)
+    changeInfo({ ...applyInfo, structureFile: file })
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onloadend = () => {
@@ -21,35 +17,40 @@ const ApplyDetailView = () => {
     }
   }
 
+  const removeStructImg = () => {
+    setImgBase64(null)
+    changeInfo({ ...applyInfo, structFile: null })
+  }
+
   return (
     <Wrapper>
-      <RoofTopDetailViewImg>
-        <OptionTitle>
-          <h5>옥상 식생 / 조경도 업로드</h5>
-          <p>등록하려는 옥상 조경 / 식생 상세도를 업로드 해주세요.</p>
-        </OptionTitle>
+      <Title>
+        <h5>옥상 식생 / 조경도 업로드</h5>
+        <p>등록하려는 옥상 조경 / 식생 상세도를 업로드 해주세요.</p>
+      </Title>
+      <Content>
         <label htmlFor="detailView">
           <FileUploadBtn>사진 업로드</FileUploadBtn>
         </label>
+        {imgBase64 && <img src={imgBase64} alt="None" onClick={removeStructImg} />}
         <input type="file" id="detailView" onChange={addRoofTopDetailView} accept=".png,.jpg" />
-        {imgBase64 && <img src={imgBase64} alt="None" style={{ width: "10vw", height: "10vw" }} />}
-      </RoofTopDetailViewImg>
+      </Content>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 33%;
-  padding: 2.5%;
-  margin: auto;
+  width: 90%;
+  padding: 1rem;
+  margin: 1vw auto;
 
   text-align: center;
   background-color: #ffffff;
 `
 
-const OptionTitle = styled.div`
+const Title = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
+    const { fonts } = theme
     return css`
       margin: auto;
 
@@ -66,11 +67,11 @@ const OptionTitle = styled.div`
 
 const FileUploadBtn = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
+    const { paddings } = theme
     return css`
-      width: 50%;
+      width: 5vw;
       padding: ${paddings.sm};
-      margin: 2vw auto;
+      margin: 1vw auto;
 
       border: 1px solid rgb(77, 77, 77);
       border-radius: 2.5vw;
@@ -90,8 +91,23 @@ const FileUploadBtn = styled.div`
   }}
 `
 
-const RoofTopDetailViewImg = styled.div`
-  margin: auto;
+const Content = styled.div`
+  width: 60%;
+  margin: 1vw auto 0vw;
+
+  display: flex;
+  justify-content: space-evenly;
+
+  label {
+    width: 100%;
+    margin: auto;
+  }
+
+  img {
+    width: 10vw;
+    height: 10vw;
+    object-fit: cover;
+  }
 
   #detailView {
     display: none;

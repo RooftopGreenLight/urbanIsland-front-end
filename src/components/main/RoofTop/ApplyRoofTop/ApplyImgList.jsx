@@ -1,11 +1,7 @@
 import styled, { css } from "styled-components"
-
 import { useState } from "react"
-import { useSetRecoilState } from "recoil"
-import { applyRoofTopImg } from "module/ApplyRoofTop"
 
-const ApplyImgList = () => {
-  const setApplyInfoImg = useSetRecoilState(applyRoofTopImg)
+const ApplyImgList = ({ applyInfo, changeInfo }) => {
   const [imgBase64, setImgBase64] = useState([])
 
   // Blob 데이터를 추출하여 이미지를 띄우는 함수.
@@ -13,7 +9,7 @@ const ApplyImgList = () => {
     const fileList = e.target.files
     if (fileList.length > 0 && fileList.length < 6) {
       setImgBase64([])
-      setApplyInfoImg({ name: "normalFile", value: fileList })
+      changeInfo({ ...applyInfo, normalFile: fileList, mainFile: fileList[0] })
       Object.values(fileList).forEach(file => {
         const reader = new FileReader()
         reader.readAsDataURL(file)
@@ -28,16 +24,16 @@ const ApplyImgList = () => {
 
   const removeRoofTopList = () => {
     setImgBase64([])
-    setApplyInfoImg({ name: "normalFile", value: [] })
+    changeInfo({ ...applyInfo, normalFile: [], mainFile: "" })
   }
 
   return (
     <Wrapper>
-      <RoofTopImgList>
-        <OptionTitle>
-          <h5>옥상 사진 업로드</h5>
-          <p>등록하려는 옥상 시설 사진을 5장 업로드 해주세요.</p>
-        </OptionTitle>
+      <Title>
+        <h5>옥상 사진 업로드</h5>
+        <p>등록하려는 옥상 시설 사진을 5장 업로드 해주세요.</p>
+      </Title>
+      <BtnList>
         <label htmlFor="imgList">
           <FileUploadBtn>사진 업로드</FileUploadBtn>
         </label>
@@ -51,24 +47,26 @@ const ApplyImgList = () => {
           multiple="multiple"
           accept=".png,.jpg"
         />
+      </BtnList>
+      <ImgList imgAmount={imgBase64.length}>
         {imgBase64.map((item, idx) => (
-          <img src={item} key={idx} alt="First slide" style={{ width: "10vw", height: "10vw" }} />
+          <img src={item} key={idx} alt="First slide" />
         ))}
-      </RoofTopImgList>
+      </ImgList>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 40%;
-  padding: 2.5%;
-  margin: auto;
+  width: 90%;
+  padding: 1rem;
+  margin: 1vw auto;
 
   text-align: center;
   background-color: #ffffff;
 `
 
-const OptionTitle = styled.div`
+const Title = styled.div`
   ${({ theme }) => {
     const { fonts } = theme
     return css`
@@ -89,9 +87,8 @@ const FileUploadBtn = styled.div`
   ${({ theme }) => {
     const { paddings } = theme
     return css`
-      width: 25%;
-      padding: ${paddings.sm};
-      margin: 2vw auto;
+      padding: ${paddings.sm} ${paddings.base};
+      margin: 1vw auto;
 
       border: 1px solid rgb(77, 77, 77);
       border-radius: 2.5vw;
@@ -112,18 +109,8 @@ const FileUploadBtn = styled.div`
 `
 
 const FileRemoveBtn = styled(FileUploadBtn)`
-  border: 1px solid rgb(77, 77, 77);
-  border-radius: 2.5vw;
-
   background-color: rgb(77, 77, 77);
   color: white;
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-weight: 100;
 
   &:hover {
     background: rgb(255, 255, 255);
@@ -131,12 +118,33 @@ const FileRemoveBtn = styled(FileUploadBtn)`
   }
 `
 
-const RoofTopImgList = styled.div`
-  margin: auto;
+const BtnList = styled.div`
+  display: flex;
+
+  label {
+    width: 15%;
+    margin: auto;
+  }
 
   #imgList {
     display: none;
   }
+`
+
+const ImgList = styled.div`
+  ${({ imgAmount }) => {
+    return css`
+      width: 100%;
+
+      display: flex;
+      justify-content: space-between;
+
+      img {
+        width: ${90 / imgAmount}%;
+        object-fit: cover;
+      }
+    `
+  }}
 `
 
 export default ApplyImgList

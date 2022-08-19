@@ -8,8 +8,8 @@ import BaseTemplate from "components/template/BaseTemplate"
 import { HomeContainer } from "pages/Container/HomeContainer"
 import { LoginContainer } from "pages/Container/LoginContainer"
 import { SignupContainer } from "pages/Container/SignupContainer"
+import { MypageContainer } from "pages/Container/MypageContainer"
 
-import { MypageContainer } from "./Container/MypageContainer"
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
 import Profile from "components/main/Mypage/Profile/Profile"
 import Schedule from "components/main/Mypage/Schedule/Schedule"
@@ -20,7 +20,7 @@ import MakeGreenbeeAccount from "components/main/Mypage/Profile/MakeGreenbeeAcco
 
 // 테스트
 import ApplyRoofTop from "components/main/RoofTop/ApplyRoofTop"
-import RequesToGreenBee from "components/main/RoofTop/RequestToGreenBee"
+import RequestToGreenBee from "components/main/RoofTop/RequestToGreenBee"
 
 // 오직 로그인이 되었을때만 접근이 가능하도록 하는 Route
 const PrivateRoute = ({ isLogin }) => {
@@ -75,8 +75,7 @@ const MainPage = () => {
             <Route path="kakao" element={<SocialAuthConfirm site={"kakao"} />} />
           </Route>
           <Route path="/apply" element={<ApplyRoofTop />} />
-          <Route path="/request" element={<RequesToGreenBee />} />
-          <Route path="/" element={<HomeContainer />} />
+          <Route path="/request" element={<RequestToGreenBee />} />
         </Routes>
       </BaseTemplate>
     </BrowserRouter>

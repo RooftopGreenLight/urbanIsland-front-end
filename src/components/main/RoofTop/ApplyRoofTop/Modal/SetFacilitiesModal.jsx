@@ -1,26 +1,24 @@
 import { useContext, useEffect, useState } from "react"
-import { useRecoilState } from "recoil"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 import { ModalContext } from "module/Modal"
-import { applyRoofTopFacilities } from "module/ApplyRoofTop"
 import { RoofTopFacilities } from "constants/RoofTopFacilities"
 
-const SetFacilitiesModal = () => {
+const SetFacilitiesModal = ({ applyInfo, changeInfo }) => {
   const { closeModal } = useContext(ModalContext)
 
-  const [detailNumList, setDetailNumList] = useRecoilState(applyRoofTopFacilities)
   const [detailFacilities, setDetailFacilities] = useState(RoofTopFacilities)
 
   useEffect(() => {
     const preSetCheckBox = () => {
       Object.keys(detailFacilities).forEach((option, idx) => {
-        detailFacilities[option] = detailNumList.includes(idx) ? true : false
+        detailFacilities[option] = applyInfo.detailInfoNum.includes(idx) ? true : false
       })
     }
+    console.log(applyInfo.detailInfoNum)
     preSetCheckBox()
   }, [])
 
@@ -30,15 +28,14 @@ const SetFacilitiesModal = () => {
   }
 
   const confirmDetailList = () => {
-    const newDetailNumList = []
+    const newDetailInfoNum = []
     const optionList = Object.keys(detailFacilities)
     for (const [option, value] of Object.entries(detailFacilities)) {
       if (value) {
-        newDetailNumList.push(optionList.indexOf(option))
+        newDetailInfoNum.push(optionList.indexOf(option))
       }
     }
-    setDetailNumList(newDetailNumList)
-    console.log(newDetailNumList)
+    changeInfo({ ...applyInfo, detailInfoNum: newDetailInfoNum })
     closeModal()
   }
 
