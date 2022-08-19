@@ -3,7 +3,7 @@ import { useState } from "react"
 import { useRecoilValue } from "recoil"
 import { applyRoofTopState } from "module/ApplyRoofTop"
 
-import { roofTopControl } from "api/roofTopControl"
+import { roofTopControl } from "api/controls/roofTopControl"
 
 import ApplyImgList from "components/main/RoofTop/ApplyRoofTop/ApplyImgList"
 import ApplyDetailView from "components/main/RoofTop/ApplyRoofTop/ApplyDetailView"

@@ -3,7 +3,7 @@ import { useContext } from "react"
 import { Link } from "react-router-dom"
 
 import { AuthStateContext } from "module/Auth"
-import { accountControl } from "api/accountControl"
+import { accountControl } from "api/controls/accountControl"
 
 const Navbar = () => {
   const { authState } = useContext(AuthStateContext)

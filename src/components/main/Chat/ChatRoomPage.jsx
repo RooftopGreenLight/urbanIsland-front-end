@@ -9,7 +9,7 @@ import NoticeEmptyChatRoom from "components/main/Chat/NoticeEmpty/NoticeEmptyCha
 
 import { ModalContext } from "module/Modal"
 import { AuthStateContext } from "module/Auth"
-import { chattingControl } from "api/chattingControl"
+import { chattingControl } from "api/controls/chattingControl"
 
 const ChatRoomPage = () => {
   const { closeModal } = useContext(ModalContext)

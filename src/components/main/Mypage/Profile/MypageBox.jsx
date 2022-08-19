@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom"
 import defaultProfile from "assets/img/defaultProfile.png"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons"
-import { mypageControl } from "api/mypageControl"
+import { mypageControl } from "api/controls/mypageControl"
 import { ModalContext } from "module/Modal"
 import MypageBoxModal from "./Modal/MypageBoxModal"
 const Wrapper = styled.div`

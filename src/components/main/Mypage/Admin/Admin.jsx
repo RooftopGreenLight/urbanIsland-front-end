@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react"
 import styled from "styled-components"
+
 import { ModalContext } from "module/Modal"
 import AdminGreenbeeModal from "./Modal/AdminGreenbeeModal"
 import AdminRooftopModal from "./Modal/AdminRooftopModal"
 import AdminGreenedRooftopModal from "./Modal/AdminGreenedRooftopModal"
-import { adminControl } from "api/adminControl"
+import { adminControl } from "api/controls/adminControl"
 import Pagination from "../Pagination"
+
 const Wrapper = styled.div`
-  background-color: ;
   width: 60vw;
   display: flex;
   flex-direction: column;

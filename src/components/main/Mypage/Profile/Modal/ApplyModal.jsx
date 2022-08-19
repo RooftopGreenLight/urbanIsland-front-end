@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
-import { mypageControl } from "api/mypageControl"
+import { mypageControl } from "api/controls/mypageControl"
 const ApplyModal = ({}) => {
   const { closeModal } = useContext(ModalContext)
   const [files, setFiles] = useState()

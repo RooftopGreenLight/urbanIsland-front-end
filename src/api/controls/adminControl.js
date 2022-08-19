@@ -1,4 +1,4 @@
-import axiosInstanceAdmin from "./axiosInstanceAdmin"
+import axiosInstanceAdmin from "api/axiosInstanceAdmin"
 export const adminControl = {
   getAdminGreenbee: async page => {
     try {

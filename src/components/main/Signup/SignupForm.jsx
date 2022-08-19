@@ -5,7 +5,7 @@ import styled, { css } from "styled-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons"
 
-import { accountControl } from "api/accountControl"
+import { accountControl } from "api/controls/accountControl"
 import { ModalContext } from "module/Modal"
 
 import SignupModal from "components/main/Signup/SignupModal"

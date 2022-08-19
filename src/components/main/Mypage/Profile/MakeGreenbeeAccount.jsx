@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { mypageControl } from "api/mypageControl"
+import { mypageControl } from "api/controls/mypageControl"
 import SelectBox from "../SelectBox"
 import Slider from "react-slick"
 const Wrapper = styled.div`

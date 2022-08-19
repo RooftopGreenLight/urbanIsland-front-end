@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, useCallback } from "react"
 import styled from "styled-components"
-import { mypageControl } from "api/mypageControl"
+import { mypageControl } from "api/controls/mypageControl"
 import ProfileModal from "./Modal/ProfileModal"
 import { ModalContext } from "module/Modal"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

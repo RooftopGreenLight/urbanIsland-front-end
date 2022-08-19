@@ -9,7 +9,7 @@ import { HomeContainer } from "pages/Container/HomeContainer"
 import { LoginContainer } from "pages/Container/LoginContainer"
 import { SignupContainer } from "pages/Container/SignupContainer"
 
-import { MypageContainer } from "./Container/MypageContainer"\
+import { MypageContainer } from "./Container/MypageContainer"
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
 import Profile from "components/main/Mypage/Profile/Profile"
 import Schedule from "components/main/Mypage/Schedule/Schedule"
