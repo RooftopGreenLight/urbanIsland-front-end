@@ -27,6 +27,7 @@ export const OAuthControl = {
       addTokenToLocalStorage(accessToken, refreshToken, id)
       window.location.href = "/"
     } catch (err) {
+      console.log(err)
       throw new Error(err)
     }
   },

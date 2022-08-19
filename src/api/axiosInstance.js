@@ -41,7 +41,7 @@ axiosInstance.interceptors.response.use(
   // 응답 실패 시 Promise Error 객체를 return 하도록 설정.
   error => {
     // 만약 Access_token이 만료되어 생긴 문제라면, refresh_token을 재전송 해야 함
-    if (error.response?.data.errorCode === 460) {
+    if (error.response.data?.errorCode === 460) {
       const refreshToken = JSON.parse(localStorage.getItem("refresh_token"))
       accountControl.getRefreshToken(refreshToken)
       return

@@ -10,11 +10,7 @@ const ChatRoomInfo = ({ chatRoomElm, currentMemberId }) => {
   const { content, memberId, roomId, sendTime } = chatRoomElm
 
   const enterChatRoom = async () => {
-    try {
-      openModal(<ChatModal roomId={roomId} memberId={currentMemberId} />)
-    } catch (err) {
-      console.log(err.message)
-    }
+    openModal(<ChatModal roomId={roomId} memberId={currentMemberId} />)
   }
 
   return (
