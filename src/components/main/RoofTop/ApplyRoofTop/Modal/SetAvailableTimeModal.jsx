@@ -1,17 +1,17 @@
 import { useContext, useRef, useState } from "react"
-import { useRecoilState } from "recoil"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
-
-import { applyRoofTopTime } from "module/ApplyRoofTop"
 import { ModalContext } from "module/Modal"
 
-const SetAvailableTimeModal = () => {
+const SetAvailableTimeModal = ({ applyInfo, changeInfo }) => {
   const { closeModal } = useContext(ModalContext)
   const feedBackMsg = useRef()
-  const [availableTime, setAvailableTime] = useRecoilState(applyRoofTopTime)
+  const [availableTime, setAvailableTime] = useState({
+    startTime: applyInfo.startTime,
+    endTime: applyInfo.endTime,
+  })
 
   const { startTime, endTime } = availableTime
 
@@ -35,7 +35,7 @@ const SetAvailableTimeModal = () => {
       return
     }
 
-    setAvailableTime({ startTime, endTime })
+    changeInfo({ ...applyInfo, startTime, endTime })
     closeModal()
   }
 

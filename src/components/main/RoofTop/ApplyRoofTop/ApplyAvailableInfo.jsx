@@ -15,7 +15,6 @@ const ApplyAvailableInfo = ({ applyInfo, changeInfo }) => {
       <InputBox boxSize="lg">
         <h5>이용 가능 시간</h5>
         <p>등록하려는 시설의 이용 가능 시간을 설정하세요.</p>
-        <input value={`어른 [${adultCount}] 명, 유아 [${kidCount}] 명`} />
         <OpenModalBtn
           onClick={() =>
             openModal(<SetAvailableTimeModal applyInfo={applyInfo} changeInfo={changeInfo} />)

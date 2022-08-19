@@ -3,7 +3,7 @@ import { useState } from "react"
 
 const ApplyBaseInfo = ({ applyInfo, changeInfo }) => {
   const [applyBaseInfo, setApplyBaseInfo] = useState(applyInfo)
-  const { phoneNumber, width, totalPrice, explainContent } = applyBaseInfo
+  const { phoneNumber, width, totalPrice, ownerContent, roofTopType } = applyBaseInfo
 
   const changeInput = e => {
     const { name, value } = e.target
@@ -13,29 +13,29 @@ const ApplyBaseInfo = ({ applyInfo, changeInfo }) => {
 
   return (
     <Wrapper>
-      <InputBox boxSize="sm">
-        <h5>건물 넓이</h5>
-        <p>등록하시려는 옥상의 넓이를 입력해주세요.</p>
-        <input name="width" value={width} placeholder="넓이" onChange={changeInput} />
-      </InputBox>
-      <InputBox boxSize="sm">
-        <h5>이용 가격</h5>
-        <p>등록하시려는 옥상의 이용가를 입력해주세요.</p>
-        <input name="totalPrice" value={totalPrice} placeholder="가격" onChange={changeInput} />
-      </InputBox>
-      <InputBox boxSize="sm">
+      <InputBox boxSize="lg">
         <h5>연락처</h5>
         <p>옥상 소유자의 연락처를 입력해주세요.</p>
         <input name="phoneNumber" value={phoneNumber} placeholder="연락처" onChange={changeInput} />
       </InputBox>
+      <InputBox boxSize="base">
+        <h5>건물 넓이</h5>
+        <p>등록하시려는 옥상의 넓이를 입력해주세요.</p>
+        <input name="width" value={width} placeholder="넓이" onChange={changeInput} />
+      </InputBox>
+      <InputBox boxSize="base">
+        <h5>이용 가격</h5>
+        <p>등록하시려는 옥상의 이용가를 입력해주세요.</p>
+        <input name="totalPrice" value={totalPrice} placeholder="가격" onChange={changeInput} />
+      </InputBox>
       <InputBox boxSize="lg">
-        <h5>옥상지기 측 멘트</h5>
+        <h5>{roofTopType === "G" ? "옥상지기 측 멘트" : "그린비에게 보내는 멘트"}</h5>
         <p>등록하시려는 옥상 시설에 대한 소개글을 작성해주세요.</p>
         <textarea
           rows="4"
           cols="50"
-          name="explainContent"
-          value={explainContent}
+          name="ownerContent"
+          value={ownerContent}
           placeholder="멘트"
           onChange={changeInput}
         />

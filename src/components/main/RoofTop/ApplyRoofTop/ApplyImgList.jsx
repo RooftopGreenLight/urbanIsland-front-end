@@ -9,7 +9,7 @@ const ApplyImgList = ({ applyInfo, changeInfo }) => {
     const fileList = e.target.files
     if (fileList.length > 0 && fileList.length < 6) {
       setImgBase64([])
-      changeInfo({ ...applyInfo, normalFile: fileList })
+      changeInfo({ ...applyInfo, normalFile: fileList, mainFile: fileList[0] })
       Object.values(fileList).forEach(file => {
         const reader = new FileReader()
         reader.readAsDataURL(file)
@@ -24,7 +24,7 @@ const ApplyImgList = ({ applyInfo, changeInfo }) => {
 
   const removeRoofTopList = () => {
     setImgBase64([])
-    changeInfo({ ...applyInfo, normalFile: [] })
+    changeInfo({ ...applyInfo, normalFile: [], mainFile: "" })
   }
 
   return (
