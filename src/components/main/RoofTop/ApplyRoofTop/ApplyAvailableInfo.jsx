@@ -6,32 +6,42 @@ import SetAvailableTimeModal from "components/main/RoofTop/ApplyRoofTop/Modal/Se
 import SetAvailablePersonModal from "components/main/RoofTop/ApplyRoofTop/Modal/SetAvailablePersonModal"
 import SetFacilitiesModal from "components/main/RoofTop/ApplyRoofTop/Modal/SetFacilitiesModal"
 
-const ApplyAvailableInfo = () => {
+const ApplyAvailableInfo = ({ applyInfo, changeInfo }) => {
   const { openModal } = useContext(ModalContext)
+  const { adultCount, kidCount, petCount } = applyInfo
 
   return (
     <Wrapper>
-      <ApplyInfoBox>
-        <h5>시설 정보 : 이용 가능 시간</h5>
+      <InputBox boxSize="lg">
+        <h5>이용 가능 시간</h5>
         <p>등록하려는 시설의 이용 가능 시간을 설정하세요.</p>
-        <OpenModalBtn onClick={() => openModal(<SetAvailableTimeModal />)}>
+        <OpenModalBtn
+          onClick={() =>
+            openModal(<SetAvailableTimeModal applyInfo={applyInfo} changeInfo={changeInfo} />)
+          }>
           시간 설정하기
         </OpenModalBtn>
-      </ApplyInfoBox>
-      <ApplyInfoBox>
-        <h5>시설 정보 : 이용 가능 인원</h5>
+      </InputBox>
+      <InputBox boxSize="lg">
+        <h5>이용 가능 인원</h5>
         <p>등록하려는 시설의 이용 가능 인원을 설정하세요.</p>
-        <OpenModalBtn onClick={() => openModal(<SetAvailablePersonModal />)}>
+        <OpenModalBtn
+          onClick={() =>
+            openModal(<SetAvailablePersonModal applyInfo={applyInfo} changeInfo={changeInfo} />)
+          }>
           인원 설정하기
         </OpenModalBtn>
-      </ApplyInfoBox>
-      <ApplyInfoBox>
-        <h5>시설 정보 : 시설 세부 정보</h5>
+      </InputBox>
+      <InputBox boxSize="lg">
+        <h5>시설 세부 정보</h5>
         <p>등록하려는 옥상 시설에 대한 세부 정보를 설정하세요.</p>
-        <OpenModalBtn onClick={() => openModal(<SetFacilitiesModal />)}>
+        <OpenModalBtn
+          onClick={() =>
+            openModal(<SetFacilitiesModal applyInfo={applyInfo} changeInfo={changeInfo} />)
+          }>
           세부 정보 설정하기
         </OpenModalBtn>
-      </ApplyInfoBox>
+      </InputBox>
     </Wrapper>
   )
 }
@@ -41,15 +51,21 @@ const Wrapper = styled.div`
   margin: auto;
 
   display: flex;
+  flex-direction: column;
 `
 
-const ApplyInfoBox = styled.div`
-  ${({ theme }) => {
+const InputBox = styled.div`
+  ${({ theme, boxSize }) => {
+    const boxWidth = new Map([
+      ["sm", "25%"],
+      ["base", "40%"],
+      ["lg", "90%"],
+    ])
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 30%;
-      margin: auto;
-      background-color: #ffffff;
+      width: ${boxWidth.get(boxSize)};
+      margin: 1vw auto;
+      background-color: ${colors.white};
       padding: ${paddings.base};
 
       h5 {
@@ -60,6 +76,13 @@ const ApplyInfoBox = styled.div`
         font-size: ${fonts.size.xsm};
         font-weight: 100;
       }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: ${paddings.sm};
+        margin: ${margins.sm} 0vw;
+      }
     `
   }}
 `
@@ -68,7 +91,7 @@ const OpenModalBtn = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 50%;
+      width: 20%;
       padding: ${paddings.sm};
       margin: 0.75vw auto 0.25vw auto;
 

@@ -1,9 +1,12 @@
 import { useContext } from "react"
 import styled, { css } from "styled-components"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
+
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
+
 const RooftopModal = () => {
   const { closeModal } = useContext(ModalContext)
 

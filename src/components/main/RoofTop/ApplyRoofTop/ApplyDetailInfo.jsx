@@ -1,19 +1,19 @@
 import styled, { css } from "styled-components"
-import { useRecoilState } from "recoil"
-import { applyRoofTopContent } from "module/ApplyRoofTop"
+import { useState } from "react"
 
-const ApplyDetailInfo = () => {
-  const [applyContent, setApplyContent] = useRecoilState(applyRoofTopContent)
-  const { roleContent, refundContent } = applyContent
+const ApplyDetailInfo = ({ applyInfo, changeInfo }) => {
+  const [applyDetailInfo, setApplyDetailInfo] = useState(applyInfo)
+  const { roleContent, refundContent } = applyDetailInfo
 
   const changeInput = e => {
     const { name, value } = e.target
-    setApplyContent({ name, value })
+    setApplyDetailInfo({ ...applyDetailInfo, [name]: value })
+    changeInfo({ ...applyInfo, [name]: value })
   }
 
   return (
     <Wrapper>
-      <ApplyInfoBox>
+      <InputBox boxSize="base">
         <h5>환불 규정</h5>
         <p>등록하려는 옥상 시설의 환불 규정을 작성해주세요.</p>
         <textarea
@@ -24,8 +24,8 @@ const ApplyDetailInfo = () => {
           placeholder="자유롭게 환불 규정을 작성해주세요."
           onChange={changeInput}
         />
-      </ApplyInfoBox>
-      <ApplyInfoBox>
+      </InputBox>
+      <InputBox boxSize="base">
         <h5>이용 규칙</h5>
         <p>등록하려는 옥상 시설의 이용 규칙을 작성해주세요.</p>
         <textarea
@@ -36,7 +36,7 @@ const ApplyDetailInfo = () => {
           placeholder="자유롭게 이용 규칙을 작성해주세요."
           onChange={changeInput}
         />
-      </ApplyInfoBox>
+      </InputBox>
     </Wrapper>
   )
 }
@@ -48,13 +48,18 @@ const Wrapper = styled.div`
   display: flex;
 `
 
-const ApplyInfoBox = styled.div`
-  ${({ theme }) => {
+const InputBox = styled.div`
+  ${({ theme, boxSize }) => {
+    const boxWidth = new Map([
+      ["sm", "25%"],
+      ["base", "40%"],
+      ["lg", "90%"],
+    ])
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 30%;
-      margin: auto;
-      background-color: #ffffff;
+      width: ${boxWidth.get(boxSize)};
+      margin: 1vw auto;
+      background-color: ${colors.white};
       padding: ${paddings.base};
 
       h5 {
@@ -66,6 +71,7 @@ const ApplyInfoBox = styled.div`
         font-weight: 100;
       }
 
+      input,
       textarea {
         width: 100%;
         padding: ${paddings.sm};

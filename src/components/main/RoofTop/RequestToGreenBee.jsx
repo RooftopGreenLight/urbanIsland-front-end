@@ -2,13 +2,23 @@ import { useContext, useState } from "react"
 import styled, { css } from "styled-components"
 
 import { ModalContext } from "module/Modal"
+import { roofTopControl } from "api/controls/roofTopControl"
+
+import ApplySidoList from "components/main/RoofTop/ApplyRoofTop/ApplySidoList"
+import ApplyBaseInfo from "components/main/RoofTop/ApplyRoofTop/ApplyBaseInfo"
+import ApplyImgList from "components/main/RoofTop/ApplyRoofTop/ApplyImgList"
+import ApplyDetailView from "components/main/RoofTop/ApplyRoofTop/ApplyDetailView"
+import ApplyAvailableInfo from "components/main/RoofTop/ApplyRoofTop/ApplyAvailableInfo"
+import ApplyDetailInfo from "components/main/RoofTop/ApplyRoofTop/ApplyDetailInfo"
+import ApplyExtraOption from "components/main/RoofTop/ApplyRoofTop/ApplyExtraOption"
 
 import RequestDeadLine from "components/main/RoofTop/RequestGreenBee/RequestDeadLine"
 import SetRequiredOptionModal from "components/main/RoofTop/RequestGreenBee/Modal/SetRequiredOption"
 
-const RequesToGreenBee = () => {
+const RequestToGreenBee = () => {
   const { openModal } = useContext(ModalContext)
   const [requiredInfo, setRequiredInfo] = useState({
+    rooftopType: "NG",
     width: 0,
     widthPrice: 0,
     totalPrice: 0,
@@ -28,69 +38,52 @@ const RequesToGreenBee = () => {
     detail: "",
     deadLineNum: [],
     requiredItemNum: [],
-    detailNum: [],
+    detailInfoNum: [],
     normalFile: [],
     structFile: "",
+    mainFile: "",
     optionCount: 0,
     optionContent: [],
     optionPrice: [],
   })
 
-  const {
-    width,
-    widthPrice,
-    totalPrice,
-    phoneNumber,
-    explainContent,
-    refundContent,
-    roleContent,
-    ownerContent,
-    startTime,
-    endTime,
-    adultCount,
-    kidCount,
-    petCount,
-    totalCount,
-    country,
-    city,
-    detail,
-    deadLineNum,
-    requiredItemNum,
-    detailNum,
-    normalFile,
-    structFile,
-    optionCount,
-    optionContent,
-    optionPrice,
-  } = requiredInfo
+  const { explainContent } = requiredInfo
 
   const changeInput = e => {
     const { name, value } = e.target
     setRequiredInfo({ ...requiredInfo, [name]: value })
   }
 
+  const submitRequest = async () => {
+    const reqFormData = new FormData()
+
+    for (const [option, value] of Object.entries(requiredInfo)) {
+      // 배열의 경우 append를 통해 같은 옵션에 값을 추가해주어야 함
+      if (typeof value === "array") {
+        for (let idx = 0; idx < value.length; idx++) {
+          reqFormData.append(option, value[idx])
+        }
+        continue
+      }
+      if (option === "startTime" || option === "endTime") {
+        reqFormData.append(option, `${value}:00:00`)
+        return
+      }
+      // 배열이 아닌 경우에는 그냥 값을 추가해주면 됨.
+      reqFormData.append(option, value)
+    }
+
+    try {
+      await roofTopControl.postRoofTopInfo(reqFormData)
+    } catch (err) {
+      throw new Error(err)
+    }
+  }
+
   return (
     <Wrapper>
-      <InputBox boxSize="lg">
-        <h5>세부사항 : 연락처</h5>
-        <p>옥상 소유자의 연락처를 입력해주세요.</p>
-        <input name="phoneNumber" value={phoneNumber} placeholder="연락처" onChange={changeInput} />
-      </InputBox>
-      <InputBox boxSize="base">
-        <h5>세부사항 : 넓이</h5>
-        <p>옥상 소유자의 연락처를 입력해주세요.</p>
-        <input name="width" value={width} placeholder="넓이" onChange={changeInput} />
-      </InputBox>
-      <InputBox boxSize="base">
-        <h5>세부사항 : 희망 가격</h5>
-        <p>옥상 소유자의 연락처를 입력해주세요.</p>
-        <input
-          name="totalPrice"
-          value={totalPrice}
-          placeholder="희망 가격"
-          onChange={changeInput}
-        />
-      </InputBox>
+      <ApplySidoList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+      <ApplyBaseInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
       <InputBox boxSize="lg">
         <h5>세부사항 : 필요 항목</h5>
         <p>옥상 녹화 단계에 필요한 시설을 체크해주세요.</p>
@@ -107,6 +100,24 @@ const RequesToGreenBee = () => {
         </OpenModalBtn>
       </InputBox>
       <RequestDeadLine requiredInfo={requiredInfo} setRequiredInfo={setRequiredInfo} />
+      <ApplyImgList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+      <ApplyDetailView applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+      <InputBox boxSize="lg">
+        <h5>세부사항 : 옥상 설명 멘트</h5>
+        <p>고객에게 옥상 시설을 설명해주세요!</p>
+        <textarea
+          name="explainContent"
+          rows="4"
+          cols="50"
+          value={explainContent}
+          placeholder="자유롭게 옥상 설명을 작성해주세요."
+          onChange={changeInput}
+        />
+      </InputBox>
+      <ApplyAvailableInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+      <ApplyDetailInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+      <ApplyExtraOption applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+      <ConfirmBtn onClick={submitRequest}>제출하기</ConfirmBtn>
     </Wrapper>
   )
 }
@@ -126,10 +137,14 @@ const Wrapper = styled.div`
 
 const InputBox = styled.div`
   ${({ theme, boxSize }) => {
-    const boxWidth = { sm: "20%", base: "40%", lg: "90%" }
+    const boxWidth = new Map([
+      ["sm", "20%"],
+      ["base", "40%"],
+      ["lg", "90%"],
+    ])
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: ${boxWidth[boxSize]};
+      width: ${boxWidth.get(boxSize)};
       margin: 1vw auto;
       background-color: ${colors.white};
       padding: ${paddings.base};
@@ -143,7 +158,8 @@ const InputBox = styled.div`
         font-weight: 100;
       }
 
-      input {
+      input,
+      textarea {
         width: 100%;
         padding: ${paddings.sm};
         margin: ${margins.sm} 0vw;
@@ -178,4 +194,29 @@ const OpenModalBtn = styled.div`
   }}
 `
 
-export default RequesToGreenBee
+const ConfirmBtn = styled.button`
+  ${({ theme }) => {
+    const { colors, margins, paddings } = theme
+    return css`
+      width: 30%;
+      padding: ${paddings.sm};
+      margin: 0.75vw auto 0.25vw auto;
+
+      border: 1px solid rgb(77, 77, 77);
+      border-radius: 2.5vw;
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-weight: 100;
+
+      &:hover {
+        background: rgb(77, 77, 77);
+        color: #fff;
+      }
+    `
+  }}
+`
+export default RequestToGreenBee
