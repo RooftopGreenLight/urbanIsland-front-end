@@ -1,0 +1,21 @@
+import axiosInstance from "api/axiosInstance"
+
+export const ownerControl = {
+  getRooftopStatus: async memberId => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: "/owners/rooftop-status",
+        params: {
+          memberId: parseInt(memberId),
+        },
+      })
+      console.log(response)
+      return response.data
+    } catch (err) {
+      console.log(err)
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
+}

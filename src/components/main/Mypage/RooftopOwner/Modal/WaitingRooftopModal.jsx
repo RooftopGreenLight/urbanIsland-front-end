@@ -1,25 +1,31 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import styled, { css } from "styled-components"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
-import { modalShow } from "styles/Animation"
-import { ModalContext } from "module/Modal"
 
-const Textpart = styled.div`
-  white-space: pre-line;
-  font-size: 15px;
-`
-const Box = styled.div`
-  background-color: grey;
-  border-radius: 0.8rem;
-  padding: 1rem;
-  margin-top: 1rem;
-`
-const Time = styled.span`
-  font-size: 11px;
-`
+import { modalShow } from "styles/Animation"
+import { ownerControl } from "api/controls/ownerControl"
+import { ModalContext } from "module/Modal"
+import { AuthStateContext } from "module/Auth"
+
 const WaitingRooftopModal = () => {
   const { closeModal } = useContext(ModalContext)
+  const { memberId } = useContext(AuthStateContext)
+  const [rooftopStatus, setRooftopStatus] = useState([])
+
+  useEffect(() => {
+    const loadingRooftopStatus = async () => {
+      try {
+        const res = await ownerControl.getRooftopStatus(memberId)
+        setRooftopStatus(res)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    loadingRooftopStatus()
+  })
+
   const sampleData = [
     {
       information: "옥상지기에게 알려주는 정보들",
@@ -80,15 +86,13 @@ const WaitingRooftopModal = () => {
       <ModalContent>
         <p>대기 옥상 진행상황</p>
         <h1>"서울시 은평구 주소주소 옥상"</h1>
-        {sampleData.map(d => {
+        {sampleData.map((d, idx) => {
           return (
-            <>
-              <Box>
-                <span>{d.information}</span>
-                <Time>{d.date}</Time>
-                <Textpart>{d.noticeMessage}</Textpart>
-              </Box>
-            </>
+            <Box key={idx}>
+              <span>{d.information}</span>
+              <Time>{d.date}</Time>
+              <Textpart>{d.noticeMessage}</Textpart>
+            </Box>
           )
         })}
       </ModalContent>
@@ -110,6 +114,7 @@ const Wrapper = styled.section`
       animation: ${modalShow} 0.3s;
       animation-fill-mode: forwards;
       overflow: hidden;
+
       header {
         display: flex;
         flex-direction: row-reverse;
@@ -151,6 +156,19 @@ const ModalContent = styled.main`
       overflow-y: auto;
     `
   }}
+`
+const Textpart = styled.div`
+  white-space: pre-line;
+  font-size: 15px;
+`
+const Box = styled.div`
+  background-color: grey;
+  border-radius: 0.8rem;
+  padding: 1rem;
+  margin-top: 1rem;
+`
+const Time = styled.span`
+  font-size: 11px;
 `
 
 export default WaitingRooftopModal

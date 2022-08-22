@@ -1,27 +1,32 @@
-import { useContext, useState } from "react"
+import { useContext, useState, useRef } from "react"
 import styled, { css } from "styled-components"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
+
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import { mypageControl } from "api/controls/mypageControl"
-const ApplyModal = ({}) => {
+
+const ApplyModal = () => {
   const { closeModal } = useContext(ModalContext)
-  const [files, setFiles] = useState()
+  const [imgfiles, setImgFiles] = useState()
+  const feedbackMsg = useRef()
 
   const onClickSubmit = async () => {
     const formData = new FormData()
-    formData.append("confirmationFile", files[0]) //files[0] === upload file
+    formData.append("confirmationFile", imgfiles)
     try {
-      const result = mypageControl.postApplyRooftop(formData)
+      await mypageControl.postApplyRooftop(formData)
+      closeModal()
     } catch (err) {
-      console.log(err)
+      feedbackMsg.current.innerText = err.message
     }
   }
 
   const handleUpload = e => {
     e.preventDefault()
-    setFiles(e.target.files)
+    setImgFiles(e.target.files[0])
   }
 
   return (
@@ -32,11 +37,14 @@ const ApplyModal = ({}) => {
         </ModalCloseBtn>
       </header>
       <ModalContent>
-        <h1>옥상지기 등록하기</h1>
-        <p>본인 명의 건축물대장 확인증</p>
+        <Title>
+          <h5>옥상지기 등록하기</h5>
+          <p>본인 명의 건축물대장 확인증</p>
+        </Title>
         <form method="post" encType="multipart/form-data">
           <input type="file" onChange={handleUpload} />
         </form>
+        <FeedBackMsg ref={feedbackMsg}>건축물 대장 확인증을 업로드 해주세요.</FeedBackMsg>
         <button type="button" value="upload" onClick={onClickSubmit}>
           옥상지기 신청하기
         </button>
@@ -126,10 +134,42 @@ const ModalContent = styled.main`
 
         background-color: #000000;
         border-radius: 25px;
+
         text-align: center;
         color: ${colors.white};
         font-size: ${fonts.size.xsm};
       }
+    `
+  }}
+`
+
+const Title = styled.div`
+  ${({ theme }) => {
+    const { fonts, margins } = theme
+    return css`
+      text-align: center;
+
+      h5 {
+        font-size: ${fonts.size.base};
+      }
+
+      p {
+        margin: ${margins.sm} auto;
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
+    `
+  }}
+`
+
+const FeedBackMsg = styled.p`
+  ${({ theme }) => {
+    const { fonts, margins } = theme
+    return css`
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
+
+      margin: ${margins.sm} auto;
     `
   }}
 `

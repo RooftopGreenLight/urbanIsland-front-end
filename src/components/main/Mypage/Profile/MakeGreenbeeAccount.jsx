@@ -107,7 +107,7 @@ const MakeGreenbeeAccount = () => {
     formData.append("district", district)
     formData.append("detail", detail)
     try {
-      const result = mypageControl.postApplyGreenbees(formData)
+      await mypageControl.postApplyGreenbees(formData)
     } catch (err) {
       console.log(err)
     }
