@@ -1,13 +1,18 @@
-import React from "react"
+import { useContext } from "react"
 import styled from "styled-components"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons"
 
+import { ModalContext } from "module/Modal"
+import FindMyRooftopOwner from "components/main/Mypage/Greenbee/Modal/FindMyRooftopOwner"
+
 const Greenbee = () => {
+  const { openModal } = useContext(ModalContext)
   return (
     <Wrapper>
       <ListBox>
-        <Box>
+        <Box onClick={() => openModal(<FindMyRooftopOwner />)}>
           <span>본인을 선택한 옥상 확인하기</span> <FontAwesomeIcon icon={faAngleRight} />
         </Box>
         <Box>

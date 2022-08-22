@@ -83,7 +83,7 @@ export const accountControl = {
       addTokenToLocalStorage(accessToken, refreshToken)
       return accessToken
     } catch (err) {
-      const { errorCode, message } = err.response?.data
+      const { errorCode, message } = err.response.data
       if (errorCode === 461) {
         this.getLogOut()
         return

@@ -10,7 +10,6 @@ import { ModalContext } from "module/Modal"
 
 const RooftopModal = () => {
   const { closeModal } = useContext(ModalContext)
-  const navigate = useNavigate()
 
   return (
     <Wrapper>
@@ -21,8 +20,8 @@ const RooftopModal = () => {
       </header>
       <ModalContent>
         <p>옥상 유형 선택</p>
-        <button onClick={() => navigate("/")}>이미 녹화가 되어있어요!</button>
-        <button onClick={() => navigate("/")}>옥상 녹화를 하고싶어요!</button>
+        <button>이미 녹화가 되어있어요!</button>
+        <button>옥상 녹화를 하고싶어요!</button>
       </ModalContent>
     </Wrapper>
   )
