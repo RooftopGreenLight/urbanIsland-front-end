@@ -10,37 +10,47 @@ import MypageBoxModal from "./Modal/MypageBoxModal"
 import { AuthStateContext } from "module/Auth"
 
 const MypageBox = () => {
-  const [users, setData] = useState()
-  const [photo, setPhoto] = useState("")
+  const [userData, setUserData] = useState({
+    authority: "",
+    email: "",
+    id: 0,
+    name: "",
+    profile: null,
+  })
+
+  const { authority, name, profile } = userData
 
   const { memberId } = useContext(AuthStateContext)
   const { openModal } = useContext(ModalContext)
 
   useEffect(() => {
-    const getProfileAndData = async () => {
+    const getUserData = async () => {
       try {
         const memberInfo = await mypageControl.getMemberInfo()
         const profile = await mypageControl.getProfile(memberId)
-        setData(memberInfo)
-        setPhoto(profile)
+        setUserData({ ...memberInfo, profile: profile.data?.fileUrl ?? defaultProfile })
+        console.log(userData)
       } catch (err) {
         console.log(err.message)
-        setPhoto(defaultProfile)
+        setUserData({ ...userData, profile: defaultProfile })
       }
     }
-    getProfileAndData()
-  }, [photo])
+    getUserData()
+  }, [profile])
 
   return (
     <Wrapper>
       <ProfileArea>
         <ProfileBox>
-          <Profile src={photo} />
-          <ProfileEditButton onClick={() => openModal(<MypageBoxModal setPhoto={setPhoto} />)}>
+          <Profile src={profile} />
+          <ProfileEditButton
+            onClick={() =>
+              openModal(<MypageBoxModal userData={userData} setUserData={setUserData} />)
+            }>
             <FontAwesomeIcon icon={faPenToSquare} />
           </ProfileEditButton>
         </ProfileBox>
-        {users && <PTag>{users.name}</PTag>}
+        <PTag>{name}</PTag>
       </ProfileArea>
       <NavArea>
         <PTag>
@@ -55,12 +65,10 @@ const MypageBox = () => {
         <PTag>
           <NavStyle to="/mypage/rooftop">옥상지기</NavStyle>
         </PTag>
-        {users && users.authority === "ROLE_ADMIN" ? (
+        {authority === "ROLE_ADMIN" && (
           <PTag>
             <NavStyle to="/mypage/admin">관리자</NavStyle>
           </PTag>
-        ) : (
-          ""
         )}
       </NavArea>
     </Wrapper>

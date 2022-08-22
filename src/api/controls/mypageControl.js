@@ -74,16 +74,17 @@ export const mypageControl = {
     }
   },
 
-  getProfile: async id => {
+  getProfile: async memberId => {
     try {
       const response = await axiosInstance({
         method: "get",
         url: "/profile",
         params: {
-          id,
+          memberId,
         },
       })
-      return response.data.fileUrl
+      console.log(response)
+      return response
     } catch (err) {
       throw new Error(err)
     }

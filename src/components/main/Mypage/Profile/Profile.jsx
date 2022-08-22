@@ -54,21 +54,21 @@ const Profile = () => {
 
   const editPhoneNum = useCallback(async phoneNum => {
     try {
-      const result = await mypageControl.postMemberChangePhoneNum(phoneNum)
+      await mypageControl.postMemberChangePhoneNum(phoneNum)
     } catch (err) {
       console.log(err.message)
     }
   })
   const editPassword = async pwd => {
     try {
-      const result = await mypageControl.postMemberChangePwd(pwd)
+      await mypageControl.postMemberChangePwd(pwd)
     } catch (err) {
       console.log(err.message)
     }
   }
   const editNickName = useCallback(async name => {
     try {
-      const result = await mypageControl.postMemberChangeNickname(name)
+      await mypageControl.postMemberChangeNickname(name)
     } catch (err) {
       console.log(err.message)
     }
