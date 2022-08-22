@@ -56,6 +56,7 @@ const Rooftop = () => {
     slidesToScroll: 1,
     swipeToSlide: true,
   }
+
   return (
     <Wrapper>
       <ListBox>

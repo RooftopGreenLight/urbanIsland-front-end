@@ -1,10 +1,13 @@
 import { useContext, useState } from "react"
 import styled, { css } from "styled-components"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
+
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import WaitingGreenbeeAcceptModal from "../../Greenbee/Modal/WaitingGreenbeeAcceptModal"
+
 const Box = styled.div`
   background-color: grey;
   border-radius: 5%;
@@ -14,11 +17,9 @@ const Box = styled.div`
 const Time = styled.span`
   font-size: 11px;
 `
+
 const WaitingGreenbeeModal = () => {
-  const { closeModal } = useContext(ModalContext)
-
-  const { openModal } = useContext(ModalContext)
-
+  const { openModal, closeModal } = useContext(ModalContext)
   const sampleData = [
     {
       companyinformation: "A 건축사무소",

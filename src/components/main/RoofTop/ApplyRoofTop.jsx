@@ -66,14 +66,13 @@ const ApplyRoofTop = () => {
       console.log(option, value)
       applyFormData.append(option, value)
     }
+
     try {
       await roofTopControl.postRoofTopInfo(applyFormData)
     } catch (err) {
       throw new Error(err)
     }
   }
-
-  console.log(applyRoofTopInfo)
 
   return (
     <Wrapper>

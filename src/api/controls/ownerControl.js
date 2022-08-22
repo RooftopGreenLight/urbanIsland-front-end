@@ -10,10 +10,24 @@ export const ownerControl = {
           memberId: parseInt(memberId),
         },
       })
+      return response.data
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
+  getGreenBeeWaiting: async memberId => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: "/owners/greenbee-waiting",
+        params: {
+          memberId: parseInt(memberId),
+        },
+      })
       console.log(response)
       return response.data
     } catch (err) {
-      console.log(err)
       const errorMessage = err.response.data.message
       throw new Error(errorMessage)
     }

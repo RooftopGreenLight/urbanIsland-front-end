@@ -107,7 +107,7 @@ export const mypageControl = {
   postApplyGreenbees: async file => {
     try {
       const response = await axiosInstance({
-        method: "post",
+        method: "POST",
         url: "/green-bees/join",
         data: file,
         headers: {
@@ -129,6 +129,7 @@ export const mypageControl = {
           "Content-Type": "multipart/form-data",
         },
       })
+      console.log(response)
       return response
     } catch (err) {
       const errMessage = err.response.data.message

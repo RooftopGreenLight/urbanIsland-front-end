@@ -17,14 +17,14 @@ const WaitingRooftopModal = () => {
   useEffect(() => {
     const loadingRooftopStatus = async () => {
       try {
-        const res = await ownerControl.getRooftopStatus(memberId)
-        setRooftopStatus(res)
+        const statusData = await ownerControl.getRooftopStatus(memberId)
+        setRooftopStatus(statusData)
       } catch (err) {
         console.log(err)
       }
     }
     loadingRooftopStatus()
-  })
+  }, [])
 
   const sampleData = [
     {
@@ -86,12 +86,12 @@ const WaitingRooftopModal = () => {
       <ModalContent>
         <p>대기 옥상 진행상황</p>
         <h1>"서울시 은평구 주소주소 옥상"</h1>
-        {sampleData.map((d, idx) => {
+        {rooftopStatus.map((data, idx) => {
           return (
             <Box key={idx}>
-              <span>{d.information}</span>
-              <Time>{d.date}</Time>
-              <Textpart>{d.noticeMessage}</Textpart>
+              <h5>{data.progress}</h5>
+              <Time>{data.rooftopDate}</Time>
+              <Textpart>{data.noticeMessage}</Textpart>
             </Box>
           )
         })}
