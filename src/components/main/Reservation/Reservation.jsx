@@ -4,12 +4,119 @@ import { ModalContext } from "module/Modal"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFilter } from "@fortawesome/free-solid-svg-icons"
 import DetailFilterModal from "./Modals/DetailFilterModal"
-import { reservationControl } from "api/reservationControl"
+import { roofTopControl } from "api/controls/roofTopControl"
 import TimeFilterModal from "components/main/Reservation/Modals/TimeFilterModal"
 import NumFilterModal from "components/main/Reservation/Modals/NumFilterModal"
 import RegionFilterModal from "components/main/Reservation/Modals/RegionFilterModal"
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons"
-import ReservationCard from "./ReservationCard"
+import ReservationCard from "components/main/Reservation/ReservationCard"
+
+const Reservation = () => {
+  const { openModal } = useContext(ModalContext)
+  const [data, setData] = useState()
+  const [filter, setFilter] = useState({
+    page: 0,
+    cond: 1,
+    type: "G",
+    kidCount: 0,
+    adultCount: 0,
+    petCount: 0,
+    startTime: "",
+    endTime: "",
+    city: "",
+    district: "",
+    maxPrice: 0,
+    minPrice: 0,
+    maxWidth: 0,
+    minWidth: 0,
+    contentNum: [],
+  })
+  useEffect(() => {
+    var obj = new Object()
+    const getFilteredData = async event => {
+      Object.entries(filter).map(d => {
+        if (d[0] === "page" || d[0] === "cond") {
+          obj[d[0]] = d[1]
+        } else if (d[0] === "contentNum") {
+          if (d[1].length >= 1) {
+            obj[d[0]] = d[1]
+          }
+        } else if (d[1] === 0 || d[1] === "") {
+        } else {
+          obj[d[0]] = d[1]
+        }
+      })
+      try {
+        const result = await roofTopControl.getRooftopSearch(obj)
+        setData(result.rooftopResponses)
+      } catch (err) {
+        console.log(err.message)
+      }
+    }
+    getFilteredData()
+  }, [filter])
+
+  const handleChange = e => {
+    setFilter({ ...filter, cond: e.target.value })
+    console.log(filter.cond)
+  }
+
+  const OPTIONS = [
+    { value: 1, name: "평점순" },
+    { value: 2, name: "낮은가격순" },
+    { value: 3, name: "높은가격순" },
+  ]
+
+  return (
+    <Wrapper>
+      <SearchBar>
+        <InnerDiv>
+          <Button
+            onClick={() => openModal(<RegionFilterModal filter={filter} setFilter={setFilter} />)}>
+            <span>지역 선택</span>
+            <FontAwesomeIcon icon={faAngleDown} />
+          </Button>
+          <Button
+            onClick={() => openModal(<TimeFilterModal filter={filter} setFilter={setFilter} />)}>
+            <span>시간 선택</span>
+            <FontAwesomeIcon icon={faAngleDown} />
+          </Button>
+          <Button
+            onClick={() => openModal(<NumFilterModal filter={filter} setFilter={setFilter} />)}>
+            <span>인원 선택</span>
+            <FontAwesomeIcon icon={faAngleDown} />
+          </Button>
+        </InnerDiv>
+
+        <InnerDiv>
+          <select onChange={handleChange}>
+            {OPTIONS.map(option => (
+              <option
+                key={option.value}
+                value={option.value}
+                defaultValue={OPTIONS === option.value}>
+                {option.name}
+              </option>
+            ))}
+          </select>
+          <Button
+            onClick={() => openModal(<DetailFilterModal filter={filter} setFilter={setFilter} />)}>
+            <span>세부필터</span>
+            <FontAwesomeIcon icon={faFilter} />
+          </Button>
+        </InnerDiv>
+      </SearchBar>
+      <SearchResult>
+        {data && data.length >= 1 ? (
+          data.map((d, index) => <ReservationCard props={d} key={index} />)
+        ) : (
+          <div>검색 결과가 없습니다</div>
+        )}
+      </SearchResult>
+    </Wrapper>
+  )
+}
+export default Reservation
 const Button = styled.button`
   background-color: white;
   border: 1px solid black;
@@ -38,139 +145,6 @@ const SearchResult = styled.div`
   display: flex;
   justify-content: center;
 `
-const Wrapper = styled.div``
-const Reservation = () => {
-  const { openModal } = useContext(ModalContext)
-  const [data, setData] = useState()
-  const [contentNum, setContentNum] = useState([])
-  const [page, setPage] = useState(0)
-  const [cond, setCond] = useState(1)
-  const [kidCount, setKid] = useState(0)
-  const [adultCount, setAdult] = useState(0)
-  const [petCount, setPet] = useState(0)
-  const [startTime, setStartTime] = useState("00:00:00")
-  const [endTime, setEndTime] = useState("23:59:00")
-  const [city, setCity] = useState("")
-  const [district, setDistrict] = useState("")
-  const [maxPrice, setMaxPrice] = useState(5000000)
-  const [minPrice, setMinPrice] = useState(0)
-  const [maxWidth, setMaxWidth] = useState(3333)
-  const [minWidth, setMinWidth] = useState(0)
-  const [type, setType] = useState("G")
-  useEffect(() => {
-    const getFilteredData = async event => {
-      try {
-        const result = await reservationControl.getRooftopSearch(
-          page,
-          startTime,
-          endTime,
-          adultCount,
-          kidCount,
-          petCount,
-          city,
-          district,
-          maxPrice,
-          minPrice,
-          contentNum,
-          maxWidth,
-          minWidth,
-          cond,
-          type,
-        )
-        setData(result.rooftopResponses)
-        console.log(result.rooftopResponses)
-      } catch (err) {
-        console.log(err.message)
-      }
-    }
-    getFilteredData()
-  }, [
-    page,
-    startTime,
-    endTime,
-    adultCount,
-    kidCount,
-    petCount,
-    city,
-    district,
-    maxPrice,
-    minPrice,
-    contentNum,
-    maxWidth,
-    minWidth,
-    cond,
-    type,
-  ])
-
-  const handleChange = e => {
-    setCond(e.target.value)
-  }
-  const OPTIONS = [
-    { value: 1, name: "평점순" },
-    { value: 2, name: "낮은가격순" },
-    { value: 3, name: "높은가격순" },
-  ]
-
-  return (
-    <Wrapper>
-      <SearchBar>
-        <InnerDiv>
-          <Button
-            onClick={() =>
-              openModal(<RegionFilterModal setDistricts={setDistrict} setCitys={setCity} />)
-            }>
-            <span>지역 선택</span>
-            <FontAwesomeIcon icon={faAngleDown} />
-          </Button>
-          <Button
-            onClick={() =>
-              openModal(<TimeFilterModal setStartTime={setStartTime} setEndTime={setEndTime} />)
-            }>
-            <span>시간 선택</span>
-            <FontAwesomeIcon icon={faAngleDown} />
-          </Button>
-          <Button
-            onClick={() =>
-              openModal(<NumFilterModal setKids={setKid} setAdults={setAdult} setPets={setPet} />)
-            }>
-            <span>인원 선택</span>
-            <FontAwesomeIcon icon={faAngleDown} />
-          </Button>
-        </InnerDiv>
-
-        <InnerDiv>
-          {" "}
-          <select onChange={handleChange}>
-            {OPTIONS.map(option => (
-              <option
-                key={option.value}
-                value={option.value}
-                defaultValue={OPTIONS === option.value}>
-                {option.name}
-              </option>
-            ))}
-          </select>
-          <Button
-            onClick={() =>
-              openModal(
-                <DetailFilterModal
-                  setMaxPrice={setMaxPrice}
-                  setMaxWidth={setMaxWidth}
-                  setMinPrice={setMinPrice}
-                  setMinWidth={setMinWidth}
-                  setContentNum={setContentNum}
-                />,
-              )
-            }>
-            <span>세부필터</span>
-            <FontAwesomeIcon icon={faFilter} />
-          </Button>
-        </InnerDiv>
-      </SearchBar>
-      <SearchResult>
-        {data ? data.map(d => <ReservationCard props={d} />) : <div>검색 결과가 없습니다</div>}
-      </SearchResult>
-    </Wrapper>
-  )
-}
-export default Reservation
+const Wrapper = styled.div`
+  width: 100%;
+`

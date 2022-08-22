@@ -4,51 +4,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons"
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
-const Box = styled.div`
-  padding: 1rem;
-`
-const Line = styled.div`
-  padding: 0.1rem;
-  display: flex;
-  justify-content: space-between;
 
-  div {
-    text-align: center;
-    width: 50%;
-  }
-`
-const Icons = styled(FontAwesomeIcon)`
-  padding: 0 0.3rem;
-`
-
-const Title = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 0.3rem;
-  span {
-    font-weight: bold;
-    font-size: 1.2rem;
-  }
-`
-const Bottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  div {
-    text-align: center;
-    width: 50%;
-  }
-`
-const NumFilterModal = ({ setAdults, setPets, setKids }) => {
+const NumFilterModal = ({ filter, setFilter }) => {
   const [kid, setKid] = useState(0)
   const [adult, setAdult] = useState(0)
   const [pet, setPet] = useState(0)
 
   const { closeModal } = useContext(ModalContext)
   const onConfirm = () => {
-    setAdults(adult)
-    setPets(pet)
-    setKids(kid)
+    setFilter({ ...filter, kid: kid, adult: adult, pet: pet })
     closeModal()
   }
   const onChangePlus = (x, setX) => {
@@ -135,7 +99,41 @@ const NumFilterModal = ({ setAdults, setPets, setKids }) => {
     </Wrapper>
   )
 }
+const Box = styled.div`
+  padding: 1rem;
+`
+const Line = styled.div`
+  padding: 0.1rem;
+  display: flex;
+  justify-content: space-between;
 
+  div {
+    text-align: center;
+    width: 50%;
+  }
+`
+const Icons = styled(FontAwesomeIcon)`
+  padding: 0 0.3rem;
+`
+
+const Title = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 0.3rem;
+  span {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+`
+const Bottom = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  div {
+    text-align: center;
+    width: 50%;
+  }
+`
 const Wrapper = styled.section`
   ${({ theme }) => {
     const { paddings } = theme

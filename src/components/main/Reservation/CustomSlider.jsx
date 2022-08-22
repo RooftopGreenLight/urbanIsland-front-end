@@ -52,8 +52,8 @@ const Wrapper = styled.div`
   justify-content: center;
   flex-wrap: wrap;
 `
-const CustomSlider = ({ STEP, MIN, MAX, unit, setValue, flag }) => {
-  const [values, setValues] = useState([MIN, MAX])
+const CustomSlider = ({ STEP, MIN, MAX, imin, imax, unit, setValue, flag }) => {
+  const [values, setValues] = useState([imin, imax])
   useEffect(() => {
     const onChange = () => {
       setValues([MIN, MAX])

@@ -4,22 +4,7 @@ import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import CustomSlider from "components/main/Reservation/CustomSlider"
 
-const Box = styled.div`
-  p {
-    font-size: 0.9rem;
-  }
-`
-
-const Title = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 0.3rem;
-  span {
-    font-weight: bold;
-    font-size: 1.2rem;
-  }
-`
-const TimeFilterModal = ({ setEndTime, setStartTime }) => {
+const TimeFilterModal = ({ filter, setFilter }) => {
   const { closeModal } = useContext(ModalContext)
   const ref = useRef(null)
   useEffect(() => {
@@ -37,23 +22,49 @@ const TimeFilterModal = ({ setEndTime, setStartTime }) => {
   const [flag, setFlag] = useState(false)
   const onReset = e => {
     setFlag(!flag)
+    setFilter({ ...filter, startTime: "", endTime: "" })
   }
   const [value, setValue] = useState([])
   const onConfirm = e => {
+    let first = ""
+    let second = ""
+    if (value[0] <= 9) {
+      first = "0" + value[0] + ":00:00"
+    } else if (value[0] !== undefined) {
+      first = value[0] + ":00:00"
+    }
+    if (value[1] <= 9) {
+      console.log(typeof value[1], typeof 0)
+      second = "0" + value[1] + ":00:00"
+    } else if (value[1] !== undefined) {
+      if (value[1] === 24) {
+        second = undefined
+      } else second = value[1] + ":00:00"
+    }
+    if (value[0] !== undefined && value[1] !== undefined) {
+      setFilter({ ...filter, startTime: first, endTime: second })
+    } else if (value[0] !== undefined) {
+      setFilter({ ...filter, startTime: first, endTime: "" })
+    } else if (value[1] !== undefined) {
+      setFilter({ ...filter, startTime: first, endTime: second })
+    }
     closeModal()
   }
   useEffect(() => {
     const ModifyForm = () => {
-      if (value[0] >= 0 || value[0] <= 9) {
-        setStartTime("0" + value[0] + ":00:00")
-        setEndTime(value[1] + ":00:00")
-      } else {
-        setStartTime(value[0] + ":00:00")
-        setEndTime(value[1] + ":00:00")
-      }
+      //   setFilter({ ...filter, startTime: "0" + value[0] + ":00:00", endTime: value[1] + ":00:00" })
+      // } else if (value[0] != undefined && value[1] != undefined) {
+      //   if (value[1] === 24) {
+      //     setFilter({ ...filter, startTime: value[0] + ":00:00", endTime: "23:59:59" })
+      //   } else {
+      //     {
+      //       setFilter({ ...filter, startTime: value[0] + ":00:00", endTime: value[1] + ":00:00" })
+      //     }
+      //   }
+      // }
     }
     ModifyForm()
-  }, [value])
+  }, [])
   return (
     <Wrapper ref={ref}>
       <ModalContent>
@@ -63,7 +74,16 @@ const TimeFilterModal = ({ setEndTime, setStartTime }) => {
         </Title>
         <Box>
           <p>사용하려는 시간이 포함된 가장 짧은 시간을 검색해주세요</p>{" "}
-          <CustomSlider MAX={24} MIN={0} STEP={1} unit={":00"} setValue={setValue} flag={flag} />
+          <CustomSlider
+            MAX={24}
+            MIN={0}
+            STEP={1}
+            unit={":00"}
+            setValue={setValue}
+            flag={flag}
+            imin={0}
+            imax={24}
+          />
         </Box>
         <Bottom>
           <div onClick={onReset}>초기화</div>
@@ -73,6 +93,21 @@ const TimeFilterModal = ({ setEndTime, setStartTime }) => {
     </Wrapper>
   )
 }
+const Box = styled.div`
+  p {
+    font-size: 0.9rem;
+  }
+`
+
+const Title = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 0.3rem;
+  span {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+`
 const Bottom = styled.div`
   display: flex;
   justify-content: space-between;
