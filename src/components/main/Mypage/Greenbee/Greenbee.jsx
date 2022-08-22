@@ -6,16 +6,18 @@ import { faAngleRight } from "@fortawesome/free-solid-svg-icons"
 
 import { ModalContext } from "module/Modal"
 import FindMyRooftopOwner from "components/main/Mypage/Greenbee/Modal/FindMyRooftopOwner"
+import { useNavigate } from "react-router-dom"
 
 const Greenbee = () => {
   const { openModal } = useContext(ModalContext)
+  const navigate = useNavigate()
   return (
     <Wrapper>
       <ListBox>
         <Box onClick={() => openModal(<FindMyRooftopOwner />)}>
           <span>본인을 선택한 옥상 확인하기</span> <FontAwesomeIcon icon={faAngleRight} />
         </Box>
-        <Box>
+        <Box onClick={() => navigate("/mypage/greenbee/required-greening")}>
           <span>녹화가 필요한 옥상 찾기</span> <FontAwesomeIcon icon={faAngleRight} />
         </Box>
         <Box>

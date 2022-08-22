@@ -7,6 +7,66 @@ import { faPenToSquare } from "@fortawesome/free-solid-svg-icons"
 import { mypageControl } from "api/controls/mypageControl"
 import { ModalContext } from "module/Modal"
 import MypageBoxModal from "./Modal/MypageBoxModal"
+import { AuthStateContext } from "module/Auth"
+
+const MypageBox = () => {
+  const [users, setData] = useState()
+  const [photo, setPhoto] = useState("")
+
+  const { memberId } = useContext(AuthStateContext)
+  const { openModal } = useContext(ModalContext)
+
+  useEffect(() => {
+    const getProfileAndData = async () => {
+      try {
+        const memberInfo = await mypageControl.getMemberInfo()
+        const profile = await mypageControl.getProfile(memberId)
+        setData(memberInfo)
+        setPhoto(profile)
+      } catch (err) {
+        console.log(err.message)
+        setPhoto(defaultProfile)
+      }
+    }
+    getProfileAndData()
+  }, [photo])
+
+  return (
+    <Wrapper>
+      <ProfileArea>
+        <ProfileBox>
+          <Profile src={photo} />
+          <ProfileEditButton onClick={() => openModal(<MypageBoxModal setPhoto={setPhoto} />)}>
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </ProfileEditButton>
+        </ProfileBox>
+        {users && <PTag>{users.name}</PTag>}
+      </ProfileArea>
+      <NavArea>
+        <PTag>
+          <NavStyle to="/mypage/profile">내프로필</NavStyle>
+        </PTag>
+        <PTag>
+          <NavStyle to="/mypage/schedule">일정관리</NavStyle>
+        </PTag>
+        <PTag>
+          <NavStyle to="/mypage/greenbee">그린비</NavStyle>
+        </PTag>
+        <PTag>
+          <NavStyle to="/mypage/rooftop">옥상지기</NavStyle>
+        </PTag>
+        {users && users.authority === "ROLE_ADMIN" ? (
+          <PTag>
+            <NavStyle to="/mypage/admin">관리자</NavStyle>
+          </PTag>
+        ) : (
+          ""
+        )}
+      </NavArea>
+    </Wrapper>
+  )
+}
+
 const Wrapper = styled.div`
   width: 20vw;
   height: 80vh;
@@ -63,66 +123,5 @@ const NavStyle = styled(NavLink)`
     text-decoration: underline;
   }
 `
-const MypageBox = () => {
-  const [users, setData] = useState()
-  const { openModal } = useContext(ModalContext)
-  const [photo, setPhoto] = useState("")
 
-  useEffect(() => {
-    const getData = async event => {
-      try {
-        const result = await mypageControl.getMemberInfo()
-        setData(result)
-      } catch (err) {
-        console.log(err.message)
-      }
-    }
-    getData()
-    const getProfile = async event => {
-      const id = JSON.parse(localStorage.getItem("memberId"))
-      try {
-        const result = await mypageControl.getProfile(id)
-        setPhoto(result)
-      } catch (err) {
-        setPhoto(defaultProfile)
-      }
-    }
-    getProfile()
-  }, [photo])
-
-  return (
-    <Wrapper>
-      <ProfileArea>
-        <ProfileBox>
-          <Profile src={photo} />
-          <ProfileEditButton onClick={() => openModal(<MypageBoxModal setPhoto={setPhoto} />)}>
-            <FontAwesomeIcon icon={faPenToSquare} />
-          </ProfileEditButton>
-        </ProfileBox>
-        {users && <PTag>{users.name}</PTag>}
-      </ProfileArea>
-      <NavArea>
-        <PTag>
-          <NavStyle to="/mypage/profile">내프로필</NavStyle>
-        </PTag>
-        <PTag>
-          <NavStyle to="/mypage/schedule">일정관리</NavStyle>
-        </PTag>
-        <PTag>
-          <NavStyle to="/mypage/greenbee">그린비</NavStyle>
-        </PTag>
-        <PTag>
-          <NavStyle to="/mypage/rooftop">옥상지기</NavStyle>
-        </PTag>
-        {users && users.authority === "ROLE_ADMIN" ? (
-          <PTag>
-            <NavStyle to="/mypage/admin">관리자</NavStyle>
-          </PTag>
-        ) : (
-          ""
-        )}
-      </NavArea>
-    </Wrapper>
-  )
-}
 export default MypageBox

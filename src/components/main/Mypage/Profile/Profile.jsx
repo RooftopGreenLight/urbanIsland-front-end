@@ -50,8 +50,8 @@ const Title = styled.div`
 `
 const Profile = () => {
   const [data, setData] = useState()
-
   const { openModal } = useContext(ModalContext)
+
   const editPhoneNum = useCallback(async phoneNum => {
     try {
       const result = await mypageControl.postMemberChangePhoneNum(phoneNum)
@@ -75,7 +75,7 @@ const Profile = () => {
   })
 
   useEffect(() => {
-    const getProfile = async event => {
+    const getProfile = async () => {
       try {
         const result = await mypageControl.getMemberInfo()
         setData(result)

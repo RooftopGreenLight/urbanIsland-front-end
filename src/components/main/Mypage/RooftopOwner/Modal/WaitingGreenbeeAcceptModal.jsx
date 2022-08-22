@@ -1,37 +1,17 @@
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import styled, { css } from "styled-components"
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
-
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
-import WaitingGreenbeeAcceptModal from "./WaitingGreenbeeAcceptModal"
 
-const Box = styled.div`
-  background-color: grey;
-  border-radius: 5%;
-  padding: 1rem;
-  margin-top: 1rem;
-`
-const Time = styled.span`
-  font-size: 11px;
-`
+const WaitingGreenbeeAcceptModal = () => {
+  const { closeModal } = useContext(ModalContext)
 
-const WaitingGreenbeeModal = () => {
-  const { openModal, closeModal } = useContext(ModalContext)
   const sampleData = [
     {
       companyinformation: "A 건축사무소",
-      date: "YY.MM.DD. HH:MM",
-    },
-    {
-      companyinformation: "B 건축사무소",
-      date: "YY.MM.DD. HH:MM",
-    },
-    {
-      companyinformation: "C 건축사무소",
-      date: "YY.MM.DD. HH:MM",
+      number: "010-xxxx-xxxx",
     },
   ]
   return (
@@ -44,27 +24,14 @@ const WaitingGreenbeeModal = () => {
       <ModalContent>
         <p>그린비 대기상황</p>
         <h1>"서울시 은평구 주소주소 옥상"</h1>
-        <button
-          onClick={() =>
-            alert("공고를 내릴 시 신청했던 옥상이 취소됩니다. 그래도 공고를 내리실건가요?!")
-          }>
-          공고 내리기
-        </button>
+        <button onClick={() => alert("녹화 종료")}>녹화 종료</button>
         {sampleData.map(d => {
           return (
             <>
               <Box>
                 <span>{d.companyinformation}</span>
-                <Time>{d.date}</Time>
-                <div>
-                  건축사무소 구경하기
-                  <button
-                    onClick={() => {
-                      openModal(<WaitingGreenbeeAcceptModal />)
-                    }}>
-                    확정하기
-                  </button>
-                </div>
+                <span>건축사무소 구경하기</span>
+                <div>건축사무소 연락처:{d.number}</div>
               </Box>
             </>
           )
@@ -98,6 +65,13 @@ const Wrapper = styled.section`
     `
   }}
 `
+const Box = styled.div`
+  background-color: grey;
+  border-radius: 5%;
+  padding: 1rem;
+  margin-top: 1rem;
+`
+
 const ModalCloseBtn = styled.button`
   ${({ theme }) => {
     const { fonts } = theme
@@ -138,4 +112,4 @@ const ModalContent = styled.main`
   }}
 `
 
-export default WaitingGreenbeeModal
+export default WaitingGreenbeeAcceptModal

@@ -10,41 +10,6 @@ import RooftopModal from "./Modal/RooftopModal"
 import WaitingRooftopModal from "./Modal/WaitingRooftopModal"
 import WaitingGreenbeeModal from "./Modal/WaitingGreenbeeModal"
 
-const Wrapper = styled.div`
-  background-color: ;
-  width: 60vw;
-  display: flex;
-  flex-direction: column;
-  margin-left: 10vw;
-`
-const Title = styled.div`
-  font-size: large;
-  font-weight: bold;
-  padding: 0.6rem;
-  margin-top: 1rem;
-`
-const Rectangle = styled.div`
-  width: 12vw;
-  height: 12vw;
-  overflow: hidden;
-  background: linear-gradient(to top, grey, white);
-  border-radius: 10%;
-`
-const SliderBox = styled.div`
-  margin-top: 2rem;
-  width: 65%;
-`
-const Box = styled.div`
-  padding: 0.6rem;
-  border-bottom: 1px solid gray;
-  display: flex;
-  justify-content: space-between;
-`
-const ListBox = styled.div`
-  margin-top: 2rem;
-  border-top: 1px solid gray;
-  width: 65%;
-`
 const Rooftop = () => {
   const { openModal } = useContext(ModalContext)
 
@@ -96,4 +61,41 @@ const Rooftop = () => {
     </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  background-color: ;
+  width: 60vw;
+  display: flex;
+  flex-direction: column;
+  margin-left: 10vw;
+`
+const Title = styled.div`
+  font-size: large;
+  font-weight: bold;
+  padding: 0.6rem;
+  margin-top: 1rem;
+`
+const Rectangle = styled.div`
+  width: 12vw;
+  height: 12vw;
+  overflow: hidden;
+  background: linear-gradient(to top, grey, white);
+  border-radius: 10%;
+`
+const SliderBox = styled.div`
+  margin-top: 2rem;
+  width: 65%;
+`
+const Box = styled.div`
+  padding: 0.6rem;
+  border-bottom: 1px solid gray;
+  display: flex;
+  justify-content: space-between;
+`
+const ListBox = styled.div`
+  margin-top: 2rem;
+  border-top: 1px solid gray;
+  width: 65%;
+`
+
 export default Rooftop

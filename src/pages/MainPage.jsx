@@ -17,6 +17,7 @@ import Admin from "components/main/Mypage/Admin/Admin"
 import Greenbee from "components/main/Mypage/Greenbee/Greenbee"
 import Rooftop from "components/main/Mypage/RooftopOwner/Rooftop"
 import MakeGreenbeeAccount from "components/main/Mypage/Profile/MakeGreenbeeAccount"
+import RequiredGreeningList from "components/main/Mypage/Greenbee/RequiredGreeningList"
 
 // 테스트
 import ApplyRoofTop from "components/main/RoofTop/ApplyRoofTop"
@@ -65,6 +66,11 @@ const MainPage = () => {
             <Route path="/mypage/profile" element={<MypageContainer props={<Profile />} />} />
             <Route path="/mypage/schedule" element={<MypageContainer props={<Schedule />} />} />
             <Route path="/mypage/greenbee" element={<MypageContainer props={<Greenbee />} />} />
+            <Route
+              path="/mypage/greenbee/required-greening"
+              element={<MypageContainer props={<RequiredGreeningList />} />}
+            />
+            <Route path="requiredgreening" element={<MypageContainer props={<Admin />} />} />
             <Route path="/mypage/rooftop" element={<MypageContainer props={<Rooftop />} />} />
             <Route path="/mypage/admin" element={<MypageContainer props={<Admin />} />} />
             <Route path="/mypage/greenbeeapply" element={<MakeGreenbeeAccount />} />
