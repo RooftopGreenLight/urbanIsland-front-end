@@ -19,4 +19,59 @@ export const roofTopControl = {
       throw new Error(errorMessage)
     }
   },
+  getRooftopSearch: async (
+    page,
+    startTime,
+    endTime,
+    adultCount,
+    kidCount,
+    petCount,
+    city,
+    district,
+    maxPrice,
+    minPrice,
+    contentNum,
+    maxWidth,
+    minWidth,
+    cond,
+    type,
+  ) => {
+    try {
+      const response = await axiosInstance({
+        method: "get",
+        url: "/rooftops/search",
+        params: {
+          page,
+          startTime,
+          endTime,
+          adultCount,
+          kidCount,
+          petCount,
+          city,
+          district,
+          maxPrice,
+          minPrice,
+          contentNum,
+          maxWidth,
+          minWidth,
+          cond,
+          type,
+        },
+      })
+      return response.data
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+  getRooftopDetail: async id => {
+    try {
+      const response = await axiosInstance({
+        method: "get",
+        url: `/rooftops/detail/${id}`,
+      })
+      return response.data
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
 }

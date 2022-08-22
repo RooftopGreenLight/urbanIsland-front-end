@@ -56,7 +56,6 @@ const FilterCheckbox = ({ setSet, flag }) => {
 
   const isAllChecked = e => {
     setCheckList(checks => checks.map((c, i) => (c === true ? !c : c)))
-    console.log(checkList)
   }
   const checkHandler = ({ target }) => {
     checkedItemHandler(target.id, target.checked)
