@@ -35,7 +35,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   // 응답 성공 시 response.data를 return 하도록 설정.
   response => {
-    const res = response.data
+    const res = response?.data
     return res
   },
   // 응답 실패 시 Promise Error 객체를 return 하도록 설정.

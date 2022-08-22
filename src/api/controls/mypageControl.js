@@ -1,4 +1,5 @@
 import axiosInstance from "api/axiosInstance"
+
 export const mypageControl = {
   getMemberInfo: async () => {
     try {
@@ -130,7 +131,8 @@ export const mypageControl = {
       })
       return response
     } catch (err) {
-      throw new Error(err)
+      const errMessage = err.response.data.message
+      throw new Error(errMessage)
     }
   },
   deleteProfile: async () => {
