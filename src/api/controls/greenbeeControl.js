@@ -8,10 +8,10 @@ export const greenbeeControl = {
         method: "GET",
         url: "/green-bees/required-green",
         params: {
-          page: 1,
+          page: 0,
         },
       })
-      return response.data
+      return response.data.rooftopResponses
     } catch (err) {
       const errorMessage = err.response.data.message
       throw new Error(errorMessage)
