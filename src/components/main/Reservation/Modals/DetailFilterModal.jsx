@@ -7,66 +7,35 @@ import { ModalContext } from "module/Modal"
 import CustomSlider from "components/main/Reservation/CustomSlider"
 import FilterCheckbox from "components/main/Reservation/FilterCheckBox"
 
-const Box = styled.div`
-  margin: 0 3rem;
-  span {
-    float: right;
-  }
-`
-const ModalBody = styled.div`
-  height: 80vh;
-  overflow-y: scroll;
-  margin: 1rem;
-`
-const Title = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 0.3rem;
-  span {
-    font-weight: bold;
-    font-size: 1.2rem;
-  }
-`
-const Bottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  div {
-    text-align: center;
-    width: 50%;
-  }
-  span {
-    padding: 1rem;
-  }
-  button {
-    padding: 1rem;
-    margin: 0.3rem 0.5rem;
-    border-radius: 0.3rem;
-  }
-`
-const DetailFilterModal = ({
-  setMaxPrice,
-  setMaxWidth,
-  setMinPrice,
-  setMinWidth,
-  setContentNum,
-}) => {
+const DetailFilterModal = ({ filter, setFilter }) => {
   const { closeModal } = useContext(ModalContext)
+
   const [price, setPrice] = useState([0, 5000000])
   const [width, setWidth] = useState([0, 3333])
   const [set, setSet] = useState(new Set())
-
   const onSubmit = () => {
-    setMaxPrice(price[1])
-    setMaxWidth(width[1])
-    setMinPrice(price[0])
-    setMinWidth(width[0])
-    setContentNum(Array.from(set))
+    setFilter({
+      ...filter,
+      minPrice: price[0],
+      maxPrice: price[1],
+      minWidth: width[0],
+      maxWidth: width[1],
+      contentNum: Array.from(set),
+    })
+
     closeModal()
   }
   const [flag, setFlag] = useState(false)
   const clear = () => {
     setFlag(!flag)
+    setFilter({
+      ...filter,
+      minPrice: 0,
+      maxPrice: 0,
+      minWidth: 0,
+      maxWidth: 0,
+      contentNum: [],
+    })
   }
   return (
     <Wrapper>
@@ -89,6 +58,8 @@ const DetailFilterModal = ({
               unit={"W"}
               setValue={setPrice}
               flag={flag}
+              imin={0}
+              imax={500000}
             />
           </Box>{" "}
           <Title>
@@ -102,6 +73,8 @@ const DetailFilterModal = ({
               unit={"M^2"}
               setValue={setWidth}
               flag={flag}
+              imin={0}
+              imax={3333}
             />
           </Box>{" "}
           <Title>
@@ -195,6 +168,44 @@ const ModalContent = styled.main`
       }
     `
   }}
+`
+
+const Box = styled.div`
+  margin: 0 3rem;
+  span {
+    float: right;
+  }
+`
+const ModalBody = styled.div`
+  height: 80vh;
+  overflow-y: scroll;
+  margin: 1rem;
+`
+const Title = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 0.3rem;
+  span {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+`
+const Bottom = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  div {
+    text-align: center;
+    width: 50%;
+  }
+  span {
+    padding: 1rem;
+  }
+  button {
+    padding: 1rem;
+    margin: 0.3rem 0.5rem;
+    border-radius: 0.3rem;
+  }
 `
 
 export default DetailFilterModal

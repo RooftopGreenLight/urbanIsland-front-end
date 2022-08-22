@@ -3,6 +3,68 @@ import styled, { css } from "styled-components"
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import { SidoGunguList } from "constants/SidoGunguList"
+
+const RegionFilterModal = ({ filter, setFilter }) => {
+  const { closeModal } = useContext(ModalContext)
+  const ref = useRef(null)
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        closeModal()
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [ref])
+
+  const clear = e => {
+    setSido("")
+    setGungu("")
+    setFilter({ ...filter, city: "", district: "" })
+  }
+
+  const [sido, setSido] = useState("")
+  const [gungu, setGungu] = useState("")
+  const onClickSido = d => {
+    setSido(d)
+    setFilter({ ...filter, city: d })
+  }
+  const onClickGungu = d => {
+    setGungu(d)
+    setFilter({ ...filter, district: d })
+    closeModal()
+  }
+  return (
+    <Wrapper ref={ref}>
+      <ModalContent>
+        <Title>
+          <span>지역선택</span>
+          <button onClick={clear}>초기화</button>
+        </Title>
+        <BoxWrapper>
+          <Box>
+            {Array.from(SidoGunguList.keys()).map((d, i) => (
+              <Line key={i} onClick={() => onClickSido(d)}>
+                {d}
+              </Line>
+            ))}
+          </Box>
+          {sido && (
+            <Box>
+              {SidoGunguList.get(sido).map((d, i) => (
+                <Line key={i} onClick={() => onClickGungu(d)}>
+                  {d}
+                </Line>
+              ))}
+            </Box>
+          )}
+        </BoxWrapper>
+      </ModalContent>
+    </Wrapper>
+  )
+}
 const BoxWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -30,65 +92,6 @@ const Title = styled.div`
     background-color: white;
   }
 `
-const RegionFilterModal = ({ setCitys, setDistricts }) => {
-  const { closeModal } = useContext(ModalContext)
-  const ref = useRef(null)
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (ref.current && !ref.current.contains(event.target)) {
-        closeModal()
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [ref])
-
-  const clear = e => {
-    setSido("")
-    setGungu("")
-    setCitys("")
-    setDistricts("")
-  }
-
-  const [sido, setSido] = useState("")
-  const [gungu, setGungu] = useState("")
-  const onClickSido = d => {
-    setSido(d)
-    setCitys(d)
-  }
-  const onClickGungu = d => {
-    setGungu(d)
-    setDistricts(d)
-    closeModal()
-  }
-  return (
-    <Wrapper ref={ref}>
-      <ModalContent>
-        <Title>
-          <span>지역선택</span>
-          <button onClick={clear}>초기화</button>
-        </Title>
-        <BoxWrapper>
-          <Box>
-            {Array.from(SidoGunguList.keys()).map(d => (
-              <Line onClick={() => onClickSido(d)}>{d}</Line>
-            ))}
-          </Box>
-          {sido && (
-            <Box>
-              {SidoGunguList.get(sido).map(d => (
-                <Line onClick={() => onClickGungu(d)}>{d}</Line>
-              ))}
-            </Box>
-          )}
-        </BoxWrapper>
-      </ModalContent>
-    </Wrapper>
-  )
-}
-
 const Wrapper = styled.section`
   ${({ theme }) => {
     const { paddings } = theme

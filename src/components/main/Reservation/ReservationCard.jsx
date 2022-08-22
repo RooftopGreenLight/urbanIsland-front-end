@@ -1,13 +1,37 @@
 import styled from "styled-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faStar } from "@fortawesome/free-solid-svg-icons"
+import { Link } from "react-router-dom"
+const ReservationCard = ({ props }) => {
+  return (
+    <Wrapper>
+      <Link to={"/reservation/" + props.id}>
+        <Image src={props.mainImage.fileUrl} />
+        <Location>
+          {props.city} {props.district}
+        </Location>
+        <Bottom>
+          <StarRate>
+            <div>
+              <Star icon={faStar} />
+              <Starview>{props.grade}/5.0</Starview>
+            </div>
+          </StarRate>
+          <Fee>{props.totalPrice}W</Fee>
+        </Bottom>
+      </Link>
+    </Wrapper>
+  )
+}
+export default ReservationCard
 const Wrapper = styled.div`
   position: relative;
-  width: 35%;
+  width: 25vw;
+  height: 25vw;
   margin: 2rem;
 `
 const Location = styled.div`
-  color: black;
+  color: white;
   position: absolute;
   left: 5%;
   top: 75%;
@@ -17,6 +41,14 @@ const Location = styled.div`
 const Image = styled.img`
   width: 100%;
   border-radius: 1.1rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(50, 50);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: auto;
 `
 const Bottom = styled.div`
   position: absolute;
@@ -31,32 +63,12 @@ const Starview = styled.div`
   display: inline-block;
 `
 const StarRate = styled.div`
-  color: black;
+  color: white;
 `
 const Fee = styled.div`
-  color: black;
+  color: white;
 `
 const Star = styled(FontAwesomeIcon)`
-  color: black;
+  color: white;
   display: inline-block;
 `
-const ReservationCard = ({ props }) => {
-  return (
-    <Wrapper>
-      <Image src={props.mainImage.fileUrl} />
-      <Location>
-        {props.city} {props.district}
-      </Location>
-      <Bottom>
-        <StarRate>
-          <div>
-            <Star icon={faStar} />
-            <Starview>{props.grade}/5.0</Starview>
-          </div>
-        </StarRate>
-        <Fee>{props.totalPrice}W</Fee>
-      </Bottom>
-    </Wrapper>
-  )
-}
-export default ReservationCard
