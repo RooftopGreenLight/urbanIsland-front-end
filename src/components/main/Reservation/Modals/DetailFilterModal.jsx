@@ -67,7 +67,6 @@ const DetailFilterModal = ({
   const [flag, setFlag] = useState(false)
   const clear = () => {
     setFlag(!flag)
-    setSet(new Set())
   }
   return (
     <Wrapper>
@@ -109,7 +108,7 @@ const DetailFilterModal = ({
             <span>편의요소</span>
           </Title>
           <Box>
-            <FilterCheckbox setSet={setSet} />
+            <FilterCheckbox setSet={setSet} flag={flag} />
           </Box>
         </ModalBody>
         <Bottom>

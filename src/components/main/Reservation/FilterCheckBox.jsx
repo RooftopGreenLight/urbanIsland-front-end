@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import styled from "styled-components"
 import { RoofTopFacilities } from "constants/RoofTopFacilities"
 
@@ -30,7 +30,13 @@ const LDisplay = styled.div`
   overflow: ${({ isShowMore }) => (isShowMore ? "auto" : "hidden")};
 `
 const Wrapper = styled.div``
-const FilterCheckbox = ({ setSet }) => {
+const FilterCheckbox = ({ setSet, flag }) => {
+  const [isShowMore, setIsShowMore] = useState(false)
+  var initial = []
+  for (let i = 0; i < Object.keys(RoofTopFacilities).length; i++) {
+    initial.push(false)
+  }
+  const [checkList, setCheckList] = useState(initial)
   const [checkedItems, setCheckedItems] = useState(new Set())
   const checkedItemHandler = (id, isChecked) => {
     if (isChecked) {
@@ -43,19 +49,38 @@ const FilterCheckbox = ({ setSet }) => {
       setSet(checkedItems)
     }
   }
+  // index 번째 체크 상태를 반전시킨다
+  const handleCheckClick = index => {
+    setCheckList(checks => checks.map((c, i) => (i === index ? !c : c)))
+  }
+
+  const isAllChecked = e => {
+    setCheckList(checks => checks.map((c, i) => (c === true ? !c : c)))
+    console.log(checkList)
+  }
   const checkHandler = ({ target }) => {
     checkedItemHandler(target.id, target.checked)
   }
-  const [isShowMore, setIsShowMore] = useState(false)
+  useEffect(() => {
+    isAllChecked()
+  }, [flag])
 
   return (
     <Wrapper>
       <LDisplay isShowMore={isShowMore}>
-        {Object.keys(RoofTopFacilities).map((d, index) =>
-          index % 2 === 0 ? (
+        {Object.keys(RoofTopFacilities).map((d, idx) =>
+          idx % 2 === 0 ? (
             <Line key={d}>
               <p>{d}</p>{" "}
-              <input className="box" type="checkbox" id={index} name={d} onChange={checkHandler} />
+              <input
+                className="box"
+                //checked={bChecked[index]}
+                type="checkbox"
+                id={idx}
+                checked={checkList[idx]}
+                onChange={checkHandler}
+                onClick={() => handleCheckClick(idx)}
+              />
             </Line>
           ) : null,
         )}
@@ -65,7 +90,15 @@ const FilterCheckbox = ({ setSet }) => {
           index % 2 !== 0 ? (
             <Line key={d}>
               <p>{d}</p>{" "}
-              <input className="box" type="checkbox" id={index} name={d} onChange={checkHandler} />
+              <input
+                className="box"
+                //checked={bChecked[index]}
+                type="checkbox"
+                id={index}
+                checked={checkList[index]}
+                onChange={checkHandler}
+                onClick={() => handleCheckClick(index)}
+              />
             </Line>
           ) : null,
         )}
@@ -73,7 +106,6 @@ const FilterCheckbox = ({ setSet }) => {
       <span
         onClick={() => {
           setIsShowMore(!isShowMore)
-          console.log(isShowMore)
         }}>
         {isShowMore ? "닫기" : "더보기"}
       </span>

@@ -16,6 +16,7 @@ export const reservationControl = {
     maxWidth,
     minWidth,
     cond,
+    type,
   ) => {
     try {
       const response = await axiosInstance({
@@ -36,6 +37,7 @@ export const reservationControl = {
           maxWidth,
           minWidth,
           cond,
+          type,
         },
       })
       return response.data
