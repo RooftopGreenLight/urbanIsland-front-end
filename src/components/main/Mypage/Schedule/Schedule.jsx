@@ -1,13 +1,15 @@
-import React, { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useContext, useState } from "react"
 import styled from "styled-components"
 
 import Calendar from "react-calendar"
 import "react-calendar/dist/Calendar.css"
 
+import { ModalContext } from "module/Modal"
+import ChatRoomPage from "components/main/Chat/ChatRoomPage"
+
 const Schedule = () => {
   const [value, onChange] = useState(new Date())
-  const navigate = useNavigate()
+  const { openModal } = useContext(ModalContext)
   return (
     <Wrapper>
       <Calendar onChange={onChange} value={value} />
@@ -25,7 +27,7 @@ const Schedule = () => {
           <span>x명(반려동물 1)</span>
         </Box>
       </InnerBox>
-      <InnerBox onClick={() => navigate("/mypage/chat")}>쪽지내역</InnerBox>
+      <InnerBox onClick={() => openModal(<ChatRoomPage />)}>쪽지내역</InnerBox>
       <ListBox>
         <Box>문의 내역 확인하기</Box>
       </ListBox>
