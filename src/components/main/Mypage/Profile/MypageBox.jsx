@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from "react"
 import styled from "styled-components"
 import { NavLink } from "react-router-dom"
-import defaultProfile from "assets/img/defaultProfile.png"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons"
 import { mypageControl } from "api/controls/mypageControl"
+
 import { ModalContext } from "module/Modal"
-import MypageBoxModal from "./Modal/MypageBoxModal"
 import { AuthStateContext } from "module/Auth"
+import defaultProfile from "assets/img/defaultProfile.png"
+import MypageBoxModal from "./Modal/MypageBoxModal"
 
 const MypageBox = () => {
   const [userData, setUserData] = useState({
@@ -17,6 +19,7 @@ const MypageBox = () => {
     name: "",
     profile: null,
   })
+  const [isProfileLoading, setProfileLoading] = useState(false)
 
   const { authority, name, profile } = userData
 
@@ -25,10 +28,12 @@ const MypageBox = () => {
 
   useEffect(() => {
     const getUserData = async () => {
+      setProfileLoading(false)
       try {
         const memberInfo = await mypageControl.getMemberInfo()
         const profile = await mypageControl.getProfile(memberId)
         setUserData({ ...memberInfo, profile: profile.data?.fileUrl ?? defaultProfile })
+        setProfileLoading(true)
       } catch (err) {
         console.log(err.message)
         setUserData({ ...userData, profile: defaultProfile })
@@ -41,7 +46,7 @@ const MypageBox = () => {
     <Wrapper>
       <ProfileArea>
         <ProfileBox>
-          <Profile src={profile} />
+          <Profile src={isProfileLoading ? profile : defaultProfile} />
           <ProfileEditButton
             onClick={() =>
               openModal(<MypageBoxModal userData={userData} setUserData={setUserData} />)
