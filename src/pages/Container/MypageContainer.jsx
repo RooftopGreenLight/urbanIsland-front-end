@@ -1,6 +1,7 @@
 import MypageTemplate from "components/template/MypageTemplate"
-import { Routes, Route, useParams } from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 
+import ChatRoomPage from "components/main/Chat/ChatRoomPage"
 import Profile from "components/main/Mypage/Profile/Profile"
 import Schedule from "components/main/Mypage/Schedule/Schedule"
 import Admin from "components/main/Mypage/Admin/Admin"
@@ -16,6 +17,7 @@ export const MypageContainer = () => {
     <MypageTemplate>
       <Routes>
         <Route path="profile" element={<Profile />} />
+        <Route path="chat" element={<ChatRoomPage />} />
         <Route path="schedule" element={<Schedule />} />
         <Route path="greenbee" element={<Greenbee />}>
           <Route path="required-greening" element={<RequiredGreeningList />} />

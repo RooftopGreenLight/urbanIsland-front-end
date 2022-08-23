@@ -1,5 +1,4 @@
 import axiosInstance from "api/axiosInstance"
-import axios from "axios"
 
 export const greenbeeControl = {
   getRequiredGreen: async () => {
