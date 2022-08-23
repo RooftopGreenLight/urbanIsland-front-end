@@ -15,7 +15,7 @@ export const MypageContainer = () => {
   return (
     <MypageTemplate>
       <Routes>
-        <Route path="/" element={<Profile />} />
+        <Route path="profile" element={<Profile />} />
         <Route path="schedule" element={<Schedule />} />
         <Route path="greenbee" element={<Greenbee />}>
           <Route path="required-greening" element={<RequiredGreeningList />} />

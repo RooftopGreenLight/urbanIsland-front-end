@@ -53,7 +53,7 @@ const MypageBox = () => {
       </ProfileArea>
       <NavArea>
         <PTag>
-          <NavStyle to="/mypage">내프로필</NavStyle>
+          <NavStyle to="/mypage/profile">내프로필</NavStyle>
         </PTag>
         <PTag>
           <NavStyle to="/mypage/schedule">일정관리</NavStyle>
