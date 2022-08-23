@@ -4,11 +4,19 @@ import { greenbeeControl } from "api/controls/greenbeeControl"
 
 const RequiredGreeningList = () => {
   const [rooftopList, setRooftopList] = useState([])
+  const getRooftopInfo = async rooftopId => {
+    try {
+      const rooftopInfo = await greenbeeControl.getRequiredGreenRooftop(rooftopId)
+    } catch (err) {
+      throw new Error(err)
+    }
+  }
+
   useEffect(() => {
     const loadRequiredList = async () => {
       try {
         const reqList = await greenbeeControl.getRequiredGreen()
-        console.log(reqList[0].mainImage.fileUrl)
+        console.log(reqList)
         setRooftopList(reqList)
       } catch (err) {
         console.log(err)
@@ -20,9 +28,9 @@ const RequiredGreeningList = () => {
   return (
     <Wrapper>
       <GridRoofTopList>
-        {rooftopList.map(({ city, detail, district, mainImage, width, widthPrice }, idx) => (
-          <RoofTopInfo fileUrl={mainImage.fileUrl} key={idx}>
-            <p>{`${width} m2 ${widthPrice} / m2`}</p>
+        {rooftopList.map(({ city, detail, district, mainImage, width, widthPrice, id }, idx) => (
+          <RoofTopInfo fileUrl={mainImage.fileUrl} key={idx} onClick={() => getRooftopInfo(id)}>
+            <p>{`${width} m2 ${widthPrice} 원 / m2`}</p>
             <h5>{`${city} ${detail} ${district}`}</h5>
           </RoofTopInfo>
         ))}
@@ -32,15 +40,17 @@ const RequiredGreeningList = () => {
 }
 
 const Wrapper = styled.div`
-  width: 60vw;
+  width: 55vw;
+  height: 75vh;
+
+  margin: auto;
   display: flex;
   flex-direction: column;
-  margin-left: 10vw;
 `
 
 const GridRoofTopList = styled.div`
-  width: 80%;
-  height: 80%;
+  width: 100%;
+  height: 100%;
 
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -49,16 +59,20 @@ const GridRoofTopList = styled.div`
 
 const RoofTopInfo = styled.div`
   ${({ theme, fileUrl }) => {
-    const { fonts, margins, paddings } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
       width: 100%;
       height: 100%;
 
+      padding: ${paddings.sm};
+
       display: flex;
       flex-direction: column-reverse;
 
-      background-image: url(${fileUrl});
+      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.25)), url(${fileUrl});
       background-size: cover;
+
+      color: ${colors.white};
     `
   }}
 `

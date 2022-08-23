@@ -31,7 +31,6 @@ const MakeGreenbeeAccount = () => {
   const fileList = []
   const handleImgUpload = e => {
     setImg(e.target.files)
-    console.log(img)
     const files = e.target.files
     const fileArray = Array.prototype.slice.call(files)
 
@@ -131,10 +130,11 @@ const MakeGreenbeeAccount = () => {
 }
 
 const Wrapper = styled.div`
+  width: 45vw;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
   border: 1px solid gray;
-  margin: 3rem;
+  margin: auto;
   padding: 3rem;
 `
 const LeftBox = styled.div`

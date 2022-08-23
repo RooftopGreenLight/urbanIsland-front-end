@@ -1,58 +1,46 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
+import { useRecoilValue } from "recoil"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
-import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
-import WaitingGreenbeeAcceptModal from "./WaitingGreenbeeAcceptModal"
+import { AuthCheckMemberId } from "module/Auth"
+import { ownerControl } from "api/controls/ownerControl"
 
-const Box = styled.div`
-  background-color: grey;
-  border-radius: 5%;
-  padding: 1rem;
-  margin-top: 1rem;
-`
-const Time = styled.span`
-  font-size: 11px;
-`
+import { modalShow } from "styles/Animation"
+import WaitingGreenbeeAcceptModal from "components/main/Mypage/RooftopOwner/Modal/WaitingGreenbeeAcceptModal"
 
 const WaitingGreenbeeModal = () => {
   const { openModal, closeModal } = useContext(ModalContext)
-  const sampleData = [
-    {
-      companyinformation: "A 건축사무소",
-      date: "YY.MM.DD. HH:MM",
-    },
-    {
-      companyinformation: "B 건축사무소",
-      date: "YY.MM.DD. HH:MM",
-    },
-    {
-      companyinformation: "C 건축사무소",
-      date: "YY.MM.DD. HH:MM",
-    },
-  ]
+  const memberId = useRecoilValue(AuthCheckMemberId)
+  const [waitingGreenBees, setWaitingGreenBees] = useState([])
+  useEffect(() => {
+    const loadWaitingGreenBeeList = async () => {
+      const waitingList = await ownerControl.getGreenBeeWaiting(memberId)
+      setWaitingGreenBees(waitingList)
+    }
+    loadWaitingGreenBeeList()
+  })
+
   return (
     <Wrapper>
-      <header>
-        <ModalCloseBtn onClick={closeModal}>
-          <FontAwesomeIcon icon={faXmark} />
-        </ModalCloseBtn>
-      </header>
+      <ModalHeader>
+        <h5>대기 옥상 진행 상황</h5>
+        <ModalCloseBtn icon={faXmark} onClick={closeModal} />
+      </ModalHeader>
       <ModalContent>
-        <p>그린비 대기상황</p>
-        <h1>"서울시 은평구 주소주소 옥상"</h1>
-        <button
-          onClick={() =>
-            alert("공고를 내릴 시 신청했던 옥상이 취소됩니다. 그래도 공고를 내리실건가요?!")
-          }>
-          공고 내리기
-        </button>
-        {sampleData.map(d => {
-          return (
+        {waitingGreenBees.length > 0 ? (
+          waitingGreenBees.map(d => (
             <>
+              <h1>"서울시 은평구 주소주소 옥상"</h1>
+              <button
+                onClick={() =>
+                  alert("공고를 내릴 시 신청했던 옥상이 취소됩니다. 그래도 공고를 내리실건가요?!")
+                }>
+                공고 내리기
+              </button>
               <Box>
                 <span>{d.companyinformation}</span>
                 <Time>{d.date}</Time>
@@ -67,8 +55,10 @@ const WaitingGreenbeeModal = () => {
                 </div>
               </Box>
             </>
-          )
-        })}
+          ))
+        ) : (
+          <h5>옥상 녹화 신청 목록 없음</h5>
+        )}
       </ModalContent>
     </Wrapper>
   )
@@ -78,7 +68,7 @@ const Wrapper = styled.section`
   ${({ theme }) => {
     const { paddings } = theme
     return css`
-      width: 50%;
+      width: 40%;
       margin: auto;
 
       border-radius: 0.3rem;
@@ -87,29 +77,41 @@ const Wrapper = styled.section`
       animation: ${modalShow} 0.3s;
       animation-fill-mode: forwards;
       overflow: hidden;
-      header {
-        display: flex;
-        flex-direction: row-reverse;
+    `
+  }}
+`
 
-        padding: ${paddings.sm} ${paddings.base};
-        background-color: #f1f1f1;
-        font-weight: 700;
+const ModalHeader = styled.header`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.base};
+
+      background-color: #000000;
+
+      display: flex;
+      justify-content: space-between;
+
+      h5 {
+        color: ${colors.white};
+        font-size: ${fonts.size.base};
+        text-align: center;
+        vertical-align: center;
       }
     `
   }}
 `
-const ModalCloseBtn = styled.button`
+
+const ModalCloseBtn = styled(FontAwesomeIcon)`
   ${({ theme }) => {
-    const { fonts } = theme
+    const { colors, fonts, paddings } = theme
     return css`
-      margin: 0vw 0vw 0vw auto
-
-      color: #999;
-      background-color: transparent;
-
+      padding: ${paddings.sm};
+      color: ${colors.white};
       font-size: ${fonts.size.xsm};
-      font-weight: 700;
-      text-align: center;
+
+      cursor: pointer;
     `
   }}
 `
@@ -136,6 +138,16 @@ const ModalContent = styled.main`
       }
     `
   }}
+`
+
+const Box = styled.div`
+  background-color: grey;
+  border-radius: 5%;
+  padding: 1rem;
+  margin-top: 1rem;
+`
+const Time = styled.span`
+  font-size: 11px;
 `
 
 export default WaitingGreenbeeModal

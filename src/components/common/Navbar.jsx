@@ -1,13 +1,18 @@
 import styled, { css } from "styled-components"
-import { useContext } from "react"
+import { useResetRecoilState, useRecoilValue } from "recoil"
 import { Link } from "react-router-dom"
 
-import { AuthStateContext } from "module/Auth"
+import { AuthCheckLogin, AuthState } from "module/Auth"
 import { accountControl } from "api/controls/accountControl"
 
 const Navbar = () => {
-  const { authState } = useContext(AuthStateContext)
-  const { authenticated } = authState
+  const resetAuthState = useResetRecoilState(AuthState)
+  const authenticated = useRecoilValue(AuthCheckLogin)
+
+  const logOut = async () => {
+    accountControl.getLogOut()
+    resetAuthState()
+  }
 
   return (
     <Wrapper>
@@ -20,7 +25,7 @@ const Navbar = () => {
       ) : (
         <>
           <LinkElement to="/login">Mypage</LinkElement>
-          <LinkElement to="/" onClick={accountControl.getLogOut}>
+          <LinkElement to="/" onClick={logOut}>
             Logout
           </LinkElement>
         </>
