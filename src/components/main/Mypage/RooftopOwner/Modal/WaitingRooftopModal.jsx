@@ -7,6 +7,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 import { modalShow } from "styles/Animation"
 import { ownerControl } from "api/controls/ownerControl"
+import { WaitingRooftopStatus } from "constants/WaitingRooftopStatus"
 import { ModalContext } from "module/Modal"
 import { AuthCheckMemberId } from "module/Auth"
 
@@ -29,23 +30,23 @@ const WaitingRooftopModal = () => {
 
   return (
     <Wrapper>
-      <header>
-        <ModalCloseBtn onClick={closeModal}>
-          <FontAwesomeIcon icon={faXmark} />
-        </ModalCloseBtn>
-      </header>
+      <ModalHeader>
+        <h5>대기 옥상 진행 상황</h5>
+        <ModalCloseBtn icon={faXmark} onClick={closeModal} />
+      </ModalHeader>
       <ModalContent>
-        <p>대기 옥상 진행상황</p>
-        <h1>"서울시 은평구 주소주소 옥상"</h1>
-        {rooftopStatus.map((data, idx) => {
-          return (
-            <Box key={idx}>
-              <h5>{data.progress}</h5>
-              <Time>{data.rooftopDate}</Time>
-              <Textpart>{data.noticeMessage}</Textpart>
-            </Box>
-          )
-        })}
+        {rooftopStatus.map(({ city, detail, district, progress, rooftopDate }, idx) => (
+          <>
+            <h5>{`${city} ${district} ${detail}`}</h5>
+            <StatusBox key={idx}>
+              <div className="header">
+                <h5>옥상지기 분께 알리는 정보</h5>
+                <span>{`${rooftopDate[0]}.${rooftopDate[1]}.${rooftopDate[2]} ${rooftopDate[3]}:${rooftopDate[4]}:${rooftopDate[5]}`}</span>
+              </div>
+              <p>{WaitingRooftopStatus.get(progress)}</p>
+            </StatusBox>
+          </>
+        ))}
       </ModalContent>
     </Wrapper>
   )
@@ -53,41 +54,52 @@ const WaitingRooftopModal = () => {
 
 const Wrapper = styled.section`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors } = theme
     return css`
       width: 50%;
       margin: auto;
 
-      max-height: 80%;
       border-radius: 0.3rem;
-      background-color: #fff;
+      background-color: ${colors.white};
 
       animation: ${modalShow} 0.3s;
       animation-fill-mode: forwards;
       overflow: hidden;
+    `
+  }}
+`
 
-      header {
-        display: flex;
-        flex-direction: row-reverse;
-        padding: ${paddings.sm} ${paddings.base};
-        background-color: #f1f1f1;
-        font-weight: 700;
+const ModalHeader = styled.header`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.base};
+
+      background-color: #000000;
+
+      display: flex;
+      justify-content: space-between;
+
+      h5 {
+        color: ${colors.white};
+        font-size: ${fonts.size.base};
+        text-align: center;
+        vertical-align: center;
       }
     `
   }}
 `
-const ModalCloseBtn = styled.button`
+
+const ModalCloseBtn = styled(FontAwesomeIcon)`
   ${({ theme }) => {
-    const { fonts } = theme
+    const { colors, fonts, paddings } = theme
     return css`
-      margin: 0vw 0vw 0vw auto
-
-      color: #999;
-      background-color: transparent;
-
+      padding: ${paddings.sm};
+      color: ${colors.white};
       font-size: ${fonts.size.xsm};
-      font-weight: 700;
-      text-align: center;
+
+      cursor: pointer;
     `
   }}
 `
@@ -99,27 +111,61 @@ const ModalContent = styled.main`
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: ${paddings.sm};
+
+      padding: ${paddings.lg} ${paddings.sm};
       border-top: 1px solid #dee2e6;
       background-color: ${colors.white};
 
       max-height: 100%;
       overflow-y: auto;
+      text-align: center;
+
+      h5 {
+        margin: ${margins.sm} auto;
+        font-size: ${fonts.size.base};
+      }
     `
   }}
 `
-const Textpart = styled.div`
-  white-space: pre-line;
-  font-size: 15px;
-`
-const Box = styled.div`
-  background-color: grey;
-  border-radius: 0.8rem;
-  padding: 1rem;
-  margin-top: 1rem;
-`
-const Time = styled.span`
-  font-size: 11px;
+
+const StatusBox = styled.div`
+  ${({ theme }) => {
+    const { fonts, paddings, margins } = theme
+    return css`
+      width: 75%;
+      padding: ${paddings.base};
+      margin: ${margins.sm} auto;
+
+      background-color: #cdcdcd;
+      border-radius: 0.8rem;
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        vertical-align: bottom;
+
+        margin-bottom: ${margins.base};
+
+        h5 {
+          margin: 0;
+          text-align: left;
+          font-size: ${fonts.size.sm};
+        }
+
+        span {
+          text-align: left;
+          font-size: ${fonts.size.xsm};
+          font-weight: 100;
+        }
+      }
+
+      p {
+        text-align: left;
+        font-size: ${fonts.size.xsm};
+        font-weight: 200;
+      }
+    `
+  }}
 `
 
 export default WaitingRooftopModal

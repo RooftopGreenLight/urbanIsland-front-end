@@ -10,6 +10,7 @@ export const ownerControl = {
           memberId: parseInt(memberId),
         },
       })
+      console.log(response.data)
       return response.data
     } catch (err) {
       const errorMessage = err.response.data.message
