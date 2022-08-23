@@ -1,7 +1,6 @@
 import styled, { css } from "styled-components"
 import { useState, useRef } from "react"
 import { useSetRecoilState } from "recoil"
-import { useNavigate } from "react-router-dom"
 
 import { AuthConfirmLogin } from "module/Auth"
 import { accountControl } from "api/controls/accountControl"
@@ -13,7 +12,6 @@ const LoginForm = () => {
     pw: "",
   })
   const { id, pw } = loginInput
-  const navigate = useNavigate()
   const confirmLogin = useSetRecoilState(AuthConfirmLogin)
 
   const submitLogin = async event => {
