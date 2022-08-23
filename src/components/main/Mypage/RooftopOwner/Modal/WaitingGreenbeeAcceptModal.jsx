@@ -4,12 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
-const Box = styled.div`
-  background-color: grey;
-  border-radius: 5%;
-  padding: 1rem;
-  margin-top: 1rem;
-`
 
 const WaitingGreenbeeAcceptModal = () => {
   const { closeModal } = useContext(ModalContext)
@@ -71,6 +65,13 @@ const Wrapper = styled.section`
     `
   }}
 `
+const Box = styled.div`
+  background-color: grey;
+  border-radius: 5%;
+  padding: 1rem;
+  margin-top: 1rem;
+`
+
 const ModalCloseBtn = styled.button`
   ${({ theme }) => {
     const { fonts } = theme

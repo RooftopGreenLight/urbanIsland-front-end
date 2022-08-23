@@ -1,4 +1,5 @@
 import { useContext } from "react"
+import { Link } from "react-router-dom"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -18,9 +19,10 @@ const RooftopModal = () => {
         </ModalCloseBtn>
       </header>
       <ModalContent>
-        <p>옥상 유형 선택</p>
-        <button>이미 녹화가 되어있어요!</button>
-        <button>옥상 녹화를 하고싶어요!</button>
+        <h5>옥상 유형 선택</h5>
+        <p>신청하려는 옥상 시설의 유형을 선택하세요.</p>
+        <LinkBtn>이미 녹화가 되어있어요!</LinkBtn>
+        <LinkBtn>옥상 녹화를 하고싶어요!</LinkBtn>
       </ModalContent>
     </Wrapper>
   )
@@ -79,17 +81,34 @@ const ModalContent = styled.main`
       border-top: 1px solid #dee2e6;
       background-color: ${colors.white};
 
-      button {
-        width: 60%;
-        padding: ${paddings.sm};
-        margin: ${margins.base} auto;
+      text-align: center;
 
-        background-color: #000000;
-        border-radius: 25px;
-        text-align: center;
-        color: ${colors.white};
-        font-size: ${fonts.size.xsm};
+      h5 {
+        font-size: ${fonts.size.base};
       }
+
+      p {
+        margin: ${margins.sm} auto;
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
+    `
+  }}
+`
+
+const LinkBtn = styled.button`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 60%;
+      padding: ${paddings.sm};
+      margin: ${margins.sm} auto;
+
+      background-color: #000000;
+      border-radius: 25px;
+
+      color: ${colors.white};
+      font-size: ${fonts.size.xsm};
     `
   }}
 `

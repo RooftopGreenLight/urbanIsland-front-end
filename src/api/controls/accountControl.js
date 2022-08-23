@@ -59,11 +59,10 @@ export const accountControl = {
         },
       })
       // 로그인에 성공했을 경우, 추후 access_token 만료를 대비하여 header 설정.
-      console.log(response)
       const { tokenDto, id } = response.data
       const { accessToken, refreshToken } = tokenDto
       addTokenToLocalStorage(accessToken, refreshToken, id)
-      return response
+      return { accessToken, memberId: id }
     } catch (err) {
       console.log(err)
       const errorMessage = err.response.data.message
@@ -84,12 +83,9 @@ export const accountControl = {
       addTokenToLocalStorage(accessToken, refreshToken)
       return accessToken
     } catch (err) {
-      const { errorCode, message } = err.response.data
-      if (errorCode === 461) {
-        this.getLogOut()
-        return
-      }
-      throw new Error(message)
+      alert("세션이 만료되어 로그아웃 되었습니다.")
+      removeTokenFromLocalStorage()
+      window.location.reload()
     }
   },
   getLogOut: () => {
@@ -98,7 +94,7 @@ export const accountControl = {
   },
 }
 
-export const addTokenToLocalStorage = (access, refresh, id = false) => {
+export const addTokenToLocalStorage = (access, refresh, id = null) => {
   localStorage.setItem("access_token", JSON.stringify(access))
   localStorage.setItem("refresh_token", JSON.stringify(refresh))
   if (id) {

@@ -5,20 +5,22 @@ import Header from "components/common/Header"
 
 const BaseTemplate = ({ children }) => {
   return (
-    <TemplateLayout>
+    <Wrapper>
       <Header />
       <div className="content">{children}</div>
       <Footer />
-    </TemplateLayout>
+    </Wrapper>
   )
 }
 
-const TemplateLayout = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 
   & > .content {
     min-height: 100vh;
+    margin: auto;
+
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

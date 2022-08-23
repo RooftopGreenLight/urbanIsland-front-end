@@ -1,4 +1,5 @@
 import axiosInstance from "api/axiosInstance"
+import qs from "qs"
 
 export const roofTopControl = {
   postRoofTopInfo: async applyFormData => {
@@ -17,6 +18,29 @@ export const roofTopControl = {
       console.log(err)
       const errorMessage = err.response.data.message
       throw new Error(errorMessage)
+    }
+  },
+  getRooftopSearch: async obj => {
+    const data = qs.stringify(obj)
+    try {
+      const response = await axiosInstance({
+        method: "get",
+        url: "/rooftops/search/?" + data,
+      })
+      return response.data
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+  getRooftopDetail: async id => {
+    try {
+      const response = await axiosInstance({
+        method: "get",
+        url: `/rooftops/detail/${id}`,
+      })
+      return response.data
+    } catch (err) {
+      throw new Error(err)
     }
   },
 }
