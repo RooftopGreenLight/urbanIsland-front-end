@@ -31,10 +31,11 @@ const Schedule = () => {
 }
 
 const Wrapper = styled.div`
-  width: 60vw;
+  width: 50vw;
+  margin: auto;
+
   display: flex;
   flex-direction: column;
-  margin-left: 10vw;
 `
 const InnerBox = styled.div`
   width: 65%;

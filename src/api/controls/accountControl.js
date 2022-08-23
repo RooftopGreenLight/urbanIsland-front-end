@@ -69,7 +69,7 @@ export const accountControl = {
       throw new Error(errorMessage)
     }
   },
-  getRefreshToken: async refresh => {
+  getRefreshToken: async function (refresh) {
     let response
     try {
       response = await axiosInstance({
@@ -83,12 +83,14 @@ export const accountControl = {
       addTokenToLocalStorage(accessToken, refreshToken)
       return accessToken
     } catch (err) {
-      const { errorCode, message } = err.response.data
-      if (errorCode === 461) {
-        this.getLogOut()
-        return
-      }
-      throw new Error(message)
+      this.getLogOut()
+      // console.log(err.response)
+      // const { errorCode, message } = err.response.data
+      // if (errorCode === 461) {
+      //   this.getLogOut()
+      //   return
+      // }
+      // throw new Error(message)
     }
   },
   getLogOut: () => {

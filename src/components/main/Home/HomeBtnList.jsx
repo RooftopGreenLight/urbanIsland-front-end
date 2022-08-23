@@ -22,7 +22,7 @@ const HomeBtnList = () => {
       </HomeBtn>
       {authenticated ? (
         <>
-          <HomeBtn to="/mypage/profile" delay={3}>
+          <HomeBtn to="/mypage" delay={3}>
             마이페이지
           </HomeBtn>
           <HomeBtn to="/" delay={4} onClick={accountControl.getLogOut}>

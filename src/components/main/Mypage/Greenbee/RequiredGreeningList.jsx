@@ -8,6 +8,7 @@ const RequiredGreeningList = () => {
     const loadRequiredList = async () => {
       try {
         const reqList = await greenbeeControl.getRequiredGreen()
+        console.log(reqList[0].mainImage.fileUrl)
         setRooftopList(reqList)
       } catch (err) {
         console.log(err)
@@ -19,10 +20,10 @@ const RequiredGreeningList = () => {
   return (
     <Wrapper>
       <GridRoofTopList>
-        {rooftopList.map(({ city, detail, district, rooftopImages, width, widthPrice }, idx) => (
-          <RoofTopInfo fileUrl={rooftopImages[0].fileUrl} key={idx}>
-            <h5>{`${city} ${detail} ${district}`}</h5>
+        {rooftopList.map(({ city, detail, district, mainImage, width, widthPrice }, idx) => (
+          <RoofTopInfo fileUrl={mainImage.fileUrl} key={idx}>
             <p>{`${width} m2 ${widthPrice} / m2`}</p>
+            <h5>{`${city} ${detail} ${district}`}</h5>
           </RoofTopInfo>
         ))}
       </GridRoofTopList>
@@ -39,7 +40,7 @@ const Wrapper = styled.div`
 
 const GridRoofTopList = styled.div`
   width: 80%;
-  height: 75%;
+  height: 80%;
 
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -53,7 +54,11 @@ const RoofTopInfo = styled.div`
       width: 100%;
       height: 100%;
 
-      background-image: url(fileUrl);
+      display: flex;
+      flex-direction: column-reverse;
+
+      background-image: url(${fileUrl});
+      background-size: cover;
     `
   }}
 `

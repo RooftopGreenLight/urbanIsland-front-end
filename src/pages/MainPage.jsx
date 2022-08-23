@@ -40,11 +40,13 @@ const MainPage = () => {
     }
   }, [])
 
+  console.log(isLogin.current)
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomeContainer />} />
-        <Route element={<RestrictedRoute isLogin={isLogin} />}>
+        <Route element={<RestrictedRoute isLogin={isLogin.current} />}>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/oauth2/login">
@@ -53,7 +55,7 @@ const MainPage = () => {
             <Route path="kakao" element={<SocialAuthConfirm site={"kakao"} />} />
           </Route>
         </Route>
-        <Route element={<PrivateRoute isLogin={isLogin} />}>
+        <Route element={<PrivateRoute isLogin={isLogin.current} />}>
           <Route path="/chat" element={<ChatRoomPage />} />
           <Route path="/mypage/*" element={<MypageContainer />} />
         </Route>

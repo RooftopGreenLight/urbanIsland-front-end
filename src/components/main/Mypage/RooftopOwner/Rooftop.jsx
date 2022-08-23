@@ -63,27 +63,29 @@ const Rooftop = () => {
 }
 
 const Wrapper = styled.div`
-  background-color: ;
-  width: 60vw;
+  width: 55vw;
+  margin: auto;
+
   display: flex;
   flex-direction: column;
-  margin-left: 10vw;
 `
 const Title = styled.div`
+  text-align: left;
   font-size: large;
+
   font-weight: bold;
   padding: 0.6rem;
-  margin-top: 1rem;
+  margin: 2rem auto;
 `
 const Rectangle = styled.div`
-  width: 12vw;
-  height: 12vw;
+  width: 11vw;
+  height: 11vw;
   overflow: hidden;
-  background: linear-gradient(to top, grey, white);
+  background: linear-gradient(to top, grey, #d4d4d4);
   border-radius: 10%;
 `
 const SliderBox = styled.div`
-  margin-top: 2rem;
+  margin: auto;
   width: 65%;
 `
 const Box = styled.div`
@@ -96,6 +98,7 @@ const ListBox = styled.div`
   margin-top: 2rem;
   border-top: 1px solid gray;
   width: 65%;
+  margin: auto;
 `
 
 export default Rooftop

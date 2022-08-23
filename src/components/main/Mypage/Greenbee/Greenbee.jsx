@@ -29,11 +29,11 @@ const Greenbee = () => {
 }
 
 const Wrapper = styled.div`
-  background-color: ;
-  width: 60vw;
+  width: 50vw;
+  margin: auto;
+
   display: flex;
   flex-direction: column;
-  margin-left: 10vw;
 `
 const Box = styled.div`
   padding: 0.6rem;

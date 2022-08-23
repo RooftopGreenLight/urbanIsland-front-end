@@ -29,7 +29,6 @@ const MypageBox = () => {
         const memberInfo = await mypageControl.getMemberInfo()
         const profile = await mypageControl.getProfile(memberId)
         setUserData({ ...memberInfo, profile: profile.data?.fileUrl ?? defaultProfile })
-        console.log(userData)
       } catch (err) {
         console.log(err.message)
         setUserData({ ...userData, profile: defaultProfile })
@@ -54,7 +53,7 @@ const MypageBox = () => {
       </ProfileArea>
       <NavArea>
         <PTag>
-          <NavStyle to="/mypage/profile">내프로필</NavStyle>
+          <NavStyle to="/mypage">내프로필</NavStyle>
         </PTag>
         <PTag>
           <NavStyle to="/mypage/schedule">일정관리</NavStyle>
@@ -78,13 +77,14 @@ const MypageBox = () => {
 const Wrapper = styled.div`
   width: 20vw;
   height: 80vh;
-  background: white;
+
   display: flex;
-  margin-left: 20vw;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
   flex-direction: column;
   align-items: center;
+
+  background: white;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
 `
 const NavArea = styled.div`
   padding-top: 6vh;
@@ -126,6 +126,7 @@ const ProfileEditButton = styled.button`
 `
 const NavStyle = styled(NavLink)`
   color: grey;
+
   &.active {
     color: black;
     text-decoration: underline;
