@@ -12,6 +12,9 @@ import Signup from "components/main/Signup/Signup"
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
 import { useRef } from "react"
 
+// 채팅 시스템을 위해 임시로 import 한 Component
+import ChatRoomPage from "components/main/Chat/ChatRoomPage"
+
 // 오직 로그인이 되었을때만 접근이 가능하도록 하는 Route
 const PrivateRoute = ({ isLogin }) => {
   return isLogin ? <Outlet /> : <Navigate to="/" replace />
