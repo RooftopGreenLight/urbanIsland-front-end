@@ -36,42 +36,40 @@ const FindMyRooftopOwner = () => {
       </ModalHeader>
       <ModalContent>
         <GreeningSection>
-          <div className="rooftop-list">
-            <h5>녹화를 완료한 옥상</h5>
-            {completed ? (
-              completed.map((elm, idx) => (
-                <div key={idx}>
-                  <p>{elm}</p>
-                </div>
-              ))
-            ) : (
-              <p>완료한 옥상이 없습니다.</p>
-            )}
-          </div>
-          <div className="rooftop-list">
-            <h5>녹화를 진행 중인 옥상</h5>
-            {progressed ? (
-              progressed.map((elm, idx) => (
-                <div key={idx}>
-                  <p>{elm}</p>
-                </div>
-              ))
-            ) : (
-              <p>완료한 옥상이 없습니다.</p>
-            )}
-          </div>
-          <div className="rooftop-list">
-            <h5>녹화를 신청한 옥상</h5>
-            {selected ? (
-              selected.map((elm, idx) => (
-                <div key={idx}>
-                  <p>{elm}</p>
-                </div>
-              ))
-            ) : (
-              <p>완료한 옥상이 없습니다.</p>
-            )}
-          </div>
+          <h5>녹화를 완료한 옥상</h5>
+          {completed ? (
+            completed.map((elm, idx) => (
+              <div key={idx}>
+                <p>{elm}</p>
+              </div>
+            ))
+          ) : (
+            <p>완료한 옥상이 없습니다.</p>
+          )}
+        </GreeningSection>
+        <GreeningSection>
+          <h5>녹화를 진행 중인 옥상</h5>
+          {progressed ? (
+            progressed.map((elm, idx) => (
+              <div key={idx}>
+                <p>{elm}</p>
+              </div>
+            ))
+          ) : (
+            <p>완료한 옥상이 없습니다.</p>
+          )}
+        </GreeningSection>
+        <GreeningSection>
+          <h5>녹화를 신청한 옥상</h5>
+          {selected ? (
+            selected.map((elm, idx) => (
+              <div key={idx}>
+                <p>{elm}</p>
+              </div>
+            ))
+          ) : (
+            <p>완료한 옥상이 없습니다.</p>
+          )}
         </GreeningSection>
       </ModalContent>
     </Wrapper>
@@ -136,14 +134,8 @@ const GreeningSection = styled.div`
   ${({ theme }) => {
     const { fonts, margins, paddings } = theme
     return css`
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-
-      .rooftop-list {
-        min-height: 10vh;
-        padding: ${paddings.sm} 0vw;
-      }
+      min-height: 10vh;
+      padding: ${paddings.sm} 0vw;
 
       h5 {
         border-bottom: 1px solid #000000;
@@ -152,6 +144,10 @@ const GreeningSection = styled.div`
         font-size: ${fonts.size.sm};
         line-height: 150%;
         text-align: left;
+      }
+
+      p {
+        font-weight: 100;
       }
     `
   }}

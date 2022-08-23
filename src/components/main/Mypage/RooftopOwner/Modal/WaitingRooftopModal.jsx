@@ -37,7 +37,7 @@ const WaitingRooftopModal = () => {
       <ModalContent>
         {rooftopStatus.map(({ city, detail, district, progress, rooftopDate }, idx) => (
           <>
-            <h5>{`${city} ${district} ${detail}`}</h5>
+            <h5 key={district}>{`${city} ${district} ${detail}`}</h5>
             <StatusBox key={idx}>
               <div className="header">
                 <h5>옥상지기 분께 알리는 정보</h5>

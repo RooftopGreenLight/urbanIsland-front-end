@@ -16,6 +16,19 @@ export const greenbeeControl = {
       throw new Error(errorMessage)
     }
   },
+  getRequiredGreenRooftop: async rooftopId => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/green-bees/required-green/${rooftopId}`,
+      })
+      console.log(response)
+      return response
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
   getGreeningRoofTop: async () => {
     try {
       const selectedList = await axiosInstance({
