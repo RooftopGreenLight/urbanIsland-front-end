@@ -69,7 +69,7 @@ export const accountControl = {
       throw new Error(errorMessage)
     }
   },
-  getRefreshToken: async function (refresh) {
+  getRefreshToken: async refresh => {
     let response
     try {
       response = await axiosInstance({
@@ -84,14 +84,8 @@ export const accountControl = {
       return accessToken
     } catch (err) {
       alert("세션이 만료되어 로그아웃 되었습니다.")
-      this.getLogOut()
-      // console.log(err.response)
-      // const { errorCode, message } = err.response.data
-      // if (errorCode === 461) {
-      //   this.getLogOut()
-      //   return
-      // }
-      // throw new Error(message)
+      removeTokenFromLocalStorage()
+      window.location.reload()
     }
   },
   getLogOut: () => {
@@ -100,7 +94,7 @@ export const accountControl = {
   },
 }
 
-export const addTokenToLocalStorage = (access, refresh, id = false) => {
+export const addTokenToLocalStorage = (access, refresh, id = null) => {
   localStorage.setItem("access_token", JSON.stringify(access))
   localStorage.setItem("refresh_token", JSON.stringify(refresh))
   if (id) {
