@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react"
+import { useRecoilValue } from "recoil"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -7,11 +8,11 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { modalShow } from "styles/Animation"
 import { ownerControl } from "api/controls/ownerControl"
 import { ModalContext } from "module/Modal"
-import { AuthStateContext } from "module/Auth"
+import { AuthCheckMemberId } from "module/Auth"
 
 const WaitingRooftopModal = () => {
   const { closeModal } = useContext(ModalContext)
-  const { memberId } = useContext(AuthStateContext)
+  const memberId = useRecoilValue(AuthCheckMemberId)
   const [rooftopStatus, setRooftopStatus] = useState([])
 
   useEffect(() => {
@@ -26,56 +27,6 @@ const WaitingRooftopModal = () => {
     loadingRooftopStatus()
   }, [])
 
-  const sampleData = [
-    {
-      information: "옥상지기에게 알려주는 정보들",
-      date: "YY.MM.DD. HH:MM",
-      noticeMessage:
-        "현재 옥상지기님의 옥상이 검토에 들어갔습니다!:) \n 추후 법률적 정보 등에 대해 공지드릴 사항 있다면 이야기드리겠습니다",
-    },
-    {
-      information: "옥상지기에게 알려주는 정보들",
-      date: "YY.MM.DD. HH:MM",
-      noticeMessage:
-        "현재 옥상지기님의 옥상이 검토에 들어갔습니다!:) \n 추후 법률적 정보 등에 대해 공지드릴 사항 있다면 이야기드리겠습니다",
-    },
-    {
-      information: "옥상지기에게 알려주는 정보들",
-      date: "YY.MM.DD. HH:MM",
-      noticeMessage:
-        "현재 옥상지기님의 옥상이 검토에 들어갔습니다!:) \n 추후 법률적 정보 등에 대해 공지드릴 사항 있다면 이야기드리겠습니다! \n 말이 길어진다면? 현재 옥상지기님의 옥상이 검토에 들어갔습니다!:) \n 추후 법률적 정보 등에 대해 공지드릴 사항 있다면 이야기드리겠습니다",
-    },
-    {
-      information: "옥상지기에게 알려주는 정보들",
-      date: "YY.MM.DD. HH:MM",
-      noticeMessage:
-        "현재 옥상지기님의 옥상이 검토에 들어갔습니다!:) \n 추후 법률적 정보 등에 대해 공지드릴 사항 있다면 이야기드리겠습니다",
-    },
-    {
-      information: "옥상지기에게 알려주는 정보들",
-      date: "YY.MM.DD. HH:MM",
-      noticeMessage:
-        "현재 옥상지기님의 옥상이 검토에 들어갔습니다!:) \n 추후 법률적 정보 등에 대해 공지드릴 사항 있다면 이야기드리겠습니다",
-    },
-    {
-      information: "옥상지기에게 알려주는 정보들",
-      date: "YY.MM.DD. HH:MM",
-      noticeMessage:
-        "현재 옥상지기님의 옥상이 검토에 들어갔습니다!:) \n 추후 법률적 정보 등에 대해 공지드릴 사항 있다면 이야기드리겠습니다",
-    },
-    {
-      information: "옥상지기에게 알려주는 정보들",
-      date: "YY.MM.DD. HH:MM",
-      noticeMessage:
-        "현재 옥상지기님의 옥상이 검토에 들어갔습니다!:) \n 추후 법률적 정보 등에 대해 공지드릴 사항 있다면 이야기드리겠습니다! \n 말이 길어진다면? 현재 옥상지기님의 옥상이 검토에 들어갔습니다!:) \n 추후 법률적 정보 등에 대해 공지드릴 사항 있다면 이야기드리겠습니다",
-    },
-    {
-      information: "옥상지기에게 알려주는 정보들",
-      date: "YY.MM.DD. HH:MM",
-      noticeMessage:
-        "현재 옥상지기님의 옥상이 검토에 들어갔습니다!:) \n 추후 법률적 정보 등에 대해 공지드릴 사항 있다면 이야기드리겠습니다",
-    },
-  ]
   return (
     <Wrapper>
       <header>

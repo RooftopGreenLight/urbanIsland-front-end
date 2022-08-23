@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react"
-import styled from "styled-components"
+import { useRecoilValue } from "recoil"
 import { NavLink } from "react-router-dom"
+import styled from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons"
 import { mypageControl } from "api/controls/mypageControl"
 
 import { ModalContext } from "module/Modal"
-import { AuthStateContext } from "module/Auth"
+import { AuthCheckMemberId } from "module/Auth"
 import defaultProfile from "assets/img/defaultProfile.png"
 import MypageBoxModal from "./Modal/MypageBoxModal"
 
@@ -20,11 +21,10 @@ const MypageBox = () => {
     profile: null,
   })
   const [isProfileLoading, setProfileLoading] = useState(false)
+  const { openModal } = useContext(ModalContext)
+  const memberId = useRecoilValue(AuthCheckMemberId)
 
   const { authority, name, profile } = userData
-
-  const { memberId } = useContext(AuthStateContext)
-  const { openModal } = useContext(ModalContext)
 
   useEffect(() => {
     const getUserData = async () => {

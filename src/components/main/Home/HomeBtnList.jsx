@@ -1,14 +1,14 @@
 import styled, { css } from "styled-components"
-import { useContext } from "react"
+import { useRecoilValue } from "recoil"
 import { Link } from "react-router-dom"
 
-import { AuthStateContext } from "module/Auth"
+import { AuthCheckLogin } from "module/Auth"
 import { leftToRight } from "styles/Animation"
 import { accountControl } from "api/controls/accountControl"
 
 const HomeBtnList = () => {
-  const authState = useContext(AuthStateContext)
-  const { authenticated } = authState
+  const authenticated = useRecoilValue(AuthCheckLogin)
+
   return (
     <Wrapper>
       <HomeBtn to="/" delay={0}>

@@ -1,8 +1,9 @@
 import styled, { css } from "styled-components"
-import { useState, useRef, useContext } from "react"
+import { useState, useRef } from "react"
+import { useSetRecoilState } from "recoil"
 import { useNavigate } from "react-router-dom"
 
-import { AuthDispatchContext } from "module/Auth"
+import { AuthConfirmLogin } from "module/Auth"
 import { accountControl } from "api/controls/accountControl"
 
 const LoginForm = () => {
@@ -13,7 +14,7 @@ const LoginForm = () => {
   })
   const { id, pw } = loginInput
   const navigate = useNavigate()
-  const authDispatch = useContext(AuthDispatchContext)
+  const confirmLogin = useSetRecoilState(AuthConfirmLogin)
 
   const submitLogin = async event => {
     event.preventDefault()
@@ -26,14 +27,8 @@ const LoginForm = () => {
     }
 
     try {
-      const response = await accountControl.postLoginData(id, pw)
-      const { accessToken } = response.data
-      authDispatch({
-        type: "SET_TOKEN",
-        token: accessToken,
-      })
-      feedbackMsg.current.innerText = "로그인에 성공했습니다. 잠시만 기다려주세요.."
-      setTimeout(() => navigate("/"), 750)
+      const { accessToken, memberId } = await accountControl.postLoginData(id, pw)
+      confirmLogin({ token: accessToken, authenticated: true, memberId: memberId })
     } catch (err) {
       feedbackMsg.current.innerText = err.message
     }

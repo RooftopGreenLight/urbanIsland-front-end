@@ -1,28 +1,39 @@
-import { createContext, useReducer } from "react"
+import { atom, selector } from "recoil"
 
-// JWT Token 관련 reducer 함수, initialState 객체 선언.
-const initialState = { token: null, authenticated: false, memberId: null }
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "SET_TOKEN":
-      return { ...state, token: action.token, memberId: action.memberId, authenticated: true }
-    case "REMOVE_TOKEN":
-      return { ...state, token: null, memberId: null, authenticated: false }
-    default:
-      return state
-  }
-}
+export const AuthState = atom({
+  key: "auth/information",
+  default: {
+    token: null,
+    authenticated: false,
+    memberId: null,
+  },
+})
 
-// state, dispatch 함수 별 Context API 선언
-export const AuthStateContext = createContext()
-export const AuthDispatchContext = createContext()
+export const AuthCheckLogin = selector({
+  key: "auth/checkState",
+  get: ({ get }) => {
+    const { authenticated } = get(AuthState)
+    return authenticated
+  },
+})
 
-// Provider 모듈을 생성하여 state, dispatch 함수를 전역적으로 사용할 수 있게끔 관리
-export const AuthProvider = ({ children }) => {
-  const [authState, authDispatch] = useReducer(reducer, initialState)
-  return (
-    <AuthStateContext.Provider value={authState}>
-      <AuthDispatchContext.Provider value={authDispatch}>{children}</AuthDispatchContext.Provider>
-    </AuthStateContext.Provider>
-  )
-}
+export const AuthCheckMemberId = selector({
+  key: "auth/checkId",
+  get: ({ get }) => {
+    const { memberId } = get(AuthState)
+    return memberId
+  },
+})
+
+export const AuthConfirmLogin = selector({
+  key: "auth/confirm",
+  get: ({ get }) => {
+    const authState = get(AuthState)
+    return authState
+  },
+  set: ({ set }, newValue) => {
+    set(AuthState, prevState => {
+      return { ...prevState, ...newValue }
+    })
+  },
+})

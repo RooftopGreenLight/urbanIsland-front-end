@@ -62,7 +62,7 @@ export const accountControl = {
       const { tokenDto, id } = response.data
       const { accessToken, refreshToken } = tokenDto
       addTokenToLocalStorage(accessToken, refreshToken, id)
-      return response
+      return { accessToken, memberId: id }
     } catch (err) {
       console.log(err)
       const errorMessage = err.response.data.message

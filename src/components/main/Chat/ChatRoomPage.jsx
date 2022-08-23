@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react"
+import { useRecoilValue } from "recoil"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -8,12 +9,12 @@ import ChatRoomInfo from "components/main/Chat/ChatRoomInfo"
 import NoticeEmptyChatRoom from "components/main/Chat/NoticeEmpty/NoticeEmptyChatRoom"
 
 import { ModalContext } from "module/Modal"
-import { AuthStateContext } from "module/Auth"
+import { AuthCheckMemberId } from "module/Auth"
 import { chattingControl } from "api/controls/chattingControl"
 
 const ChatRoomPage = () => {
   const { closeModal } = useContext(ModalContext)
-  const { memberId } = useContext(AuthStateContext)
+  const memberId = useRecoilValue(AuthCheckMemberId)
 
   const [currentRoomList, setCurrentRoomList] = useState([])
   const isEmpty = currentRoomList.length === 0
