@@ -54,36 +54,34 @@ const MainPage = () => {
 
   return (
     <BrowserRouter>
-      <BaseTemplate>
-        <Routes>
-          <Route path="/" element={<HomeContainer />} />
-          <Route element={<RestrictedRoute isLogin={isLogin} />}>
-            <Route path="/login" element={<LoginContainer />} />
-            <Route path="/signup" element={<SignupContainer />} />
+      <Routes>
+        <Route path="/" element={<HomeContainer />} />
+        <Route element={<RestrictedRoute isLogin={isLogin} />}>
+          <Route path="/login" element={<LoginContainer />} />
+          <Route path="/signup" element={<SignupContainer />} />
+        </Route>
+        <Route element={<PrivateRoute isLogin={isLogin} />}>
+          <Route path="/chat" element={<ChatRoomPage />} />
+          <Route path="/mypage" element={<MypageContainer />}>
+            <Route path="profile" element={<Profile />} />
+            <Route path="schedule" element={<Schedule />} />
+            <Route path="greenbee" element={<Greenbee />}>
+              <Route path="required-greening" element={<RequiredGreeningList />} />
+            </Route>
+            <Route path="rooftop" element={<Rooftop />}>
+              <Route path="apply" element={<ApplyRoofTop />} />
+              <Route path="request" element={<RequestToGreenBee />} />
+            </Route>
+            <Route path="admin" element={<Admin />} />
+            <Route path="greenbeeapply" element={<MakeGreenbeeAccount />} />
           </Route>
-          <Route element={<PrivateRoute isLogin={isLogin} />}>
-            <Route path="/chat" element={<ChatRoomPage />} />
-            <Route path="/mypage/profile" element={<MypageContainer props={<Profile />} />} />
-            <Route path="/mypage/schedule" element={<MypageContainer props={<Schedule />} />} />
-            <Route path="/mypage/greenbee" element={<MypageContainer props={<Greenbee />} />} />
-            <Route
-              path="/mypage/greenbee/required-greening"
-              element={<MypageContainer props={<RequiredGreeningList />} />}
-            />
-            <Route path="requiredgreening" element={<MypageContainer props={<Admin />} />} />
-            <Route path="/mypage/rooftop" element={<MypageContainer props={<Rooftop />} />} />
-            <Route path="/mypage/admin" element={<MypageContainer props={<Admin />} />} />
-            <Route path="/mypage/greenbeeapply" element={<MakeGreenbeeAccount />} />
-          </Route>
-          <Route path="/oauth2/login/">
-            <Route path="google" element={<SocialAuthConfirm site={"google"} />} />
-            <Route path="naver" element={<SocialAuthConfirm site={"naver"} />} />
-            <Route path="kakao" element={<SocialAuthConfirm site={"kakao"} />} />
-          </Route>
-          <Route path="/apply" element={<ApplyRoofTop />} />
-          <Route path="/request" element={<RequestToGreenBee />} />
-        </Routes>
-      </BaseTemplate>
+        </Route>
+        <Route path="/oauth2/login/">
+          <Route path="google" element={<SocialAuthConfirm site={"google"} />} />
+          <Route path="naver" element={<SocialAuthConfirm site={"naver"} />} />
+          <Route path="kakao" element={<SocialAuthConfirm site={"kakao"} />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   )
 }
