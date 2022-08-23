@@ -83,7 +83,6 @@ export const mypageControl = {
           memberId,
         },
       })
-      console.log(response)
       return response
     } catch (err) {
       throw new Error(err)
