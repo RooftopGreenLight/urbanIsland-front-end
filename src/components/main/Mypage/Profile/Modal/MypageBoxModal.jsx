@@ -6,14 +6,15 @@ import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import { mypageControl } from "api/controls/mypageControl"
 import defaultProfile from "assets/img/defaultProfile.png"
-const MypageBoxModal = ({ setPhoto }) => {
+
+const MypageBoxModal = ({ userData, setUserData }) => {
   const { closeModal } = useContext(ModalContext)
-  const [files, setFiles] = useState()
+  const [file, setFile] = useState()
 
   const deleteProfile = async () => {
     try {
-      const result = await mypageControl.deleteProfile()
-      setPhoto(defaultProfile)
+      await mypageControl.deleteProfile()
+      setUserData({ ...userData, profile: defaultProfile })
     } catch (err) {
       console.log(err.message)
     }
@@ -21,11 +22,11 @@ const MypageBoxModal = ({ setPhoto }) => {
 
   const onFinish = async () => {
     const formData = new FormData()
-    formData.append("file", files[0]) //files[0] === upload file
+    formData.append("file", file)
     try {
       const result = mypageControl.postProfile(formData)
-      console.log(result.data)
-      setPhoto(result)
+      setUserData({ ...userData, profile: result })
+      closeModal()
     } catch (err) {
       console.log(err)
     }
@@ -33,8 +34,9 @@ const MypageBoxModal = ({ setPhoto }) => {
 
   const handleUpload = e => {
     e.preventDefault()
-    setFiles(e.target.files)
+    setFile(e.target.files[0])
   }
+
   return (
     <Wrapper>
       <header>

@@ -2,11 +2,40 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import Calendar from "react-calendar"
 import "react-calendar/dist/Calendar.css"
+
+const Schedule = () => {
+  const [value, onChange] = useState(new Date())
+  return (
+    <Wrapper>
+      <Calendar onChange={onChange} value={value} />
+      <InnerBox>
+        <Box>
+          <span>예약일자</span>
+          <span>2.22~2.23</span>
+        </Box>
+        <Box>
+          <span>예약시간</span>
+          <span>AM 11 ~ PM8</span>
+        </Box>
+        <Box>
+          <span>총 인원</span>
+          <span>x명(반려동물 1)</span>
+        </Box>
+      </InnerBox>
+      <InnerBox>쪽지내역</InnerBox>
+      <ListBox>
+        <Box>문의 내역 확인하기</Box>
+      </ListBox>
+    </Wrapper>
+  )
+}
+
 const Wrapper = styled.div`
-  width: 60vw;
+  width: 50vw;
+  margin: auto;
+
   display: flex;
   flex-direction: column;
-  margin-left: 10vw;
 `
 const InnerBox = styled.div`
   width: 65%;
@@ -27,30 +56,5 @@ const ListBox = styled.div`
   border-top: 1px solid gray;
   width: 65%;
 `
-const Schedule = () => {
-  const [value, onChange] = useState(new Date())
-  return (
-    <Wrapper>
-      <Calendar onChange={onChange} value={value} />
-      <InnerBox>
-        <Box>
-          <span>예약일자</span>
-          <span>2.22~2.23</span>
-        </Box>{" "}
-        <Box>
-          <span>예약시간</span>
-          <span>AM 11 ~ PM8</span>
-        </Box>{" "}
-        <Box>
-          <span>총 인원</span>
-          <span>x명(반려동물 1)</span>
-        </Box>
-      </InnerBox>
-      <InnerBox>쪽지내역</InnerBox>
-      <ListBox>
-        <Box>문의 내역 확인하기</Box>
-      </ListBox>
-    </Wrapper>
-  )
-}
+
 export default Schedule

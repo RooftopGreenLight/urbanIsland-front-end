@@ -1,22 +1,95 @@
 import React, { useContext, useEffect, useState } from "react"
 import styled from "styled-components"
 import { NavLink } from "react-router-dom"
-import defaultProfile from "assets/img/defaultProfile.png"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons"
 import { mypageControl } from "api/controls/mypageControl"
+
 import { ModalContext } from "module/Modal"
+import { AuthStateContext } from "module/Auth"
+import defaultProfile from "assets/img/defaultProfile.png"
 import MypageBoxModal from "./Modal/MypageBoxModal"
+
+const MypageBox = () => {
+  const [userData, setUserData] = useState({
+    authority: "",
+    email: "",
+    id: 0,
+    name: "",
+    profile: null,
+  })
+  const [isProfileLoading, setProfileLoading] = useState(false)
+
+  const { authority, name, profile } = userData
+
+  const { memberId } = useContext(AuthStateContext)
+  const { openModal } = useContext(ModalContext)
+
+  useEffect(() => {
+    const getUserData = async () => {
+      setProfileLoading(false)
+      try {
+        const memberInfo = await mypageControl.getMemberInfo()
+        const profile = await mypageControl.getProfile(memberId)
+        setUserData({ ...memberInfo, profile: profile.data?.fileUrl ?? defaultProfile })
+        setProfileLoading(true)
+      } catch (err) {
+        console.log(err.message)
+        setUserData({ ...userData, profile: defaultProfile })
+      }
+    }
+    getUserData()
+  }, [profile])
+
+  return (
+    <Wrapper>
+      <ProfileArea>
+        <ProfileBox>
+          <Profile src={isProfileLoading ? profile : defaultProfile} />
+          <ProfileEditButton
+            onClick={() =>
+              openModal(<MypageBoxModal userData={userData} setUserData={setUserData} />)
+            }>
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </ProfileEditButton>
+        </ProfileBox>
+        <PTag>{name}</PTag>
+      </ProfileArea>
+      <NavArea>
+        <PTag>
+          <NavStyle to="/mypage/profile">내프로필</NavStyle>
+        </PTag>
+        <PTag>
+          <NavStyle to="/mypage/schedule">일정관리</NavStyle>
+        </PTag>
+        <PTag>
+          <NavStyle to="/mypage/greenbee">그린비</NavStyle>
+        </PTag>
+        <PTag>
+          <NavStyle to="/mypage/rooftop">옥상지기</NavStyle>
+        </PTag>
+        {authority === "ROLE_ADMIN" && (
+          <PTag>
+            <NavStyle to="/mypage/admin">관리자</NavStyle>
+          </PTag>
+        )}
+      </NavArea>
+    </Wrapper>
+  )
+}
+
 const Wrapper = styled.div`
   width: 20vw;
   height: 80vh;
-  background: white;
+
   display: flex;
-  margin-left: 20vw;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
   flex-direction: column;
   align-items: center;
+
+  background: white;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
 `
 const NavArea = styled.div`
   padding-top: 6vh;
@@ -58,71 +131,11 @@ const ProfileEditButton = styled.button`
 `
 const NavStyle = styled(NavLink)`
   color: grey;
+
   &.active {
     color: black;
     text-decoration: underline;
   }
 `
-const MypageBox = () => {
-  const [users, setData] = useState()
-  const { openModal } = useContext(ModalContext)
-  const [photo, setPhoto] = useState("")
 
-  useEffect(() => {
-    const getData = async event => {
-      try {
-        const result = await mypageControl.getMemberInfo()
-        setData(result)
-      } catch (err) {
-        console.log(err.message)
-      }
-    }
-    getData()
-    const getProfile = async event => {
-      const id = JSON.parse(localStorage.getItem("memberId"))
-      try {
-        const result = await mypageControl.getProfile(id)
-        setPhoto(result)
-      } catch (err) {
-        setPhoto(defaultProfile)
-      }
-    }
-    getProfile()
-  }, [photo])
-
-  return (
-    <Wrapper>
-      <ProfileArea>
-        <ProfileBox>
-          <Profile src={photo} />
-          <ProfileEditButton onClick={() => openModal(<MypageBoxModal setPhoto={setPhoto} />)}>
-            <FontAwesomeIcon icon={faPenToSquare} />
-          </ProfileEditButton>
-        </ProfileBox>
-        {users && <PTag>{users.name}</PTag>}
-      </ProfileArea>
-      <NavArea>
-        <PTag>
-          <NavStyle to="/mypage/profile">내프로필</NavStyle>
-        </PTag>
-        <PTag>
-          <NavStyle to="/mypage/schedule">일정관리</NavStyle>
-        </PTag>
-        <PTag>
-          <NavStyle to="/mypage/greenbee">그린비</NavStyle>
-        </PTag>
-        <PTag>
-          <NavStyle to="/mypage/rooftop">옥상지기</NavStyle>
-        </PTag>
-        {users && users.authority === "ROLE_ADMIN" ? (
-          <PTag>
-            <NavStyle to="/mypage/admin">관리자</NavStyle>
-          </PTag>
-        ) : (
-          ""
-        )}
-      </NavArea>
-    </Wrapper>
-  )
-}
 export default MypageBox

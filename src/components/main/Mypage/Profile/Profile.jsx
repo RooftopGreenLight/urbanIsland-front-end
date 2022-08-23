@@ -1,81 +1,44 @@
 import React, { useContext, useEffect, useState, useCallback } from "react"
+import { Link } from "react-router-dom"
 import styled from "styled-components"
+
 import { mypageControl } from "api/controls/mypageControl"
-import ProfileModal from "./Modal/ProfileModal"
 import { ModalContext } from "module/Modal"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons"
-import ApplyModal from "./Modal/ApplyModal"
-import { Link } from "react-router-dom"
-const Box = styled.div`
-  padding: 0.6rem;
-  border-bottom: 1px solid gray;
-  display: flex;
-  justify-content: space-between;
-`
-const ListBox = styled.div`
-  margin-top: 2rem;
-  border-top: 1px solid gray;
-  width: 65%;
-`
-const Wrapper = styled.div`
-  background-color: ;
-  width: 60vw;
-  display: flex;
-  flex-direction: column;
-  margin-left: 10vw;
-`
-const PTag = styled.p`
-  color: gray;
-  padding-left: 0.6rem;
-`
 
-const ProfileBox = styled.div`
-  width: 65%;
-  background-color: white;
-  align-items: center;
-`
-const ProfileLine = styled.div`
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid gray;
-  padding: 0.6rem;
-  color: gray;
-`
-const Title = styled.div`
-  justify-content: space-between;
-  font-size: large;
-  font-weight: bold;
-  padding: 0.6rem;
-`
+import ApplyModal from "./Modal/ApplyModal"
+import ProfileModal from "./Modal/ProfileModal"
+
 const Profile = () => {
   const [data, setData] = useState()
-
   const { openModal } = useContext(ModalContext)
+
   const editPhoneNum = useCallback(async phoneNum => {
     try {
-      const result = await mypageControl.postMemberChangePhoneNum(phoneNum)
+      await mypageControl.postMemberChangePhoneNum(phoneNum)
     } catch (err) {
       console.log(err.message)
     }
   })
   const editPassword = async pwd => {
     try {
-      const result = await mypageControl.postMemberChangePwd(pwd)
+      await mypageControl.postMemberChangePwd(pwd)
     } catch (err) {
       console.log(err.message)
     }
   }
   const editNickName = useCallback(async name => {
     try {
-      const result = await mypageControl.postMemberChangeNickname(name)
+      await mypageControl.postMemberChangeNickname(name)
     } catch (err) {
       console.log(err.message)
     }
   })
 
   useEffect(() => {
-    const getProfile = async event => {
+    const getProfile = async () => {
       try {
         const result = await mypageControl.getMemberInfo()
         setData(result)
@@ -141,4 +104,49 @@ const Profile = () => {
     </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  width: 50vw;
+  margin: auto;
+
+  display: flex;
+  flex-direction: column;
+`
+
+const Box = styled.div`
+  padding: 0.6rem;
+  border-bottom: 1px solid gray;
+  display: flex;
+  justify-content: space-between;
+`
+const ListBox = styled.div`
+  margin-top: 2rem;
+  border-top: 1px solid gray;
+  width: 65%;
+`
+
+const PTag = styled.p`
+  color: gray;
+  padding-left: 0.6rem;
+`
+
+const ProfileBox = styled.div`
+  width: 65%;
+  background-color: white;
+  align-items: center;
+`
+const ProfileLine = styled.div`
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid gray;
+  padding: 0.6rem;
+  color: gray;
+`
+const Title = styled.div`
+  justify-content: space-between;
+  font-size: large;
+  font-weight: bold;
+  padding: 0.6rem;
+`
+
 export default Profile

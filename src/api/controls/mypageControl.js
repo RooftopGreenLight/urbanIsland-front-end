@@ -1,4 +1,5 @@
 import axiosInstance from "api/axiosInstance"
+
 export const mypageControl = {
   getMemberInfo: async () => {
     try {
@@ -73,16 +74,16 @@ export const mypageControl = {
     }
   },
 
-  getProfile: async id => {
+  getProfile: async memberId => {
     try {
       const response = await axiosInstance({
         method: "get",
         url: "/profile",
         params: {
-          id,
+          memberId,
         },
       })
-      return response.data.fileUrl
+      return response
     } catch (err) {
       throw new Error(err)
     }
@@ -106,7 +107,7 @@ export const mypageControl = {
   postApplyGreenbees: async file => {
     try {
       const response = await axiosInstance({
-        method: "post",
+        method: "POST",
         url: "/green-bees/join",
         data: file,
         headers: {
@@ -128,9 +129,11 @@ export const mypageControl = {
           "Content-Type": "multipart/form-data",
         },
       })
+      console.log(response)
       return response
     } catch (err) {
-      throw new Error(err)
+      const errMessage = err.response.data.message
+      throw new Error(errMessage)
     }
   },
   deleteProfile: async () => {
