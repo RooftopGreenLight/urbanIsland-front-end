@@ -39,12 +39,18 @@ const colors = {
   red: "#ff4d4d",
   yellow: "#ffff4d",
   white: "#ffffff",
-  blue: {
-    primary: "#011f4b",
-    secondary: "#03396c",
-    tertiary: "#005b96",
-    quaternary: "#6497b1",
-    quinary: "#b3cde0",
+  black: {
+    primary: "#000000",
+    secondary: "#191919",
+    tertiary: "#333333",
+    quaternary: "#4d4d4d",
+    quinary: "#666666",
+  },
+  main: {
+    primary: "#184d47",
+    secondary: "#035956",
+    tertiary: "#00917c",
+    quaternary: "#a5f0c5",
   },
 }
 
