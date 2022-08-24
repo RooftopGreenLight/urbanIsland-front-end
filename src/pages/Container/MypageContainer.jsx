@@ -19,10 +19,9 @@ export const MypageContainer = () => {
         <Route path="schedule" element={<Schedule />} />
         <Route path="greenbee" element={<Greenbee />} />
         <Route path="required-greening" element={<RequiredGreeningList />} />
-        <Route path="rooftop" element={<Rooftop />}>
-          <Route path="apply" element={<ApplyRoofTop />} />
-          <Route path="request" element={<RequestToGreenBee />} />
-        </Route>
+        <Route path="rooftop" element={<Rooftop />} />
+        <Route path="rooftop/apply" element={<ApplyRoofTop />} />
+        <Route path="rooftop/request" element={<RequestToGreenBee />} />
         <Route path="admin" element={<Admin />} />
         <Route path="greenbeeapply" element={<MakeGreenbeeAccount />} />
       </Routes>

@@ -1,4 +1,5 @@
 import { useContext, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import styled, { css } from "styled-components"
 
 import { ModalContext } from "module/Modal"
@@ -13,10 +14,11 @@ import ApplyDetailInfo from "components/main/RoofTop/ApplyRoofTop/ApplyDetailInf
 import ApplyExtraOption from "components/main/RoofTop/ApplyRoofTop/ApplyExtraOption"
 
 import RequestDeadLine from "components/main/RoofTop/RequestGreenBee/RequestDeadLine"
-import SetRequiredOptionModal from "components/main/RoofTop/RequestGreenBee/Modal/SetRequiredOption"
+import SetRequiredOptionModal from "components/main/RoofTop/RequestGreenBee/Modal/SetRequiredOptionModal"
 
 const RequestToGreenBee = () => {
   const { openModal } = useContext(ModalContext)
+  const navigate = useNavigate()
   const [requiredInfo, setRequiredInfo] = useState({
     rooftopType: "NG",
     width: 0,
@@ -33,7 +35,7 @@ const RequestToGreenBee = () => {
     kidCount: 0,
     petCount: 0,
     totalCount: 0,
-    country: "",
+    county: "",
     city: "",
     detail: "",
     deadLineNum: [],
@@ -56,10 +58,9 @@ const RequestToGreenBee = () => {
 
   const submitRequest = async () => {
     const reqFormData = new FormData()
-
     for (const [option, value] of Object.entries(requiredInfo)) {
       // 배열의 경우 append를 통해 같은 옵션에 값을 추가해주어야 함
-      if (typeof value === "array") {
+      if (Array.isArray(value)) {
         for (let idx = 0; idx < value.length; idx++) {
           reqFormData.append(option, value[idx])
         }
@@ -67,14 +68,14 @@ const RequestToGreenBee = () => {
       }
       if (option === "startTime" || option === "endTime") {
         reqFormData.append(option, `${value}:00:00`)
-        return
+        continue
       }
       // 배열이 아닌 경우에는 그냥 값을 추가해주면 됨.
       reqFormData.append(option, value)
     }
-
     try {
       await roofTopControl.postRoofTopInfo(reqFormData)
+      navigate("/")
     } catch (err) {
       throw new Error(err)
     }
@@ -82,48 +83,52 @@ const RequestToGreenBee = () => {
 
   return (
     <Wrapper>
-      <ApplySidoList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-      <ApplyBaseInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-      <InputBox boxSize="lg">
-        <h5>세부사항 : 필요 항목</h5>
-        <p>옥상 녹화 단계에 필요한 시설을 체크해주세요.</p>
-        <OpenModalBtn
-          onClick={() =>
-            openModal(
-              <SetRequiredOptionModal
-                requiredInfo={requiredInfo}
-                setRequiredInfo={setRequiredInfo}
-              />,
-            )
-          }>
-          수정하기
-        </OpenModalBtn>
-      </InputBox>
-      <RequestDeadLine requiredInfo={requiredInfo} setRequiredInfo={setRequiredInfo} />
-      <ApplyImgList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-      <ApplyDetailView applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-      <InputBox boxSize="lg">
-        <h5>세부사항 : 옥상 설명 멘트</h5>
-        <p>고객에게 옥상 시설을 설명해주세요!</p>
-        <textarea
-          name="explainContent"
-          rows="4"
-          cols="50"
-          value={explainContent}
-          placeholder="자유롭게 옥상 설명을 작성해주세요."
-          onChange={changeInput}
-        />
-      </InputBox>
-      <ApplyAvailableInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-      <ApplyDetailInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-      <ApplyExtraOption applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-      <ConfirmBtn onClick={submitRequest}>제출하기</ConfirmBtn>
+      <ViewPoint>
+        <ApplySidoList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <ApplyBaseInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <InputBox boxSize="lg">
+          <h5>세부사항 : 필요 항목</h5>
+          <p>옥상 녹화 단계에 필요한 시설을 체크해주세요.</p>
+          <OpenModalBtn
+            onClick={() =>
+              openModal(
+                <SetRequiredOptionModal
+                  requiredInfo={requiredInfo}
+                  setRequiredInfo={setRequiredInfo}
+                />,
+              )
+            }>
+            수정하기
+          </OpenModalBtn>
+        </InputBox>
+        <RequestDeadLine requiredInfo={requiredInfo} setRequiredInfo={setRequiredInfo} />
+        <ApplyImgList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <ApplyDetailView applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <InputBox boxSize="lg">
+          <h5>세부사항 : 옥상 설명 멘트</h5>
+          <p>고객에게 옥상 시설을 설명해주세요!</p>
+          <textarea
+            name="explainContent"
+            rows="4"
+            cols="50"
+            value={explainContent}
+            placeholder="자유롭게 옥상 설명을 작성해주세요."
+            onChange={changeInput}
+          />
+        </InputBox>
+        <ApplyAvailableInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <ApplyDetailInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <ApplyExtraOption applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <ConfirmBtn onClick={submitRequest}>제출하기</ConfirmBtn>
+      </ViewPoint>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
   width: 50vw;
+  height: 80vh;
+
   margin: auto;
   padding: 1rem;
 
@@ -133,6 +138,11 @@ const Wrapper = styled.div`
 
   background-color: #d3d3d3;
   text-align: center;
+`
+
+const ViewPoint = styled.div`
+  max-height: 80vh;
+  overflow: auto;
 `
 
 const InputBox = styled.div`

@@ -6,6 +6,7 @@ export const AuthState = atom({
     token: null,
     authenticated: false,
     memberId: null,
+    memberRole: null,
   },
 })
 
@@ -22,6 +23,14 @@ export const AuthCheckMemberId = selector({
   get: ({ get }) => {
     const { memberId } = get(AuthState)
     return memberId
+  },
+})
+
+export const AuthCheckMemberRole = selector({
+  key: "auth/checkRole",
+  get: ({ get }) => {
+    const { memberRole } = get(AuthState)
+    return memberRole
   },
 })
 

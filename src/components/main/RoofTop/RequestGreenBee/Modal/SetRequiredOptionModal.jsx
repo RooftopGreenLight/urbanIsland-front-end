@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react"
-import { useRecoilState } from "recoil"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -11,15 +10,18 @@ import { RequiredRoofTopOption } from "constants/RequiredRoofTopOption"
 const SetRequiredOptionModal = ({ requiredInfo, setRequiredInfo }) => {
   const { closeModal } = useContext(ModalContext)
   const [requiredOptions, setRequiredOptions] = useState(RequiredRoofTopOption)
+
+  const optionList = Object.keys(requiredOptions)
   const { requiredItemNum } = requiredInfo
 
   useEffect(() => {
     const preSetCheckBox = () => {
-      Object.keys(requiredOptions).forEach((option, idx) => {
-        setRequiredOptions({ ...requiredOptions, option: requiredItemNum.includes(idx) })
-      })
+      optionList.forEach((option, idx) =>
+        setRequiredOptions({ ...requiredOptions, [option]: requiredItemNum.includes(idx) }),
+      )
     }
     preSetCheckBox()
+    console.log(requiredOptions)
   }, [])
 
   const changeCheck = e => {
@@ -27,15 +29,16 @@ const SetRequiredOptionModal = ({ requiredInfo, setRequiredInfo }) => {
     setRequiredOptions({ ...requiredOptions, [name]: checked })
   }
 
-  const confirmDetailList = () => {
-    const newDetailNumList = []
-    const optionList = Object.keys(requiredOptions)
+  const confirmRequiredList = () => {
+    const newRequiredItemNum = []
     for (const [option, value] of Object.entries(requiredOptions)) {
       if (value) {
-        newDetailNumList.push(optionList.indexOf(option))
+        newRequiredItemNum.push(optionList.indexOf(option))
       }
     }
-    setRequiredInfo(newDetailNumList)
+
+    console.log(newRequiredItemNum)
+    setRequiredInfo({ ...requiredInfo, requiredItemNum: newRequiredItemNum })
     closeModal()
   }
 
@@ -60,7 +63,7 @@ const SetRequiredOptionModal = ({ requiredInfo, setRequiredInfo }) => {
           ))}
         </ShowOptionList>
         <ApplySection>
-          <button onClick={confirmDetailList}>세부 정보 저장</button>
+          <button onClick={confirmRequiredList}>세부 정보 저장</button>
         </ApplySection>
       </ModalContent>
     </Wrapper>

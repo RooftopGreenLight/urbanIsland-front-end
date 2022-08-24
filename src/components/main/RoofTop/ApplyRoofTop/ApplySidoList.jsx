@@ -1,17 +1,14 @@
 import styled, { css } from "styled-components"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import { SidoGunguList } from "constants/SidoGunguList"
 
 const ApplySidoList = ({ applyInfo, changeInfo }) => {
-  let defaultSidoList = {}
-  // option Content, Price를 한 쌍으로 묶어 새로운 객체를 생성
-  useEffect(() => {
-    const { county, city, detail } = applyInfo
-    defaultSidoList = { county, city, detail }
-  }, [])
-
-  const [sidoInfo, setSidoInfo] = useState(applyInfo)
+  const [sidoInfo, setSidoInfo] = useState({
+    county: applyInfo.county,
+    city: applyInfo.city,
+    detail: applyInfo.detail,
+  })
   const { county, city, detail } = sidoInfo
 
   const changeSelect = e => {

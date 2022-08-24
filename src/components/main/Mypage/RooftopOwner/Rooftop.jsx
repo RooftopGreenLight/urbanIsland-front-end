@@ -1,12 +1,15 @@
 import React, { useContext } from "react"
 import styled from "styled-components"
 import Slider from "react-slick"
+
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons"
 import { ModalContext } from "module/Modal"
-import RooftopModal from "./Modal/RooftopModal"
+
+import RegisterRooftop from "./Modal/RegisterRooftop"
 import WaitingRooftopModal from "./Modal/WaitingRooftopModal"
 import WaitingGreenbeeModal from "./Modal/WaitingGreenbeeModal"
 
@@ -27,7 +30,7 @@ const Rooftop = () => {
       <ListBox>
         <Box
           onClick={() => {
-            openModal(<RooftopModal />)
+            openModal(<RegisterRooftop />)
           }}>
           <span>옥상 추가 신청하기</span>
           <FontAwesomeIcon icon={faAngleRight} />

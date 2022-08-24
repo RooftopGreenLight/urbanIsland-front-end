@@ -8,21 +8,23 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 
-const RooftopModal = () => {
+const RegisterRooftop = () => {
   const { closeModal } = useContext(ModalContext)
-
   return (
     <Wrapper>
-      <header>
-        <ModalCloseBtn onClick={closeModal}>
-          <FontAwesomeIcon icon={faXmark} />
-        </ModalCloseBtn>
-      </header>
+      <ModalHeader>
+        <h5>옥상 시설 등록</h5>
+        <ModalCloseBtn icon={faXmark} onClick={closeModal} />
+      </ModalHeader>
       <ModalContent>
         <h5>옥상 유형 선택</h5>
         <p>신청하려는 옥상 시설의 유형을 선택하세요.</p>
-        <LinkBtn>이미 녹화가 되어있어요!</LinkBtn>
-        <LinkBtn>옥상 녹화를 하고싶어요!</LinkBtn>
+        <LinkBtn to="/mypage/rooftop/apply" onClick={closeModal}>
+          이미 녹화가 되어있어요!
+        </LinkBtn>
+        <LinkBtn to="/mypage/rooftop/request" onClick={closeModal}>
+          옥상 녹화를 하고싶어요!
+        </LinkBtn>
       </ModalContent>
     </Wrapper>
   )
@@ -30,41 +32,52 @@ const RooftopModal = () => {
 
 const Wrapper = styled.section`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors } = theme
     return css`
-      width: 30%;
+      width: 33%;
       margin: auto;
 
       border-radius: 0.3rem;
-      background-color: #fff;
+      background-color: ${colors.white};
 
       animation: ${modalShow} 0.3s;
       animation-fill-mode: forwards;
       overflow: hidden;
+    `
+  }}
+`
 
-      header {
-        display: flex;
-        flex-direction: row-reverse;
+const ModalHeader = styled.header`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.base};
 
-        padding: ${paddings.sm} ${paddings.base};
-        background-color: #f1f1f1;
-        font-weight: 700;
+      background-color: #000000;
+
+      display: flex;
+      justify-content: space-between;
+
+      h5 {
+        color: ${colors.white};
+        font-size: ${fonts.size.base};
+        text-align: center;
+        vertical-align: center;
       }
     `
   }}
 `
-const ModalCloseBtn = styled.button`
+
+const ModalCloseBtn = styled(FontAwesomeIcon)`
   ${({ theme }) => {
-    const { fonts } = theme
+    const { colors, fonts, paddings } = theme
     return css`
-      margin: 0vw 0vw 0vw auto
-
-      color: #999;
-      background-color: transparent;
-
+      padding: ${paddings.sm};
+      color: ${colors.white};
       font-size: ${fonts.size.xsm};
-      font-weight: 700;
-      text-align: center;
+
+      cursor: pointer;
     `
   }}
 `
@@ -84,11 +97,12 @@ const ModalContent = styled.main`
       text-align: center;
 
       h5 {
+        margin: ${margins.sm} auto;
         font-size: ${fonts.size.base};
       }
 
       p {
-        margin: ${margins.sm} auto;
+        margin-bottom: ${margins.sm};
         font-size: ${fonts.size.xsm};
         font-weight: 100;
       }
@@ -96,11 +110,11 @@ const ModalContent = styled.main`
   }}
 `
 
-const LinkBtn = styled.button`
+const LinkBtn = styled(Link)`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 60%;
+      width: 40%;
       padding: ${paddings.sm};
       margin: ${margins.sm} auto;
 
@@ -113,4 +127,4 @@ const LinkBtn = styled.button`
   }}
 `
 
-export default RooftopModal
+export default RegisterRooftop
