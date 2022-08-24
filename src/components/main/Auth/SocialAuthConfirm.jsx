@@ -1,11 +1,10 @@
 import { OAuthControl } from "api/oAuth"
-import { useEffect } from "react"
+import { useSearchParams } from "react-router-dom"
 
 const SocialAuthConfirm = ({ site }) => {
-  useEffect(() => {
-    const code = new URL(window.location.href).searchParams.get("code")
-    OAuthControl.sendCodeToServer(site, code)
-  }, [])
+  const [searchParams, setSearchParams] = useSearchParams()
+  const code = searchParams.get("code")
+  OAuthControl.sendCodeToServer(site, code)
 
   return (
     <div>
