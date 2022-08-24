@@ -76,32 +76,35 @@ const ApplyRoofTop = () => {
 
   return (
     <Wrapper>
-      <ApplySidoList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-      <ApplyBaseInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-      <ApplyImgList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-      <ApplyDetailView applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-      <InputBox boxSize="lg">
-        <h5>세부사항 : 옥상 설명 멘트</h5>
-        <p>고객에게 옥상 시설을 설명해주세요!</p>
-        <textarea
-          name="explainContent"
-          rows="4"
-          cols="50"
-          value={explainContent}
-          placeholder="자유롭게 옥상 설명을 작성해주세요."
-          onChange={changeInput}
-        />
-      </InputBox>
-      <ApplyAvailableInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-      <ApplyDetailInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-      <ApplyExtraOption applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-      <ConfirmBtn onClick={sendRoofTopData}>옥상 신청하기</ConfirmBtn>
+      <ViewPoint>
+        <ApplySidoList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyBaseInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyImgList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyDetailView applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <InputBox boxSize="lg">
+          <h5>세부사항 : 옥상 설명 멘트</h5>
+          <p>고객에게 옥상 시설을 설명해주세요!</p>
+          <textarea
+            name="explainContent"
+            rows="4"
+            cols="50"
+            value={explainContent}
+            placeholder="자유롭게 옥상 설명을 작성해주세요."
+            onChange={changeInput}
+          />
+        </InputBox>
+        <ApplyAvailableInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyDetailInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyExtraOption applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ConfirmBtn onClick={sendRoofTopData}>옥상 신청하기</ConfirmBtn>
+      </ViewPoint>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
   width: 50vw;
+
   margin: auto;
   padding: 1rem;
 
@@ -110,6 +113,11 @@ const Wrapper = styled.div`
 
   background-color: #d3d3d3;
   text-align: center;
+`
+
+const ViewPoint = styled.div`
+  max-height: 80vh;
+  overflow: auto;
 `
 
 const ConfirmBtn = styled.button`
