@@ -51,7 +51,7 @@ const ApplyRoofTop = () => {
 
     for (const [option, value] of Object.entries(applyRoofTopInfo)) {
       // 배열의 경우 append를 통해 같은 옵션에 값을 추가해주어야 함
-      if (typeof value === "array") {
+      if (Array.isArray(value)) {
         for (let idx = 0; idx < value.length; idx++) {
           applyFormData.append(option, value[idx])
         }

@@ -14,7 +14,7 @@ import ApplyDetailInfo from "components/main/RoofTop/ApplyRoofTop/ApplyDetailInf
 import ApplyExtraOption from "components/main/RoofTop/ApplyRoofTop/ApplyExtraOption"
 
 import RequestDeadLine from "components/main/RoofTop/RequestGreenBee/RequestDeadLine"
-import SetRequiredOptionModal from "components/main/RoofTop/RequestGreenBee/Modal/SetRequiredOption"
+import SetRequiredOptionModal from "components/main/RoofTop/RequestGreenBee/Modal/SetRequiredOptionModal"
 
 const RequestToGreenBee = () => {
   const { openModal } = useContext(ModalContext)
@@ -60,7 +60,7 @@ const RequestToGreenBee = () => {
     const reqFormData = new FormData()
     for (const [option, value] of Object.entries(requiredInfo)) {
       // 배열의 경우 append를 통해 같은 옵션에 값을 추가해주어야 함
-      if (typeof value === "array") {
+      if (Array.isArray(value)) {
         for (let idx = 0; idx < value.length; idx++) {
           reqFormData.append(option, value[idx])
         }

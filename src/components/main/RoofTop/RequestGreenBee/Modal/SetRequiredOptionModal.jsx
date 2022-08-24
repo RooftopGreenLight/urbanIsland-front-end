@@ -10,18 +10,18 @@ import { RequiredRoofTopOption } from "constants/RequiredRoofTopOption"
 const SetRequiredOptionModal = ({ requiredInfo, setRequiredInfo }) => {
   const { closeModal } = useContext(ModalContext)
   const [requiredOptions, setRequiredOptions] = useState(RequiredRoofTopOption)
-  const [isLoading, setLoading] = useState(false)
+
+  const optionList = Object.keys(requiredOptions)
   const { requiredItemNum } = requiredInfo
 
   useEffect(() => {
     const preSetCheckBox = () => {
-      Object.keys(requiredOptions).forEach((option, idx) => {
-        setRequiredOptions({ ...requiredOptions, [option]: requiredItemNum.includes(idx) })
-        console.log(requiredOptions)
-      })
-      setLoading(true)
+      optionList.forEach((option, idx) =>
+        setRequiredOptions({ ...requiredOptions, [option]: requiredItemNum.includes(idx) }),
+      )
     }
     preSetCheckBox()
+    console.log(requiredOptions)
   }, [])
 
   const changeCheck = e => {
@@ -31,7 +31,6 @@ const SetRequiredOptionModal = ({ requiredInfo, setRequiredInfo }) => {
 
   const confirmRequiredList = () => {
     const newRequiredItemNum = []
-    const optionList = Object.keys(requiredOptions)
     for (const [option, value] of Object.entries(requiredOptions)) {
       if (value) {
         newRequiredItemNum.push(optionList.indexOf(option))
@@ -51,18 +50,17 @@ const SetRequiredOptionModal = ({ requiredInfo, setRequiredInfo }) => {
       </ModalHeader>
       <ModalContent>
         <ShowOptionList>
-          {isLoading &&
-            Object.keys(requiredOptions).map(option => (
-              <div className="select-section" key={option}>
-                <p>{option}</p>
-                <input
-                  type="checkbox"
-                  name={option}
-                  checked={requiredOptions[option]}
-                  onChange={changeCheck}
-                />
-              </div>
-            ))}
+          {Object.keys(requiredOptions).map(option => (
+            <div className="select-section" key={option}>
+              <p>{option}</p>
+              <input
+                type="checkbox"
+                name={option}
+                checked={requiredOptions[option]}
+                onChange={changeCheck}
+              />
+            </div>
+          ))}
         </ShowOptionList>
         <ApplySection>
           <button onClick={confirmRequiredList}>세부 정보 저장</button>
