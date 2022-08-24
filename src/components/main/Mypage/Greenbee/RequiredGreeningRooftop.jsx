@@ -1,45 +1,26 @@
 import styled, { css } from "styled-components"
 import { useState, useEffect } from "react"
-
 import { greenbeeControl } from "api/controls/greenbeeControl"
 
-const RequiredGreeningList = () => {
-  const [rooftopList, setRooftopList] = useState([])
-  const getRooftopInfo = async rooftopId => {
-    try {
-      const rooftopInfo = await greenbeeControl.getRequiredGreenRooftop(rooftopId)
-    } catch (err) {
-      throw new Error(err)
-    }
-  }
+const RequiredGreeningRooftop = ({ rooftopId }) => {
+  const [rooftopInfo, setRooftopInfo] = useState([])
 
   useEffect(() => {
-    const loadRequiredList = async () => {
+    const loadRooftopInfo = async () => {
       try {
-        const reqList = await greenbeeControl.getRequiredGreen()
-        console.log(reqList)
-        setRooftopList(reqList)
+        const loadedRooftopInfo = await greenbeeControl.getRequiredGreenRooftop(rooftopId)
+        console.log(loadedRooftopInfo)
+        setRooftopInfo(loadedRooftopInfo)
       } catch (err) {
         console.log(err)
       }
     }
-    loadRequiredList()
+    loadRooftopInfo()
   }, [])
 
   return (
     <Wrapper>
-      <GridRoofTopList>
-        {rooftopList.map(({ city, detail, district, mainImage, width, widthPrice, id }, idx) => (
-          <RoofTopInfo fileUrl={mainImage.fileUrl} key={idx} onClick={() => getRooftopInfo(id)}>
-            <h5>{`${city} ${district}`}</h5>
-            <p>{detail}</p>
-            <div className="width-price">
-              <span>{`${width} m2`}</span>
-              <span> {`${widthPrice} 원 / m2`}</span>
-            </div>
-          </RoofTopInfo>
-        ))}
-      </GridRoofTopList>
+      <p>{rooftopInfo}</p>
     </Wrapper>
   )
 }
@@ -101,4 +82,4 @@ const RoofTopInfo = styled.div`
   }}
 `
 
-export default RequiredGreeningList
+export default RequiredGreeningRooftop
