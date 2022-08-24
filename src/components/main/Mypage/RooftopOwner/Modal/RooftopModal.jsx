@@ -10,7 +10,6 @@ import { ModalContext } from "module/Modal"
 
 const RooftopModal = () => {
   const { closeModal } = useContext(ModalContext)
-
   return (
     <Wrapper>
       <header>
@@ -21,8 +20,12 @@ const RooftopModal = () => {
       <ModalContent>
         <h5>옥상 유형 선택</h5>
         <p>신청하려는 옥상 시설의 유형을 선택하세요.</p>
-        <LinkBtn>이미 녹화가 되어있어요!</LinkBtn>
-        <LinkBtn>옥상 녹화를 하고싶어요!</LinkBtn>
+        <LinkBtn to="/mypage/rooftop/apply" onClick={closeModal}>
+          이미 녹화가 되어있어요!
+        </LinkBtn>
+        <LinkBtn to="/mypage/rooftop/request" onClick={closeModal}>
+          옥상 녹화를 하고싶어요!
+        </LinkBtn>
       </ModalContent>
     </Wrapper>
   )
@@ -96,7 +99,7 @@ const ModalContent = styled.main`
   }}
 `
 
-const LinkBtn = styled.button`
+const LinkBtn = styled(Link)`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`

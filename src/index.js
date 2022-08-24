@@ -1,5 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
+import { BrowserRouter } from "react-router-dom"
 import { RecoilRoot } from "recoil"
 import App from "App"
 
@@ -11,11 +12,13 @@ import GlobalStyle from "styles/GlobalStyle"
 const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
   <ThemeProvider theme={theme}>
-    <RecoilRoot>
-      <ModalProvider>
-        <GlobalStyle />
-        <App />
-      </ModalProvider>
-    </RecoilRoot>
+    <BrowserRouter>
+      <RecoilRoot>
+        <ModalProvider>
+          <GlobalStyle />
+          <App />
+        </ModalProvider>
+      </RecoilRoot>
+    </BrowserRouter>
   </ThemeProvider>,
 )
