@@ -25,8 +25,8 @@ const LoginForm = () => {
     }
 
     try {
-      const { accessToken, memberId } = await accountControl.postLoginData(id, pw)
-      confirmLogin({ token: accessToken, authenticated: true, memberId: memberId })
+      const { accessToken, memberId, memberRole } = await accountControl.postLoginData(id, pw)
+      confirmLogin({ token: accessToken, authenticated: true, memberId, memberRole })
     } catch (err) {
       feedbackMsg.current.innerText = err.message
     }

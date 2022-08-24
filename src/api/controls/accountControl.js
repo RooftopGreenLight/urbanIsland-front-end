@@ -58,11 +58,10 @@ export const accountControl = {
           password,
         },
       })
-      // 로그인에 성공했을 경우, 추후 access_token 만료를 대비하여 header 설정.
-      const { tokenDto, id } = response.data
+      const { tokenDto, id, authority } = response.data
       const { accessToken, refreshToken } = tokenDto
-      addTokenToLocalStorage(accessToken, refreshToken, id)
-      return { accessToken, memberId: id }
+      addTokenToLocalStorage(accessToken, refreshToken, id, authority)
+      return { accessToken, memberId: id, memberRole: authority }
     } catch (err) {
       console.log(err)
       const errorMessage = err.response.data.message
@@ -87,17 +86,28 @@ export const accountControl = {
       window.location.reload()
     }
   },
-  getLogOut: () => {
-    removeTokenFromLocalStorage()
-    window.location.reload()
+  deleteLogOut: async () => {
+    try {
+      await axiosInstance({
+        method: "DELETE",
+        url: "auth/logout",
+      })
+      removeTokenFromLocalStorage()
+      window.location.reload()
+    } catch (err) {
+      console.log(err)
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
   },
 }
 
-export const addTokenToLocalStorage = (access, refresh, id = null) => {
+export const addTokenToLocalStorage = (access, refresh, id = null, authority = null) => {
   localStorage.setItem("access_token", JSON.stringify(access))
   localStorage.setItem("refresh_token", JSON.stringify(refresh))
-  if (id) {
+  if (id && authority) {
     localStorage.setItem("memberId", JSON.stringify(id))
+    localStorage.setItem("memberRole", JSON.stringify(authority))
   }
 }
 
@@ -105,4 +115,5 @@ export const removeTokenFromLocalStorage = () => {
   localStorage.removeItem("access_token")
   localStorage.removeItem("refresh_token")
   localStorage.removeItem("memberId")
+  localStorage.removeItem("memberRole")
 }
