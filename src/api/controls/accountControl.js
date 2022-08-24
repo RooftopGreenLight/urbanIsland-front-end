@@ -68,7 +68,7 @@ export const accountControl = {
       throw new Error(errorMessage)
     }
   },
-  getRefreshToken: async refresh => {
+  getRefreshToken: async (refresh, memberId) => {
     let response
     try {
       response = await axiosInstance({
@@ -76,7 +76,7 @@ export const accountControl = {
           "refresh-token": `${refresh}`,
         },
         method: "GET",
-        url: "auth/check-refresh-token",
+        url: `auth/${memberId}/check-refresh-token`,
       })
       const { accessToken, refreshToken } = response.data
       addTokenToLocalStorage(accessToken, refreshToken)
