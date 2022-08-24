@@ -1,4 +1,5 @@
 import { useContext, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import styled, { css } from "styled-components"
 
 import { ModalContext } from "module/Modal"
@@ -17,6 +18,7 @@ import SetRequiredOptionModal from "components/main/RoofTop/RequestGreenBee/Moda
 
 const RequestToGreenBee = () => {
   const { openModal } = useContext(ModalContext)
+  const navigate = useNavigate()
   const [requiredInfo, setRequiredInfo] = useState({
     rooftopType: "NG",
     width: 0,
@@ -33,7 +35,7 @@ const RequestToGreenBee = () => {
     kidCount: 0,
     petCount: 0,
     totalCount: 0,
-    country: "",
+    county: "",
     city: "",
     detail: "",
     deadLineNum: [],
@@ -56,7 +58,6 @@ const RequestToGreenBee = () => {
 
   const submitRequest = async () => {
     const reqFormData = new FormData()
-
     for (const [option, value] of Object.entries(requiredInfo)) {
       // 배열의 경우 append를 통해 같은 옵션에 값을 추가해주어야 함
       if (typeof value === "array") {
@@ -67,14 +68,14 @@ const RequestToGreenBee = () => {
       }
       if (option === "startTime" || option === "endTime") {
         reqFormData.append(option, `${value}:00:00`)
-        return
+        continue
       }
       // 배열이 아닌 경우에는 그냥 값을 추가해주면 됨.
       reqFormData.append(option, value)
     }
-
     try {
       await roofTopControl.postRoofTopInfo(reqFormData)
+      navigate("/")
     } catch (err) {
       throw new Error(err)
     }

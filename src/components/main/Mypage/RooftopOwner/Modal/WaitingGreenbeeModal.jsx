@@ -15,6 +15,7 @@ import WaitingGreenbeeAcceptModal from "components/main/Mypage/RooftopOwner/Moda
 const WaitingGreenbeeModal = () => {
   const { openModal, closeModal } = useContext(ModalContext)
   const memberId = useRecoilValue(AuthCheckMemberId)
+  console.log(memberId)
   const [waitingGreenBees, setWaitingGreenBees] = useState([])
   useEffect(() => {
     const loadWaitingGreenBeeList = async () => {

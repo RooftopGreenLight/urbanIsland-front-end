@@ -83,7 +83,6 @@ export const accountControl = {
       addTokenToLocalStorage(accessToken, refreshToken)
       return accessToken
     } catch (err) {
-      alert("세션이 만료되어 로그아웃 되었습니다.")
       removeTokenFromLocalStorage()
       window.location.reload()
     }

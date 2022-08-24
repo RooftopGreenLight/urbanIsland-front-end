@@ -8,7 +8,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 
-const RooftopModal = () => {
+const RegisterRooftop = () => {
   const { closeModal } = useContext(ModalContext)
   return (
     <Wrapper>
@@ -127,4 +127,4 @@ const LinkBtn = styled(Link)`
   }}
 `
 
-export default RooftopModal
+export default RegisterRooftop
