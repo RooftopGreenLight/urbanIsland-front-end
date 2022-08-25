@@ -1,20 +1,32 @@
 import axiosInstance from "api/axiosInstance"
 
 export const accountControl = {
-  getSignUpEmail: async email => {
+  getCheckEmail: async email => {
     try {
-      const response = await axiosInstance({
-        method: "get",
+      await axiosInstance({
+        method: "GET",
         url: "/auth/check-email",
         params: {
           email,
         },
       })
-      return response
     } catch (err) {
       console.log(err)
       const errorMessage = err.response.data.message
       throw new Error(errorMessage)
+    }
+  },
+  getCheckNickname: async nickname => {
+    try {
+      await axiosInstance({
+        method: "GET",
+        url: "/auth/check-nickname",
+        params: {
+          nickname,
+        },
+      })
+    } catch (err) {
+      throw new Error(err)
     }
   },
   postSignupData: async (email, password, nickname) => {

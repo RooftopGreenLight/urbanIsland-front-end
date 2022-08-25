@@ -37,6 +37,9 @@ const SignupForm = () => {
   }
 
   const checkEmailAddress = async () => {
+    if (is_verified) {
+      return
+    }
     const emailRegex =
       /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/
     if (!emailRegex.test(email)) {
@@ -44,7 +47,7 @@ const SignupForm = () => {
       return
     }
     try {
-      await accountControl.getSignUpEmail(email)
+      await accountControl.getCheckEmail(email)
       const code = await accountControl.getVerifyEmail(email)
       setInputValue({ ...inputValue, code })
       openModal(<SignupModal code={code} verifiedEmail={verifiedEmail} />)
@@ -68,6 +71,7 @@ const SignupForm = () => {
       return
     }
     try {
+      await accountControl.getCheckNickname(nickname)
       await accountControl.postSignupData(email, password, nickname)
       feedbackMsg.current.innerText = "회원가입이 완료되었습니다. 로그인 창으로 이동합니다."
       setTimeout(() => navigate("/login"), 750)
