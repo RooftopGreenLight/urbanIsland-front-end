@@ -8,6 +8,192 @@ import AdminGreenedRooftopModal from "./Modal/AdminGreenedRooftopModal"
 import { adminControl } from "api/controls/adminControl"
 import Pagination from "../Pagination"
 
+const Admin = () => {
+  const { openModal } = useContext(ModalContext)
+  const [greenbeeInfo, setGreenbeeInfo] = useState({
+    greenbeeList: [],
+    greenbeePage: 0,
+    greenbeePageLimit: 0,
+  })
+  const [ownerInfo, setOwnerInfo] = useState({
+    ownerList: [],
+    ownerPage: 0,
+    ownerPageLimit: 0,
+  })
+  const [rooftopInfo, setRooftopInfo] = useState({
+    rooftopList: [],
+    rooftopPage: 0,
+    rooftopPageLimit: 0,
+  })
+
+  const { greenbeeList, greenbeePage, greenbeePageLimit } = greenbeeInfo
+  const { ownerList, ownerPage, ownerPageLimit } = ownerInfo
+  const { rooftopList, rooftopPage, rooftopPageLimit } = rooftopInfo
+
+  useEffect(() => {
+    const getAdminInformation = async () => {
+      const { greenbeePageLimit, greenbeeList } = await adminControl.getAdminGreenbee(greenbeePage)
+      const { ownerPageLimit, ownerList } = await adminControl.getAdminOwner(ownerPage)
+      const { rooftopPageLimit, rooftopList } = await adminControl.getAdminGreenedRooftop(
+        rooftopPage,
+      )
+      setGreenbeeInfo({
+        ...greenbeeInfo,
+        greenbeePageLimit,
+        greenbeeList,
+      })
+      setOwnerInfo({
+        ...ownerInfo,
+        ownerPageLimit,
+        ownerList,
+      })
+      setRooftopInfo({
+        ...rooftopInfo,
+        rooftopPageLimit,
+        rooftopList,
+      })
+    }
+
+    getAdminInformation()
+  }, [rooftopList, ownerList, greenbeeList])
+
+  const applyGreenbeeApprove = async id => {
+    try {
+      await adminControl.postGreenbeeApprove(id)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  const applyGreenbeeDisapprove = async id => {
+    try {
+      await adminControl.deleteGreenbeeDisapprove(id)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  const applyRooftopApprove = async id => {
+    try {
+      await adminControl.postOwnerApprove(id)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  const applyRooftopDisapprove = async id => {
+    try {
+      await adminControl.deleteOwnerDisapprove(id)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const AdminGreenedRooftopApprove = async id => {
+    try {
+      await adminControl.postAdminGreenedRooftopApprove(id)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  const AdminGreenedRooftopDisapprove = async id => {
+    try {
+      await adminControl.deleteAdminGreenedRooftopDisapprove(id)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  console.log(rooftopList)
+
+  return (
+    <Wrapper>
+      <ListBox>
+        <h1>대기중인 그린비</h1>
+        {greenbeeList ? (
+          <div>
+            {greenbeeList.map(({ memberId, officeNumber, confirmationImage, content }, index) => (
+              <Box
+                onClick={() => {
+                  openModal(
+                    <AdminGreenbeeModal
+                      id={memberId}
+                      phone={officeNumber}
+                      photo={confirmationImage.fileUrl}
+                      content={content}
+                      approve={applyGreenbeeApprove}
+                      disapprove={applyGreenbeeDisapprove}
+                    />,
+                  )
+                }}>
+                {memberId}
+              </Box>
+            ))}
+          </div>
+        ) : (
+          <p>대기중인 그린비 없음</p>
+        )}
+        {greenbeePageLimit !== 0 && (
+          <Pagination total={greenbeePageLimit} page={greenbeePage} setPage={setGreenbeeInfo} />
+        )}
+      </ListBox>
+      <ListBox>
+        <h1>대기중인 옥상지기</h1>
+        {ownerList ? (
+          <div>
+            {ownerList.map(({ memberId, confirmationImage }, index) => (
+              <Box
+                onClick={() => {
+                  openModal(
+                    <AdminRooftopModal
+                      id={memberId}
+                      photo={confirmationImage.fileUrl}
+                      approve={applyRooftopApprove}
+                      disapprove={applyRooftopDisapprove}
+                    />,
+                  )
+                }}>
+                {memberId}
+              </Box>
+            ))}
+          </div>
+        ) : (
+          <p>대기중인 옥상지기 없음</p>
+        )}
+        {ownerPageLimit !== 0 && (
+          <Pagination total={ownerPageLimit} page={ownerPage} setPage={setOwnerInfo} />
+        )}
+      </ListBox>
+      <ListBox>
+        <h1>이미 녹화된 옥상 승인</h1>
+        {rooftopList ? (
+          <div>
+            {rooftopList.map(({ id, ownerContent, phoneNumber, structureImage }) => (
+              <Box
+                onClick={() => {
+                  openModal(
+                    <AdminGreenedRooftopModal
+                      id={id}
+                      photo={structureImage.fileUrl}
+                      phoneNum={phoneNumber}
+                      ment={ownerContent}
+                      approve={AdminGreenedRooftopApprove}
+                      disapprove={AdminGreenedRooftopDisapprove}
+                    />,
+                  )
+                }}>
+                {id}
+              </Box>
+            ))}
+          </div>
+        ) : (
+          <p>대기중인 이미 녹화된 옥상 없음</p>
+        )}
+        {rooftopPageLimit !== 0 && (
+          <Pagination total={rooftopPageLimit} page={rooftopPage} setPage={setRooftopInfo} />
+        )}
+      </ListBox>
+    </Wrapper>
+  )
+}
+
 const Wrapper = styled.div`
   width: 60vw;
   display: flex;
@@ -25,168 +211,5 @@ const ListBox = styled.div`
   border-bottom: 1px solid gray;
   width: 65%;
 `
-const Admin = () => {
-  const { openModal } = useContext(ModalContext)
-  const [gList, setGList] = useState([])
-  const [rList, setRList] = useState([])
-  const [gPage, setGpage] = useState(0)
-  const [gPageLimit, setGpageLimit] = useState(0)
-  const [rPageLimit, setRpageLimit] = useState(0)
-  const [grtPageLimit, setGRTpageLimit] = useState(0)
-  const [rPage, setRpage] = useState(0)
-  const [grtList, setGRTList] = useState([])
-  const [grtPage, setGRTpage] = useState(0)
 
-  const applyGreenbeeApprove = async id => {
-    try {
-      const result = adminControl.postGreenbeeApprove(id)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-  const applyGreenbeeDisapprove = async id => {
-    try {
-      const result = adminControl.deleteGreenbeeDisapprove(id)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-  const applyRooftopApprove = async id => {
-    try {
-      const result = adminControl.postOwnerApprove(id)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-  const applyRooftopDisapprove = async id => {
-    try {
-      const result = adminControl.deleteOwnerDisapprove(id)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const AdminGreenedRooftopApprove = async id => {
-    try {
-      const result = adminControl.postAdminGreenedRooftopApprove(id)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-  const AdminGreenedRooftopDisapprove = async id => {
-    try {
-      const result = adminControl.deleteAdminGreenedRooftopDisapprove(id)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-  useEffect(() => {
-    const getAdminGreenbee = async event => {
-      const data = await adminControl.getAdminGreenbee(gPage)
-      setGList(data.greenBeeInfoResponses)
-      setGpageLimit(data.totalPages)
-    }
-    getAdminGreenbee()
-
-    const getAdminRooftop = async event => {
-      const data = await adminControl.getAdminOwner(rPage)
-      setRList(data.ownerInfoResponses)
-      setRpageLimit(data.totalPages)
-    }
-    getAdminRooftop()
-
-    const getAdminGreenedRooftop = async event => {
-      const data = await adminControl.getAdminGreenedRooftop(grtPage)
-      setGRTList(data.rooftopResponses)
-      setGRTpageLimit(data.totalPages)
-    }
-    getAdminGreenedRooftop()
-  }, [rPage, gPage, grtPage])
-
-  return (
-    <Wrapper>
-      <ListBox>
-        <h1>대기중인 그린비</h1>
-        {gList.length !== 0 ? (
-          <div>
-            {gList.map((d, index) => (
-              <Box
-                onClick={() => {
-                  openModal(
-                    <AdminGreenbeeModal
-                      id={d.memberId}
-                      phone={d.officeNumber}
-                      photo={d.confirmationImage.fileUrl}
-                      content={d.content}
-                      approve={applyGreenbeeApprove}
-                      disapprove={applyGreenbeeDisapprove}
-                    />,
-                  )
-                }}>
-                {d.memberId}
-              </Box>
-            ))}
-          </div>
-        ) : (
-          <p>대기중인 그린비 없음</p>
-        )}{" "}
-        {gPageLimit !== 0 && <Pagination total={gPageLimit} page={gPage} setPage={setGpage} />}{" "}
-      </ListBox>
-      <ListBox>
-        <h1>대기중인 옥상지기</h1>
-        {rList.length !== 0 ? (
-          <div>
-            {rList.map((d, index) => (
-              <Box
-                onClick={() => {
-                  openModal(
-                    <AdminRooftopModal
-                      id={d.memberId}
-                      photo={d.confirmationImage.fileUrl}
-                      approve={applyRooftopApprove}
-                      disapprove={applyRooftopDisapprove}
-                    />,
-                  )
-                }}>
-                {d.memberId}
-              </Box>
-            ))}
-          </div>
-        ) : (
-          <p>대기중인 옥상지기 없음</p>
-        )}{" "}
-        {rPageLimit !== 0 && <Pagination total={rPageLimit} page={rPage} setPage={setRpage} />}
-      </ListBox>
-      <ListBox>
-        <h1>이미 녹화된 옥상 승인</h1>
-        {grtList.length !== 0 ? (
-          <div>
-            {grtList.map((d, index) => (
-              <Box
-                onClick={() => {
-                  openModal(
-                    <AdminGreenedRooftopModal
-                      id={d.rooftopId}
-                      photo={d.structureImage.fileUrl}
-                      phoneNum={d.phoneNumber}
-                      ment={d.ownerContent}
-                      approve={AdminGreenedRooftopApprove}
-                      disapprove={AdminGreenedRooftopDisapprove}
-                    />,
-                  )
-                }}>
-                {d.memberId}
-              </Box>
-            ))}
-          </div>
-        ) : (
-          <p>대기중인 이미 녹화된 옥상 없음</p>
-        )}{" "}
-        {grtPageLimit !== 0 && (
-          <Pagination total={grtPageLimit} page={grtPage} setPage={setGRTpage} />
-        )}
-      </ListBox>
-    </Wrapper>
-  )
-}
 export default Admin
