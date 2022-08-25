@@ -8,7 +8,6 @@ import SetFacilitiesModal from "components/main/RoofTop/ApplyRoofTop/Modal/SetFa
 
 const ApplyAvailableInfo = ({ applyInfo, changeInfo }) => {
   const { openModal } = useContext(ModalContext)
-  const { adultCount, kidCount, petCount } = applyInfo
 
   return (
     <Wrapper>

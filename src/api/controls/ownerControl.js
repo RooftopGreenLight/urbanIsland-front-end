@@ -20,9 +20,24 @@ export const ownerControl = {
     try {
       const response = await axiosInstance({
         method: "GET",
-        url: "/owners/greenbee-waiting",
+        url: `/owners/greenbee-waiting`,
         params: {
-          memberId: parseInt(memberId),
+          memberId,
+        },
+      })
+      return response.data ?? []
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
+  getGreenBeeWaitingRooftop: async (rooftopId, page = 0) => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/owners/greenbee-waiting/${rooftopId}`,
+        params: {
+          page,
         },
       })
       return response.data ?? []

@@ -1,20 +1,32 @@
 import axiosInstance from "api/axiosInstance"
 
 export const accountControl = {
-  getSignUpEmail: async email => {
+  getCheckEmail: async email => {
     try {
-      const response = await axiosInstance({
-        method: "get",
+      await axiosInstance({
+        method: "GET",
         url: "/auth/check-email",
         params: {
           email,
         },
       })
-      return response
     } catch (err) {
       console.log(err)
       const errorMessage = err.response.data.message
       throw new Error(errorMessage)
+    }
+  },
+  getCheckNickname: async nickname => {
+    try {
+      await axiosInstance({
+        method: "GET",
+        url: "/auth/check-nickname",
+        params: {
+          nickname,
+        },
+      })
+    } catch (err) {
+      throw new Error(err)
     }
   },
   postSignupData: async (email, password, nickname) => {
@@ -58,18 +70,17 @@ export const accountControl = {
           password,
         },
       })
-      // 로그인에 성공했을 경우, 추후 access_token 만료를 대비하여 header 설정.
-      const { tokenDto, id } = response.data
+      const { tokenDto, id, authority } = response.data
       const { accessToken, refreshToken } = tokenDto
-      addTokenToLocalStorage(accessToken, refreshToken, id)
-      return { accessToken, memberId: id }
+      addTokenToLocalStorage(accessToken, refreshToken, id, authority)
+      return { accessToken, memberId: id, memberRole: authority }
     } catch (err) {
       console.log(err)
       const errorMessage = err.response.data.message
       throw new Error(errorMessage)
     }
   },
-  getRefreshToken: async refresh => {
+  getRefreshToken: async (refresh, memberId) => {
     let response
     try {
       response = await axiosInstance({
@@ -77,28 +88,38 @@ export const accountControl = {
           "refresh-token": `${refresh}`,
         },
         method: "GET",
-        url: "auth/check-refresh-token",
+        url: `auth/${memberId}/check-refresh-token`,
       })
       const { accessToken, refreshToken } = response.data
       addTokenToLocalStorage(accessToken, refreshToken)
       return accessToken
     } catch (err) {
-      alert("세션이 만료되어 로그아웃 되었습니다.")
       removeTokenFromLocalStorage()
       window.location.reload()
     }
   },
-  getLogOut: () => {
-    removeTokenFromLocalStorage()
-    window.location.reload()
+  deleteLogOut: async () => {
+    try {
+      await axiosInstance({
+        method: "DELETE",
+        url: "auth/logout",
+      })
+      removeTokenFromLocalStorage()
+      window.location.reload()
+    } catch (err) {
+      console.log(err)
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
   },
 }
 
-export const addTokenToLocalStorage = (access, refresh, id = null) => {
+export const addTokenToLocalStorage = (access, refresh, id = null, authority = null) => {
   localStorage.setItem("access_token", JSON.stringify(access))
   localStorage.setItem("refresh_token", JSON.stringify(refresh))
-  if (id) {
+  if (id && authority) {
     localStorage.setItem("memberId", JSON.stringify(id))
+    localStorage.setItem("memberRole", JSON.stringify(authority))
   }
 }
 
@@ -106,4 +127,5 @@ export const removeTokenFromLocalStorage = () => {
   localStorage.removeItem("access_token")
   localStorage.removeItem("refresh_token")
   localStorage.removeItem("memberId")
+  localStorage.removeItem("memberRole")
 }

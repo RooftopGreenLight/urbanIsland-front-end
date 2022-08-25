@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react"
-import { useRecoilState } from "recoil"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -8,34 +7,19 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { ModalContext } from "module/Modal"
 import { RequiredRoofTopOption } from "constants/RequiredRoofTopOption"
 
-const SetRequiredOptionModal = ({ requiredInfo, setRequiredInfo }) => {
+const SetRequiredOptionModal = ({ applyInfo, changeInfo }) => {
   const { closeModal } = useContext(ModalContext)
-  const [requiredOptions, setRequiredOptions] = useState(RequiredRoofTopOption)
-  const { requiredItemNum } = requiredInfo
-
-  useEffect(() => {
-    const preSetCheckBox = () => {
-      Object.keys(requiredOptions).forEach((option, idx) => {
-        setRequiredOptions({ ...requiredOptions, option: requiredItemNum.includes(idx) })
-      })
-    }
-    preSetCheckBox()
-  }, [])
+  const [requiredOptions, setRequiredOptions] = useState(applyInfo.requiredItemNum)
 
   const changeCheck = e => {
     const { name, checked } = e.target
-    setRequiredOptions({ ...requiredOptions, [name]: checked })
+    checked
+      ? setRequiredOptions([...requiredOptions, parseInt(name)])
+      : setRequiredOptions([...requiredOptions].filter(option => option !== parseInt(name)))
   }
 
-  const confirmDetailList = () => {
-    const newDetailNumList = []
-    const optionList = Object.keys(requiredOptions)
-    for (const [option, value] of Object.entries(requiredOptions)) {
-      if (value) {
-        newDetailNumList.push(optionList.indexOf(option))
-      }
-    }
-    setRequiredInfo(newDetailNumList)
+  const confirmRequiredList = () => {
+    changeInfo({ ...applyInfo, requiredItemNum: requiredOptions })
     closeModal()
   }
 
@@ -47,20 +31,20 @@ const SetRequiredOptionModal = ({ requiredInfo, setRequiredInfo }) => {
       </ModalHeader>
       <ModalContent>
         <ShowOptionList>
-          {Object.keys(requiredOptions).map(option => (
+          {RequiredRoofTopOption.map((option, idx) => (
             <div className="select-section" key={option}>
               <p>{option}</p>
               <input
                 type="checkbox"
-                name={option}
-                checked={requiredOptions[option]}
+                name={idx}
+                checked={requiredOptions.includes(idx)}
                 onChange={changeCheck}
               />
             </div>
           ))}
         </ShowOptionList>
         <ApplySection>
-          <button onClick={confirmDetailList}>세부 정보 저장</button>
+          <button onClick={confirmRequiredList}>세부 정보 저장</button>
         </ApplySection>
       </ModalContent>
     </Wrapper>

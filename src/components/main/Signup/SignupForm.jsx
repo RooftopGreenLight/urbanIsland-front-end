@@ -37,6 +37,10 @@ const SignupForm = () => {
   }
 
   const checkEmailAddress = async () => {
+    if (is_verified) {
+      feedbackMsg.current.innerText = "이미 이메일 인증을 완료했습니다."
+      return
+    }
     const emailRegex =
       /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/
     if (!emailRegex.test(email)) {
@@ -44,7 +48,7 @@ const SignupForm = () => {
       return
     }
     try {
-      await accountControl.getSignUpEmail(email)
+      await accountControl.getCheckEmail(email)
       const code = await accountControl.getVerifyEmail(email)
       setInputValue({ ...inputValue, code })
       openModal(<SignupModal code={code} verifiedEmail={verifiedEmail} />)
@@ -68,6 +72,7 @@ const SignupForm = () => {
       return
     }
     try {
+      await accountControl.getCheckNickname(nickname)
       await accountControl.postSignupData(email, password, nickname)
       feedbackMsg.current.innerText = "회원가입이 완료되었습니다. 로그인 창으로 이동합니다."
       setTimeout(() => navigate("/login"), 750)
@@ -82,7 +87,13 @@ const SignupForm = () => {
       <EmailVerifiedBtn is_verified={is_verified} onClick={checkEmailAddress}>
         {is_verified ? <FontAwesomeIcon icon={faCircleCheck} /> : "이메일 인증"}
       </EmailVerifiedBtn>
-      <SignupInput name="nickname" placeholder="Nickname" onChange={changeInput} value={nickname} />
+      <SignupInput
+        name="nickname"
+        placeholder="Nickname"
+        onChange={changeInput}
+        value={nickname}
+        maxlength="20"
+      />
       <SignupInput
         name="password"
         placeholder="Password"

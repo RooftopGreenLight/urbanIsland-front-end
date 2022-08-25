@@ -4,7 +4,7 @@ import qs from "qs"
 export const roofTopControl = {
   postRoofTopInfo: async applyFormData => {
     try {
-      const response = await axiosInstance({
+      await axiosInstance({
         method: "POST",
         url: "/rooftops/green",
         headers: {
@@ -12,8 +12,6 @@ export const roofTopControl = {
         },
         data: applyFormData,
       })
-      console.log(response)
-      return response.data
     } catch (err) {
       console.log(err)
       const errorMessage = err.response.data.message

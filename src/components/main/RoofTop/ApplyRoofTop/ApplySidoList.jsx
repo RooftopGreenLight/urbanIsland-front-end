@@ -1,17 +1,14 @@
 import styled, { css } from "styled-components"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import { SidoGunguList } from "constants/SidoGunguList"
 
 const ApplySidoList = ({ applyInfo, changeInfo }) => {
-  let defaultSidoList = {}
-  // option Content, Price를 한 쌍으로 묶어 새로운 객체를 생성
-  useEffect(() => {
-    const { county, city, detail } = applyInfo
-    defaultSidoList = { county, city, detail }
-  }, [])
-
-  const [sidoInfo, setSidoInfo] = useState(applyInfo)
+  const [sidoInfo, setSidoInfo] = useState({
+    county: "",
+    city: "",
+    detail: "",
+  })
   const { county, city, detail } = sidoInfo
 
   const changeSelect = e => {
@@ -36,7 +33,10 @@ const ApplySidoList = ({ applyInfo, changeInfo }) => {
       <InputBox boxSize="lg">
         <h5>현위치</h5>
         <p>옥상 시설의 현 위치를 지정해주세요.</p>
-        <SelectBox name="county" onChange={changeSelect}>
+        <SelectBox name="county" onChange={changeSelect} defaultValue="default">
+          <option value="default" disabled>
+            시 선택
+          </option>
           {Array.from(SidoGunguList.keys()).map(sido => (
             <option key={sido} value={sido}>
               {sido}
@@ -44,7 +44,10 @@ const ApplySidoList = ({ applyInfo, changeInfo }) => {
           ))}
         </SelectBox>
         {county && (
-          <SelectBox name="city" onChange={changeSelect}>
+          <SelectBox name="city" onChange={changeSelect} defaultValue="default">
+            <option value="default" disabled>
+              구 선택
+            </option>
             {SidoGunguList.get(county).map(sigun => (
               <option key={sigun} value={sigun}>
                 {sigun}
