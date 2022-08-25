@@ -49,7 +49,7 @@ const RequestToGreenBee = () => {
     optionPrice: [],
   })
 
-  const { explainContent, requiredItemNum } = requiredInfo
+  const { explainContent } = requiredInfo
 
   const changeInput = e => {
     const { name, value } = e.target
@@ -75,7 +75,8 @@ const RequestToGreenBee = () => {
     }
     try {
       await roofTopControl.postRoofTopInfo(reqFormData)
-      navigate("/")
+      alert("정상적으로 옥상이 등록되셨습니다.")
+      navigate("/mypage/rooftop")
     } catch (err) {
       throw new Error(err)
     }
@@ -113,7 +114,7 @@ const RequestToGreenBee = () => {
             onChange={changeInput}
           />
         </InputBox>
-        <ApplyAvailableInfo applyInfo={requiredInfo} changeInfo={changeInfo} />
+        <ApplyAvailableInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
         <ApplyDetailInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
         <ApplyExtraOption applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
         <ConfirmBtn onClick={submitRequest}>제출하기</ConfirmBtn>

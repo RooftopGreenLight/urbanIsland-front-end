@@ -32,54 +32,56 @@ const WaitingGreenbeeModal = () => {
         <ModalCloseBtn icon={faXmark} onClick={closeModal} />
       </ModalHeader>
       <ModalContent>
-        {waitingGreenBees.length > 0 ? (
-          waitingGreenBees.map(d => (
-            <>
-              <h1>"서울시 은평구 주소주소 옥상"</h1>
-              <button
-                onClick={() =>
-                  alert("공고를 내릴 시 신청했던 옥상이 취소됩니다. 그래도 공고를 내리실건가요?!")
-                }>
-                공고 내리기
-              </button>
-              <Box>
-                <span>{d.companyinformation}</span>
-                <Time>{d.date}</Time>
-                <div>
-                  건축사무소 구경하기
-                  <button
-                    onClick={() => {
-                      openModal(<WaitingGreenbeeAcceptModal />)
-                    }}>
-                    확정하기
-                  </button>
-                </div>
-              </Box>
-            </>
-          ))
-        ) : (
-          <h5>옥상 녹화 신청 목록 없음</h5>
-        )}
+        <ViewPoint>
+          {waitingGreenBees.length > 0 ? (
+            waitingGreenBees.map(d => (
+              <>
+                <h1>"서울시 은평구 주소주소 옥상"</h1>
+                <button
+                  onClick={() =>
+                    alert("공고를 내릴 시 신청했던 옥상이 취소됩니다. 그래도 공고를 내리실건가요?!")
+                  }>
+                  공고 내리기
+                </button>
+                <Box>
+                  <span>{d.companyinformation}</span>
+                  <Time>{d.date}</Time>
+                  <div>
+                    건축사무소 구경하기
+                    <button
+                      onClick={() => {
+                        openModal(<WaitingGreenbeeAcceptModal />)
+                      }}>
+                      확정하기
+                    </button>
+                  </div>
+                </Box>
+              </>
+            ))
+          ) : (
+            <h5>옥상 녹화 신청 목록 없음</h5>
+          )}
+        </ViewPoint>
       </ModalContent>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.section`
-  ${({ theme }) => {
-    const { paddings } = theme
-    return css`
-      width: 40%;
-      margin: auto;
+  width: 40%;
+  margin: auto;
 
-      border-radius: 0.3rem;
-      background-color: #fff;
+  border-radius: 0.3rem;
+  background-color: #fff;
 
-      animation: ${modalShow} 0.3s;
-      animation-fill-mode: forwards;
-      overflow: hidden;
-    `
-  }}
+  animation: ${modalShow} 0.3s;
+  animation-fill-mode: forwards;
+  overflow: hidden;
+`
+
+const ViewPoint = styled.div`
+  max-height: 42.5vh;
+  overflow: auto;
 `
 
 const ModalHeader = styled.header`

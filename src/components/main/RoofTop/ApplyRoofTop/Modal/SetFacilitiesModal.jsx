@@ -14,8 +14,8 @@ const SetFacilitiesModal = ({ applyInfo, changeInfo }) => {
   const changeCheck = e => {
     const { name, checked } = e.target
     checked
-      ? setDetailFacilities([...detailFacilities, name])
-      : setDetailFacilities([...detailFacilities].filter(option => option !== name))
+      ? setDetailFacilities([...detailFacilities, parseInt(name)])
+      : setDetailFacilities([...detailFacilities].filter(option => option !== parseInt(name)))
   }
 
   const confirmDetailList = () => {

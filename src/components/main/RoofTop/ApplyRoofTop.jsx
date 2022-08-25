@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 import { roofTopControl } from "api/controls/roofTopControl"
 
@@ -12,6 +13,7 @@ import ApplyDetailInfo from "components/main/RoofTop/ApplyRoofTop/ApplyDetailInf
 import ApplyExtraOption from "components/main/RoofTop/ApplyRoofTop/ApplyExtraOption"
 
 const ApplyRoofTop = () => {
+  const navigate = useNavigate()
   const [applyRoofTopInfo, setApplyRoofTopInfo] = useState({
     rooftopType: "G",
     width: 0,
@@ -63,12 +65,13 @@ const ApplyRoofTop = () => {
         continue
       }
       // 배열이 아닌 경우에는 그냥 값을 추가해주면 됨.
-      console.log(option, value)
       applyFormData.append(option, value)
     }
 
     try {
       await roofTopControl.postRoofTopInfo(applyFormData)
+      alert("정상적으로 옥상이 등록되셨습니다.")
+      navigate("/mypage/rooftop")
     } catch (err) {
       throw new Error(err)
     }
