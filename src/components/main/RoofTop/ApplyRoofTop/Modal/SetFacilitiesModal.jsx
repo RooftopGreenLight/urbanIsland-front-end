@@ -9,33 +9,17 @@ import { RoofTopFacilities } from "constants/RoofTopFacilities"
 
 const SetFacilitiesModal = ({ applyInfo, changeInfo }) => {
   const { closeModal } = useContext(ModalContext)
-
-  const [detailFacilities, setDetailFacilities] = useState(RoofTopFacilities)
-
-  useEffect(() => {
-    const preSetCheckBox = () => {
-      Object.keys(detailFacilities).forEach((option, idx) => {
-        detailFacilities[option] = applyInfo.detailInfoNum.includes(idx) ? true : false
-      })
-    }
-    console.log(applyInfo.detailInfoNum)
-    preSetCheckBox()
-  }, [])
+  const [detailFacilities, setDetailFacilities] = useState(applyInfo.detailInfoNum)
 
   const changeCheck = e => {
     const { name, checked } = e.target
-    setDetailFacilities({ ...detailFacilities, [name]: checked })
+    checked
+      ? setDetailFacilities([...detailFacilities, name])
+      : setDetailFacilities([...detailFacilities].filter(option => option !== name))
   }
 
   const confirmDetailList = () => {
-    const newDetailInfoNum = []
-    const optionList = Object.keys(detailFacilities)
-    for (const [option, value] of Object.entries(detailFacilities)) {
-      if (value) {
-        newDetailInfoNum.push(optionList.indexOf(option))
-      }
-    }
-    changeInfo({ ...applyInfo, detailInfoNum: newDetailInfoNum })
+    changeInfo({ ...applyInfo, detailInfoNum: detailFacilities })
     closeModal()
   }
 
@@ -47,13 +31,13 @@ const SetFacilitiesModal = ({ applyInfo, changeInfo }) => {
       </ModalHeader>
       <ModalContent>
         <SetDetailSection>
-          {Object.keys(detailFacilities).map(facility => (
+          {RoofTopFacilities.map((facility, idx) => (
             <div className="select-section" key={facility}>
               <p>{facility}</p>
               <input
                 type="checkbox"
-                name={facility}
-                checked={detailFacilities[facility]}
+                name={idx}
+                checked={detailFacilities.includes(idx)}
                 onChange={changeCheck}></input>
             </div>
           ))}

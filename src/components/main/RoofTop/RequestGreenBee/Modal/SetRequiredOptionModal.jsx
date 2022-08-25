@@ -9,7 +9,7 @@ import { RequiredRoofTopOption } from "constants/RequiredRoofTopOption"
 
 const SetRequiredOptionModal = ({ applyInfo, changeInfo }) => {
   const { closeModal } = useContext(ModalContext)
-  const [requiredOptions, setRequiredOptions] = useState(applyInfo)
+  const [requiredOptions, setRequiredOptions] = useState(applyInfo.requiredItemNum)
 
   const changeCheck = e => {
     const { name, checked } = e.target
@@ -19,8 +19,7 @@ const SetRequiredOptionModal = ({ applyInfo, changeInfo }) => {
   }
 
   const confirmRequiredList = () => {
-    console.log(requiredOptions)
-    changeInfo("requiredItemNum", requiredOptions)
+    changeInfo({ ...applyInfo, requiredItemNum: requiredOptions })
     closeModal()
   }
 
