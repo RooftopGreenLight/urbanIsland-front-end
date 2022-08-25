@@ -127,15 +127,24 @@ const ModalContent = styled.main`
       flex-direction: column;
       justify-content: center;
 
-      padding: ${paddings.sm};
+      padding: ${paddings.lg} ${paddings.sm};
       border-top: 1px solid #dee2e6;
       background-color: ${colors.white};
+
+      max-height: 100%;
+      overflow-y: auto;
+      text-align: center;
+
+      h5 {
+        margin: ${margins.sm} auto;
+        font-size: ${fonts.size.base};
+      }
 
       button {
         width: 20%;
         background-color: #000000;
         border-radius: 25px;
-        text-align: center;
+
         color: ${colors.white};
         font-size: ${fonts.size.xsm};
       }

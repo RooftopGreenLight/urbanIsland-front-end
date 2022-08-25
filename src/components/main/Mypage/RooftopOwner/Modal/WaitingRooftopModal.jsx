@@ -36,18 +36,22 @@ const WaitingRooftopModal = () => {
       </ModalHeader>
       <ModalContent>
         <ViewPoint>
-          {rooftopStatus.map(({ city, detail, district, progress, rooftopDate }, idx) => (
-            <>
-              <h5 key={district}>{`${city} ${district} ${detail}`}</h5>
-              <StatusBox key={idx}>
-                <div className="header">
-                  <h5>옥상지기 분께 알리는 정보</h5>
-                  <span>{`${rooftopDate[0]}.${rooftopDate[1]}.${rooftopDate[2]} ${rooftopDate[3]}:${rooftopDate[4]}:${rooftopDate[5]}`}</span>
-                </div>
-                <p>{WaitingRooftopStatus.get(progress)}</p>
-              </StatusBox>
-            </>
-          ))}
+          {rooftopStatus ? (
+            rooftopStatus.map(({ city, detail, district, progress, rooftopDate }, idx) => (
+              <>
+                <h5 key={district}>{`${city} ${district} ${detail}`}</h5>
+                <StatusBox key={idx}>
+                  <div className="header">
+                    <h5>옥상지기 분께 알리는 정보</h5>
+                    <span>{`${rooftopDate[0]}.${rooftopDate[1]}.${rooftopDate[2]} ${rooftopDate[3]}:${rooftopDate[4]}:${rooftopDate[5]}`}</span>
+                  </div>
+                  <p>{WaitingRooftopStatus.get(progress)}</p>
+                </StatusBox>
+              </>
+            ))
+          ) : (
+            <h5>새롭게 도착한 정보가 없습니다.</h5>
+          )}
         </ViewPoint>
       </ModalContent>
     </Wrapper>
@@ -58,7 +62,7 @@ const Wrapper = styled.section`
   ${({ theme }) => {
     const { colors } = theme
     return css`
-      width: 50%;
+      width: 40%;
       margin: auto;
 
       border-radius: 0.3rem;
