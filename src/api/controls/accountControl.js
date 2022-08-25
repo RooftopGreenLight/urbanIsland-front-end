@@ -1,20 +1,32 @@
 import axiosInstance from "api/axiosInstance"
 
 export const accountControl = {
-  getSignUpEmail: async email => {
+  getCheckEmail: async email => {
     try {
-      const response = await axiosInstance({
-        method: "get",
+      await axiosInstance({
+        method: "GET",
         url: "/auth/check-email",
         params: {
           email,
         },
       })
-      return response
     } catch (err) {
       console.log(err)
       const errorMessage = err.response.data.message
       throw new Error(errorMessage)
+    }
+  },
+  getCheckNickname: async nickname => {
+    try {
+      await axiosInstance({
+        method: "GET",
+        url: "/auth/check-nickname",
+        params: {
+          nickname,
+        },
+      })
+    } catch (err) {
+      throw new Error(err)
     }
   },
   postSignupData: async (email, password, nickname) => {
@@ -68,7 +80,7 @@ export const accountControl = {
       throw new Error(errorMessage)
     }
   },
-  getRefreshToken: async refresh => {
+  getRefreshToken: async (refresh, memberId) => {
     let response
     try {
       response = await axiosInstance({
@@ -76,7 +88,7 @@ export const accountControl = {
           "refresh-token": `${refresh}`,
         },
         method: "GET",
-        url: "auth/check-refresh-token",
+        url: `auth/${memberId}/check-refresh-token`,
       })
       const { accessToken, refreshToken } = response.data
       addTokenToLocalStorage(accessToken, refreshToken)

@@ -5,9 +5,9 @@ import { SidoGunguList } from "constants/SidoGunguList"
 
 const ApplySidoList = ({ applyInfo, changeInfo }) => {
   const [sidoInfo, setSidoInfo] = useState({
-    county: applyInfo.county,
-    city: applyInfo.city,
-    detail: applyInfo.detail,
+    county: "",
+    city: "",
+    detail: "",
   })
   const { county, city, detail } = sidoInfo
 
@@ -33,7 +33,10 @@ const ApplySidoList = ({ applyInfo, changeInfo }) => {
       <InputBox boxSize="lg">
         <h5>현위치</h5>
         <p>옥상 시설의 현 위치를 지정해주세요.</p>
-        <SelectBox name="county" onChange={changeSelect}>
+        <SelectBox name="county" onChange={changeSelect} defaultValue="default">
+          <option value="default" disabled>
+            시 선택
+          </option>
           {Array.from(SidoGunguList.keys()).map(sido => (
             <option key={sido} value={sido}>
               {sido}
@@ -41,7 +44,10 @@ const ApplySidoList = ({ applyInfo, changeInfo }) => {
           ))}
         </SelectBox>
         {county && (
-          <SelectBox name="city" onChange={changeSelect}>
+          <SelectBox name="city" onChange={changeSelect} defaultValue="default">
+            <option value="default" disabled>
+              구 선택
+            </option>
             {SidoGunguList.get(county).map(sigun => (
               <option key={sigun} value={sigun}>
                 {sigun}

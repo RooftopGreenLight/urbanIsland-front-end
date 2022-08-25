@@ -16,13 +16,11 @@ const WaitingGreenbeeAcceptModal = () => {
   ]
   return (
     <Wrapper>
-      <header>
-        <ModalCloseBtn onClick={closeModal}>
-          <FontAwesomeIcon icon={faXmark} />
-        </ModalCloseBtn>
-      </header>
+      <ModalHeader>
+        <h5>그린비 대기상황</h5>
+        <ModalCloseBtn icon={faXmark} onClick={closeModal} />
+      </ModalHeader>
       <ModalContent>
-        <p>그린비 대기상황</p>
         <h1>"서울시 은평구 주소주소 옥상"</h1>
         <button onClick={() => alert("녹화 종료")}>녹화 종료</button>
         {sampleData.map(d => {
@@ -42,28 +40,15 @@ const WaitingGreenbeeAcceptModal = () => {
 }
 
 const Wrapper = styled.section`
-  ${({ theme }) => {
-    const { paddings } = theme
-    return css`
-      width: 50%;
-      margin: auto;
+  width: 50%;
+  margin: auto;
 
-      border-radius: 0.3rem;
-      background-color: #fff;
+  border-radius: 0.3rem;
+  background-color: #fff;
 
-      animation: ${modalShow} 0.3s;
-      animation-fill-mode: forwards;
-      overflow: hidden;
-      header {
-        display: flex;
-        flex-direction: row-reverse;
-
-        padding: ${paddings.sm} ${paddings.base};
-        background-color: #f1f1f1;
-        font-weight: 700;
-      }
-    `
-  }}
+  animation: ${modalShow} 0.3s;
+  animation-fill-mode: forwards;
+  overflow: hidden;
 `
 const Box = styled.div`
   background-color: grey;
@@ -71,19 +56,37 @@ const Box = styled.div`
   padding: 1rem;
   margin-top: 1rem;
 `
-
-const ModalCloseBtn = styled.button`
+const ModalHeader = styled.header`
   ${({ theme }) => {
-    const { fonts } = theme
+    const { colors, fonts, paddings } = theme
     return css`
-      margin: 0vw 0vw 0vw auto
+      width: 100%;
+      padding: ${paddings.base};
 
-      color: #999;
-      background-color: transparent;
+      background-color: #000000;
 
+      display: flex;
+      justify-content: space-between;
+
+      h5 {
+        color: ${colors.white};
+        font-size: ${fonts.size.base};
+        text-align: center;
+        vertical-align: center;
+      }
+    `
+  }}
+`
+
+const ModalCloseBtn = styled(FontAwesomeIcon)`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      padding: ${paddings.sm};
+      color: ${colors.white};
       font-size: ${fonts.size.xsm};
-      font-weight: 700;
-      text-align: center;
+
+      cursor: pointer;
     `
   }}
 `

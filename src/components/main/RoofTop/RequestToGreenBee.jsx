@@ -75,7 +75,8 @@ const RequestToGreenBee = () => {
     }
     try {
       await roofTopControl.postRoofTopInfo(reqFormData)
-      navigate("/")
+      alert("정상적으로 옥상이 등록되셨습니다.")
+      navigate("/mypage/rooftop")
     } catch (err) {
       throw new Error(err)
     }
@@ -92,10 +93,7 @@ const RequestToGreenBee = () => {
           <OpenModalBtn
             onClick={() =>
               openModal(
-                <SetRequiredOptionModal
-                  requiredInfo={requiredInfo}
-                  setRequiredInfo={setRequiredInfo}
-                />,
+                <SetRequiredOptionModal applyInfo={requiredInfo} changeInfo={setRequiredInfo} />,
               )
             }>
             수정하기

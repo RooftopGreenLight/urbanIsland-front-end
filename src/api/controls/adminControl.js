@@ -9,7 +9,8 @@ export const adminControl = {
           page,
         },
       })
-      return response.data
+      const { totalPages, greenBeeInfoResponses } = response.data
+      return { greenbeePageLimit: totalPages, greenbeeList: greenBeeInfoResponses }
     } catch (err) {
       throw new Error(err)
     }
@@ -23,7 +24,8 @@ export const adminControl = {
           page,
         },
       })
-      return response.data
+      const { totalPages, ownerInfoResponses } = response.data
+      return { ownerPageLimit: totalPages, ownerList: ownerInfoResponses }
     } catch (err) {
       throw new Error(err)
     }
@@ -37,7 +39,8 @@ export const adminControl = {
           page,
         },
       })
-      return response.data
+      const { totalPages, rooftopResponses } = response.data
+      return { rooftopPageLimit: totalPages, rooftopList: rooftopResponses }
     } catch (err) {
       throw new Error(err)
     }
@@ -55,6 +58,7 @@ export const adminControl = {
       throw new Error(err)
     }
   },
+
   postGreenbeeApprove: async id => {
     try {
       const response = await axiosInstanceAdmin({
@@ -80,26 +84,26 @@ export const adminControl = {
       throw new Error(err)
     }
   },
+
   deleteAdminGreenedRooftopDisapprove: async id => {
     try {
-      const response = await axiosInstanceAdmin({
+      await axiosInstanceAdmin({
         method: "delete",
-        url: `/rooftop/reject//${id}`,
+        url: `/rooftop/reject/${id}`,
         withCredentials: true,
       })
-      return response
     } catch (err) {
       throw new Error(err)
     }
   },
+
   deleteGreenbeeDisapprove: async id => {
     try {
-      const response = await axiosInstanceAdmin({
+      await axiosInstanceAdmin({
         method: "delete",
         baseURL: `/green-bees/accept/${id}`,
         withCredentials: true,
       })
-      return response
     } catch (err) {
       throw new Error(err)
     }
