@@ -7,38 +7,20 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { ModalContext } from "module/Modal"
 import { RequiredRoofTopOption } from "constants/RequiredRoofTopOption"
 
-const SetRequiredOptionModal = ({ requiredInfo, setRequiredInfo }) => {
+const SetRequiredOptionModal = ({ applyInfo, changeInfo }) => {
   const { closeModal } = useContext(ModalContext)
-  const [requiredOptions, setRequiredOptions] = useState(RequiredRoofTopOption)
-
-  const optionList = Object.keys(requiredOptions)
-  const { requiredItemNum } = requiredInfo
-
-  useEffect(() => {
-    const preSetCheckBox = () => {
-      optionList.forEach((option, idx) =>
-        setRequiredOptions({ ...requiredOptions, [option]: requiredItemNum.includes(idx) }),
-      )
-    }
-    preSetCheckBox()
-    console.log(requiredOptions)
-  }, [])
+  const [requiredOptions, setRequiredOptions] = useState(applyInfo)
 
   const changeCheck = e => {
     const { name, checked } = e.target
-    setRequiredOptions({ ...requiredOptions, [name]: checked })
+    checked
+      ? setRequiredOptions([...requiredOptions, parseInt(name)])
+      : setRequiredOptions([...requiredOptions].filter(option => option !== parseInt(name)))
   }
 
   const confirmRequiredList = () => {
-    const newRequiredItemNum = []
-    for (const [option, value] of Object.entries(requiredOptions)) {
-      if (value) {
-        newRequiredItemNum.push(optionList.indexOf(option))
-      }
-    }
-
-    console.log(newRequiredItemNum)
-    setRequiredInfo({ ...requiredInfo, requiredItemNum: newRequiredItemNum })
+    console.log(requiredOptions)
+    changeInfo("requiredItemNum", requiredOptions)
     closeModal()
   }
 
@@ -50,13 +32,13 @@ const SetRequiredOptionModal = ({ requiredInfo, setRequiredInfo }) => {
       </ModalHeader>
       <ModalContent>
         <ShowOptionList>
-          {Object.keys(requiredOptions).map(option => (
+          {RequiredRoofTopOption.map((option, idx) => (
             <div className="select-section" key={option}>
               <p>{option}</p>
               <input
                 type="checkbox"
-                name={option}
-                checked={requiredOptions[option]}
+                name={idx}
+                checked={requiredOptions.includes(idx)}
                 onChange={changeCheck}
               />
             </div>

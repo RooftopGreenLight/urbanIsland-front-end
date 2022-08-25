@@ -49,7 +49,11 @@ const RequestToGreenBee = () => {
     optionPrice: [],
   })
 
-  const { explainContent } = requiredInfo
+  const { explainContent, requiredItemNum } = requiredInfo
+
+  const changeInfo = (option, value) => {
+    setRequiredInfo({ ...requiredInfo, [option]: value })
+  }
 
   const changeInput = e => {
     const { name, value } = e.target
@@ -92,10 +96,7 @@ const RequestToGreenBee = () => {
           <OpenModalBtn
             onClick={() =>
               openModal(
-                <SetRequiredOptionModal
-                  requiredInfo={requiredInfo}
-                  setRequiredInfo={setRequiredInfo}
-                />,
+                <SetRequiredOptionModal applyInfo={requiredItemNum} changeInfo={changeInfo} />,
               )
             }>
             수정하기

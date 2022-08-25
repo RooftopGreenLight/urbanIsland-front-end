@@ -38,6 +38,7 @@ const SignupForm = () => {
 
   const checkEmailAddress = async () => {
     if (is_verified) {
+      feedbackMsg.current.innerText = "이미 이메일 인증을 완료했습니다."
       return
     }
     const emailRegex =
@@ -86,7 +87,13 @@ const SignupForm = () => {
       <EmailVerifiedBtn is_verified={is_verified} onClick={checkEmailAddress}>
         {is_verified ? <FontAwesomeIcon icon={faCircleCheck} /> : "이메일 인증"}
       </EmailVerifiedBtn>
-      <SignupInput name="nickname" placeholder="Nickname" onChange={changeInput} value={nickname} />
+      <SignupInput
+        name="nickname"
+        placeholder="Nickname"
+        onChange={changeInput}
+        value={nickname}
+        maxlength="20"
+      />
       <SignupInput
         name="password"
         placeholder="Password"
