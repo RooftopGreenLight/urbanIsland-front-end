@@ -1,14 +1,14 @@
 import styled, { css } from "styled-components"
-import { useContext } from "react"
+import { useRecoilValue } from "recoil"
 import { Link } from "react-router-dom"
 
-import { AuthStateContext } from "module/Auth"
+import { AuthCheckLogin } from "module/Auth"
 import { leftToRight } from "styles/Animation"
 import { accountControl } from "api/controls/accountControl"
 
 const HomeBtnList = () => {
-  const authState = useContext(AuthStateContext)
-  const { authenticated } = authState
+  const authenticated = useRecoilValue(AuthCheckLogin)
+
   return (
     <Wrapper>
       <HomeBtn to="/" delay={0}>
@@ -25,7 +25,7 @@ const HomeBtnList = () => {
           <HomeBtn to="/mypage/profile" delay={3}>
             마이페이지
           </HomeBtn>
-          <HomeBtn to="/" delay={4} onClick={accountControl.getLogOut}>
+          <HomeBtn to="/" delay={4} onClick={accountControl.deleteLogOut}>
             로그아웃
           </HomeBtn>
         </>

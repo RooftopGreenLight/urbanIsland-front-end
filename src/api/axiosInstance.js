@@ -35,7 +35,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   // 응답 성공 시 response.data를 return 하도록 설정.
   response => {
-    const res = response.data
+    const res = response?.data
     return res
   },
   // 응답 실패 시 Promise Error 객체를 return 하도록 설정.
@@ -43,7 +43,8 @@ axiosInstance.interceptors.response.use(
     // 만약 Access_token이 만료되어 생긴 문제라면, refresh_token을 재전송 해야 함
     if (error.response.data?.errorCode === 460) {
       const refreshToken = JSON.parse(localStorage.getItem("refresh_token"))
-      accountControl.getRefreshToken(refreshToken)
+      const memberId = JSON.parse(localStorage.getItem("memberId"))
+      accountControl.getRefreshToken(refreshToken, memberId)
       return
     }
     console.log(error)

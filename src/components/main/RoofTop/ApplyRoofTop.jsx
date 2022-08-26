@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 import { roofTopControl } from "api/controls/roofTopControl"
 
@@ -12,6 +13,7 @@ import ApplyDetailInfo from "components/main/RoofTop/ApplyRoofTop/ApplyDetailInf
 import ApplyExtraOption from "components/main/RoofTop/ApplyRoofTop/ApplyExtraOption"
 
 const ApplyRoofTop = () => {
+  const navigate = useNavigate()
   const [applyRoofTopInfo, setApplyRoofTopInfo] = useState({
     rooftopType: "G",
     width: 0,
@@ -51,7 +53,7 @@ const ApplyRoofTop = () => {
 
     for (const [option, value] of Object.entries(applyRoofTopInfo)) {
       // 배열의 경우 append를 통해 같은 옵션에 값을 추가해주어야 함
-      if (typeof value === "array") {
+      if (Array.isArray(value)) {
         for (let idx = 0; idx < value.length; idx++) {
           applyFormData.append(option, value[idx])
         }
@@ -63,46 +65,49 @@ const ApplyRoofTop = () => {
         continue
       }
       // 배열이 아닌 경우에는 그냥 값을 추가해주면 됨.
-      console.log(option, value)
       applyFormData.append(option, value)
     }
+
     try {
       await roofTopControl.postRoofTopInfo(applyFormData)
+      alert("정상적으로 옥상이 등록되셨습니다.")
+      navigate("/mypage/rooftop")
     } catch (err) {
       throw new Error(err)
     }
   }
 
-  console.log(applyRoofTopInfo)
-
   return (
     <Wrapper>
-      <ApplySidoList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-      <ApplyBaseInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-      <ApplyImgList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-      <ApplyDetailView applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-      <InputBox boxSize="lg">
-        <h5>세부사항 : 옥상 설명 멘트</h5>
-        <p>고객에게 옥상 시설을 설명해주세요!</p>
-        <textarea
-          name="explainContent"
-          rows="4"
-          cols="50"
-          value={explainContent}
-          placeholder="자유롭게 옥상 설명을 작성해주세요."
-          onChange={changeInput}
-        />
-      </InputBox>
-      <ApplyAvailableInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-      <ApplyDetailInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-      <ApplyExtraOption applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-      <ConfirmBtn onClick={sendRoofTopData}>옥상 신청하기</ConfirmBtn>
+      <ViewPoint>
+        <ApplySidoList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyBaseInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyImgList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyDetailView applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <InputBox boxSize="lg">
+          <h5>세부사항 : 옥상 설명 멘트</h5>
+          <p>고객에게 옥상 시설을 설명해주세요!</p>
+          <textarea
+            name="explainContent"
+            rows="4"
+            cols="50"
+            value={explainContent}
+            placeholder="자유롭게 옥상 설명을 작성해주세요."
+            onChange={changeInput}
+          />
+        </InputBox>
+        <ApplyAvailableInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyDetailInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyExtraOption applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ConfirmBtn onClick={sendRoofTopData}>옥상 신청하기</ConfirmBtn>
+      </ViewPoint>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
   width: 50vw;
+
   margin: auto;
   padding: 1rem;
 
@@ -111,6 +116,11 @@ const Wrapper = styled.div`
 
   background-color: #d3d3d3;
   text-align: center;
+`
+
+const ViewPoint = styled.div`
+  max-height: 80vh;
+  overflow: auto;
 `
 
 const ConfirmBtn = styled.button`

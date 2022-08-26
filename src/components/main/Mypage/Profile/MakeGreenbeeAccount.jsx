@@ -3,42 +3,7 @@ import styled from "styled-components"
 import { mypageControl } from "api/controls/mypageControl"
 import SelectBox from "../SelectBox"
 import Slider from "react-slick"
-const Wrapper = styled.div`
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
-  border: 1px solid gray;
-  margin: 3rem;
-  padding: 3rem;
-`
-const LeftBox = styled.div`
-  display: inline-block;
-`
-const RightBox = styled.div`
-  display: inline-block;
-`
-const SliderBox = styled.div`
-  height: 10%;
-`
-const InputBox = styled.input`
-  margin: 1rem;
-  padding: 0.5rem;
-`
-const TextBox = styled.input`
-  height: 200px;
-  width: 90%;
-`
-const StyledSlider = styled(Slider)`
-  height: 70%; //슬라이드 컨테이너 영역
 
-  .slick-slide div {
-    //슬라이더  컨텐츠
-    /* cursor: pointer; */
-  }
-`
-const Button = styled.button`
-  margin: 1rem;
-  display: block;
-`
 const MakeGreenbeeAccount = () => {
   const [rooftopInput, setRooftopInput] = useState({
     officeNumber: "",
@@ -48,14 +13,16 @@ const MakeGreenbeeAccount = () => {
   const [city, setCity] = useState()
   const [district, setDistrict] = useState()
   const { officeNumber, detail, content } = rooftopInput
+
+  const [selectedFiles, setSelectedFiles] = useState([])
+  const [img, setImg] = useState([])
+  const [files, setFiles] = useState()
+
   const insertInput = e => {
     const { name, value } = e.target
     setRooftopInput({ ...rooftopInput, [name]: value })
   }
 
-  const [selectedFiles, setSelectedFiles] = useState([])
-  const [img, setImg] = useState([])
-  const [files, setFiles] = useState()
   const handleUpload = e => {
     e.preventDefault()
     setFiles(e.target.files)
@@ -64,7 +31,6 @@ const MakeGreenbeeAccount = () => {
   const fileList = []
   const handleImgUpload = e => {
     setImg(e.target.files)
-    console.log(img)
     const files = e.target.files
     const fileArray = Array.prototype.slice.call(files)
 
@@ -87,6 +53,7 @@ const MakeGreenbeeAccount = () => {
     slidesToScroll: 1,
     swipeToSlide: true,
   }
+
   const renderPhotos = source => {
     return (
       <StyledSlider {...settings}>
@@ -107,7 +74,7 @@ const MakeGreenbeeAccount = () => {
     formData.append("district", district)
     formData.append("detail", detail)
     try {
-      const result = mypageControl.postApplyGreenbees(formData)
+      await mypageControl.postApplyGreenbees(formData)
     } catch (err) {
       console.log(err)
     }
@@ -117,7 +84,6 @@ const MakeGreenbeeAccount = () => {
     <Wrapper>
       <form method="post" encType="multipart/form-data">
         <LeftBox>
-          {" "}
           <SliderBox>{renderPhotos(selectedFiles)}</SliderBox>
           <input
             type="file"
@@ -162,4 +128,43 @@ const MakeGreenbeeAccount = () => {
     </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  width: 45vw;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  border: 1px solid gray;
+  margin: auto;
+  padding: 3rem;
+`
+const LeftBox = styled.div`
+  display: inline-block;
+`
+const RightBox = styled.div`
+  display: inline-block;
+`
+const SliderBox = styled.div`
+  height: 10%;
+`
+const InputBox = styled.input`
+  margin: 1rem;
+  padding: 0.5rem;
+`
+const TextBox = styled.input`
+  height: 200px;
+  width: 90%;
+`
+const StyledSlider = styled(Slider)`
+  height: 70%; //슬라이드 컨테이너 영역
+
+  .slick-slide div {
+    //슬라이더  컨텐츠
+    /* cursor: pointer; */
+  }
+`
+const Button = styled.button`
+  margin: 1rem;
+  display: block;
+`
+
 export default MakeGreenbeeAccount

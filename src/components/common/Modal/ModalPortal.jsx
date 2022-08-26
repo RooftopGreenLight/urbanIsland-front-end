@@ -13,11 +13,15 @@ const ModalPortal = () => {
   if (modalStatus) {
     return ReactDOM.createPortal(
       <>
-        <Wrapper>{modalContent}</Wrapper>
+        <Wrapper onClick={preventClick}>{modalContent}</Wrapper>
       </>,
       modalRoot,
     )
   } else return null
+}
+
+const preventClick = e => {
+  e.preventDefault()
 }
 
 const Wrapper = styled.div`
