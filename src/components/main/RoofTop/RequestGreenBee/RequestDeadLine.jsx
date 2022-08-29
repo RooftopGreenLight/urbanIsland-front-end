@@ -1,13 +1,13 @@
 import styled, { css } from "styled-components"
 import { useState } from "react"
 
-const deadLineList = ["1개월 이내", "2개월 이내", "3개월 이내", "6개월 이내", "제한 없음"]
+import { RequestDeadLineDate } from "constants/RequestDeadLineDate"
 
 const RequestDeadLine = ({ requiredInfo, setRequiredInfo }) => {
   const [checkedDeadLineNum, setCheckedDeadLineNum] = useState(requiredInfo.deadLineNum)
-  const changeDeadLineNum = e => {
+  const changeCheckbox = e => {
     const { name, checked } = e.target
-    setCheckedDeadLineNum(checked ? parseInt(name) : [])
+    setCheckedDeadLineNum(checked ? parseInt(name) : null)
     setRequiredInfo({ ...requiredInfo, deadLineNum: checkedDeadLineNum })
   }
 
@@ -16,14 +16,14 @@ const RequestDeadLine = ({ requiredInfo, setRequiredInfo }) => {
       <h5>세부사항 : 필요 시공 기한</h5>
       <p>옥상 녹화까지 소요될 시공 기한을 설정하세요.</p>
       <InputBoxList>
-        {deadLineList.map((elm, idx) => (
+        {RequestDeadLineDate.map((elm, idx) => (
           <InputBox key={elm}>
             <p>{elm}</p>
             <input
               type="checkbox"
               name={idx}
               checked={checkedDeadLineNum === idx}
-              onChange={changeDeadLineNum}
+              onChange={changeCheckbox}
             />
           </InputBox>
         ))}

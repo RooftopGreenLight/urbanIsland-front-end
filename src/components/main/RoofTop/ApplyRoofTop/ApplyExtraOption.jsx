@@ -1,16 +1,12 @@
 import styled, { css } from "styled-components"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
-  let defaultExtraOptions = {}
-  // option Content, Price를 한 쌍으로 묶어 새로운 객체를 생성
-  useEffect(() => {
-    const { optionContent, optionPrice } = applyInfo
-    defaultExtraOptions =
-      optionContent.length > 0
-        ? Object.assign(...optionContent.map((option, idx) => ({ [option]: optionPrice[idx] })))
-        : {}
-  }, [])
+  const { optionContent, optionPrice } = applyInfo
+  const defaultExtraOptions =
+    optionContent.length > 0
+      ? Object.assign(...optionContent.map((option, idx) => ({ [option]: optionPrice[idx] })))
+      : {}
 
   const [extraOptions, setExtraOptions] = useState(defaultExtraOptions)
   const [newExtraOption, setNewExtraOption] = useState({
@@ -22,17 +18,15 @@ const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
 
   const changeInput = e => {
     const { name, value } = e.target
-    if (name === "cost") {
-      setNewExtraOption({
-        ...newExtraOption,
-        [name]: isNaN(value) || value.length === 0 ? 0 : parseInt(value),
-      })
-      return
-    }
-    setNewExtraOption({
-      ...newExtraOption,
-      [name]: value,
-    })
+    name === "cost"
+      ? setNewExtraOption({
+          ...newExtraOption,
+          [name]: isNaN(value) || value.length === 0 ? 0 : parseInt(value),
+        })
+      : setNewExtraOption({
+          ...newExtraOption,
+          [name]: value,
+        })
   }
 
   const addNewOption = () => {

@@ -80,7 +80,7 @@ export const accountControl = {
       throw new Error(errorMessage)
     }
   },
-  getRefreshToken: async (refresh, memberId) => {
+  getRefreshToken: async function (refresh, memberId) {
     let response
     try {
       response = await axiosInstance({
@@ -94,8 +94,7 @@ export const accountControl = {
       addTokenToLocalStorage(accessToken, refreshToken)
       return accessToken
     } catch (err) {
-      removeTokenFromLocalStorage()
-      window.location.reload()
+      this.deleteLogOut()
     }
   },
   deleteLogOut: async () => {
