@@ -20,7 +20,7 @@ const Greenbee = () => {
         <Box onClick={() => navigate("/mypage/required-greening")}>
           <span>녹화가 필요한 옥상 찾기</span> <FontAwesomeIcon icon={faAngleRight} />
         </Box>
-        <Box>
+        <Box onClick={() => navigate("/mypage/greenbee/info")}>
           <span>그린비 페이지 확인/수정</span> <FontAwesomeIcon icon={faAngleRight} />
         </Box>
       </ListBox>
