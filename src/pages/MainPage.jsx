@@ -27,7 +27,9 @@ const MainPage = () => {
   useEffect(() => {
     const token = localStorage.getItem("access_token")
     if (token) {
-      confirmLogin({ authenticated: true, token })
+      const memberId = JSON.parse(localStorage.getItem("memberId"))
+      const memberRole = localStorage.getItem("memberRole")
+      confirmLogin({ authenticated: true, token, memberId, memberRole })
     }
   }, [])
 
