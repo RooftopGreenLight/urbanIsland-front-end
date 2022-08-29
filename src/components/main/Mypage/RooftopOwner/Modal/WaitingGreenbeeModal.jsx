@@ -22,7 +22,6 @@ const WaitingGreenbeeModal = () => {
   useEffect(() => {
     const loadWaitingGreenBeeList = async () => {
       const waitingList = await ownerControl.getGreenBeeWaiting(memberId)
-      console.log(waitingList)
       setWaitingGreenBees(waitingList)
     }
     loadWaitingGreenBeeList()

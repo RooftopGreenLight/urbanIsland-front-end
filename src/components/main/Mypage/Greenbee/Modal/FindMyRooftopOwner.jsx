@@ -33,6 +33,16 @@ const FindMyRooftopOwner = () => {
     loadInformation()
   }, [])
 
+  const finishGreeningRooftop = async rooftopId => {
+    try {
+      await greenbeeControl.getCompletedGreeningRooftop(rooftopId)
+      alert("녹화 확정이 완료되었습니다.")
+      closeModal()
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
   return (
     <Wrapper>
       <ModalHeader>
@@ -63,6 +73,7 @@ const FindMyRooftopOwner = () => {
                 <RooftopInfo key={idx}>
                   <h5>{`${rooftopCity} ${rooftopDistrict} ${rooftopDetail}`}</h5>
                   <p>{`옥상지기 연락처 : ${phoneNumber}`}</p>
+                  <button onClick={() => finishGreeningRooftop(rooftopId)}>녹화 확정하기</button>
                 </RooftopInfo>
               ),
             )
@@ -169,13 +180,13 @@ const GreeningSection = styled.div`
 
 const RooftopInfo = styled.div`
   ${({ theme }) => {
-    const { fonts, margins, paddings } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
       background-color: #cacaca;
       padding: ${paddings.sm};
 
       h5 {
-        margin-bottom: ${margins.sm};
+        margin-bottom: 0;
         border: 0px;
 
         font-size: ${fonts.size.sm};
@@ -184,7 +195,19 @@ const RooftopInfo = styled.div`
       }
 
       p {
+        margin-bottom: ${margins.sm};
         font-weight: 100;
+      }
+
+      button {
+        width: 50%;
+        margin: 0vw auto;
+        padding: ${paddings.sm};
+        background-color: #000000;
+        border-radius: 25px;
+
+        color: ${colors.white};
+        font-size: ${fonts.size.xsm};
       }
     `
   }}

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 
 import { greenbeeControl } from "api/controls/greenbeeControl"
 import { RequestDeadLineDate } from "constants/RequestDeadLineDate"
+import { RequiredRoofTopOption } from "constants/RequiredRoofTopOption"
 import { useRef } from "react"
 
 const RequiredGreeningRooftop = () => {
@@ -40,6 +41,7 @@ const RequiredGreeningRooftop = () => {
     city,
     district,
     detail,
+    detailNums,
     ownerContent,
     phoneNumber,
     requiredTermType,
@@ -87,6 +89,23 @@ const RequiredGreeningRooftop = () => {
             <h5>옥상 시설 면적 당 시공가</h5>
             <p>옥상 시설의 면적 당 시공가입니다.</p>
             <span>{`${widthPrice} 원 / m2`}</span>
+          </OptionBox>
+          <OptionBox boxSize="lg">
+            <h5>시공 시 필요 시설</h5>
+            <p>시설 시공 시 필요 시설 목록입니다.</p>
+            <DetailOptionList>
+              {detailNums &&
+                RequiredRoofTopOption.map((elm, idx) => (
+                  <div key={idx} className="option">
+                    <span>{elm}</span>
+                    <input
+                      type="checkbox"
+                      checked={detailNums.includes(idx)}
+                      onChange={e => e.preventDefault()}
+                    />
+                  </div>
+                ))}
+            </DetailOptionList>
           </OptionBox>
           <ApplyFeedback ref={feedbackMsg}></ApplyFeedback>
           <ApplyBtn onClick={applyRooftopGreening}>시공 신청하기</ApplyBtn>
@@ -154,6 +173,29 @@ const OptionBox = styled.div`
 
         padding: ${paddings.sm};
         margin: ${margins.sm} 0vw;
+      }
+    `
+  }}
+`
+
+const DetailOptionList = styled.div`
+  ${({ theme }) => {
+    const { margins } = theme
+    return css`
+      width: 70%;
+      margin: ${margins.base} auto;
+
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .option {
+        width: 40%;
+        margin: ${margins.sm} 0vw;
+
+        display: flex;
+        justify-content: space-between;
+        text-align: left;
       }
     `
   }}

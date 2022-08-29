@@ -94,4 +94,15 @@ export const greenbeeControl = {
       throw new Error(errorMessage)
     }
   },
+  getCompletedGreeningRooftop: async rooftopId => {
+    try {
+      await axiosInstance({
+        method: "GET",
+        url: `/green-bees/greening-rooftop/${rooftopId}`,
+      })
+    } catch (err) {
+      const errorMessage = err.response.data?.message
+      throw new Error(errorMessage)
+    }
+  },
 }
