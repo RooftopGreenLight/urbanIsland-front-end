@@ -1,15 +1,16 @@
 import axiosInstance from "api/axiosInstance"
 
 export const greenbeeControl = {
-  getRequiredGreen: async () => {
+  getRequiredGreen: async (page = 0) => {
     try {
       const response = await axiosInstance({
         method: "GET",
         url: "/green-bees/required-green",
         params: {
-          page: 0,
+          page,
         },
       })
+      console.log(response)
       return response.data.rooftopResponses
     } catch (err) {
       const errorMessage = err.response.data.message
@@ -22,7 +23,6 @@ export const greenbeeControl = {
         method: "GET",
         url: `/green-bees/required-green/${rooftopId}`,
       })
-      console.log(response)
       return response
     } catch (err) {
       const errorMessage = err.response.data.message
@@ -59,6 +59,28 @@ export const greenbeeControl = {
       ])
       console.log(greeningList)
       return greeningList
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+  getGreenbeeInfo: async () => {
+    try {
+      const greenbeeInfo = await axiosInstance({
+        method: "GET",
+        url: "/green-bees",
+      })
+      return greenbeeInfo.data
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+  getOtherGreenbeeInfo: async memberId => {
+    try {
+      const greenbeeInfo = await axiosInstance({
+        method: "GET",
+        url: `/green-bees/${memberId}`,
+      })
+      return greenbeeInfo.data
     } catch (err) {
       throw new Error(err)
     }

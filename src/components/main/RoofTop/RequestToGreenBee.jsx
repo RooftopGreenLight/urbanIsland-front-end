@@ -38,16 +38,18 @@ const RequestToGreenBee = () => {
     county: "",
     city: "",
     detail: "",
-    deadLineNum: [],
+    deadLineNum: 0,
     requiredItemNum: [],
     detailInfoNum: [],
     normalFile: [],
-    structFile: "",
+    structureFile: "",
     mainFile: "",
     optionCount: 0,
     optionContent: [],
     optionPrice: [],
   })
+
+  console.log(requiredInfo)
 
   const { explainContent } = requiredInfo
 

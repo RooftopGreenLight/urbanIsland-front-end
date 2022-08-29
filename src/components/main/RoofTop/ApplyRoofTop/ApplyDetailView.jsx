@@ -19,7 +19,7 @@ const ApplyDetailView = ({ applyInfo, changeInfo }) => {
 
   const removeStructImg = () => {
     setImgBase64(null)
-    changeInfo({ ...applyInfo, structFile: null })
+    changeInfo({ ...applyInfo, structureFile: null })
   }
 
   return (

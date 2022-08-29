@@ -27,11 +27,10 @@ const SignupModal = ({ code, verifiedEmail }) => {
 
   return (
     <Wrapper>
-      <header>
-        <ModalCloseBtn onClick={closeModal}>
-          <FontAwesomeIcon icon={faXmark} />
-        </ModalCloseBtn>
-      </header>
+      <ModalHeader>
+        <h5>이메일 코드 인증</h5>
+        <ModalCloseBtn icon={faXmark} onClick={closeModal} />
+      </ModalHeader>
       <ModalContent>
         <h5>이메일로 전송된 인증 코드를 입력해주세요.</h5>
         <input placeholder="XXXX-XXXX" onChange={changeInput} value={verifiedCode} />
@@ -55,30 +54,40 @@ const Wrapper = styled.section`
       animation: ${modalShow} 0.3s;
       animation-fill-mode: forwards;
       overflow: hidden;
+    `
+  }}
+`
+const ModalHeader = styled.header`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.base};
 
-      header {
-        display: flex;
-        flex-direction: row-reverse;
+      background-color: #000000;
 
-        padding: ${paddings.sm} ${paddings.base};
-        background-color: #f1f1f1;
-        font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+
+      h5 {
+        color: ${colors.white};
+        font-size: ${fonts.size.base};
+        text-align: center;
+        vertical-align: center;
       }
     `
   }}
 `
-const ModalCloseBtn = styled.button`
+
+const ModalCloseBtn = styled(FontAwesomeIcon)`
   ${({ theme }) => {
-    const { fonts } = theme
+    const { colors, fonts, paddings } = theme
     return css`
-      margin: 0vw 0vw 0vw auto
-
-      color: #999;
-      background-color: transparent;
-
+      padding: ${paddings.sm};
+      color: ${colors.white};
       font-size: ${fonts.size.xsm};
-      font-weight: 700;
-      text-align: center;
+
+      cursor: pointer;
     `
   }}
 `
