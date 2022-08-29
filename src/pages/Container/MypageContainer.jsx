@@ -19,10 +19,7 @@ export const MypageContainer = () => {
       <Routes>
         <Route path="profile" element={<Profile />} />
         <Route path="schedule" element={<Schedule />} />
-        <Route path="greenbee" element={<Greenbee />} />
-        <Route path="greenbee/info" element={<GreenbeeInfo />} />
-        <Route path="required-greening" element={<RequiredGreeningList />} />
-        <Route path="required-greening/:rooftopId" element={<RequiredGreeningRooftop />} />
+        <Route path="greenbee/*" element={<GreenbeeContainer />} />
         <Route path="rooftop" element={<Rooftop />} />
         <Route path="rooftop/apply" element={<ApplyRoofTop />} />
         <Route path="rooftop/request" element={<RequestToGreenBee />} />
@@ -30,5 +27,16 @@ export const MypageContainer = () => {
         <Route path="greenbeeapply" element={<MakeGreenbeeAccount />} />
       </Routes>
     </MypageTemplate>
+  )
+}
+
+const GreenbeeContainer = () => {
+  return (
+    <Routes>
+      <Route path="" element={<Greenbee />} />
+      <Route path="info" element={<GreenbeeInfo />} />
+      <Route path="required-greening" element={<RequiredGreeningList />} />
+      <Route path="required-greening/:rooftopId" element={<RequiredGreeningRooftop />} />
+    </Routes>
   )
 }

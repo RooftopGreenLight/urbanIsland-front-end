@@ -31,7 +31,7 @@ const RequiredGreeningList = () => {
           <RoofTopInfo
             fileUrl={mainImage.fileUrl}
             key={idx}
-            onClick={() => navigate(`/mypage/required-greening/${id}`)}>
+            onClick={() => navigate(`/mypage/greenbee/required-greening/${id}`)}>
             <h5>{`${city} ${district}`}</h5>
             <p>{detail}</p>
             <div className="width-price">
