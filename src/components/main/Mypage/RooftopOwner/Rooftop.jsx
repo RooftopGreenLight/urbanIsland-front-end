@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import styled from "styled-components"
 import Slider from "react-slick"
 
@@ -12,9 +12,20 @@ import { ModalContext } from "module/Modal"
 import RegisterRooftop from "./Modal/RegisterRooftop"
 import WaitingRooftopModal from "./Modal/WaitingRooftopModal"
 import WaitingGreenbeeModal from "./Modal/WaitingGreenbeeModal"
+import OwnRooftop from "./OwnRooftop"
+import { roofTopControl } from "api/controls/roofTopControl"
 
 const Rooftop = () => {
   const { openModal } = useContext(ModalContext)
+  const [ownRooftopList, setOwnRooftopList] = useState([])
+
+  useEffect(() => {
+    const loadMyOwnRooftop = async () => {
+      const { rooftopResponses } = await roofTopControl.getMyOwnRooftop()
+      setOwnRooftopList(rooftopResponses)
+    }
+    loadMyOwnRooftop()
+  }, [])
 
   const settings = {
     arrow: false,
@@ -47,18 +58,15 @@ const Rooftop = () => {
       <Title>내 옥상 관리하기</Title>
       <SliderBox>
         <Slider {...settings}>
-          <div>
-            <Rectangle />
-          </div>
-          <div>
-            <Rectangle />
-          </div>
-          <div>
-            <Rectangle />
-          </div>
-          <div>
-            <Rectangle />
-          </div>
+          {[...Array(5).keys()].map(elm => (
+            <div key={elm}>
+              {ownRooftopList[elm] ? (
+                <OwnRooftop rooftopInfo={ownRooftopList[elm]} />
+              ) : (
+                <Rectangle />
+              )}
+            </div>
+          ))}
         </Slider>
       </SliderBox>
     </Wrapper>

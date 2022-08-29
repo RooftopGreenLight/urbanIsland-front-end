@@ -41,4 +41,19 @@ export const roofTopControl = {
       throw new Error(err)
     }
   },
+  getMyOwnRooftop: async (page = 0, size = 5) => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/rooftops`,
+        params: {
+          page,
+          size,
+        },
+      })
+      return response.data
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
 }
