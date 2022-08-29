@@ -48,7 +48,7 @@ const Wrapper = styled.ul`
       justify-content: space-evenly;
 
       text-align: center;
-      color: ${colors.white};
+      color: ${colors.main.primary};
     `
   }}
 `
@@ -58,16 +58,16 @@ const LinkElement = styled(Link)`
     const { colors, fonts } = theme
     return css`
       font-family: ${fonts.family.detail};
-      font-size: ${fonts.size.xsm};
+      font-size: ${fonts.size.sm};
 
       vertical-align: middle;
       transform: 0.5s all cubic-bezier(0.21, 0.76, 0.81, 0.31);
 
       &:hover {
-        color: ${colors.white};
+        color: ${colors.main.secondary};
 
         &::after {
-          border-bottom: 2px solid ${colors.white};
+          border-bottom: 2px solid ${colors.main.secondary};
         }
       }
 
@@ -75,7 +75,7 @@ const LinkElement = styled(Link)`
         content: "";
         display: block;
         margin: 0.1vw auto;
-        border-bottom: 2px solid ${colors.white};
+        border-bottom: 2px solid ${colors.main.primary};
         width: ${fonts.size.sm};
       }
     `

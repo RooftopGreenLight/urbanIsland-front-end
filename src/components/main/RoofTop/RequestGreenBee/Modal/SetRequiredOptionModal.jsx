@@ -13,9 +13,13 @@ const SetRequiredOptionModal = ({ applyInfo, changeInfo }) => {
 
   const changeCheck = e => {
     const { name, checked } = e.target
+    console.log(checked)
     checked
-      ? setRequiredOptions([...requiredOptions, parseInt(name)])
-      : setRequiredOptions([...requiredOptions].filter(option => option !== parseInt(name)))
+      ? setRequiredOptions(prevOptions => [...prevOptions, parseInt(name)])
+      : setRequiredOptions(prevOptions =>
+          [...prevOptions].filter(option => option !== parseInt(name)),
+        )
+    console.log(requiredOptions)
   }
 
   const confirmRequiredList = () => {

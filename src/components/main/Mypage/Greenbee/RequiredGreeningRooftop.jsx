@@ -1,15 +1,16 @@
 import styled, { css } from "styled-components"
+import { useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
+
 import { greenbeeControl } from "api/controls/greenbeeControl"
 
-const RequiredGreeningRooftop = ({ rooftopId }) => {
+const RequiredGreeningRooftop = () => {
+  const { rooftopId } = useParams()
   const [rooftopInfo, setRooftopInfo] = useState([])
-
   useEffect(() => {
     const loadRooftopInfo = async () => {
       try {
         const loadedRooftopInfo = await greenbeeControl.getRequiredGreenRooftop(rooftopId)
-        console.log(loadedRooftopInfo)
         setRooftopInfo(loadedRooftopInfo)
       } catch (err) {
         console.log(err)

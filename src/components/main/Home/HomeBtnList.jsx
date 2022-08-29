@@ -11,7 +11,7 @@ const HomeBtnList = () => {
 
   return (
     <Wrapper>
-      <HomeBtn to="/" delay={0}>
+      <HomeBtn to="/reservation" delay={0}>
         옥상시설 예약
       </HomeBtn>
       <HomeBtn to="/" delay={1}>
