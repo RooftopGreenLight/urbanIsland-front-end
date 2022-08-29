@@ -34,29 +34,28 @@ export const greenbeeControl = {
         method: "GET",
         url: "/green-bees/greening-select-rooftop",
         params: {
-          page: 1,
+          page: 0,
         },
       })
       const completedList = await axiosInstance({
         method: "GET",
         url: "/green-bees/greening-completed-rooftop",
         params: {
-          page: 1,
+          page: 0,
         },
       })
       const progressedList = await axiosInstance({
         method: "GET",
         url: "/green-bees/greening-rooftop",
         params: {
-          page: 1,
+          page: 0,
         },
       })
-      const greeningList = new Map([
-        ["completed", completedList.data ?? []],
-        ["progressed", progressedList.data ?? []],
-        ["selected", selectedList.data ?? []],
-      ])
-      console.log(greeningList)
+      const greeningList = {
+        completed: completedList.data ?? [],
+        progressed: progressedList.data ?? [],
+        selected: selectedList.data ?? [],
+      }
       return greeningList
     } catch (err) {
       throw new Error(err)
