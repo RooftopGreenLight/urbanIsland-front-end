@@ -26,18 +26,17 @@ const GreenbeeInfo = () => {
       <OptionBox boxSize="base">
         <h5>사무소 주소</h5>
         <p>해당 사무소의 주소입니다.</p>
-        <h5>{`${addressCity} ${addressDistrict}`}</h5>
-        <p>{addressDetail}</p>
+        <span>{`${addressCity} ${addressDistrict} ${addressDetail}`}</span>
       </OptionBox>
       <OptionBox boxSize="base">
         <h5>사무소 연락처</h5>
         <p>해당 사무소의 연락처입니다.</p>
-        <p>{officeNumber}</p>
+        <span>{officeNumber}</span>
       </OptionBox>
       <OptionBox boxSize="lg">
         <h5>사무소 소개</h5>
         <p>해당 사무소의 소개글입니다.</p>
-        <p>{content}</p>
+        <span>{content}</span>
       </OptionBox>
     </Wrapper>
   )
@@ -75,16 +74,21 @@ const OptionBox = styled.div`
       }
 
       p {
+        margin-bottom: ${margins.sm};
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
+
+      span {
         font-size: ${fonts.size.xsm};
         font-weight: 100;
       }
 
       img {
-        width: 50%;
-        max-height: 50%;
+        width: 25%;
 
         background-size: cover;
-        overflow: hidden;
+        object-fit: cover;
 
         padding: ${paddings.sm};
         margin: ${margins.sm} 0vw;

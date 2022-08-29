@@ -18,9 +18,11 @@ const WaitingGreenbeeModal = () => {
 
   const [waitingGreenBees, setWaitingGreenBees] = useState([])
   const [currentLoadList, setCurrentLoadList] = useState({
-    rooftopId: 0,
-    requestedGreenbees: [],
+    selectedRooftopId: 0,
+    appliedGreenbees: [],
   })
+
+  const { selectedRooftopId, appliedGreenbees } = currentLoadList
 
   useEffect(() => {
     const loadWaitingGreenBeeList = async () => {
@@ -30,6 +32,11 @@ const WaitingGreenbeeModal = () => {
     }
     loadWaitingGreenBeeList()
   }, [])
+
+  const loadAppliedGreenbeeList = async rooftopId => {
+    const { applyDtos } = await ownerControl.getGreenBeeWaitingRooftop(rooftopId)
+    setCurrentLoadList({ selectedRooftopId: rooftopId, appliedGreebees: applyDtos })
+  }
 
   return (
     <Wrapper>
@@ -42,9 +49,37 @@ const WaitingGreenbeeModal = () => {
           {waitingGreenBees.length > 0 ? (
             waitingGreenBees.map(({ city, district, detail, id }) => (
               <RooftopStatus>
-                <h1>{`${city} ${district}`}</h1>
+                <h5>{`${city} ${district}`}</h5>
                 <p>{detail}</p>
-                <button>공고 상세 보기</button>
+                {selectedRooftopId === id ? (
+                  <>
+                    <AppliedGreenbeeList>
+                      {appliedGreenbees ? (
+                        appliedGreenbees.map(elm => (
+                          <div>
+                            <p>{elm}</p>
+                            <button onClick={() => openModal(<WaitingGreenbeeAcceptModal />)}>
+                              신청하기
+                            </button>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="empty-list">
+                          <h5>그린비 목록 없음</h5>
+                          <p>해당 시설의 녹화를 신청한 사무소가 없습니다.</p>
+                        </div>
+                      )}
+                    </AppliedGreenbeeList>
+                    <button
+                      onClick={() =>
+                        setCurrentLoadList({ selectedRooftopId: 0, appliedGreenbees: [] })
+                      }>
+                      공고 닫기
+                    </button>
+                  </>
+                ) : (
+                  <button onClick={() => loadAppliedGreenbeeList(id)}>공고 상세 보기</button>
+                )}
               </RooftopStatus>
             ))
           ) : (
@@ -123,11 +158,6 @@ const ModalContent = styled.main`
       max-height: 100%;
       overflow-y: auto;
       text-align: center;
-
-      h5 {
-        margin: ${margins.sm} auto;
-        font-size: ${fonts.size.base};
-      }
     `
   }}
 `
@@ -136,14 +166,14 @@ const RooftopStatus = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      margin: ${margins.sm};
+      margin: ${margins.sm} 0vw;
       padding: ${paddings.sm};
 
       color: ${colors.black.primary};
       cursor: pointer;
 
       h5 {
-        font-size: ${fonts.size.sm};
+        font-size: ${fonts.size.base};
       }
       p {
         font-size: ${fonts.size.xsm};
@@ -164,14 +194,30 @@ const RooftopStatus = styled.div`
   }}
 `
 
-const Box = styled.div`
-  background-color: grey;
-  border-radius: 5%;
-  padding: 1rem;
-  margin-top: 1rem;
-`
-const Time = styled.span`
-  font-size: 11px;
-`
+const AppliedGreenbeeList = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, margins, paddings } = theme
+    return css`
+      padding: ${paddings.base} 0vw;
+      margin: ${margins.base} 0vw;
+      border: 1px solid ${colors.black.tertiary};
+      border-radius: 25px;
 
+      color: ${colors.black.primary};
+      cursor: pointer;
+
+      h5 {
+        font-size: ${fonts.size.base};
+      }
+      p {
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+      }
+
+      .empty-list {
+        color: ${colors.black.tertiary};
+      }
+    `
+  }}
+`
 export default WaitingGreenbeeModal
