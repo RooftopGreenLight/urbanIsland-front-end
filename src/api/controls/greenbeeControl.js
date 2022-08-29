@@ -10,7 +10,6 @@ export const greenbeeControl = {
           page,
         },
       })
-      console.log(response)
       return response.data.rooftopResponses
     } catch (err) {
       const errorMessage = err.response.data.message
@@ -23,7 +22,7 @@ export const greenbeeControl = {
         method: "GET",
         url: `/green-bees/required-green/${rooftopId}`,
       })
-      return response
+      return response.data
     } catch (err) {
       const errorMessage = err.response.data.message
       throw new Error(errorMessage)
@@ -83,6 +82,17 @@ export const greenbeeControl = {
       return greenbeeInfo.data
     } catch (err) {
       throw new Error(err)
+    }
+  },
+  getSelectGreeningRooftop: async rooftopId => {
+    try {
+      const res = await axiosInstance({
+        method: "GET",
+        url: `/green-bees/required-green/select/${rooftopId}`,
+      })
+    } catch (err) {
+      const errorMessage = err.response?.data.message
+      throw new Error(errorMessage)
     }
   },
 }

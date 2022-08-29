@@ -1,5 +1,9 @@
-import { useEffect, useState } from "react"
 import styled, { css } from "styled-components"
+import { useEffect, useState } from "react"
+import Slider from "react-slick"
+
+import "slick-carousel/slick/slick.css"
+import "slick-carousel/slick/slick-theme.css"
 
 import { greenbeeControl } from "api/controls/greenbeeControl"
 
@@ -15,13 +19,29 @@ const GreenbeeInfo = () => {
     loadGreenbeeInfo()
   }, [])
 
+  const settings = {
+    arrow: false,
+    dots: false,
+    infinite: false,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    swipeToSlide: true,
+  }
+
   return (
     <Wrapper>
       <OptionBox boxSize="lg">
         <h5>사무소 대표 사진</h5>
         <p>해당 사무소의 소개 사진입니다.</p>
-        {greenBeeImages &&
-          greenBeeImages.map((elm, idx) => <img src={elm.fileUrl} alt="Img" key={idx} />)}
+        {greenBeeImages && (
+          <Slider {...settings}>
+            {greenBeeImages.map((elm, idx) => (
+              <div key={elm}>
+                <img src={elm.fileUrl} alt="Img" key={idx} />
+              </div>
+            ))}
+          </Slider>
+        )}
       </OptionBox>
       <OptionBox boxSize="base">
         <h5>사무소 주소</h5>
