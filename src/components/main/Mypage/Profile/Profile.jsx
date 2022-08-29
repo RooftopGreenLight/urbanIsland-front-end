@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState, useCallback } from "react"
+import { useContext, useEffect, useState, useCallback } from "react"
 import { Link } from "react-router-dom"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
 import { mypageControl } from "api/controls/mypageControl"
 import { ModalContext } from "module/Modal"
@@ -53,8 +53,10 @@ const Profile = () => {
     <Wrapper>
       {data && (
         <>
-          <Title>내 프로필 관리하기</Title>
-          <PTag>기본정보</PTag>
+          <Title>
+            <h5>내 프로필 관리하기</h5>
+            <p>사용자 기본 정보</p>
+          </Title>
           <ProfileBox>
             <ProfileLine>
               {data.name}{" "}
@@ -107,6 +109,7 @@ const Profile = () => {
 
 const Wrapper = styled.div`
   width: 50vw;
+  height: 75vh;
   margin: auto;
 
   display: flex;
@@ -143,10 +146,31 @@ const ProfileLine = styled.div`
   color: gray;
 `
 const Title = styled.div`
-  justify-content: space-between;
-  font-size: large;
-  font-weight: bold;
-  padding: 0.6rem;
+  ${({ theme }) => {
+    const { colors, fonts, margins, paddings } = theme
+    return css`
+      width: 65%;
+
+      padding-bottom: ${paddings.sm};
+      margin-bottom: ${margins.base};
+
+      border-bottom: 1px solid ${colors.main.primary};
+
+      h5 {
+        margin-bottom: ${margins.sm};
+
+        color: ${colors.main.secondary};
+        font-size: ${fonts.size.base};
+        font-weight: ${fonts.weight.bold};
+      }
+
+      p {
+        color: ${colors.main.secondary};
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+      }
+    `
+  }}
 `
 
 export default Profile

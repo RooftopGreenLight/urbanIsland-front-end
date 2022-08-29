@@ -33,7 +33,7 @@ const Admin = () => {
   useEffect(() => {
     const getAdminInformation = async () => {
       const { greenbeePageLimit, greenbeeList } = await adminControl.getAdminGreenbee(greenbeePage)
-      const { ownerPageLimit, ownerList } = await adminControl.getAdminOwner(ownerPage)
+      // const { ownerPageLimit, ownerList } = await adminControl.getAdminOwner(ownerPage)
       const { rooftopPageLimit, rooftopList } = await adminControl.getAdminGreenedRooftop(
         rooftopPage,
       )
@@ -42,11 +42,11 @@ const Admin = () => {
         greenbeePageLimit,
         greenbeeList,
       })
-      setOwnerInfo({
-        ...ownerInfo,
-        ownerPageLimit,
-        ownerList,
-      })
+      // setOwnerInfo({
+      //   ...ownerInfo,
+      //   ownerPageLimit,
+      //   ownerList,
+      // })
       setRooftopInfo({
         ...rooftopInfo,
         rooftopPageLimit,

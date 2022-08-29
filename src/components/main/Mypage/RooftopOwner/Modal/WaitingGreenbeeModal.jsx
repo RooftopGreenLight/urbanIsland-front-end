@@ -15,15 +15,21 @@ import WaitingGreenbeeAcceptModal from "components/main/Mypage/RooftopOwner/Moda
 const WaitingGreenbeeModal = () => {
   const { openModal, closeModal } = useContext(ModalContext)
   const memberId = useRecoilValue(AuthCheckMemberId)
-  console.log(memberId)
+
   const [waitingGreenBees, setWaitingGreenBees] = useState([])
+  const [currentLoadList, setCurrentLoadList] = useState({
+    rooftopId: 0,
+    requestedGreenbees: [],
+  })
+
   useEffect(() => {
     const loadWaitingGreenBeeList = async () => {
       const waitingList = await ownerControl.getGreenBeeWaiting(memberId)
+      console.log(waitingList)
       setWaitingGreenBees(waitingList)
     }
     loadWaitingGreenBeeList()
-  })
+  }, [])
 
   return (
     <Wrapper>
@@ -34,29 +40,12 @@ const WaitingGreenbeeModal = () => {
       <ModalContent>
         <ViewPoint>
           {waitingGreenBees.length > 0 ? (
-            waitingGreenBees.map(d => (
-              <>
-                <h1>"서울시 은평구 주소주소 옥상"</h1>
-                <button
-                  onClick={() =>
-                    alert("공고를 내릴 시 신청했던 옥상이 취소됩니다. 그래도 공고를 내리실건가요?!")
-                  }>
-                  공고 내리기
-                </button>
-                <Box>
-                  <span>{d.companyinformation}</span>
-                  <Time>{d.date}</Time>
-                  <div>
-                    건축사무소 구경하기
-                    <button
-                      onClick={() => {
-                        openModal(<WaitingGreenbeeAcceptModal />)
-                      }}>
-                      확정하기
-                    </button>
-                  </div>
-                </Box>
-              </>
+            waitingGreenBees.map(({ city, district, detail, id }) => (
+              <RooftopStatus>
+                <h1>{`${city} ${district}`}</h1>
+                <p>{detail}</p>
+                <button>공고 상세 보기</button>
+              </RooftopStatus>
             ))
           ) : (
             <h5>옥상 녹화 신청 목록 없음</h5>
@@ -139,9 +128,32 @@ const ModalContent = styled.main`
         margin: ${margins.sm} auto;
         font-size: ${fonts.size.base};
       }
+    `
+  }}
+`
+
+const RooftopStatus = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, margins, paddings } = theme
+    return css`
+      margin: ${margins.sm};
+      padding: ${paddings.sm};
+
+      color: ${colors.black.primary};
+      cursor: pointer;
+
+      h5 {
+        font-size: ${fonts.size.sm};
+      }
+      p {
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+        margin-bottom: ${margins.sm};
+      }
 
       button {
         width: 20%;
+        padding: ${paddings.sm};
         background-color: #000000;
         border-radius: 25px;
 
