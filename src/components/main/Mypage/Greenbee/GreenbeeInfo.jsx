@@ -105,7 +105,7 @@ const OptionBox = styled.div`
       }
 
       img {
-        width: 25%;
+        width: 50%;
 
         background-size: cover;
         object-fit: cover;

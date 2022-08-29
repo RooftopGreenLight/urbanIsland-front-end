@@ -8,21 +8,16 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { ModalContext } from "module/Modal"
 import { AuthCheckMemberId } from "module/Auth"
 import { ownerControl } from "api/controls/ownerControl"
-
 import { modalShow } from "styles/Animation"
-import WaitingGreenbeeAcceptModal from "components/main/Mypage/RooftopOwner/Modal/WaitingGreenbeeAcceptModal"
+
+import WaitingGreenbeeList from "../WaitingGreenbeeList"
 
 const WaitingGreenbeeModal = () => {
-  const { openModal, closeModal } = useContext(ModalContext)
+  const { closeModal } = useContext(ModalContext)
   const memberId = useRecoilValue(AuthCheckMemberId)
 
   const [waitingGreenBees, setWaitingGreenBees] = useState([])
-  const [currentLoadList, setCurrentLoadList] = useState({
-    selectedRooftopId: 0,
-    appliedGreenbees: [],
-  })
-
-  const { selectedRooftopId, appliedGreenbees } = currentLoadList
+  const [selectedRooftopId, setSelectedRooftopId] = useState(-1)
 
   useEffect(() => {
     const loadWaitingGreenBeeList = async () => {
@@ -33,9 +28,8 @@ const WaitingGreenbeeModal = () => {
     loadWaitingGreenBeeList()
   }, [])
 
-  const loadAppliedGreenbeeList = async rooftopId => {
-    const { applyDtos } = await ownerControl.getGreenBeeWaitingRooftop(rooftopId)
-    setCurrentLoadList({ selectedRooftopId: rooftopId, appliedGreebees: applyDtos })
+  const cancelSelectRooftop = () => {
+    setSelectedRooftopId(-1)
   }
 
   return (
@@ -52,33 +46,9 @@ const WaitingGreenbeeModal = () => {
                 <h5>{`${city} ${district}`}</h5>
                 <p>{detail}</p>
                 {selectedRooftopId === id ? (
-                  <>
-                    <AppliedGreenbeeList>
-                      {appliedGreenbees ? (
-                        appliedGreenbees.map(elm => (
-                          <div>
-                            <p>{elm}</p>
-                            <button onClick={() => openModal(<WaitingGreenbeeAcceptModal />)}>
-                              신청하기
-                            </button>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="empty-list">
-                          <h5>그린비 목록 없음</h5>
-                          <p>해당 시설의 녹화를 신청한 사무소가 없습니다.</p>
-                        </div>
-                      )}
-                    </AppliedGreenbeeList>
-                    <button
-                      onClick={() =>
-                        setCurrentLoadList({ selectedRooftopId: 0, appliedGreenbees: [] })
-                      }>
-                      공고 닫기
-                    </button>
-                  </>
+                  <WaitingGreenbeeList rooftopId={id} cancelSelectRooftop={cancelSelectRooftop} />
                 ) : (
-                  <button onClick={() => loadAppliedGreenbeeList(id)}>공고 상세 보기</button>
+                  <button onClick={() => setSelectedRooftopId(id)}>공고 상세 보기</button>
                 )}
               </RooftopStatus>
             ))
@@ -167,7 +137,6 @@ const RooftopStatus = styled.div`
     const { colors, fonts, margins, paddings } = theme
     return css`
       margin: ${margins.sm} 0vw;
-      padding: ${paddings.sm};
 
       color: ${colors.black.primary};
       cursor: pointer;
@@ -194,30 +163,4 @@ const RooftopStatus = styled.div`
   }}
 `
 
-const AppliedGreenbeeList = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
-    return css`
-      padding: ${paddings.base} 0vw;
-      margin: ${margins.base} 0vw;
-      border: 1px solid ${colors.black.tertiary};
-      border-radius: 25px;
-
-      color: ${colors.black.primary};
-      cursor: pointer;
-
-      h5 {
-        font-size: ${fonts.size.base};
-      }
-      p {
-        font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
-      }
-
-      .empty-list {
-        color: ${colors.black.tertiary};
-      }
-    `
-  }}
-`
 export default WaitingGreenbeeModal
