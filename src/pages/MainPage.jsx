@@ -10,6 +10,7 @@ import { MypageContainer } from "pages/Container/MypageContainer"
 import Login from "components/main/Login/Login"
 import Signup from "components/main/Signup/Signup"
 import SocialAuthConfirm from "components/main/Auth/SocialAuthConfirm"
+import { ReservationContainer } from "./Container/ReservationContainer"
 
 // 오직 로그인이 되었을때만 접근이 가능하도록 하는 Route
 const PrivateRoute = ({ isLogin }) => {
@@ -47,6 +48,7 @@ const MainPage = () => {
       </Route>
       <Route element={<PrivateRoute isLogin={isLogin} />}>
         <Route path="/mypage/*" element={<MypageContainer />} />
+        <Route path="/reservation" element={<ReservationContainer />} />
       </Route>
     </Routes>
   )

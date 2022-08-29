@@ -117,6 +117,7 @@ const Reservation = () => {
   )
 }
 export default Reservation
+
 const Button = styled.button`
   background-color: white;
   border: 1px solid black;
