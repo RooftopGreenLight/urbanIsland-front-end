@@ -48,7 +48,7 @@ const MainPage = () => {
       </Route>
       <Route element={<PrivateRoute isLogin={isLogin} />}>
         <Route path="/mypage/*" element={<MypageContainer />} />
-        <Route path="/reservation" element={<ReservationContainer />} />
+        <Route path="/reservation/*" element={<ReservationContainer />} />
       </Route>
     </Routes>
   )
