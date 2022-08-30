@@ -31,6 +31,16 @@ const WaitingGreenbeeModal = () => {
     setSelectedRooftopId(-1)
   }
 
+  const removeGreeningRooftop = async rooftopId => {
+    try {
+      await ownerControl.deleteGreeningRooftop(rooftopId)
+      setWaitingGreenBees([...waitingGreenBees].filter(({ id }) => id !== rooftopId))
+      alert("성공적으로 녹화 공고를 내렸습니다.")
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
   return (
     <Wrapper>
       <ModalHeader>
@@ -47,7 +57,10 @@ const WaitingGreenbeeModal = () => {
                 {selectedRooftopId === id ? (
                   <WaitingGreenbeeList rooftopId={id} cancelSelectRooftop={cancelSelectRooftop} />
                 ) : (
-                  <button onClick={() => setSelectedRooftopId(id)}>공고 상세 보기</button>
+                  <div className="button-list">
+                    <button onClick={() => setSelectedRooftopId(id)}>공고 상세 보기</button>
+                    <button onClick={() => removeGreeningRooftop(id)}>공고 내리기</button>
+                  </div>
                 )}
               </RooftopStatus>
             ))
@@ -114,7 +127,7 @@ const ModalCloseBtn = styled(FontAwesomeIcon)`
 
 const ModalContent = styled.main`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { colors, paddings } = theme
     return css`
       display: flex;
       flex-direction: column;
@@ -149,8 +162,16 @@ const RooftopStatus = styled.div`
         margin-bottom: ${margins.sm};
       }
 
+      .button-list {
+        width: 40%;
+        margin: ${margins.base} auto 0vw auto;
+
+        display: flex;
+        justify-content: space-between;
+      }
+
       button {
-        width: 20%;
+        width: 40%;
         padding: ${paddings.sm};
         background-color: #000000;
         border-radius: 25px;

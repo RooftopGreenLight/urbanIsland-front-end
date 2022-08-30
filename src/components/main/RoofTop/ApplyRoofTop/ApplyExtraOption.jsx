@@ -21,7 +21,7 @@ const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
     name === "cost"
       ? setNewExtraOption({
           ...newExtraOption,
-          [name]: isNaN(value) || value.length === 0 ? 0 : parseInt(value),
+          [name]: isNaN(value) || value.length === 0 || value < 0 ? 0 : parseInt(value),
         })
       : setNewExtraOption({
           ...newExtraOption,
@@ -30,11 +30,6 @@ const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
   }
 
   const addNewOption = () => {
-    setNewExtraOption({
-      option: "",
-      cost: 0,
-    })
-
     if (option.length === 0 || cost <= 0) {
       return
     }
@@ -43,11 +38,16 @@ const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
       return
     }
 
+    setNewExtraOption({
+      option: "",
+      cost: 0,
+    })
+    setExtraOptions({ ...extraOptions, [option]: cost })
+
     const optionContent = Object.keys(extraOptions)
     const optionPrice = Object.values(extraOptions)
     const optionCount = optionContent.length
 
-    setExtraOptions({ ...extraOptions, [option]: cost })
     changeInfo({
       ...applyInfo,
       optionContent,
