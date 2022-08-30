@@ -9,8 +9,6 @@ import { greenbeeControl } from "api/controls/greenbeeControl"
 
 const GreenbeeInfo = () => {
   const [myGreenbeeInfo, setMyGreenbeeInfo] = useState({})
-  const { addressCity, addressDetail, addressDistrict, content, greenBeeImages, officeNumber } =
-    myGreenbeeInfo
   useEffect(() => {
     const loadGreenbeeInfo = async () => {
       const loadedGreenbeeInfo = await greenbeeControl.getGreenbeeInfo()
@@ -19,7 +17,12 @@ const GreenbeeInfo = () => {
     loadGreenbeeInfo()
   }, [])
 
-  const settings = {
+  const moveToEditPage = () => {}
+
+  const { addressCity, addressDetail, addressDistrict, content, greenBeeImages, officeNumber } =
+    myGreenbeeInfo
+
+  const sliderSettings = {
     arrow: false,
     dots: false,
     infinite: false,
@@ -34,7 +37,7 @@ const GreenbeeInfo = () => {
         <h5>사무소 대표 사진</h5>
         <p>해당 사무소의 소개 사진입니다.</p>
         {greenBeeImages && (
-          <Slider {...settings}>
+          <Slider {...sliderSettings}>
             {greenBeeImages.map((elm, idx) => (
               <div key={elm}>
                 <img src={elm.fileUrl} alt="Img" key={idx} />
@@ -58,6 +61,7 @@ const GreenbeeInfo = () => {
         <p>해당 사무소의 소개글입니다.</p>
         <span>{content}</span>
       </OptionBox>
+      <ModifyBtn onClick={moveToEditPage}>정보 수정하기</ModifyBtn>
     </Wrapper>
   )
 }
@@ -112,6 +116,32 @@ const OptionBox = styled.div`
 
         padding: ${paddings.sm};
         margin: ${margins.sm} 0vw;
+      }
+    `
+  }}
+`
+
+const ModifyBtn = styled.button`
+  ${({ theme }) => {
+    const { paddings } = theme
+    return css`
+      width: 30%;
+      padding: ${paddings.sm};
+      margin: 0.75vw auto 0.25vw auto;
+
+      border: 1px solid rgb(77, 77, 77);
+      border-radius: 2.5vw;
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-weight: 100;
+
+      &:hover {
+        background: rgb(77, 77, 77);
+        color: #fff;
       }
     `
   }}
