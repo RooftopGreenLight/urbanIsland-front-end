@@ -1,16 +1,20 @@
 import { useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { roofTopControl } from "api/controls/roofTopControl"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import Slider from "react-slick"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faStar, faUser, faArrowsLeftRight } from "@fortawesome/free-solid-svg-icons"
+import { faStar, faUser, faArrowsLeftRight, faMailBulk } from "@fortawesome/free-solid-svg-icons"
 import ReservationTime from "components/main/Reservation/Modals/ReservationTime"
 import { useContext } from "react"
 import { ModalContext } from "module/Modal"
+import { RoofTopFacilities } from "constants/RoofTopFacilities"
 import ReservationNumber from "components/main/Reservation/Modals/ReservationNumber"
+import ReservationDate from "components/main/Reservation/Modals/ReservationDate"
+import Tooltip from "components/common/Tooltip"
+import ImageManage from "components/main/Reservation/ImageManage"
 const ReservationDetail = () => {
   const { openModal } = useContext(ModalContext)
   const { id } = useParams()
@@ -35,62 +39,121 @@ const ReservationDetail = () => {
     getData()
   }, [])
 
+  const copyUrl = e => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href)
+      alert("URL 복사완료")
+    }
+  }
+
+  const [textValue, setTextValue] = useState("")
+  const handleSetValue = e => {
+    setTextValue(e.target.value)
+  }
   return (
     <Wrapper>
       {data && (
         <>
           <DetailTop>
-            {data.rooftopImages.map(d => (
-              <SliderWrapper {...settings}>
-                <Image src={d.fileUrl} />
-              </SliderWrapper>
-            ))}
+            {data.rooftopImages ? (
+              data.rooftopImages.map(d => (
+                <SliderWrapper {...settings}>
+                  <Image src={d.fileUrl} />
+                </SliderWrapper>
+              ))
+            ) : (
+              <DefaultSlider>사진없음</DefaultSlider>
+            )}
             <Location>
               <div>
+                <Share>
+                  <button onClick={copyUrl}>공유하기</button>
+                </Share>
                 {data.city} {data.district} {data.detail}
               </div>
-            </Location>{" "}
+              <LocationDetail>{data.explainContent}</LocationDetail>
+            </Location>
           </DetailTop>
           <InfoLine>
             <div>
-              <Icon icon={faArrowsLeftRight} />
-              <IconText>{data.width}m2</IconText>
+              <Tooltip message={(data.width * 0.3025).toFixed(0) + "평"}>
+                <Icon icon={faArrowsLeftRight} />
+                <IconText>{data.width}m2</IconText>
+              </Tooltip>
             </div>
             <div>
-              <Icon icon={faStar} />
-              <IconText>{data.grade}/5.0</IconText>
+              <Tooltip message="0건">
+                <Icon icon={faStar} />
+                <IconText>{data.grade}/5.0</IconText>
+              </Tooltip>
             </div>{" "}
             <div>
-              <Icon icon={faUser} />
-              <IconText>{data.totalCount}인 까지</IconText>
+              <Tooltip message={"유아 최대 " + data.kidCount + "명"}>
+                <Icon icon={faUser} />
+                <IconText>{data.totalCount}인 까지</IconText>
+              </Tooltip>
             </div>
           </InfoLine>
           <DetailBottom>
             <LeftBox>
-              <Review>
-                <ReviewHeader>
-                  <Icon icon={faStar} />
-                  <IconText>{data.rooftopReviews.length}개의 리뷰</IconText>
-                </ReviewHeader>
-                {data.rooftopReviews.map(d => (
-                  <ReviewBox>
-                    <div>
+              {data.rooftopReviews ? (
+                <Review>
+                  <ReviewHeader>
+                    <Icon icon={faStar} />
+                    <IconText>{data.rooftopReviews.length}개의 리뷰</IconText>
+                  </ReviewHeader>
+                  {data.rooftopReviews.map(d => (
+                    <ReviewBox>
                       <div>
-                        <Icon icon={faStar} />
-                        <IconText>{d.grade}</IconText>
-                      </div>
-                      <div>
-                        {d.createTime[0]}.{d.createTime[1]}.{d.createTime[2]}
-                      </div>
-                    </div>{" "}
-                    <div>{d.content}</div>
-                  </ReviewBox>
+                        <div>
+                          <Icon icon={faStar} />
+                          <IconText>{d.grade}</IconText>
+                        </div>
+                        <div>
+                          {d.createTime[0]}.{d.createTime[1]}.{d.createTime[2]}
+                        </div>
+                      </div>{" "}
+                      <div>{d.content}</div>
+                    </ReviewBox>
+                  ))}
+                </Review>
+              ) : (
+                <Review>
+                  <ReviewHeader>
+                    <IconText>아직 리뷰가 존재하지 않습니다</IconText>
+                  </ReviewHeader>
+                </Review>
+              )}
+              <BoxWrapper>
+                {data.detailNums.map((d, index) => (
+                  <Line>{RoofTopFacilities[d]}</Line>
                 ))}
-              </Review>
-              <StructureImage>
-                <p>배치도</p>
-                <img src={data.structureImage.fileUrl} />
-              </StructureImage>
+              </BoxWrapper>
+              <BoxWrapper>
+                <Title>추가 서비스 내용</Title>
+                <Line>
+                  <p>환불규정</p>
+                  {data.refundContent}
+                </Line>
+                <Line>
+                  <p>루프탑 이용규칙</p>
+                  {data.roleContent}
+                </Line>
+              </BoxWrapper>
+              <BoxWrapper>
+                <Title>건물주에게 문의하기</Title>
+                <TextArea
+                  placeholder="파티, 대여 등 목적에 따라 활용이 가능할지 또는 부족한 정보가 있다면 문의해보세요!"
+                  value={textValue}
+                  onChange={e => handleSetValue(e)}></TextArea>
+                <button>
+                  전송하기 <Icon icon={faMailBulk} />
+                </button>
+              </BoxWrapper>
+              <BoxWrapper>
+                <Title>배치도</Title>
+                <ImageManage width={"200px"} src={data.structureImage.fileUrl} />
+              </BoxWrapper>
             </LeftBox>
             <RightBox>
               <ButtonBox>
@@ -103,6 +166,7 @@ const ReservationDetail = () => {
                   이용 가능시간
                 </button>
                 <button onClick={() => openModal(<ReservationNumber />)}>인원수 설정</button>
+                <button onClick={() => openModal(<ReservationDate />)}>기간 설정</button>
                 <div>
                   <Fee>{data.totalPrice}W</Fee>
                 </div>
@@ -117,13 +181,36 @@ const ReservationDetail = () => {
 }
 
 export default ReservationDetail
+const TextArea = styled.textarea`
+  width: 100%;
+  height: 5rem;
+`
+const DefaultSlider = styled.div`
+  ${({ theme }) => {
+    const { margins } = theme
+    return css`
+      width: 50%;
+      display: flex;
+      background-color: gray;
+      height: 25vh;
+      justify-content: center;
+      align-items: center;
+      margin-right: ${margins.sm};
+    `
+  }}
+`
 const ButtonBox = styled.div`
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
-  padding: 2rem;
-  .pay {
-    background-color: black;
-    color: white;
-  }
+  ${({ theme }) => {
+    const { paddings } = theme
+    return css`
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+      padding: ${paddings.lg};
+      .pay {
+        background-color: black;
+        color: white;
+      }
+    `
+  }}
 `
 const LeftBox = styled.div`
   width: 50%;
@@ -133,54 +220,103 @@ const LeftBox = styled.div`
   align-items: center;
 `
 const Fee = styled.div`
-  font-weight: bold;
-  font-size: 1.2rem;
-  float: right;
+  ${({ theme }) => {
+    const { fonts } = theme
+    return css`
+      font-weight: bold;
+      font-size: ${fonts.size.sm};
+      float: right;
+    `
+  }}
 `
 const RightBox = styled.div`
-  width: 50%;
-  background: white;
-  display: flex;
-  flex-direction: column;
-  border-radius: 2rem;
-  button {
-    width: 100%;
-    height: 2rem;
-    margin: 0.3rem;
-    border-radius: 0.3rem;
-  }
-
-  padding-left: 1rem;
+  ${({ theme }) => {
+    const { paddings } = theme
+    return css`
+      width: 50%;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      border-radius: 2rem;
+      padding-left: ${paddings.base};
+      button {
+        width: 100%;
+        height: 2rem;
+        margin: 0.3rem;
+        border-radius: 0.3rem;
+      }
+    `
+  }}
 `
-const StructureImage = styled.div`
-  width: 100%;
-  background-color: gray;
-  padding: 1rem;
-  margin-top: 1rem;
-  border-radius: 1rem;
-  img {
-    width: 100%;
-  }
-  background-color: gray;
+const BoxWrapper = styled.div`
+  ${({ theme }) => {
+    const { paddings, margins } = theme
+    return css`
+      width: 100%;
+      background-color: gray;
+      padding: ${paddings.base};
+      margin-top: ${margins.base};
+      border-radius: 1rem;
+      img {
+        width: 100%;
+      }
+      background-color: gray;
+      button {
+        float: right;
+      }
+    `
+  }}
+`
+const Line = styled.div`
+  ${({ theme }) => {
+    const { fonts, margins } = theme
+    return css`
+      font-weight: ${fonts.weight.bold};
+      font-size: ${fonts.size.xsm};
+      margin-bottom: ${margins.sm};
+      display: inline-block;
+      width: 50%;
+    `
+  }}
 `
 const ReviewHeader = styled.div`
   text-align: center;
 `
 const ReviewBox = styled.div`
-  background-color: lightgray;
-  div {
-    display: flex;
-    justify-content: space-between;
-  }
-  margin: 1rem;
-  padding: 1rem;
-  border-radius: 1rem;
+  ${({ theme }) => {
+    const { paddings, margins } = theme
+    return css`
+      background-color: lightgray;
+      div {
+        display: flex;
+        justify-content: space-between;
+      }
+      margin: ${margins.base};
+      padding: ${paddings.base};
+      border-radius: 1rem;
+    `
+  }}
 `
 const Review = styled.div`
-  border-radius: 1rem;
-  width: 100%;
-  background-color: gray;
-  padding: 1rem;
+  ${({ theme }) => {
+    const { paddings } = theme
+    return css`
+      border-radius: 1rem;
+      width: 100%;
+      background-color: gray;
+      padding: ${paddings.base};
+    `
+  }}
+`
+const Title = styled.p`
+  ${({ theme }) => {
+    const { fonts, margins } = theme
+    return css`
+      font-weight: ${fonts.weight.bold};
+      font-size: ${fonts.size.sm};
+      margin-bottom: ${margins.sm};
+    `
+  }}
 `
 const Image = styled.img`
   width: 70%;
@@ -194,19 +330,32 @@ const DetailTop = styled.div`
 const Location = styled.div`
   width: 50%;
   display: flex;
+  flex-direction: column;
+`
+const LocationDetail = styled.div`
+  height: 100%;
+  display: flex;
   align-items: center;
   justify-content: center;
 `
 const InfoLine = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem;
-  font-size: 1.2rem;
-  border-radius: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+  ${({ theme }) => {
+    const { margins, paddings, fonts } = theme
+    return css`
+      display: flex;
+      justify-content: space-between;
+      padding: ${paddings.base};
+      font-size: ${fonts.size.sm}
+      border-radius: 1rem;
+      margin-bottom: ${margins.base};
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+    `
+  }}
 `
-const Share = styled.button``
+const Share = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`
 const Wrapper = styled.div`
   width: 100%;
   padding: 10vh 15vw;

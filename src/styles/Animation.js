@@ -1,5 +1,14 @@
 import { keyframes } from "styled-components"
 
+export const tooltip = keyframes`
+from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`
+
 export const modalShow = keyframes`
   from {
     opacity: 0;
