@@ -6,12 +6,13 @@ import Schedule from "components/main/Mypage/Schedule/Schedule"
 import Admin from "components/main/Mypage/Admin/Admin"
 import Greenbee from "components/main/Mypage/Greenbee/Greenbee"
 import GreenbeeInfo from "components/main/Mypage/Greenbee/GreenbeeInfo"
-import Rooftop from "components/main/Mypage/RooftopOwner/Rooftop"
+import GreenbeeInfoEdit from "components/main/Mypage/Greenbee/GreenbeeInfoEdit"
 import MakeGreenbeeAccount from "components/main/Mypage/Profile/MakeGreenbeeAccount"
 import RequiredGreeningList from "components/main/Mypage/Greenbee/RequiredGreeningList"
 import RequiredGreeningRooftop from "components/main/Mypage/Greenbee/RequiredGreeningRooftop"
-import ApplyRoofTop from "components/main/RoofTop/ApplyRoofTop"
 import RequestToGreenBee from "components/main/RoofTop/RequestToGreenBee"
+import Rooftop from "components/main/Mypage/RooftopOwner/Rooftop"
+import ApplyRoofTop from "components/main/RoofTop/ApplyRoofTop"
 
 export const MypageContainer = () => {
   return (
@@ -20,11 +21,9 @@ export const MypageContainer = () => {
         <Route path="profile" element={<Profile />} />
         <Route path="schedule" element={<Schedule />} />
         <Route path="greenbee/*" element={<GreenbeeContainer />} />
-        <Route path="rooftop" element={<Rooftop />} />
-        <Route path="rooftop/apply" element={<ApplyRoofTop />} />
-        <Route path="rooftop/request" element={<RequestToGreenBee />} />
-        <Route path="admin" element={<Admin />} />
+        <Route path="rooftop/*" element={<RooftopContainer />} />
         <Route path="greenbeeapply" element={<MakeGreenbeeAccount />} />
+        <Route path="admin" element={<Admin />} />
       </Routes>
     </MypageTemplate>
   )
@@ -35,8 +34,19 @@ const GreenbeeContainer = () => {
     <Routes>
       <Route path="" element={<Greenbee />} />
       <Route path="info" element={<GreenbeeInfo />} />
+      <Route path="info/edit" element={<GreenbeeInfoEdit />} />
       <Route path="required-greening" element={<RequiredGreeningList />} />
       <Route path="required-greening/:rooftopId" element={<RequiredGreeningRooftop />} />
+    </Routes>
+  )
+}
+
+const RooftopContainer = () => {
+  return (
+    <Routes>
+      <Route path="" element={<Rooftop />} />
+      <Route path="apply" element={<ApplyRoofTop />} />
+      <Route path="request" element={<RequestToGreenBee />} />
     </Routes>
   )
 }

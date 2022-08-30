@@ -46,4 +46,26 @@ export const ownerControl = {
       throw new Error(errorMessage)
     }
   },
+  getConfirmSelectedGreenbee: async (rooftopId, greenbeeId) => {
+    try {
+      await axiosInstance({
+        method: "GET",
+        url: `/owners/confirm-greenbee/${rooftopId}/${greenbeeId}`,
+      })
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
+  deleteGreeningRooftop: async rooftopId => {
+    try {
+      await axiosInstance({
+        method: "DELETE",
+        url: `/owners/delete-ngrooftop/${rooftopId}`,
+      })
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
 }
