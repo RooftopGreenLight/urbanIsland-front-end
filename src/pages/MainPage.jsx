@@ -51,8 +51,6 @@ const MainPage = () => {
         <Route path="/reservation/*" element={<ReservationContainer />} />
       </Route>
     </Routes>
-          <Route path="/reservation" element={<ReservationContainer />} />
-          <Route path="/reservation/:id" element={<ReservationDetail />} />
   )
 }
 
