@@ -206,7 +206,7 @@ const OpenModalBtn = styled.div`
 
 const ConfirmBtn = styled.button`
   ${({ theme }) => {
-    const { colors, margins, paddings } = theme
+    const { paddings } = theme
     return css`
       width: 30%;
       padding: ${paddings.sm};

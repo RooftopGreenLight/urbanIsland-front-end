@@ -14,7 +14,7 @@ import { ReservationContainer } from "./Container/ReservationContainer"
 
 // 오직 로그인이 되었을때만 접근이 가능하도록 하는 Route
 const PrivateRoute = ({ isLogin }) => {
-  return isLogin ? <Outlet /> : <Navigate to="/" replace />
+  return isLogin ? <Outlet /> : <Navigate to="/login" replace />
 }
 
 // 로그인이 되지 않았을 경우에만 접근이 가능하도록 하는 Route

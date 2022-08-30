@@ -8,12 +8,17 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { greenbeeControl } from "api/controls/greenbeeControl"
 import { ModalContext } from "module/Modal"
 import { AuthCheckMemberId } from "module/Auth"
+import { GreeningProgressStatus } from "constants/GreeningProgressStatus"
 
 const FindMyRooftopOwner = () => {
   const { closeModal } = useContext(ModalContext)
   const memberId = useRecoilValue(AuthCheckMemberId)
 
-  const [greeningRoofTops, setGreeningRoofTops] = useState(new Map())
+  const [greeningRoofTops, setGreeningRoofTops] = useState({
+    completed: [],
+    progressed: [],
+    selected: [],
+  })
   const { completed, progressed, selected } = greeningRoofTops
 
   useEffect(() => {
@@ -28,6 +33,16 @@ const FindMyRooftopOwner = () => {
     loadInformation()
   }, [])
 
+  const finishGreeningRooftop = async rooftopId => {
+    try {
+      await greenbeeControl.getCompletedGreeningRooftop(rooftopId)
+      alert("녹화 확정이 완료되었습니다.")
+      closeModal()
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
   return (
     <Wrapper>
       <ModalHeader>
@@ -37,36 +52,52 @@ const FindMyRooftopOwner = () => {
       <ModalContent>
         <GreeningSection>
           <h5>녹화를 완료한 옥상</h5>
-          {completed ? (
-            completed.map((elm, idx) => (
-              <div key={idx}>
-                <p>{elm}</p>
-              </div>
-            ))
+          {completed.length > 0 ? (
+            completed.map(
+              (
+                { rooftopId, rooftopCity, rooftopDistrict, rooftopDetail, ownerPhoneNumber },
+                idx,
+              ) => (
+                <RooftopInfo key={idx}>
+                  <h5>{`${rooftopCity} ${rooftopDistrict} ${rooftopDetail}`}</h5>
+                  <p>{`옥상지기 연락처 : ${ownerPhoneNumber ?? "번호 없음"}`}</p>
+                </RooftopInfo>
+              ),
+            )
           ) : (
             <p>완료한 옥상이 없습니다.</p>
           )}
         </GreeningSection>
         <GreeningSection>
           <h5>녹화를 진행 중인 옥상</h5>
-          {progressed ? (
-            progressed.map((elm, idx) => (
-              <div key={idx}>
-                <p>{elm}</p>
-              </div>
-            ))
+          {progressed.length > 0 ? (
+            progressed.map(
+              (
+                { rooftopId, rooftopCity, rooftopDistrict, rooftopDetail, ownerPhoneNumber },
+                idx,
+              ) => (
+                <RooftopInfo key={idx}>
+                  <h5>{`${rooftopCity} ${rooftopDistrict} ${rooftopDetail}`}</h5>
+                  <p>{`옥상지기 연락처 : ${ownerPhoneNumber ?? "번호 없음"}`}</p>
+                  <button onClick={() => finishGreeningRooftop(rooftopId)}>녹화 확정하기</button>
+                </RooftopInfo>
+              ),
+            )
           ) : (
             <p>완료한 옥상이 없습니다.</p>
           )}
         </GreeningSection>
         <GreeningSection>
           <h5>녹화를 신청한 옥상</h5>
-          {selected ? (
-            selected.map((elm, idx) => (
-              <div key={idx}>
-                <p>{elm}</p>
-              </div>
-            ))
+          {selected.length > 0 ? (
+            selected.map(
+              ({ rooftopId, rooftopCity, rooftopDistrict, rooftopDetail, progress }, idx) => (
+                <RooftopInfo key={idx}>
+                  <h5>{`${rooftopCity} ${rooftopDistrict} ${rooftopDetail}`}</h5>
+                  <p>{GreeningProgressStatus.get(progress)}</p>
+                </RooftopInfo>
+              ),
+            )
           ) : (
             <p>완료한 옥상이 없습니다.</p>
           )}
@@ -148,6 +179,41 @@ const GreeningSection = styled.div`
 
       p {
         font-weight: 100;
+      }
+    `
+  }}
+`
+
+const RooftopInfo = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, margins, paddings } = theme
+    return css`
+      background-color: #cacaca;
+      padding: ${paddings.sm};
+
+      h5 {
+        margin-bottom: 0;
+        border: 0px;
+
+        font-size: ${fonts.size.sm};
+        line-height: 150%;
+        text-align: left;
+      }
+
+      p {
+        margin-bottom: ${margins.sm};
+        font-weight: 100;
+      }
+
+      button {
+        width: 50%;
+        margin: 0vw auto;
+        padding: ${paddings.sm};
+        background-color: #000000;
+        border-radius: 25px;
+
+        color: ${colors.white};
+        font-size: ${fonts.size.xsm};
       }
     `
   }}

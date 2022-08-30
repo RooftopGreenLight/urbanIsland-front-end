@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { ModalContext } from "module/Modal"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFilter } from "@fortawesome/free-solid-svg-icons"
@@ -89,7 +89,7 @@ const Reservation = () => {
         </InnerDiv>
 
         <InnerDiv>
-          <select onChange={handleChange}>
+          <Select onChange={handleChange}>
             {OPTIONS.map(option => (
               <option
                 key={option.value}
@@ -98,7 +98,7 @@ const Reservation = () => {
                 {option.name}
               </option>
             ))}
-          </select>
+          </Select>
           <Button
             onClick={() => openModal(<DetailFilterModal filter={filter} setFilter={setFilter} />)}>
             <span>세부필터</span>
@@ -119,27 +119,59 @@ const Reservation = () => {
 export default Reservation
 
 const Button = styled.button`
-  background-color: white;
-  border: 1px solid black;
-  padding: 0.3rem;
-  border-radius: 0.5rem;
-  width: 9vw;
-  display: flex;
-  justify-content: space-between;
-  margin: 0 1rem;
+  ${({ theme }) => {
+    const { margins, paddings } = theme
+    return css`
+      background-color: white;
+      border: 1px solid black;
+      padding: ${paddings.sm};
+      border-radius: 0.5rem;
+      width: 9vw;
+      display: flex;
+      justify-content: space-between;
+      margin: ${margins.sm};
+      height: 2.2rem;
+    `
+  }}
+`
+
+const Select = styled.select`
+  ${({ theme }) => {
+    const { margins, paddings } = theme
+    return css`
+      background-color: white;
+      border: 1px solid black;
+      padding: ${paddings.sm};
+      border-radius: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      margin: ${margins.sm};
+      height: 2.2rem;
+    `
+  }}
 `
 const InnerDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin: 0 3rem;
+  ${({ theme }) => {
+    const { margins } = theme
+    return css`
+      display: flex;
+      flex-direction: row;
+      margin: ${margins.sm};
+    `
+  }}
 `
 const SearchBar = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  height: 3.4rem;
-  padding: 0.8rem 0;
-  border-bottom: 1px solid black;
+  ${({ theme }) => {
+    const { paddings } = theme
+    return css`
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      height: 3.4rem;
+      padding-bottom: ${paddings.sm};
+      border-bottom: 1px solid black;
+    `
+  }}
 `
 const SearchResult = styled.div`
   margin: 10vh 15vw;
