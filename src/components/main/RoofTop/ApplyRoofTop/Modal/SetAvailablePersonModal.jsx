@@ -87,6 +87,7 @@ const SetAvailablePersonModal = ({ applyInfo, changeInfo }) => {
             <input
               type="checkbox"
               name="noKidZone"
+              key={`noKidZone-${noKidZone}`}
               checked={noKidZone}
               onChange={changeCheck}></input>
           </div>
@@ -97,6 +98,7 @@ const SetAvailablePersonModal = ({ applyInfo, changeInfo }) => {
             <input
               type="checkbox"
               name="preventPet"
+              key={`preventPet-${preventPet}`}
               checked={preventPet}
               onChange={changeCheck}></input>
           </div>
