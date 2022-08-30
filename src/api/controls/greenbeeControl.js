@@ -72,6 +72,20 @@ export const greenbeeControl = {
       throw new Error(err)
     }
   },
+  postGreenbeeModifiedInfo: async modifiedData => {
+    try {
+      await axiosInstance({
+        method: "POST",
+        url: "/green-bees/edit",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        data: modifiedData,
+      })
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
   getOtherGreenbeeInfo: async memberId => {
     try {
       const greenbeeInfo = await axiosInstance({
@@ -85,7 +99,7 @@ export const greenbeeControl = {
   },
   getSelectGreeningRooftop: async rooftopId => {
     try {
-      const res = await axiosInstance({
+      await axiosInstance({
         method: "GET",
         url: `/green-bees/required-green/select/${rooftopId}`,
       })
