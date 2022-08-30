@@ -54,10 +54,13 @@ const FindMyRooftopOwner = () => {
           <h5>녹화를 완료한 옥상</h5>
           {completed.length > 0 ? (
             completed.map(
-              ({ rooftopId, rooftopCity, rooftopDistrict, rooftopDetail, phoneNumber }, idx) => (
+              (
+                { rooftopId, rooftopCity, rooftopDistrict, rooftopDetail, ownerPhoneNumber },
+                idx,
+              ) => (
                 <RooftopInfo key={idx}>
                   <h5>{`${rooftopCity} ${rooftopDistrict} ${rooftopDetail}`}</h5>
-                  <p>{`옥상지기 연락처 : ${phoneNumber}`}</p>
+                  <p>{`옥상지기 연락처 : ${ownerPhoneNumber ?? "번호 없음"}`}</p>
                 </RooftopInfo>
               ),
             )
@@ -69,10 +72,13 @@ const FindMyRooftopOwner = () => {
           <h5>녹화를 진행 중인 옥상</h5>
           {progressed.length > 0 ? (
             progressed.map(
-              ({ rooftopId, rooftopCity, rooftopDistrict, rooftopDetail, phoneNumber }, idx) => (
+              (
+                { rooftopId, rooftopCity, rooftopDistrict, rooftopDetail, ownerPhoneNumber },
+                idx,
+              ) => (
                 <RooftopInfo key={idx}>
                   <h5>{`${rooftopCity} ${rooftopDistrict} ${rooftopDetail}`}</h5>
-                  <p>{`옥상지기 연락처 : ${phoneNumber}`}</p>
+                  <p>{`옥상지기 연락처 : ${ownerPhoneNumber ?? "번호 없음"}`}</p>
                   <button onClick={() => finishGreeningRooftop(rooftopId)}>녹화 확정하기</button>
                 </RooftopInfo>
               ),
