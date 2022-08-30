@@ -22,7 +22,6 @@ const DetailFilterModal = ({ filter, setFilter }) => {
       maxWidth: width[1],
       contentNum: Array.from(set),
     })
-
     closeModal()
   }
   const [flag, setFlag] = useState(false)
@@ -36,6 +35,12 @@ const DetailFilterModal = ({ filter, setFilter }) => {
       maxWidth: 0,
       contentNum: [],
     })
+  }
+
+  const [checked, updateChecked] = useState(false)
+
+  const handleChange = () => {
+    updateChecked(prev => !prev)
   }
   return (
     <Wrapper>

@@ -1,44 +1,19 @@
 import { useState, useEffect } from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { RoofTopFacilities } from "constants/RoofTopFacilities"
 
-const Line = styled.div`
-  display: flex;
-  justify-content: space-between;
-  .box {
-    width: 1rem;
-    margin: 1rem;
-  }
-  p {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 1rem;
-  }
-`
-const RDisplay = styled.div`
-  height: ${({ isShowMore }) => (isShowMore ? "100%" : "200px")};
-  overflow: ${({ isShowMore }) => (isShowMore ? "auto" : "hidden")};
-  width: 50%;
-  display: inline-block;
-`
-const LDisplay = styled.div`
-  display: inline-block;
-  width: 50%;
-  border-right: 1px solid black;
-  height: ${({ isShowMore }) => (isShowMore ? "100%" : "200px")};
-  overflow: ${({ isShowMore }) => (isShowMore ? "auto" : "hidden")};
-`
-const Wrapper = styled.div``
 const FilterCheckbox = ({ setSet, flag }) => {
   const [isShowMore, setIsShowMore] = useState(false)
-  var initial = []
-  for (let i = 0; i < Object.keys(RoofTopFacilities).length; i++) {
-    initial.push(false)
-  }
-  const [checkList, setCheckList] = useState(initial)
   const [checkedItems, setCheckedItems] = useState(new Set())
+  const [checkedState, setCheckedState] = useState(new Array(RoofTopFacilities.length).fill(false))
+  const isAllChecked = e => {
+    setCheckedState(new Array(RoofTopFacilities.length).fill(false))
+  }
+  useEffect(() => {
+    isAllChecked()
+  }, [flag])
   const checkedItemHandler = (id, isChecked) => {
+    console.log(id, isChecked)
     if (isChecked) {
       checkedItems.add(id)
       setCheckedItems(checkedItems)
@@ -49,59 +24,33 @@ const FilterCheckbox = ({ setSet, flag }) => {
       setSet(checkedItems)
     }
   }
-  // index 번째 체크 상태를 반전시킨다
-  const handleCheckClick = index => {
-    setCheckList(checks => checks.map((c, i) => (i === index ? !c : c)))
+  const handleCheck = event => {
+    const updatedCheckedState = checkedState.map((item, index) =>
+      index === Number(event.target.id) ? !item : item,
+    )
+    setCheckedState(updatedCheckedState)
+    console.log(checkedState)
+    checkedItemHandler(event.target.id, event.target.checked)
   }
-
-  const isAllChecked = e => {
-    setCheckList(checks => checks.map((c, i) => (c === true ? !c : c)))
-  }
-  const checkHandler = ({ target }) => {
-    checkedItemHandler(target.id, target.checked)
-  }
-  useEffect(() => {
-    isAllChecked()
-  }, [flag])
 
   return (
     <Wrapper>
-      <LDisplay isShowMore={isShowMore}>
-        {Object.keys(RoofTopFacilities).map((d, idx) =>
-          idx % 2 === 0 ? (
-            <Line key={d}>
-              <p>{d}</p>{" "}
+      <Display isShowMore={isShowMore}>
+        {RoofTopFacilities.map((d, idx) => (
+          <Line key={d}>
+            <CheckBox htmlFor={idx}>
+              <p> {d}</p>
               <input
                 className="box"
-                //checked={bChecked[index]}
                 type="checkbox"
+                checked={checkedState[idx]}
                 id={idx}
-                checked={checkList[idx]}
-                onChange={checkHandler}
-                onClick={() => handleCheckClick(idx)}
+                onChange={handleCheck}
               />
-            </Line>
-          ) : null,
-        )}
-      </LDisplay>
-      <RDisplay isShowMore={isShowMore}>
-        {Object.keys(RoofTopFacilities).map((d, index) =>
-          index % 2 !== 0 ? (
-            <Line key={d}>
-              <p>{d}</p>{" "}
-              <input
-                className="box"
-                //checked={bChecked[index]}
-                type="checkbox"
-                id={index}
-                checked={checkList[index]}
-                onChange={checkHandler}
-                onClick={() => handleCheckClick(index)}
-              />
-            </Line>
-          ) : null,
-        )}
-      </RDisplay>
+            </CheckBox>
+          </Line>
+        ))}
+      </Display>
       <span
         onClick={() => {
           setIsShowMore(!isShowMore)
@@ -112,3 +61,31 @@ const FilterCheckbox = ({ setSet, flag }) => {
   )
 }
 export default FilterCheckbox
+const Line = styled.div`
+  display: inline-block;
+  width: 50%;
+`
+const CheckBox = styled.label`
+  ${({ theme }) => {
+    const { margins } = theme
+    return css`
+      display: flex;
+      justify-content: space-between;
+      .box {
+        width: 1rem;
+        margin: ${margins.base};
+      }
+      p {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: ${margins.base} 0;
+      }
+    `
+  }}
+`
+const Wrapper = styled.div``
+const Display = styled.div`
+  height: ${({ isShowMore }) => (isShowMore ? "100%" : "200px")};
+  overflow: ${({ isShowMore }) => (isShowMore ? "auto" : "hidden")};
+`
