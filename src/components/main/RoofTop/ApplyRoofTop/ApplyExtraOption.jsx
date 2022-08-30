@@ -1,18 +1,25 @@
 import styled, { css } from "styled-components"
 import { useState } from "react"
+import { useEffect } from "react"
 
 const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
-  const { optionContent, optionPrice } = applyInfo
-  const defaultExtraOptions =
-    optionContent.length > 0
-      ? Object.assign(...optionContent.map((option, idx) => ({ [option]: optionPrice[idx] })))
-      : {}
-
-  const [extraOptions, setExtraOptions] = useState(defaultExtraOptions)
+  const [extraOptions, setExtraOptions] = useState([])
   const [newExtraOption, setNewExtraOption] = useState({
     option: "",
     cost: 0,
   })
+
+  useEffect(() => {
+    const confirmExtraOption = () => {
+      changeInfo(prevInfo => ({
+        ...prevInfo,
+        optionContent: extraOptions.map(({ option }) => option),
+        optionPrice: extraOptions.map(({ cost }) => cost),
+        optionCount: extraOptions.length,
+      }))
+    }
+    confirmExtraOption()
+  }, [extraOptions])
 
   const { option, cost } = newExtraOption
 
@@ -30,30 +37,19 @@ const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
   }
 
   const addNewOption = () => {
-    if (option.length === 0 || cost <= 0) {
+    if (cost === 0 || extraOptions.includes(newExtraOption)) {
       return
     }
 
-    if (Object.keys(extraOptions).includes(option)) {
-      return
-    }
-
+    setExtraOptions(prevOptions => [...prevOptions, newExtraOption])
     setNewExtraOption({
       option: "",
       cost: 0,
     })
-    setExtraOptions({ ...extraOptions, [option]: cost })
+  }
 
-    const optionContent = Object.keys(extraOptions)
-    const optionPrice = Object.values(extraOptions)
-    const optionCount = optionContent.length
-
-    changeInfo({
-      ...applyInfo,
-      optionContent,
-      optionPrice,
-      optionCount,
-    })
+  const deleteExtraOption = e => {
+    setExtraOptions(extraOptions.filter(({ option }) => option !== e.target.dataset.option))
   }
 
   return (
@@ -65,8 +61,12 @@ const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
       <OptionList>
         {extraOptions && (
           <ExtraOptionList>
-            {Object.entries(extraOptions).map(([option, cost]) => (
-              <span key={option}>{`${option} ${cost}원`}</span>
+            {extraOptions.map(({ option, cost }) => (
+              <span
+                key={option}
+                data-option={option}
+                data-cost={cost}
+                onClick={deleteExtraOption}>{`${option} ${cost}원`}</span>
             ))}
           </ExtraOptionList>
         )}

@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const ApplyImgList = ({ applyInfo, changeInfo }) => {
   const [imgBase64, setImgBase64] = useState([])
@@ -9,7 +9,11 @@ const ApplyImgList = ({ applyInfo, changeInfo }) => {
     const fileList = e.target.files
     if (fileList.length > 0 && fileList.length < 6) {
       setImgBase64([])
-      changeInfo({ ...applyInfo, normalFile: fileList, mainFile: fileList[0] })
+      changeInfo(prevInfo => ({
+        ...prevInfo,
+        normalFile: Array.from(fileList),
+        mainFile: fileList[0],
+      }))
       Object.values(fileList).forEach(file => {
         const reader = new FileReader()
         reader.readAsDataURL(file)
