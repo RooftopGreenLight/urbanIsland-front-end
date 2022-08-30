@@ -26,28 +26,17 @@ const GreenbeeInfo = () => {
   const { addressCity, addressDetail, addressDistrict, content, greenBeeImages, officeNumber } =
     myGreenbeeInfo
 
-  const sliderSettings = {
-    arrow: false,
-    dots: false,
-    infinite: false,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    swipeToSlide: true,
-  }
-
   return (
     <Wrapper>
       <OptionBox boxSize="lg">
         <h5>사무소 대표 사진</h5>
         <p>해당 사무소의 소개 사진입니다.</p>
         {greenBeeImages && (
-          <Slider {...sliderSettings}>
+          <div className="img-list">
             {greenBeeImages.map((elm, idx) => (
-              <div key={elm}>
-                <img src={elm.fileUrl} alt="Img" key={idx} />
-              </div>
+              <img src={elm.fileUrl} alt="Img" key={idx} />
             ))}
-          </Slider>
+          </div>
         )}
       </OptionBox>
       <OptionBox boxSize="base">
@@ -112,8 +101,14 @@ const OptionBox = styled.div`
         font-weight: 100;
       }
 
+      .img-list {
+        width: 90%;
+        display: flex;
+        justify-content: space-around;
+      }
+
       img {
-        width: 50%;
+        width: 20%;
 
         background-size: cover;
         object-fit: cover;
