@@ -5,28 +5,15 @@ import { faPlus, faMinus, faXmark } from "@fortawesome/free-solid-svg-icons"
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 
-const ReservationNumber = () => {
-  const [kid, setKid] = useState(0)
-  const [adult, setAdult] = useState(0)
-  const [pet, setPet] = useState(0)
-
+const ReservationNumber = ({ data, setData, adultCount, kidCount }) => {
+  const { adult, kid, pet } = data
   const { closeModal } = useContext(ModalContext)
-
-  const onChangePlus = (x, setX) => {
-    if (x >= 99) {
-      console.log("최대 99")
-    } else setX(x + 1)
-  }
-  const onChangeMinus = (x, setX) => {
-    setX(x - 1)
-  }
-
-  const onReset = () => {
-    setAdult(0)
-    setPet(0)
-    setKid(0)
-  }
-
+  const [num, setNum] = useState({
+    a: adult,
+    b: kid,
+    c: pet,
+  })
+  const { a, b, c } = num
   return (
     <Wrapper>
       <header>
@@ -39,42 +26,88 @@ const ReservationNumber = () => {
           <Line>
             <div>성인</div>
             <div>
-              {adult === 0 ? (
+              {a === 0 ? (
                 <Icons icon={faMinus} style={{ color: "gray" }} />
               ) : (
                 <Icons
                   icon={faMinus}
-                  value={adult}
-                  onClick={() => onChangeMinus(adult, setAdult)}
+                  onClick={() => {
+                    const newValue = num.a - 1
+                    setNum({ ...num, a: newValue })
+                    setData({ ...data, adult: newValue })
+                  }}
                 />
               )}
-              {adult}
-              <Icons icon={faPlus} value={adult} onClick={() => onChangePlus(adult, setAdult)} />
+              {a}
+              {a === adultCount ? (
+                <Icons icon={faPlus} style={{ color: "gray" }} />
+              ) : (
+                <Icons
+                  icon={faPlus}
+                  onClick={() => {
+                    const newValue = num.a + 1
+                    setNum({ ...num, a: newValue })
+                    setData({ ...data, adult: newValue })
+                  }}
+                />
+              )}
             </div>
           </Line>
           <Line>
             <div>유아</div>
             <div>
-              {kid === 0 ? (
+              {b === 0 ? (
                 <Icons icon={faMinus} style={{ color: "gray" }} />
               ) : (
-                <Icons icon={faMinus} value={kid} onClick={() => onChangePlus(kid, setKid)} />
+                <Icons
+                  icon={faMinus}
+                  onClick={() => {
+                    const newValue = num.b - 1
+                    setNum({ ...num, b: newValue })
+                    setData({ ...data, kid: newValue })
+                  }}
+                />
               )}
-              {kid}
-              <Icons icon={faPlus} value={kid} onClick={() => onChangePlus(kid, setKid)} />
-            </div>{" "}
+              {b}
+              {b === kidCount ? (
+                <Icons icon={faPlus} style={{ color: "gray" }} />
+              ) : (
+                <Icons
+                  icon={faPlus}
+                  onClick={() => {
+                    const newValue = num.b + 1
+                    setNum({ ...num, b: newValue })
+                    setData({ ...data, kid: newValue })
+                  }}
+                />
+              )}
+            </div>
           </Line>
           <Line>
             <div>반려동물</div>
             <div>
-              {pet === 0 ? (
+              {c === 0 ? (
                 <Icons icon={faMinus} style={{ color: "gray" }} />
               ) : (
-                <Icons icon={faMinus} value={pet} onClick={() => onChangeMinus(pet, setPet)} />
+                <Icons
+                  icon={faMinus}
+                  onClick={() => {
+                    const newValue = num.c - 1
+                    setNum({ ...num, c: newValue })
+                    setData({ ...data, pet: newValue })
+                  }}
+                />
               )}
-              {pet}
-              <Icons icon={faPlus} value={pet} onClick={() => onChangePlus(pet, setPet)} />
-            </div>{" "}
+              {c}
+              <Icons
+                icon={faPlus}
+                onClick={() => {
+                  const newValue = num.c + 1
+                  setNum({ ...num, c: newValue })
+                  setData({ ...data, pet: newValue })
+                }}
+              />
+            </div>
           </Line>
         </Box>
       </ModalContent>

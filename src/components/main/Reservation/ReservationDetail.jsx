@@ -15,6 +15,7 @@ import ReservationNumber from "components/main/Reservation/Modals/ReservationNum
 import ReservationDate from "components/main/Reservation/Modals/ReservationDate"
 import Tooltip from "components/common/Tooltip"
 import ImageManage from "components/main/Reservation/ImageManage"
+
 const ReservationDetail = () => {
   const { openModal } = useContext(ModalContext)
   const { id } = useParams()
@@ -26,12 +27,22 @@ const ReservationDetail = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
   }
+  const [reservation, setReservation] = useState({
+    reservationDate: [0, 0],
+    reservationTime: [],
+    adult: 0,
+    kid: 0,
+    pet: 0,
+    totalPrice: 0,
+  })
+  useEffect(() => {
+    console.log(reservation)
+  }, [reservation])
   useEffect(() => {
     const getData = async event => {
       try {
         const result = await roofTopControl.getRooftopDetail(id)
         setData(result)
-        console.log(result)
       } catch (err) {
         console.log(err.message)
       }
@@ -58,7 +69,7 @@ const ReservationDetail = () => {
             {data.rooftopImages ? (
               data.rooftopImages.map(d => (
                 <SliderWrapper {...settings}>
-                  <Image src={d.fileUrl} />
+                  <Image key={d} src={d.fileUrl} />
                 </SliderWrapper>
               ))
             ) : (
@@ -103,7 +114,7 @@ const ReservationDetail = () => {
                     <IconText>{data.rooftopReviews.length}개의 리뷰</IconText>
                   </ReviewHeader>
                   {data.rooftopReviews.map(d => (
-                    <ReviewBox>
+                    <ReviewBox key={d}>
                       <div>
                         <div>
                           <Icon icon={faStar} />
@@ -126,7 +137,7 @@ const ReservationDetail = () => {
               )}
               <BoxWrapper>
                 {data.detailNums.map((d, index) => (
-                  <Line>{RoofTopFacilities[d]}</Line>
+                  <Line key={index}>{RoofTopFacilities[d]}</Line>
                 ))}
               </BoxWrapper>
               <BoxWrapper>
@@ -150,23 +161,47 @@ const ReservationDetail = () => {
                   전송하기 <Icon icon={faMailBulk} />
                 </button>
               </BoxWrapper>
-              <BoxWrapper>
-                <Title>배치도</Title>
-                <ImageManage width={"200px"} src={data.structureImage.fileUrl} />
-              </BoxWrapper>
+              {data.structureImage ? (
+                <BoxWrapper>
+                  <Title>배치도</Title>
+                  <ImageManage width={"200px"} src={data.structureImage.fileUrl} />
+                </BoxWrapper>
+              ) : null}
             </LeftBox>
             <RightBox>
               <ButtonBox>
                 <button
                   onClick={() =>
                     openModal(
-                      <ReservationTime startTime={data.startTime[0]} endTime={data.endTime[0]} />,
+                      <ReservationTime
+                        startTime={data.startTime[0]}
+                        endTime={data.endTime[0]}
+                        data={reservation}
+                        setData={setReservation}
+                      />,
                     )
                   }>
                   이용 가능시간
                 </button>
-                <button onClick={() => openModal(<ReservationNumber />)}>인원수 설정</button>
-                <button onClick={() => openModal(<ReservationDate />)}>기간 설정</button>
+                <button
+                  onClick={() =>
+                    openModal(
+                      <ReservationNumber
+                        data={reservation}
+                        setData={setReservation}
+                        adultCount={data.adultCount}
+                        kidCount={data.kidCount}
+                      />,
+                    )
+                  }>
+                  인원수 설정
+                </button>
+                <button
+                  onClick={() =>
+                    openModal(<ReservationDate data={reservation} setData={setReservation} />)
+                  }>
+                  기간 설정
+                </button>
                 <div>
                   <Fee>{data.totalPrice}W</Fee>
                 </div>
