@@ -7,7 +7,10 @@ const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
   const [newExtraOption, setNewExtraOption] = useState({
     option: "",
     cost: 0,
+    count: 0,
   })
+
+  const { option, cost, count } = newExtraOption
 
   useEffect(() => {
     const confirmExtraOption = () => {
@@ -15,29 +18,27 @@ const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
         ...prevInfo,
         optionContent: extraOptions.map(({ option }) => option),
         optionPrice: extraOptions.map(({ cost }) => cost),
-        optionCount: extraOptions.length,
+        optionCount: extraOptions.map(({ count }) => count),
       }))
     }
     confirmExtraOption()
   }, [extraOptions])
 
-  const { option, cost } = newExtraOption
-
   const changeInput = e => {
     const { name, value } = e.target
-    name === "cost"
+    name === "option"
       ? setNewExtraOption({
           ...newExtraOption,
-          [name]: isNaN(value) || value.length === 0 || value < 0 ? 0 : parseInt(value),
+          [name]: value,
         })
       : setNewExtraOption({
           ...newExtraOption,
-          [name]: value,
+          [name]: isNaN(value) || value.length === 0 || value < 0 ? 0 : parseInt(value),
         })
   }
 
   const addNewOption = () => {
-    if (cost === 0 || extraOptions.includes(newExtraOption)) {
+    if (count * cost === 0 || extraOptions.includes(newExtraOption)) {
       return
     }
 
@@ -45,6 +46,7 @@ const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
     setNewExtraOption({
       option: "",
       cost: 0,
+      count: 0,
     })
   }
 
@@ -61,18 +63,18 @@ const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
       <OptionList>
         {extraOptions && (
           <ExtraOptionList>
-            {extraOptions.map(({ option, cost }) => (
+            {extraOptions.map(({ option, cost, count }) => (
               <span
                 key={option}
                 data-option={option}
-                data-cost={cost}
-                onClick={deleteExtraOption}>{`${option} ${cost}원`}</span>
+                onClick={deleteExtraOption}>{`${option} ${cost}원 (최대 ${count} 개)`}</span>
             ))}
           </ExtraOptionList>
         )}
         <InsertNewOption>
-          <input name="option" value={option} placeholder="새로운 옵션" onChange={changeInput} />
-          <input name="cost" value={cost} placeholder="새로운 옵션 가격" onChange={changeInput} />
+          <input name="option" value={option} placeholder="옵션 이름" onChange={changeInput} />
+          <input name="cost" value={cost} placeholder="옵션 가격" onChange={changeInput} />
+          <input name="count" value={count} placeholder="옵션 최대 수량" onChange={changeInput} />
           <button onClick={addNewOption}>옵션 추가</button>
         </InsertNewOption>
       </OptionList>
@@ -109,7 +111,7 @@ const Title = styled.div`
 
 const OptionList = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
+    const { colors } = theme
     return css`
       width: 70%;
       margin: auto;
@@ -142,7 +144,11 @@ const InsertNewOption = styled.div`
         }
 
         &[name="cost"] {
-          width: 20%;
+          width: 10%;
+        }
+
+        &[name="count"] {
+          width: 10%;
         }
       }
 
