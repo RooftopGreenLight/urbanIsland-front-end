@@ -43,6 +43,10 @@ const ReservationDetail = () => {
       try {
         const result = await roofTopControl.getRooftopDetail(id)
         setData(result)
+        setReservation({
+          ...reservation,
+          reservationTime: [result.startTime[0], result.endTime[0]],
+        })
       } catch (err) {
         console.log(err.message)
       }

@@ -32,8 +32,8 @@ const ReservationTime = ({ startTime, endTime, data, setData }) => {
             STEP={1}
             unit={":00"}
             setValue={setValue}
-            imin={startTime}
-            imax={endTime}
+            imin={data.reservationTime[0]}
+            imax={data.reservationTime[1]}
           />
         </Box>
       </ModalContent>
