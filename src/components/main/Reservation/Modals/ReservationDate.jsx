@@ -8,9 +8,8 @@ import Calendar from "react-calendar"
 import "react-calendar/dist/Calendar.css"
 import { useEffect } from "react"
 import moment from "moment"
-const ReservationDate = () => {
+const ReservationDate = ({ data, setData }) => {
   const [value, onChange] = useState(new Date())
-
   const { closeModal } = useContext(ModalContext)
   const startDate = new Date()
   useEffect(() => {}, [value])
@@ -20,6 +19,9 @@ const ReservationDate = () => {
   const confirm = e => {
     closeModal()
   }
+  useEffect(() => {
+    setData({ ...data, reservationDate: value })
+  }, [value])
   return (
     <Wrapper>
       <header>

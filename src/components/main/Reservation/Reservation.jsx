@@ -174,9 +174,15 @@ const SearchBar = styled.div`
   }}
 `
 const SearchResult = styled.div`
-  margin: 10vh 15vw;
-  display: flex;
-  justify-content: center;
+  ${({ theme }) => {
+    const { margins } = theme
+    return css`
+      width: 100%;
+      margin: ${margins.sm};
+      display: flex;
+      justify-content: center;
+    `
+  }}
 `
 const Wrapper = styled.div`
   width: 100%;

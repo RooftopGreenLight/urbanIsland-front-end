@@ -5,9 +5,13 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import CustomSlider from "components/main/Reservation/CustomSlider"
-const ReservationTime = ({ startTime, endTime }) => {
+import { useEffect } from "react"
+const ReservationTime = ({ startTime, endTime, data, setData }) => {
   const { closeModal } = useContext(ModalContext)
   const [value, setValue] = useState([])
+  useEffect(() => {
+    setData({ ...data, reservationTime: value })
+  }, [value])
   return (
     <Wrapper>
       <header>
@@ -28,8 +32,8 @@ const ReservationTime = ({ startTime, endTime }) => {
             STEP={1}
             unit={":00"}
             setValue={setValue}
-            imin={startTime}
-            imax={endTime}
+            imin={data.reservationTime[0]}
+            imax={data.reservationTime[1]}
           />
         </Box>
       </ModalContent>

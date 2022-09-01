@@ -14,6 +14,7 @@ import WaitingRooftopModal from "./Modal/WaitingRooftopModal"
 import WaitingGreenbeeModal from "./Modal/WaitingGreenbeeModal"
 import OwnRooftop from "./OwnRooftop"
 import { roofTopControl } from "api/controls/roofTopControl"
+import { Link } from "react-router-dom"
 
 const Rooftop = () => {
   const { openModal } = useContext(ModalContext)
@@ -61,7 +62,9 @@ const Rooftop = () => {
           {[...Array(5).keys()].map(elm => (
             <div key={elm}>
               {ownRooftopList[elm] ? (
-                <OwnRooftop rooftopInfo={ownRooftopList[elm]} />
+                <Link to={`/mypage/rooftop/supervise/${elm}`}>
+                  <OwnRooftop rooftopInfo={ownRooftopList[elm]} />
+                </Link>
               ) : (
                 <Rectangle />
               )}

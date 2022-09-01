@@ -15,6 +15,7 @@ import ReservationNumber from "components/main/Reservation/Modals/ReservationNum
 import ReservationDate from "components/main/Reservation/Modals/ReservationDate"
 import Tooltip from "components/common/Tooltip"
 import ImageManage from "components/main/Reservation/ImageManage"
+
 const ReservationDetail = () => {
   const { openModal } = useContext(ModalContext)
   const { id } = useParams()
@@ -26,12 +27,24 @@ const ReservationDetail = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
   }
+  const [reservation, setReservation] = useState({
+    reservationDate: [0, 0],
+    reservationTime: [],
+    adult: 0,
+    kid: 0,
+    pet: 0,
+    totalPrice: 0,
+  })
+
   useEffect(() => {
     const getData = async event => {
       try {
         const result = await roofTopControl.getRooftopDetail(id)
         setData(result)
-        console.log(result)
+        setReservation({
+          ...reservation,
+          reservationTime: [result.startTime[0], result.endTime[0]],
+        })
       } catch (err) {
         console.log(err.message)
       }
@@ -45,11 +58,6 @@ const ReservationDetail = () => {
       alert("URL 복사완료")
     }
   }
-
-  const [textValue, setTextValue] = useState("")
-  const handleSetValue = e => {
-    setTextValue(e.target.value)
-  }
   return (
     <Wrapper>
       {data && (
@@ -58,11 +66,13 @@ const ReservationDetail = () => {
             {data.rooftopImages ? (
               data.rooftopImages.map(d => (
                 <SliderWrapper {...settings}>
-                  <Image src={d.fileUrl} />
+                  <Image key={d} src={d.fileUrl} />
                 </SliderWrapper>
               ))
             ) : (
-              <DefaultSlider>사진없음</DefaultSlider>
+              <DefaultSlider>
+                <Image src={data.mainImage.fileUrl} />
+              </DefaultSlider>
             )}
             <Location>
               <div>
@@ -103,7 +113,7 @@ const ReservationDetail = () => {
                     <IconText>{data.rooftopReviews.length}개의 리뷰</IconText>
                   </ReviewHeader>
                   {data.rooftopReviews.map(d => (
-                    <ReviewBox>
+                    <ReviewBox key={d}>
                       <div>
                         <div>
                           <Icon icon={faStar} />
@@ -126,7 +136,7 @@ const ReservationDetail = () => {
               )}
               <BoxWrapper>
                 {data.detailNums.map((d, index) => (
-                  <Line>{RoofTopFacilities[d]}</Line>
+                  <Line key={index}>{RoofTopFacilities[d]}</Line>
                 ))}
               </BoxWrapper>
               <BoxWrapper>
@@ -140,33 +150,48 @@ const ReservationDetail = () => {
                   {data.roleContent}
                 </Line>
               </BoxWrapper>
-              <BoxWrapper>
-                <Title>건물주에게 문의하기</Title>
-                <TextArea
-                  placeholder="파티, 대여 등 목적에 따라 활용이 가능할지 또는 부족한 정보가 있다면 문의해보세요!"
-                  value={textValue}
-                  onChange={e => handleSetValue(e)}></TextArea>
-                <button>
-                  전송하기 <Icon icon={faMailBulk} />
-                </button>
-              </BoxWrapper>
-              <BoxWrapper>
-                <Title>배치도</Title>
-                <ImageManage width={"200px"} src={data.structureImage.fileUrl} />
-              </BoxWrapper>
+              <Button>건물주에게 문의하기</Button>
+              {data.structureImage ? (
+                <BoxWrapper>
+                  <Title>배치도</Title>
+                  <ImageManage width={"200px"} src={data.structureImage.fileUrl} />
+                </BoxWrapper>
+              ) : null}
             </LeftBox>
             <RightBox>
               <ButtonBox>
                 <button
                   onClick={() =>
                     openModal(
-                      <ReservationTime startTime={data.startTime[0]} endTime={data.endTime[0]} />,
+                      <ReservationTime
+                        startTime={data.startTime[0]}
+                        endTime={data.endTime[0]}
+                        data={reservation}
+                        setData={setReservation}
+                      />,
                     )
                   }>
                   이용 가능시간
                 </button>
-                <button onClick={() => openModal(<ReservationNumber />)}>인원수 설정</button>
-                <button onClick={() => openModal(<ReservationDate />)}>기간 설정</button>
+                <button
+                  onClick={() =>
+                    openModal(
+                      <ReservationNumber
+                        data={reservation}
+                        setData={setReservation}
+                        adultCount={data.adultCount}
+                        kidCount={data.kidCount}
+                      />,
+                    )
+                  }>
+                  인원수 설정
+                </button>
+                <button
+                  onClick={() =>
+                    openModal(<ReservationDate data={reservation} setData={setReservation} />)
+                  }>
+                  기간 설정
+                </button>
                 <div>
                   <Fee>{data.totalPrice}W</Fee>
                 </div>
@@ -181,21 +206,26 @@ const ReservationDetail = () => {
 }
 
 export default ReservationDetail
-const TextArea = styled.textarea`
-  width: 100%;
-  height: 5rem;
+const Button = styled.button`
+  ${({ theme }) => {
+    const { paddings, margins } = theme
+    return css`
+      width: 100%;
+      background-color: lightgray;
+      padding: ${paddings.base};
+      margin-top: ${margins.base};
+      border-radius: 1rem;
+    `
+  }}
 `
 const DefaultSlider = styled.div`
   ${({ theme }) => {
     const { margins } = theme
     return css`
-      width: 50%;
-      display: flex;
-      background-color: gray;
-      height: 25vh;
-      justify-content: center;
-      align-items: center;
-      margin-right: ${margins.sm};
+      position: relative;
+      width: 25vw;
+      height: 25vw;
+      margin: ${margins.lg};
     `
   }}
 `
@@ -260,7 +290,6 @@ const BoxWrapper = styled.div`
       img {
         width: 100%;
       }
-      background-color: gray;
       button {
         float: right;
       }
@@ -319,7 +348,16 @@ const Title = styled.p`
   }}
 `
 const Image = styled.img`
-  width: 70%;
+  width: 100%;
+  border-radius: 1.1rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(50, 50);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: auto;
 `
 const SliderWrapper = styled(Slider)`
   width: 50%;
@@ -347,7 +385,7 @@ const InfoLine = styled.div`
       padding: ${paddings.base};
       font-size: ${fonts.size.sm}
       border-radius: 1rem;
-      margin-bottom: ${margins.base};
+      margin:  ${margins.base} 0;
       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
     `
   }}
