@@ -30,6 +30,19 @@ export const roofTopControl = {
       throw new Error(err)
     }
   },
+  getRooftopSearchTest: async filter => {
+    try {
+      const response = await axiosInstance({
+        method: "get",
+        url: "/rooftops/search/",
+        params: filter,
+        withCredentials: true,
+      })
+      return response.data.rooftopResponses
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
   getRooftopDetail: async id => {
     try {
       const response = await axiosInstance({

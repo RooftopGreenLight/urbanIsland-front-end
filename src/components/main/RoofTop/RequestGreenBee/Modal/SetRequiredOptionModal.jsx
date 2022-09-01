@@ -11,6 +11,10 @@ const SetRequiredOptionModal = ({ applyInfo, changeInfo }) => {
   const { closeModal } = useContext(ModalContext)
   const [requiredOptions, setRequiredOptions] = useState(applyInfo.requiredItemNum)
 
+  useEffect(() => {
+    console.log(requiredOptions)
+  }, [requiredOptions])
+
   const changeCheck = e => {
     const { name, checked } = e.target
     console.log(checked)
@@ -19,11 +23,10 @@ const SetRequiredOptionModal = ({ applyInfo, changeInfo }) => {
       : setRequiredOptions(prevOptions =>
           [...prevOptions].filter(option => option !== parseInt(name)),
         )
-    console.log(requiredOptions)
   }
 
   const confirmRequiredList = () => {
-    changeInfo({ ...applyInfo, requiredItemNum: requiredOptions })
+    changeInfo(prevInfo => ({ ...prevInfo, requiredItemNum: requiredOptions }))
     closeModal()
   }
 
@@ -39,6 +42,7 @@ const SetRequiredOptionModal = ({ applyInfo, changeInfo }) => {
             <div className="select-section" key={option}>
               <p>{option}</p>
               <input
+                key={`${option} + ${requiredOptions.includes(idx)}`}
                 type="checkbox"
                 name={idx}
                 checked={requiredOptions.includes(idx)}

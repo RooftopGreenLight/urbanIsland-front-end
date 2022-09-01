@@ -1,23 +1,34 @@
 import styled, { css } from "styled-components"
-import { useState, useEffect } from "react"
+import { useContext, useState, useEffect } from "react"
 
 import { greenbeeControl } from "api/controls/greenbeeControl"
+import { roofTopControl } from "api/controls/roofTopControl"
 import { useNavigate } from "react-router-dom"
+import { ModalContext } from "module/Modal"
+
+import RequiredGreeningFilter from "./Modal/RequiredGreeningFilter"
 
 const RequiredGreeningList = () => {
   const navigate = useNavigate()
+  const { openModal } = useContext(ModalContext)
   const [rooftopList, setRooftopList] = useState([])
+  const [appliedFilter, setAppliedFilter] = useState(null)
   useEffect(() => {
     const loadRequiredList = async () => {
+      let reqList
       try {
-        const reqList = await greenbeeControl.getRequiredGreen()
+        if (appliedFilter) {
+          reqList = await roofTopControl.getRooftopSearchTest(appliedFilter)
+        } else {
+          reqList = await greenbeeControl.getRequiredGreen()
+        }
         setRooftopList(reqList)
       } catch (err) {
         console.log(err)
       }
     }
     loadRequiredList()
-  }, [])
+  }, [appliedFilter])
 
   return (
     <Wrapper>
@@ -25,7 +36,17 @@ const RequiredGreeningList = () => {
         <h5>옥상 녹화 필요 시설 목록</h5>
         <p>그린비의 손길이 필요한 시설 목록입니다.</p>
       </Title>
-
+      <button
+        onClick={() =>
+          openModal(
+            <RequiredGreeningFilter
+              appliedFilter={appliedFilter}
+              setAppliedFilter={setAppliedFilter}
+            />,
+          )
+        }>
+        필터
+      </button>
       <GridRoofTopList>
         {rooftopList.map(({ city, detail, district, mainImage, width, widthPrice, id }, idx) => (
           <RoofTopInfo

@@ -35,6 +35,7 @@ const SetFacilitiesModal = ({ applyInfo, changeInfo }) => {
             <div className="select-section" key={facility}>
               <p>{facility}</p>
               <input
+                key={`${facility}-${detailFacilities.includes(idx)}`}
                 type="checkbox"
                 name={idx}
                 checked={detailFacilities.includes(idx)}

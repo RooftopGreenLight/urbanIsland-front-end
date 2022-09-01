@@ -83,7 +83,7 @@ const ChatModal = ({ roomId, memberId }) => {
     }
 
     client.current.publish({
-      destination: `/app/inquiry/room`,
+      destination: `/app/inquiry/room/${roomId}`,
       body: JSON.stringify({ roomId, content, memberId }),
       headers: jwtHeader,
     })
@@ -182,7 +182,7 @@ const ModalCloseBtn = styled(FontAwesomeIcon)`
 
 const ModalContent = styled.main`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { colors, paddings } = theme
     return css`
       min-height: 50vh;
 
@@ -195,9 +195,10 @@ const ModalContent = styled.main`
 
 const ChatMessageList = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { paddings } = theme
     return css`
       height: 80%;
+
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -214,7 +215,7 @@ const ChatMessageList = styled.div`
 
 const ChatMessage = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { paddings } = theme
     return css`
       width: 60%;
       padding: ${paddings.sm};

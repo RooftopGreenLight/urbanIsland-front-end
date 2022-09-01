@@ -27,8 +27,8 @@ const ReservationTime = ({ startTime, endTime, data, setData }) => {
             <div>{endTime}:00</div>
           </Time>
           <CustomSlider
-            MAX={endTime}
-            MIN={startTime}
+            MAX={0}
+            MIN={24}
             STEP={1}
             unit={":00"}
             setValue={setValue}

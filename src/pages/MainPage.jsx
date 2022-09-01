@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { Routes, Route, Outlet, Navigate } from "react-router-dom"
 
@@ -23,17 +23,7 @@ const RestrictedRoute = ({ isLogin }) => {
 }
 
 const MainPage = () => {
-  const confirmLogin = useSetRecoilState(AuthConfirmLogin)
   const isLogin = useRecoilValue(AuthCheckLogin)
-  useEffect(() => {
-    const token = localStorage.getItem("access_token")
-    if (token) {
-      const memberId = JSON.parse(localStorage.getItem("memberId"))
-      const memberRole = localStorage.getItem("memberRole")
-      confirmLogin({ authenticated: true, token, memberId, memberRole })
-    }
-  }, [])
-
   return (
     <Routes>
       <Route path="/" element={<HomeContainer />} />

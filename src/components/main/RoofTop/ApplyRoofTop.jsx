@@ -107,12 +107,14 @@ const ApplyRoofTop = () => {
 
 const Wrapper = styled.div`
   width: 50vw;
+  height: 80vh;
 
   margin: auto;
   padding: 1rem;
 
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 
   background-color: #d3d3d3;
   text-align: center;
@@ -127,9 +129,9 @@ const ConfirmBtn = styled.button`
   ${({ theme }) => {
     const { paddings } = theme
     return css`
-      width: 25%;
+      width: 30%;
       padding: ${paddings.sm};
-      margin: 2vw auto;
+      margin: 0.75vw auto 0.25vw auto;
 
       border: 1px solid rgb(77, 77, 77);
       border-radius: 2.5vw;

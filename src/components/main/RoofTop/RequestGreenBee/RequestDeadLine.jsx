@@ -1,14 +1,18 @@
 import styled, { css } from "styled-components"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { RequestDeadLineDate } from "constants/RequestDeadLineDate"
 
 const RequestDeadLine = ({ requiredInfo, setRequiredInfo }) => {
   const [checkedDeadLineNum, setCheckedDeadLineNum] = useState(requiredInfo.deadLineNum)
+
+  useEffect(() => {
+    setRequiredInfo(prevInfo => ({ ...prevInfo, deadLineNum: checkedDeadLineNum }))
+  }, [checkedDeadLineNum])
+
   const changeCheckbox = e => {
     const { name, checked } = e.target
     setCheckedDeadLineNum(checked ? parseInt(name) : null)
-    setRequiredInfo({ ...requiredInfo, deadLineNum: checkedDeadLineNum })
   }
 
   return (
