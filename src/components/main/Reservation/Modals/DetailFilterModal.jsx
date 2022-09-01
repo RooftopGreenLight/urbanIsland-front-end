@@ -36,12 +36,6 @@ const DetailFilterModal = ({ filter, setFilter }) => {
       contentNum: [],
     })
   }
-
-  const [checked, updateChecked] = useState(false)
-
-  const handleChange = () => {
-    updateChecked(prev => !prev)
-  }
   return (
     <Wrapper>
       <header>
@@ -51,7 +45,6 @@ const DetailFilterModal = ({ filter, setFilter }) => {
       </header>
       <ModalContent>
         <ModalBody>
-          {" "}
           <Title>
             <span>가격</span>
           </Title>
@@ -66,10 +59,10 @@ const DetailFilterModal = ({ filter, setFilter }) => {
               imin={0}
               imax={500000}
             />
-          </Box>{" "}
+          </Box>
           <Title>
             <span>넓이</span>
-          </Title>{" "}
+          </Title>
           <Box>
             <CustomSlider
               STEP={1}
@@ -81,7 +74,7 @@ const DetailFilterModal = ({ filter, setFilter }) => {
               imin={0}
               imax={3333}
             />
-          </Box>{" "}
+          </Box>
           <Title>
             <span>편의요소</span>
           </Title>

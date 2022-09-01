@@ -13,7 +13,6 @@ const FilterCheckbox = ({ setSet, flag }) => {
     isAllChecked()
   }, [flag])
   const checkedItemHandler = (id, isChecked) => {
-    console.log(id, isChecked)
     if (isChecked) {
       checkedItems.add(id)
       setCheckedItems(checkedItems)
@@ -29,7 +28,6 @@ const FilterCheckbox = ({ setSet, flag }) => {
       index === Number(event.target.id) ? !item : item,
     )
     setCheckedState(updatedCheckedState)
-    console.log(checkedState)
     checkedItemHandler(event.target.id, event.target.checked)
   }
 
@@ -38,13 +36,14 @@ const FilterCheckbox = ({ setSet, flag }) => {
       <Display isShowMore={isShowMore}>
         {RoofTopFacilities.map((d, idx) => (
           <Line key={d}>
-            <CheckBox htmlFor={idx}>
-              <p> {d}</p>
+            <CheckBox>
+              <p>{d}</p>
               <input
                 className="box"
                 type="checkbox"
                 checked={checkedState[idx]}
                 id={idx}
+                key={checkedState[idx]}
                 onChange={handleCheck}
               />
             </CheckBox>
