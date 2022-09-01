@@ -1,12 +1,14 @@
 import { atom, selector } from "recoil"
 
+const access_token = localStorage.getItem("access_token")
+
 export const AuthState = atom({
   key: "auth/information",
   default: {
-    token: null,
-    authenticated: false,
-    memberId: null,
-    memberRole: null,
+    token: access_token,
+    authenticated: access_token ? true : false,
+    memberId: localStorage.getItem("memberId"),
+    memberRole: localStorage.getItem("memberRole"),
   },
 })
 
