@@ -32,4 +32,29 @@ export const KakaoPayControl = {
       throw new Error(err)
     }
   },
+  postApprovePayment: async (tid, pg_token) => {
+    let response
+    try {
+      response = await axios({
+        baseURL: process.env.REACT_APP_KAKAO_PAY_HOST_URL,
+        url: "/v1/payment/approve",
+        method: "POST",
+        headers: {
+          Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_ADMIN_KEY}`,
+          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+        params: {
+          cid: "TC0ONETIME",
+          tid,
+          partner_order_id: "partner_order_id",
+          partner_user_id: "partner_user_id",
+          pg_token,
+        },
+      })
+      return response.data
+    } catch (err) {
+      console.log(err)
+      throw new Error(err)
+    }
+  },
 }

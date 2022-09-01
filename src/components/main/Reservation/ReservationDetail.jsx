@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { roofTopControl } from "api/controls/roofTopControl"
 import styled, { css } from "styled-components"
@@ -16,6 +16,7 @@ import ReservationDate from "components/main/Reservation/Modals/ReservationDate"
 import Tooltip from "components/common/Tooltip"
 import ImageManage from "components/main/Reservation/ImageManage"
 const ReservationDetail = () => {
+  const navigate = useNavigate()
   const { openModal } = useContext(ModalContext)
   const { id } = useParams()
   const [data, setData] = useState()
@@ -152,7 +153,7 @@ const ReservationDetail = () => {
               </BoxWrapper>
               <BoxWrapper>
                 <Title>배치도</Title>
-                <ImageManage width={"200px"} src={data.structureImage.fileUrl} />
+                <ImageManage width={"200px"} src={data.mainImage.fileUrl} />
               </BoxWrapper>
             </LeftBox>
             <RightBox>
@@ -170,7 +171,9 @@ const ReservationDetail = () => {
                 <div>
                   <Fee>{data.totalPrice}W</Fee>
                 </div>
-                <button className="pay">예약하기</button>
+                <button className="pay" onClick={() => navigate(`/reservation/payment/${id}`)}>
+                  예약하기
+                </button>
               </ButtonBox>
             </RightBox>
           </DetailBottom>

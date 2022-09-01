@@ -22,10 +22,10 @@ const Payment = () => {
 
   const readyToSetPayment = async () => {
     try {
-      const { next_redirect_pc_url, tid, created_at } = await KakaoPayControl.postRequestToPay(
-        rooftopId,
-      )
+      const { next_redirect_pc_url, tid } = await KakaoPayControl.postRequestToPay(rooftopId)
       window.location.href = next_redirect_pc_url
+      localStorage.setItem("tid", tid)
+      localStorage.setItem("payment_information", JSON.stringify(paymentInfo))
     } catch (err) {
       console.log(err)
     }
