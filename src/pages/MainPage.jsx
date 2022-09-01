@@ -1,8 +1,7 @@
-import { useEffect, useRef } from "react"
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilValue } from "recoil"
 import { Routes, Route, Outlet, Navigate } from "react-router-dom"
 
-import { AuthCheckLogin, AuthConfirmLogin } from "module/Auth"
+import { AuthCheckLogin } from "module/Auth"
 
 import { HomeContainer } from "pages/Container/HomeContainer"
 import { MypageContainer } from "pages/Container/MypageContainer"
@@ -10,7 +9,8 @@ import { MypageContainer } from "pages/Container/MypageContainer"
 import Login from "components/main/Login/Login"
 import Signup from "components/main/Signup/Signup"
 import SocialAuthConfirm from "components/main/Auth/SocialAuthConfirm"
-import { ReservationContainer } from "./Container/ReservationContainer"
+import { ReservationContainer } from "pages/Container/ReservationContainer"
+import { PaymentContainer } from "pages/Container/PaymentContainer"
 
 // 오직 로그인이 되었을때만 접근이 가능하도록 하는 Route
 const PrivateRoute = ({ isLogin }) => {
@@ -39,6 +39,7 @@ const MainPage = () => {
       <Route element={<PrivateRoute isLogin={isLogin} />}>
         <Route path="/mypage/*" element={<MypageContainer />} />
         <Route path="/reservation/*" element={<ReservationContainer />} />
+        <Route path="/payment/*" element={<PaymentContainer />} />
       </Route>
     </Routes>
   )

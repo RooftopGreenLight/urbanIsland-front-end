@@ -196,7 +196,7 @@ const ReservationDetail = () => {
                 <div>
                   <Fee>{data.totalPrice}W</Fee>
                 </div>
-                <button className="pay" onClick={() => navigate(`/reservation/payment/${id}`)}>
+                <button className="pay" onClick={() => navigate(`/payment/${id}`)}>
                   예약하기
                 </button>
               </ButtonBox>
