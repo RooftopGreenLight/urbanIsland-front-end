@@ -1,9 +1,8 @@
 import axios from "axios"
 
 export const KakaoPayControl = {
-  postRequestToPay: async () => {
+  postRequestToPay: async rooftopId => {
     let response
-    console.log(1)
     try {
       response = await axios({
         baseURL: process.env.REACT_APP_KAKAO_PAY_HOST_URL,
@@ -22,9 +21,9 @@ export const KakaoPayControl = {
           total_amount: 22000,
           vat_amount: 0,
           tax_free_amount: 0,
-          approval_url: "http://localhost:3000/mypage/rooftop",
-          fail_url: "http://localhost:3000",
-          cancel_url: "http://localhost:3000",
+          approval_url: `http://localhost:3000/reservation/payment/${rooftopId}/success`,
+          fail_url: `http://localhost:3000/reservation/payment/${rooftopId}/fail`,
+          cancel_url: `http://localhost:3000/reservation/payment/${rooftopId}/fail`,
         },
       })
       return response.data

@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import styled, { css } from "styled-components"
 
 import { KakaoPayControl } from "api/KakaoPay"
 
 const Payment = () => {
   const { rooftopId } = useParams()
+  const navigate = useNavigate()
   const [paymentInfo, setPaymentInfo] = useState({
     userId: "",
     phoneNumber: "",
@@ -21,7 +22,10 @@ const Payment = () => {
 
   const readyToSetPayment = async () => {
     try {
-      const res = await KakaoPayControl.postRequestToPay()
+      const { next_redirect_pc_url, tid, created_at } = await KakaoPayControl.postRequestToPay(
+        rooftopId,
+      )
+      window.location.href = next_redirect_pc_url
     } catch (err) {
       console.log(err)
     }
@@ -92,7 +96,7 @@ const Payment = () => {
             <p>KRW {`415,000`}</p>
           </div>
         </BasicInformation>
-        <ConfirmBtn>결제하기</ConfirmBtn>
+        <ConfirmBtn onClick={readyToSetPayment}>결제하기</ConfirmBtn>
       </PaymentConfirm>
     </Wrapper>
   )
