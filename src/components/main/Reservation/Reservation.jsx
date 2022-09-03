@@ -133,7 +133,7 @@ const Reservation = () => {
       </SearchBar>
       <SearchResult>
         {data && data.length >= 1 ? (
-          data.map((d, index) => <ReservationCard props={d} key={index} />)
+          data.map((d, index) => <ReservationCard reservationInfo={d} key={index} />)
         ) : (
           <div>검색 결과가 없습니다</div>
         )}
