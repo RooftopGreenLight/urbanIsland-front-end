@@ -16,6 +16,7 @@ const Reservation = () => {
   const [data, setData] = useState()
   const [filter, setFilter] = useState({
     page: 0,
+    size: 9,
     cond: 1,
     type: "G",
     kidCount: 0,
@@ -31,24 +32,48 @@ const Reservation = () => {
     minWidth: 0,
     contentNum: [],
   })
+  // useEffect(() => {
+  //   var obj = new Object()
+  //   const getFilteredData = async event => {
+  //     Object.entries(filter).map(d => {
+  //       if (d[0] === "page" || d[0] === "cond") {
+  //         obj[d[0]] = d[1]
+  //       } else if (d[0] === "contentNum") {
+  //         if (d[1].length >= 1) {
+  //           obj[d[0]] = d[1]
+  //         }
+  //       } else if (d[1] === 0 || d[1] === "") {
+  //       } else {
+  //         obj[d[0]] = d[1]
+  //       }
+  //     })
+  //     console.log(obj)
+  //     try {
+  //       const result = await roofTopControl.getRooftopSearch(obj)
+  //       setData(result.rooftopResponses)
+  //     } catch (err) {
+  //       console.log(err.message)
+  //     }
+  //   }
+  //   getFilteredData()
+  // }, [filter])
   useEffect(() => {
-    var obj = new Object()
-    const getFilteredData = async event => {
-      Object.entries(filter).map(d => {
-        if (d[0] === "page" || d[0] === "cond") {
-          obj[d[0]] = d[1]
-        } else if (d[0] === "contentNum") {
-          if (d[1].length >= 1) {
-            obj[d[0]] = d[1]
-          }
-        } else if (d[1] === 0 || d[1] === "") {
-        } else {
-          obj[d[0]] = d[1]
+    const getFilteredData = async () => {
+      const searchFilter = Object.entries(filter).filter(([option, value]) => {
+        if (option === "page" || option === "cond") {
+          return true
         }
+        if (option === "contentNum" && value.length < 1) {
+          return false
+        }
+        if (value === 0 || value === "") {
+          return false
+        }
+        return true
       })
       try {
-        const result = await roofTopControl.getRooftopSearch(obj)
-        setData(result.rooftopResponses)
+        const result = await roofTopControl.getRooftopSearch(Object.fromEntries(searchFilter))
+        setData(result)
       } catch (err) {
         console.log(err.message)
       }
@@ -177,9 +202,10 @@ const SearchResult = styled.div`
   ${({ theme }) => {
     const { margins } = theme
     return css`
-      width: 100%;
+      width: 90vw;
       margin: ${margins.sm};
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
     `
   }}
