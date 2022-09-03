@@ -25,7 +25,7 @@ const Profile = () => {
       }
     }
     getProfile()
-  }, [userData])
+  }, [])
 
   const { name, email, phoneNumber, authority } = userData
   return (

@@ -25,6 +25,7 @@ const Wrapper = styled.div`
   & > .content {
     min-height: 100vh;
     margin: auto 15vw;
+    overflow: auto;
 
     display: flex;
     justify-content: space-between;
