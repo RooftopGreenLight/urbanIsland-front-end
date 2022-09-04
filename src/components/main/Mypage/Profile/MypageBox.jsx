@@ -9,7 +9,9 @@ import {
   faBuilding,
   faCalendar,
   faPen,
+  faPeopleArrows,
   faSeedling,
+  faSignOut,
   faUser,
 } from "@fortawesome/free-solid-svg-icons"
 import { mypageControl } from "api/controls/mypageControl"
@@ -90,8 +92,18 @@ const MypageBox = () => {
           <p>옥상지기 정보 관리</p>
           <FontAwesomeIcon icon={faAngleRight} size="sm" fixedWidth />
         </NavStyle>
-        {authority === "ROLE_ADMIN" && <NavStyle to="/mypage/admin">관리자</NavStyle>}
-        <LogoutBtn onClick={() => accountControl.deleteLogOut()}>로그아웃</LogoutBtn>
+        <NavStyle to="/" onClick={() => accountControl.deleteLogOut()}>
+          <FontAwesomeIcon icon={faSignOut} size="xl" fixedWidth />
+          <p>로그아웃</p>
+          <FontAwesomeIcon icon={faAngleRight} size="sm" fixedWidth />
+        </NavStyle>
+        {authority === "ROLE_ADMIN" && (
+          <NavStyle to="/mypage/admin">
+            <FontAwesomeIcon icon={faPeopleArrows} size="xl" fixedWidth />
+            <p>운영자 설정 관리</p>
+            <FontAwesomeIcon icon={faAngleRight} size="sm" fixedWidth />
+          </NavStyle>
+        )}
       </NavArea>
     </Wrapper>
   )
