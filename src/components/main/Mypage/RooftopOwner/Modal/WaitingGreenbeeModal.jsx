@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faXmark } from "@fortawesome/free-solid-svg-icons"
+import { faHourglassEmpty, faXmark } from "@fortawesome/free-solid-svg-icons"
 
 import { ModalContext } from "module/Modal"
 import { AuthCheckMemberId } from "module/Auth"
@@ -65,7 +65,11 @@ const WaitingGreenbeeModal = () => {
               </RooftopStatus>
             ))
           ) : (
-            <h5>옥상 녹화 신청 목록 없음</h5>
+            <NoticeEmptyIcon>
+              <FontAwesomeIcon icon={faHourglassEmpty} />
+              <h5>그린비 목록 없음</h5>
+              <p>녹화 작업을 신청한 그린비 업체가 없습니다.</p>
+            </NoticeEmptyIcon>
           )}
         </ViewPoint>
       </ModalContent>
@@ -90,22 +94,23 @@ const ViewPoint = styled.div`
   overflow: auto;
 `
 
-const ModalHeader = styled.header`
+const ModalHeader = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`
       width: 100%;
       padding: ${paddings.base};
 
-      background-color: #000000;
+      background-color: ${colors.main.primary};
 
       display: flex;
       justify-content: space-between;
 
+      color: ${colors.white};
+      text-align: center;
+
       h5 {
-        color: ${colors.white};
         font-size: ${fonts.size.base};
-        text-align: center;
         vertical-align: center;
       }
     `
@@ -119,8 +124,6 @@ const ModalCloseBtn = styled(FontAwesomeIcon)`
       padding: ${paddings.sm};
       color: ${colors.white};
       font-size: ${fonts.size.xsm};
-
-      cursor: pointer;
     `
   }}
 `
@@ -178,6 +181,42 @@ const RooftopStatus = styled.div`
 
         color: ${colors.white};
         font-size: ${fonts.size.xsm};
+      }
+    `
+  }}
+`
+
+const NoticeEmptyIcon = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      margin: ${margins.base} auto;
+
+      color: ${colors.main.primary};
+      text-align: center;
+
+      h5 {
+        font-size: ${fonts.size.base};
+        margin-bottom: ${margins.sm};
+      }
+
+      p {
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
+
+      svg {
+        width: 2.5vw;
+        height: 2.5vw;
+
+        margin-bottom: ${margins.base};
+        padding: ${paddings.lg};
+
+        background-color: ${colors.main.secondary};
+        border-radius: 20vw;
+
+        color: ${colors.white};
       }
     `
   }}

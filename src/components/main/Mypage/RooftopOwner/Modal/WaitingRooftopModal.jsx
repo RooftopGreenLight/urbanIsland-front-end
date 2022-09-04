@@ -38,8 +38,8 @@ const WaitingRooftopModal = () => {
         <ViewPoint>
           {rooftopStatus ? (
             rooftopStatus.map(({ city, detail, district, progress, rooftopDate }, idx) => (
-              <>
-                <h5 key={district}>{`${city} ${district} ${detail}`}</h5>
+              <StatusList>
+                <h5 key={district}>{`#${idx + 1}. ${city} ${district} ${detail}`}</h5>
                 <StatusBox key={idx}>
                   <div className="header">
                     <h5>옥상지기 분께 알리는 정보</h5>
@@ -47,7 +47,7 @@ const WaitingRooftopModal = () => {
                   </div>
                   <p>{WaitingRooftopStatus.get(progress)}</p>
                 </StatusBox>
-              </>
+              </StatusList>
             ))
           ) : (
             <h5>새롭게 도착한 정보가 없습니다.</h5>
@@ -80,22 +80,23 @@ const ViewPoint = styled.div`
   overflow: auto;
 `
 
-const ModalHeader = styled.header`
+const ModalHeader = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`
       width: 100%;
       padding: ${paddings.base};
 
-      background-color: #000000;
+      background-color: ${colors.main.primary};
 
       display: flex;
       justify-content: space-between;
 
+      color: ${colors.white};
+      text-align: center;
+
       h5 {
-        color: ${colors.white};
         font-size: ${fonts.size.base};
-        text-align: center;
         vertical-align: center;
       }
     `
@@ -109,8 +110,6 @@ const ModalCloseBtn = styled(FontAwesomeIcon)`
       padding: ${paddings.sm};
       color: ${colors.white};
       font-size: ${fonts.size.xsm};
-
-      cursor: pointer;
     `
   }}
 `
@@ -129,14 +128,20 @@ const ModalContent = styled.main`
 
       max-height: 100%;
       overflow-y: auto;
-      text-align: center;
 
       h5 {
+        text-align: left;
         margin: ${margins.sm} auto;
-        font-size: ${fonts.size.base};
+        font-size: ${fonts.size.sm};
       }
     `
   }}
+`
+
+const StatusList = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5vh;
 `
 
 const StatusBox = styled.div`
@@ -149,6 +154,7 @@ const StatusBox = styled.div`
 
       background-color: #cdcdcd;
       border-radius: 0.8rem;
+      text-align: left;
 
       .header {
         display: flex;
@@ -159,19 +165,16 @@ const StatusBox = styled.div`
 
         h5 {
           margin: 0;
-          text-align: left;
           font-size: ${fonts.size.sm};
         }
 
         span {
-          text-align: left;
           font-size: ${fonts.size.xsm};
           font-weight: 100;
         }
       }
 
       p {
-        text-align: left;
         font-size: ${fonts.size.xsm};
         font-weight: 200;
       }

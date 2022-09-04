@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import styled, { css } from "styled-components"
-import Slider from "react-slick"
 
+import Slider from "react-slick"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 
@@ -9,13 +10,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons"
 import { ModalContext } from "module/Modal"
 
-import RegisterRooftop from "./Modal/RegisterRooftop"
 import WaitingRooftopModal from "./Modal/WaitingRooftopModal"
 import WaitingGreenbeeModal from "./Modal/WaitingGreenbeeModal"
 import OwnRooftop from "./OwnRooftop"
 
 import { roofTopControl } from "api/controls/roofTopControl"
-import { Link } from "react-router-dom"
 
 const Rooftop = () => {
   const { openModal } = useContext(ModalContext)
@@ -42,41 +41,12 @@ const Rooftop = () => {
     <Wrapper>
       <ServiceList>
         <Title>
-          <h5>내 서비스 관리하기</h5>
-        </Title>
-        <ServiceBox
-          onClick={() => {
-            openModal(<RegisterRooftop />)
-          }}>
-          <div className="introduce">
-            <h5>옥상 추가 신청하기</h5>
-            <p>자신이 소유한 옥상을 등록하는 절차를 거칩니다.</p>
-          </div>
-          <FontAwesomeIcon icon={faAngleRight} />
-        </ServiceBox>
-        <ServiceBox onClick={() => openModal(<WaitingRooftopModal />)}>
-          <div className="introduce">
-            <h5>대기중인 옥상신청</h5>
-            <p>나의 그린비 페이지를 확인하고, 이를 수정합니다.</p>
-          </div>
-          <FontAwesomeIcon icon={faAngleRight} />
-        </ServiceBox>
-        <ServiceBox onClick={() => openModal(<WaitingGreenbeeModal />)}>
-          <div className="introduce">
-            <h5>대기중인 그린비 찾기</h5>
-            <p>나의 그린비 페이지를 확인하고, 이를 수정합니다.</p>
-          </div>
-          <FontAwesomeIcon icon={faAngleRight} />
-        </ServiceBox>
-      </ServiceList>
-      <ServiceList>
-        <Title>
           <h5>등록된 옥상 관리하기</h5>
         </Title>
         <SliderBox>
           <Slider {...SlickSettings}>
             {ownRooftopList.map((rooftopInfo, idx) => (
-              <div key={idx} className="rooftop-card">
+              <div key={idx}>
                 <Link to={`/mypage/rooftop/supervise/${idx}`}>
                   <OwnRooftop rooftopInfo={rooftopInfo} />
                 </Link>
@@ -84,6 +54,43 @@ const Rooftop = () => {
             ))}
           </Slider>
         </SliderBox>
+      </ServiceList>
+      <ServiceList>
+        <Title>
+          <h5>내 서비스 관리하기</h5>
+        </Title>
+        <Link to="/mypage/rooftop/apply">
+          <ServiceBox>
+            <div className="introduce">
+              <h5>옥상 시설 등록하기</h5>
+              <p>자신이 소유한 옥상을 등록하는 절차를 거칩니다.</p>
+            </div>
+            <FontAwesomeIcon icon={faAngleRight} />
+          </ServiceBox>
+        </Link>
+        <Link to="/mypage/rooftop/request">
+          <ServiceBox>
+            <div className="introduce">
+              <h5>옥상 녹화 신청하기</h5>
+              <p>아직 녹화를 하지 않은 옥상을 신청합니다.</p>
+            </div>
+            <FontAwesomeIcon icon={faAngleRight} />
+          </ServiceBox>
+        </Link>
+        <ServiceBox onClick={() => openModal(<WaitingRooftopModal />)}>
+          <div className="introduce">
+            <h5>대기중인 옥상 등록 신청</h5>
+            <p>새롭게 등록한 옥상 시설의 진행 상황을 확인합니다</p>
+          </div>
+          <FontAwesomeIcon icon={faAngleRight} />
+        </ServiceBox>
+        <ServiceBox onClick={() => openModal(<WaitingGreenbeeModal />)}>
+          <div className="introduce">
+            <h5>대기중인 그린비 찾기</h5>
+            <p>녹화를 신청한 시설을 작업할 그린비 목록을 확인합니다.</p>
+          </div>
+          <FontAwesomeIcon icon={faAngleRight} />
+        </ServiceBox>
       </ServiceList>
     </Wrapper>
   )
@@ -126,7 +133,7 @@ const Title = styled.div`
 const ServiceList = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 7.5vh;
+  margin-bottom: 2.5vh;
 `
 
 const ServiceBox = styled.div`
@@ -178,14 +185,8 @@ const SliderBox = styled.div`
   ${({ theme }) => {
     const { margins } = theme
     return css`
-      margin: ${margins.lg} 0vw;
-      width: 90%;
-
-      .rooftop-card {
-        width: 10vw;
-        height: 10vw;
-        overflow: hidden;
-      }
+      margin: ${margins.lg} auto;
+      width: 95%;
     `
   }}
 `
