@@ -92,11 +92,6 @@ const MypageBox = () => {
           <p>옥상지기 정보 관리</p>
           <FontAwesomeIcon icon={faAngleRight} size="sm" fixedWidth />
         </NavStyle>
-        <NavStyle to="/" onClick={() => accountControl.deleteLogOut()}>
-          <FontAwesomeIcon icon={faSignOut} size="xl" fixedWidth />
-          <p>로그아웃</p>
-          <FontAwesomeIcon icon={faAngleRight} size="sm" fixedWidth />
-        </NavStyle>
         {authority === "ROLE_ADMIN" && (
           <NavStyle to="/mypage/admin">
             <FontAwesomeIcon icon={faPeopleArrows} size="xl" fixedWidth />
@@ -104,6 +99,11 @@ const MypageBox = () => {
             <FontAwesomeIcon icon={faAngleRight} size="sm" fixedWidth />
           </NavStyle>
         )}
+        <NavStyle to="/" onClick={() => accountControl.deleteLogOut()}>
+          <FontAwesomeIcon icon={faSignOut} size="xl" fixedWidth />
+          <p>로그아웃</p>
+          <FontAwesomeIcon icon={faAngleRight} size="sm" fixedWidth />
+        </NavStyle>
       </NavArea>
     </Wrapper>
   )
@@ -123,6 +123,7 @@ const NavArea = styled.nav`
     return css`
       width: 80%;
       padding-top: 6vh;
+      border-bottom: 1px solid ${colors.main.primary}55;
 
       display: flex;
       flex-direction: column;

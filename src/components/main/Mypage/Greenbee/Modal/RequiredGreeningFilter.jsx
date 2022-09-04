@@ -82,7 +82,7 @@ const RequiredGreeningFilter = ({ appliedFilter, setAppliedFilter }) => {
       <ModalContent>
         <ViewPoint>
           <OptionBox>
-            <h5>지역</h5>
+            <h5>옥상 지역</h5>
             <SelectBox name="city" onChange={changeSelect} defaultValue="default">
               <option value="default" disabled>
                 시 선택
@@ -93,7 +93,7 @@ const RequiredGreeningFilter = ({ appliedFilter, setAppliedFilter }) => {
                 </option>
               ))}
             </SelectBox>
-            {city && (
+            {city ? (
               <SelectBox name="district" onChange={changeSelect} defaultValue="default">
                 <option value="default" disabled>
                   구 선택
@@ -104,10 +104,18 @@ const RequiredGreeningFilter = ({ appliedFilter, setAppliedFilter }) => {
                   </option>
                 ))}
               </SelectBox>
+            ) : (
+              <SelectBox name="district" defaultValue="default">
+                <option value="default" disabled>
+                  --- ---
+                </option>
+              </SelectBox>
             )}
           </OptionBox>
           <OptionBox>
-            <h5>단가</h5>
+            <h5>
+              시공 단가 <span>(KRW / m2)</span>
+            </h5>
             <CustomRange
               MAX={100000000}
               MIN={0}
@@ -121,7 +129,9 @@ const RequiredGreeningFilter = ({ appliedFilter, setAppliedFilter }) => {
             />
           </OptionBox>
           <OptionBox>
-            <h5>넓이</h5>
+            <h5>
+              시설 넓이 <span>(m2)</span>
+            </h5>
             <CustomRange
               MAX={1000000}
               MIN={0}
@@ -149,6 +159,7 @@ const RequiredGreeningFilter = ({ appliedFilter, setAppliedFilter }) => {
                   />
                 </InputBox>
               ))}
+              <InputBox />
             </InputBoxList>
           </OptionBox>
           <OptionBox>
@@ -179,17 +190,31 @@ const Wrapper = styled.div`
   width: 33vw;
 
   margin: auto;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
 `
 
 const ViewPoint = styled.div`
   width: 100%;
-  max-height: 100%;
+  max-height: 80vh;
   overflow: auto;
 
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    margin-left: 10px;
+    background: #ffffff;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #ced4da;
+    &:hover {
+      background-color: #adb5bd;
+    }
+  }
 `
 
 const ModalHeader = styled.div`
@@ -199,15 +224,16 @@ const ModalHeader = styled.div`
       width: 100%;
       padding: ${paddings.base};
 
-      background-color: #000000;
+      background-color: ${colors.main.primary};
 
       display: flex;
       justify-content: space-between;
 
+      color: ${colors.white};
+      text-align: center;
+
       h5 {
-        color: ${colors.white};
         font-size: ${fonts.size.base};
-        text-align: center;
         vertical-align: center;
       }
     `
@@ -225,31 +251,68 @@ const ModalCloseBtn = styled(FontAwesomeIcon)`
   }}
 `
 
-const ModalContent = styled.div`
+const ModalContent = styled.main`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors, fonts, paddings, margins } = theme
     return css`
-      padding: ${paddings.xl};
-      margin: auto;
-
       display: flex;
       flex-direction: column;
-      justify-content: space-evenly;
+      justify-content: center;
+
+      padding: ${paddings.sm};
+      border-top: 1px solid #dee2e6;
+      background-color: ${colors.white};
+
+      h5 {
+        margin: ${margins.base} 0vw ${margins.xsm} 0vw;
+        font-size: ${fonts.size.sm};
+        text-align: center;
+      }
+
+      p {
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+        text-align: center;
+      }
+
+      input {
+        width: 70%;
+        padding: ${paddings.sm};
+        margin: ${margins.lg} auto;
+
+        background-color: transparent;
+        border: 0;
+        border-bottom: 1px solid #232323;
+        text-align: center;
+
+        &::placeholder {
+          color: #3e3e3e;
+          font-weight: 100;
+        }
+
+        &::before {
+          background-color: #d9d9d9;
+        }
+      }
     `
   }}
 `
 
 const OptionBox = styled.div`
   ${({ theme }) => {
-    const { fonts, paddings } = theme
+    const { colors, fonts, paddings, margins } = theme
     return css`
       width: 90%;
       margin: auto;
-      padding: ${paddings.base};
+      padding: ${paddings.sm};
 
       h5 {
-        text-align: center;
+        border-bottom: 1px solid ${colors.main.secondary};
+        margin-bottom: ${margins.sm};
+
         font-size: ${fonts.size.base};
+        line-height: 150%;
+        text-align: left;
       }
 
       span {
@@ -287,29 +350,30 @@ const SelectBox = styled.select`
 `
 
 const InputBoxList = styled.div`
-  width: 85%;
+  width: 75%;
   margin: 1vw auto 0vw auto;
 
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-evenly;
 `
 
 const InputBox = styled.div`
   ${({ theme }) => {
-    const { fonts } = theme
+    const { fonts, margins } = theme
     return css`
       width: 47.5%;
-      margin: auto;
+      margin: ${margins.xsm} auto;
 
       display: flex;
-      justify-content: space-between;
+      justify-content: space-evenly;
 
       p {
-        width: 90%;
+        width: 80%;
         margin: 0;
         font-size: ${fonts.size.xsm};
         font-weight: ${fonts.weight.light};
+        text-align: left;
       }
       input {
         width: 10%;
@@ -318,27 +382,29 @@ const InputBox = styled.div`
     `
   }}
 `
-const ConfirmBtn = styled.button`
+const ConfirmBtn = styled.div`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 30%;
-      padding: ${paddings.sm};
-      margin: 0.75vw auto 0.25vw auto;
+      width: 60%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin: ${margins.lg} auto;
 
-      border: 1px solid rgb(77, 77, 77);
-      border-radius: 2.5vw;
       cursor: pointer;
+      border-radius: ${fonts.size.sm};
+      background-color: ${colors.main.primary};
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      text-align: center;
+      color: ${colors.white};
+      font-size: ${fonts.size.sm};
 
-      font-weight: 100;
+      svg {
+        margin: auto ${margins.sm} auto 0vw;
+      }
 
       &:hover {
-        background: rgb(77, 77, 77);
-        color: #fff;
+        background-color: ${colors.main.tertiary};
+        font-weight: ${fonts.weight.bold};
       }
     `
   }}
