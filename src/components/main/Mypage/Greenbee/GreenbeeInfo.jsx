@@ -72,6 +72,31 @@ const Wrapper = styled.div`
   text-align: center;
 `
 
+const Title = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin-bottom: ${margins.sm};
+
+      display: flex;
+      border-bottom: 1px solid ${colors.main.primary}77;
+
+      color: ${colors.main.primary};
+      text-align: center;
+
+      h5 {
+        width: 90%;
+
+        font-size: ${fonts.size.base};
+        font-weight: ${fonts.weight.bold};
+        text-align: left;
+      }
+    `
+  }}
+`
+
 const OptionBox = styled.div`
   ${({ theme, boxSize }) => {
     const boxWidth = new Map([

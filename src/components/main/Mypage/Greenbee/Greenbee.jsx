@@ -15,7 +15,7 @@ const Greenbee = () => {
     <Wrapper>
       <ServiceList>
         <Title>
-          <h5>서비스 등록하기</h5>
+          <h5>내 서비스 관리하기</h5>
         </Title>
         <ServiceBox onClick={() => openModal(<FindMyRooftopOwner />)}>
           <div className="introduce">
@@ -24,24 +24,29 @@ const Greenbee = () => {
           </div>
           <FontAwesomeIcon icon={faAngleRight} />
         </ServiceBox>
-        <Link to="/mypage/greenbee/required-greening">
-          <ServiceBox>
+        <ServiceBox>
+          <Link to="/mypage/greenbee/info">
+            <div className="introduce">
+              <h5>내 그린비 페이지</h5>
+              <p>나의 그린비 페이지를 확인하고, 이를 수정합니다.</p>
+            </div>
+          </Link>
+          <button onClick={() => navigate("/mypage/greenbee/edit")}>수정</button>
+        </ServiceBox>
+      </ServiceList>
+      <ServiceList>
+        <Title>
+          <h5>녹화 작업 진행하기</h5>
+        </Title>
+        <ServiceBox>
+          <Link to="/mypage/greenbee/required-greening">
             <div className="introduce">
               <h5>녹화가 필요한 옥상 찾기</h5>
               <p>옥상 녹화 작업이 필요한 옥상 목록을 확인합니다.</p>
             </div>
-            <FontAwesomeIcon icon={faAngleRight} />
-          </ServiceBox>
-        </Link>
-        <Link to="/mypage/greenbee/info">
-          <ServiceBox>
-            <div className="introduce">
-              <h5>내 그린비 페이지</h5>
-              <p>나의 그린비 페이지를 확인하고, 이를 수정합니다..</p>
-            </div>
-            <button onClick={() => openModal(() => navigate("/mypage/greenbee/info"))}>변경</button>
-          </ServiceBox>
-        </Link>
+          </Link>
+          <FontAwesomeIcon icon={faAngleRight} />
+        </ServiceBox>
       </ServiceList>
     </Wrapper>
   )
@@ -84,12 +89,12 @@ const Title = styled.div`
 const ServiceList = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  margin-bottom: 7.5vh;
 `
 
 const ServiceBox = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { colors, fonts, paddings } = theme
     return css`
       display: flex;
       justify-content: space-between;

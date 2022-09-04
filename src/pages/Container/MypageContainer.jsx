@@ -35,7 +35,7 @@ const GreenbeeContainer = () => {
     <Routes>
       <Route path="" element={<Greenbee />} />
       <Route path="info" element={<GreenbeeInfo />} />
-      <Route path="info/edit" element={<GreenbeeInfoEdit />} />
+      <Route path="edit" element={<GreenbeeInfoEdit />} />
       <Route path="required-greening" element={<RequiredGreeningList />} />
       <Route path="required-greening/:rooftopId" element={<RequiredGreeningRooftop />} />
     </Routes>
