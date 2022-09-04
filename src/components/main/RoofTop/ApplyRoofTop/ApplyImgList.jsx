@@ -1,5 +1,9 @@
 import styled, { css } from "styled-components"
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import Slider from "react-slick"
+
+import "slick-carousel/slick/slick.css"
+import "slick-carousel/slick/slick-theme.css"
 
 const ApplyImgList = ({ applyInfo, changeInfo }) => {
   const [imgBase64, setImgBase64] = useState([])
@@ -26,24 +30,27 @@ const ApplyImgList = ({ applyInfo, changeInfo }) => {
     }
   }
 
-  const removeRoofTopList = () => {
-    setImgBase64([])
-    changeInfo({ ...applyInfo, normalFile: [], mainFile: "" })
+  const SlickSettings = {
+    dots: true,
+    infinite: true,
+    lazyLoad: true,
+    speed: 500,
+    slidesToShow: imgBase64.length > 2 ? 3 : imgBase64.length,
+    slidesToScroll: 1,
   }
+
+  console.log(imgBase64)
 
   return (
     <Wrapper>
-      <Title>
+      <div className="title">
         <h5>옥상 사진 업로드</h5>
         <p>등록하려는 옥상 시설 사진을 5장 업로드 해주세요.</p>
-      </Title>
+      </div>
       <BtnList>
         <label htmlFor="imgList">
           <FileUploadBtn>사진 업로드</FileUploadBtn>
         </label>
-        {imgBase64.length > 0 && (
-          <FileRemoveBtn onClick={removeRoofTopList}>사진 제거</FileRemoveBtn>
-        )}
         <input
           type="file"
           id="imgList"
@@ -52,103 +59,99 @@ const ApplyImgList = ({ applyInfo, changeInfo }) => {
           accept=".png,.jpg"
         />
       </BtnList>
-      <ImgList imgAmount={imgBase64.length}>
-        {imgBase64.map((item, idx) => (
-          <img src={item} key={idx} alt="First slide" />
-        ))}
-      </ImgList>
+      <SliderBox>
+        <Slider {...SlickSettings}>
+          {imgBase64.map((item, idx) => (
+            <div key={idx}>
+              <img src={item} key={idx} alt="First slide" />
+            </div>
+          ))}
+        </Slider>
+      </SliderBox>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 90%;
-  padding: 1rem;
-  margin: 1vw auto;
-
-  text-align: center;
-  background-color: #ffffff;
-`
-
-const Title = styled.div`
   ${({ theme }) => {
-    const { fonts } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
-      margin: auto;
+      width: 100%;
+      background-color: ${colors.white};
+      padding: ${paddings.base};
 
-      h5 {
-        font-size: ${fonts.size.lg};
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .title {
+        width: 80%;
+        margin-bottom: ${margins.sm};
+        text-align: left;
       }
 
       p {
-        font-weight: 100;
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        margin-bottom: 0.25rem;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
       }
     `
   }}
 `
-
 const FileUploadBtn = styled.div`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors, fonts, paddings } = theme
     return css`
-      padding: ${paddings.sm} ${paddings.base};
-      margin: 1vw auto;
+      height: 100%;
+      padding: ${paddings.sm};
 
-      border: 1px solid rgb(77, 77, 77);
-      border-radius: 2.5vw;
-      cursor: pointer;
+      border-radius: ${fonts.size.xsm};
+      background-color: ${colors.main.secondary};
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-weight: 100;
+      color: ${colors.white};
+      font-size: ${fonts.size.xsm};
+      font-weight: ${fonts.weight.light};
 
       &:hover {
-        background: rgb(77, 77, 77);
-        color: #fff;
+        background-color: ${colors.main.tertiary};
+        font-weight: ${fonts.weight.bold};
       }
     `
   }}
 `
 
-const FileRemoveBtn = styled(FileUploadBtn)`
-  background-color: rgb(77, 77, 77);
-  color: white;
+const SliderBox = styled.div`
+  ${({ theme }) => {
+    const { margins } = theme
+    return css`
+      margin: ${margins.lg} auto;
+      width: 90%;
 
-  &:hover {
-    background: rgb(255, 255, 255);
-    color: #313131;
-  }
+      img {
+        width: 10vw;
+        height: 10vw;
+        overflow: hidden;
+      }
+    `
+  }}
 `
 
 const BtnList = styled.div`
   display: flex;
 
   label {
-    width: 15%;
-    margin: auto;
+    width: 100%;
+    margin-bottom: 0.25rem;
   }
 
   #imgList {
     display: none;
   }
-`
-
-const ImgList = styled.div`
-  ${({ imgAmount }) => {
-    return css`
-      width: 100%;
-
-      display: flex;
-      justify-content: space-between;
-
-      img {
-        width: ${90 / imgAmount}%;
-        object-fit: cover;
-      }
-    `
-  }}
 `
 
 export default ApplyImgList

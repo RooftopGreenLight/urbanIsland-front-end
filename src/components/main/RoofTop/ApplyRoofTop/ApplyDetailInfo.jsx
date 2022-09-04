@@ -13,9 +13,11 @@ const ApplyDetailInfo = ({ applyInfo, changeInfo }) => {
 
   return (
     <Wrapper>
-      <InputBox boxSize="base">
-        <h5>환불 규정</h5>
-        <p>등록하려는 옥상 시설의 환불 규정을 작성해주세요.</p>
+      <InputBox>
+        <div className="title">
+          <h5>환불 규정</h5>
+          <p>등록하려는 옥상 시설의 환불 규정을 작성해주세요.</p>
+        </div>
         <textarea
           name="refundContent"
           rows="4"
@@ -25,9 +27,11 @@ const ApplyDetailInfo = ({ applyInfo, changeInfo }) => {
           onChange={changeInput}
         />
       </InputBox>
-      <InputBox boxSize="base">
-        <h5>이용 규칙</h5>
-        <p>등록하려는 옥상 시설의 이용 규칙을 작성해주세요.</p>
+      <InputBox>
+        <div className="title">
+          <h5>이용 규칙</h5>
+          <p>등록하려는 옥상 시설의 이용 규칙을 작성해주세요.</p>
+        </div>
         <textarea
           name="roleContent"
           rows="4"
@@ -44,38 +48,51 @@ const ApplyDetailInfo = ({ applyInfo, changeInfo }) => {
 const Wrapper = styled.div`
   width: 100%;
   margin: auto;
-
-  display: flex;
 `
 
 const InputBox = styled.div`
-  ${({ theme, boxSize }) => {
-    const boxWidth = new Map([
-      ["sm", "25%"],
-      ["base", "40%"],
-      ["lg", "90%"],
-    ])
+  ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: ${boxWidth.get(boxSize)};
-      margin: 1vw auto;
+      width: 100%;
       background-color: ${colors.white};
       padding: ${paddings.base};
 
-      h5 {
-        font-size: ${fonts.size.base};
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .title {
+        width: 80%;
+        margin-bottom: ${margins.sm};
+        text-align: left;
       }
 
       p {
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        margin-bottom: 0.25rem;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
       }
 
       input,
       textarea {
         width: 100%;
-        padding: ${paddings.sm};
-        margin: ${margins.sm} 0vw;
+        padding: ${paddings.sm} 0vw;
+        margin: ${margins.xsm} 0vw;
+
+        border: 0;
+        background-color: ${colors.main.tertiary}11;
+        border-bottom: 1px solid ${colors.main.secondary}44;
+
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+        text-align: center;
       }
     `
   }}

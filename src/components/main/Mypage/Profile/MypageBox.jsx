@@ -192,6 +192,7 @@ const ProfileInfo = styled.div`
       }
 
       p {
+        margin-top: ${margins.xsm};
         font-size: ${fonts.size.xsm};
         font-weight: ${fonts.weight.light};
       }
@@ -203,10 +204,10 @@ const ProfileEditButton = styled.button`
   ${({ theme }) => {
     const { colors } = theme
     return css`
-      width: 25px;
-      height: 25px;
+      width: 2rem;
+      height: 2rem;
 
-      background-color: ${colors.main.primary};
+      background-color: ${colors.main.secondary};
       border-radius: 50%;
 
       position: absolute;
@@ -226,40 +227,22 @@ const ProfileEditButton = styled.button`
   }}
 `
 
-const LogoutBtn = styled.div`
+const Profile = styled.img`
   ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
+    const { colors } = theme
     return css`
-      width: 90%;
-      padding: ${paddings.sm} ${paddings.base};
-      margin: ${margins.lg} auto;
-
-      cursor: pointer;
-      border-radius: ${fonts.size.sm};
-      background-color: ${colors.main.primary};
-
-      text-align: center;
-      color: ${colors.white};
-      font-size: ${fonts.size.sm};
-
-      &:hover {
-        background-color: ${colors.main.tertiary};
-        font-weight: ${fonts.weight.bold};
-      }
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      object-fit: cover;
+      box-shadow: 0px 5px 5px ${colors.main.secondary}55;
     `
   }}
 `
-
-const Profile = styled.img`
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  overflow: hidden;
-  object-fit: cover;
-`
 const ProfileBox = styled.div`
-  width: 5rem;
-  height: 5rem;
+  width: 8rem;
+  height: 8rem;
   position: relative;
 `
 

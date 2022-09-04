@@ -56,10 +56,10 @@ const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
 
   return (
     <Wrapper>
-      <Title>
+      <div className="title">
         <h5>옥상 부가 옵션</h5>
         <p>등록하려는 부가 서비스 옵션을 작성해주세요.</p>
-      </Title>
+      </div>
       <OptionList>
         {extraOptions && (
           <ExtraOptionList>
@@ -83,27 +83,37 @@ const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
 }
 
 const Wrapper = styled.div`
-  width: 90%;
-  padding: 2.5%;
-  margin: auto;
-
-  text-align: center;
-  background-color: #ffffff;
-`
-
-const Title = styled.div`
   ${({ theme }) => {
-    const { fonts, margins } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
-      margin: auto;
+      width: 100%;
+      background-color: ${colors.white};
+      padding: ${paddings.base};
 
-      h5 {
-        font-size: ${fonts.size.lg};
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .title {
+        width: 80%;
+        margin-bottom: ${margins.sm};
+        text-align: left;
       }
 
       p {
-        font-weight: 100;
-        margin-bottom: ${margins.sm};
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        margin-bottom: 0.25rem;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
+      }
+
+      img {
+        width: 80%;
+        margin: ${margins.lg} auto 0vw auto;
       }
     `
   }}
@@ -114,7 +124,7 @@ const OptionList = styled.div`
     const { colors } = theme
     return css`
       width: 70%;
-      margin: auto;
+      margin: auto 0vw;
       background-color: ${colors.white};
 
       display: flex;

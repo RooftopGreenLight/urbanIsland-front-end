@@ -24,42 +24,53 @@ const ApplyDetailView = ({ applyInfo, changeInfo }) => {
 
   return (
     <Wrapper>
-      <Title>
+      <div className="title">
         <h5>옥상 식생 / 조경도 업로드</h5>
         <p>등록하려는 옥상 조경 / 식생 상세도를 업로드 해주세요.</p>
-      </Title>
-      <Content>
+      </div>
+      <BtnList>
         <label htmlFor="detailView">
           <FileUploadBtn>사진 업로드</FileUploadBtn>
         </label>
-        {imgBase64 && <img src={imgBase64} alt="None" onClick={removeStructImg} />}
         <input type="file" id="detailView" onChange={addRoofTopDetailView} accept=".png,.jpg" />
-      </Content>
+      </BtnList>
+      {imgBase64 && <img src={imgBase64} alt="None" onClick={removeStructImg} />}
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 90%;
-  padding: 1rem;
-  margin: 1vw auto;
-
-  text-align: center;
-  background-color: #ffffff;
-`
-
-const Title = styled.div`
   ${({ theme }) => {
-    const { fonts } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
-      margin: auto;
+      width: 100%;
+      background-color: ${colors.white};
+      padding: ${paddings.base};
 
-      h5 {
-        font-size: ${fonts.size.lg};
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .title {
+        width: 80%;
+        margin-bottom: ${margins.sm};
+        text-align: left;
       }
 
       p {
-        font-weight: 100;
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        margin-bottom: 0.25rem;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
+      }
+
+      img {
+        width: 80%;
+        margin: ${margins.lg} auto 0vw auto;
       }
     `
   }}
@@ -67,46 +78,32 @@ const Title = styled.div`
 
 const FileUploadBtn = styled.div`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors, fonts, paddings } = theme
     return css`
-      width: 5vw;
+      height: 100%;
       padding: ${paddings.sm};
-      margin: 1vw auto;
 
-      border: 1px solid rgb(77, 77, 77);
-      border-radius: 2.5vw;
-      cursor: pointer;
+      border-radius: ${fonts.size.xsm};
+      background-color: ${colors.main.secondary};
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-weight: 100;
+      color: ${colors.white};
+      font-size: ${fonts.size.xsm};
+      font-weight: ${fonts.weight.light};
 
       &:hover {
-        background: rgb(77, 77, 77);
-        color: #fff;
+        background-color: ${colors.main.tertiary};
+        font-weight: ${fonts.weight.bold};
       }
     `
   }}
 `
 
-const Content = styled.div`
-  width: 60%;
-  margin: 1vw auto 0vw;
-
+const BtnList = styled.div`
   display: flex;
-  justify-content: space-evenly;
 
   label {
     width: 100%;
-    margin: auto;
-  }
-
-  img {
-    width: 10vw;
-    height: 10vw;
-    object-fit: cover;
+    margin-bottom: 0.25rem;
   }
 
   #detailView {

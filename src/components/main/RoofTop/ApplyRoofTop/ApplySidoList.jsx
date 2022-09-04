@@ -14,8 +14,8 @@ const ApplySidoList = ({ applyInfo, changeInfo }) => {
   const changeSelect = e => {
     const { name, value } = e.target
     if (name === "county") {
-      setSidoInfo({ ...sidoInfo, [name]: value, city: "" })
-      changeInfo({ ...applyInfo, [name]: value, city: "" })
+      setSidoInfo({ ...sidoInfo, [name]: value, city: "", detail: "" })
+      changeInfo({ ...applyInfo, [name]: value, city: "", detail: "" })
       return
     }
     setSidoInfo({ ...sidoInfo, [name]: value })
@@ -30,9 +30,11 @@ const ApplySidoList = ({ applyInfo, changeInfo }) => {
 
   return (
     <Wrapper>
-      <InputBox boxSize="lg">
-        <h5>현위치</h5>
-        <p>옥상 시설의 현 위치를 지정해주세요.</p>
+      <div className="title">
+        <h5>시설 위치</h5>
+        <p>등록하려는 옥상 시설의 주소를 설정해주세요.</p>
+      </div>
+      <SelectList>
         <SelectBox name="county" onChange={changeSelect} defaultValue="default">
           <option value="default" disabled>
             시 선택
@@ -43,7 +45,7 @@ const ApplySidoList = ({ applyInfo, changeInfo }) => {
             </option>
           ))}
         </SelectBox>
-        {county && (
+        {county ? (
           <SelectBox name="city" onChange={changeSelect} defaultValue="default">
             <option value="default" disabled>
               구 선택
@@ -54,8 +56,14 @@ const ApplySidoList = ({ applyInfo, changeInfo }) => {
               </option>
             ))}
           </SelectBox>
+        ) : (
+          <SelectBox name="city" onChange={changeSelect} defaultValue="default">
+            <option value="default" disabled>
+              시를 선택해주세요.
+            </option>
+          </SelectBox>
         )}
-        {city && (
+        {city ? (
           <input
             type="texT"
             name="detail"
@@ -63,31 +71,73 @@ const ApplySidoList = ({ applyInfo, changeInfo }) => {
             value={detail}
             onChange={changeInput}
           />
+        ) : (
+          <input type="texT" name="detail" placeholder="시 / 구를 설정해주세요." disabled />
         )}
-      </InputBox>
+      </SelectList>
     </Wrapper>
   )
 }
 const Wrapper = styled.div`
-  width: 100%;
-  margin: auto;
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: ${paddings.base};
+      text-align: left;
 
+      .title {
+        margin-bottom: ${margins.sm};
+      }
+
+      p {
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        margin-bottom: 0.25rem;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
+      }
+
+      input {
+        width: 50%;
+        padding: ${paddings.sm} 0vw;
+        margin: ${margins.xsm} 0vw;
+
+        border: 0;
+        background-color: ${colors.main.tertiary}09;
+        border-bottom: 1px solid ${colors.main.secondary}44;
+
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+        text-align: center;
+      }
+    `
+  }}
+`
+
+const SelectList = styled.div`
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
 `
 
 const SelectBox = styled.select`
   ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
+    const { fonts, margins, paddings } = theme
     return css`
-      width: 25%;
-      margin: ${margins.sm};
+      width: 20%;
+      margin: ${margins.sm} 0vw;
       padding: ${paddings.sm};
 
       border: 1px solid #999;
       border-radius: 0px;
 
+      font-weight: 100;
       font-size: ${fonts.size.xsm};
       text-align: center;
 
@@ -103,36 +153,4 @@ const SelectBox = styled.select`
   }}
 `
 
-const InputBox = styled.div`
-  ${({ theme, boxSize }) => {
-    const boxWidth = new Map([
-      ["sm", "22.5%"],
-      ["base", "40%"],
-      ["lg", "90%"],
-    ])
-    const { colors, fonts, margins, paddings } = theme
-    return css`
-      width: ${boxWidth.get(boxSize)};
-      margin: 1vw auto;
-      background-color: ${colors.white};
-      padding: ${paddings.base};
-
-      h5 {
-        font-size: ${fonts.size.base};
-      }
-
-      p {
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
-      }
-
-      input,
-      textarea {
-        width: 90%;
-        padding: ${paddings.sm};
-        margin: ${margins.sm} 0vw;
-      }
-    `
-  }}
-`
 export default ApplySidoList

@@ -11,9 +11,11 @@ const ApplyAvailableInfo = ({ applyInfo, changeInfo }) => {
 
   return (
     <Wrapper>
-      <InputBox boxSize="lg">
-        <h5>이용 가능 시간</h5>
-        <p>등록하려는 시설의 이용 가능 시간을 설정하세요.</p>
+      <InputBox>
+        <div className="title">
+          <h5>이용 가능 시간</h5>
+          <p>등록하려는 시설의 이용 가능 시간을 설정하세요.</p>
+        </div>
         <OpenModalBtn
           onClick={() =>
             openModal(<SetAvailableTimeModal applyInfo={applyInfo} changeInfo={changeInfo} />)
@@ -21,9 +23,11 @@ const ApplyAvailableInfo = ({ applyInfo, changeInfo }) => {
           시간 설정하기
         </OpenModalBtn>
       </InputBox>
-      <InputBox boxSize="lg">
-        <h5>이용 가능 인원</h5>
-        <p>등록하려는 시설의 이용 가능 인원을 설정하세요.</p>
+      <InputBox>
+        <div className="title">
+          <h5>이용 가능 인원</h5>
+          <p>등록하려는 시설의 이용 가능 인원을 설정하세요.</p>
+        </div>
         <OpenModalBtn
           onClick={() =>
             openModal(<SetAvailablePersonModal applyInfo={applyInfo} changeInfo={changeInfo} />)
@@ -31,9 +35,11 @@ const ApplyAvailableInfo = ({ applyInfo, changeInfo }) => {
           인원 설정하기
         </OpenModalBtn>
       </InputBox>
-      <InputBox boxSize="lg">
-        <h5>시설 세부 정보</h5>
-        <p>등록하려는 옥상 시설에 대한 세부 정보를 설정하세요.</p>
+      <InputBox>
+        <div className="title">
+          <h5>시설 세부 정보</h5>
+          <p>등록하려는 옥상 시설에 대한 세부 정보를 설정하세요.</p>
+        </div>
         <OpenModalBtn
           onClick={() =>
             openModal(<SetFacilitiesModal applyInfo={applyInfo} changeInfo={changeInfo} />)
@@ -54,33 +60,48 @@ const Wrapper = styled.div`
 `
 
 const InputBox = styled.div`
-  ${({ theme, boxSize }) => {
-    const boxWidth = new Map([
-      ["sm", "25%"],
-      ["base", "40%"],
-      ["lg", "90%"],
-    ])
+  ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: ${boxWidth.get(boxSize)};
-      margin: 1vw auto;
+      width: 100%;
       background-color: ${colors.white};
       padding: ${paddings.base};
 
-      h5 {
-        font-size: ${fonts.size.base};
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .title {
+        width: 80%;
+        margin-bottom: ${margins.sm};
+        text-align: left;
       }
 
       p {
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        margin-bottom: 0.25rem;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
       }
 
       input,
       textarea {
         width: 100%;
-        padding: ${paddings.sm};
-        margin: ${margins.sm} 0vw;
+        padding: ${paddings.sm} 0vw;
+        margin: ${margins.xsm} 0vw;
+
+        border: 0;
+        background-color: ${colors.main.tertiary}11;
+        border-bottom: 1px solid ${colors.main.secondary}44;
+
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+        text-align: center;
       }
     `
   }}

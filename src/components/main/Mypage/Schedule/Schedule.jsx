@@ -3,11 +3,11 @@ import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
+  faBook,
   faBuilding,
   faCalendar,
   faClock,
-  faHourglassEmpty,
-  faMessage,
+  faComments,
   faUser,
 } from "@fortawesome/free-solid-svg-icons"
 
@@ -83,14 +83,14 @@ const Schedule = () => {
           </>
         ) : (
           <NoticeEmptyIcon>
-            <FontAwesomeIcon icon={faHourglassEmpty} />
+            <FontAwesomeIcon icon={faBook} />
             <h5>옥상 예약 정보 없음</h5>
             <p>해당 일자에 옥상을 예약한 기록이 없습니다.</p>
           </NoticeEmptyIcon>
         )}
       </InnerBox>
       <SendMessageBtn onClick={() => openModal(<ChatRoomPage />)}>
-        <FontAwesomeIcon icon={faMessage} /> 채팅 목록 열기
+        <FontAwesomeIcon icon={faComments} /> 채팅 목록 열기
       </SendMessageBtn>
     </Wrapper>
   )

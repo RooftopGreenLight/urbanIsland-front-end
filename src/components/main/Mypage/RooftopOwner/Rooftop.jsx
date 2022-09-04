@@ -62,8 +62,8 @@ const Rooftop = () => {
         <Link to="/mypage/rooftop/apply">
           <ServiceBox>
             <div className="introduce">
-              <h5>옥상 시설 등록하기</h5>
-              <p>자신이 소유한 옥상을 등록하는 절차를 거칩니다.</p>
+              <h5>녹화된 옥상 등록하기</h5>
+              <p>이미 녹화된 옥상을 가지고 계신가요?</p>
             </div>
             <FontAwesomeIcon icon={faAngleRight} />
           </ServiceBox>
@@ -71,8 +71,8 @@ const Rooftop = () => {
         <Link to="/mypage/rooftop/request">
           <ServiceBox>
             <div className="introduce">
-              <h5>옥상 녹화 신청하기</h5>
-              <p>아직 녹화를 하지 않은 옥상을 신청합니다.</p>
+              <h5>그린비 매칭 신청하기</h5>
+              <p>아직 옥상이 녹화 되어있지 않으신가요?</p>
             </div>
             <FontAwesomeIcon icon={faAngleRight} />
           </ServiceBox>
