@@ -134,8 +134,8 @@ const CalenderBox = styled.div`
   ${({ theme }) => {
     const { paddings, margins } = theme
     return css`
-      margin: ${margins.sm} auto ${margins.base} auto;
-      padding: ${paddings.base};
+      margin: ${margins.sm} 0vw ${margins.base} 0vw;
+      padding: ${paddings.base} 0vw;
     `
   }}
 `
@@ -144,7 +144,7 @@ const InnerBox = styled.div`
   ${({ theme }) => {
     const { margins } = theme
     return css`
-      margin: ${margins.base} ${margins.sm};
+      margin: ${margins.base} 0vw;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -215,7 +215,7 @@ const NoticeEmptyIcon = styled.div`
     const { colors, fonts, paddings, margins } = theme
     return css`
       width: 100%;
-      margin: ${margins.lg} auto;
+      margin: ${margins.lg} auto 0vw auto;
 
       color: ${colors.main.primary};
       text-align: center;

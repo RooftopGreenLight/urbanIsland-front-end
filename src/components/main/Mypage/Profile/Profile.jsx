@@ -31,55 +31,53 @@ const Profile = () => {
   return (
     <Wrapper>
       {userData && (
-        <>
+        <ProfileBox>
           <Title>
             <h5>내 프로필 관리하기</h5>
           </Title>
-          <ProfileBox>
-            <ProfileLine>
-              <div className="info">
-                <span>이메일</span>
-                <p>{email}</p>
-              </div>
-            </ProfileLine>
-            <ProfileLine>
-              <div className="info">
-                <span>닉네임</span>
-                <p>{name}</p>
-              </div>
-              <button
-                onClick={() =>
-                  openModal(<ProfileModifyModal content="nickname" placeholder="닉네임" />)
-                }>
-                수정
-              </button>
-            </ProfileLine>
-            <ProfileLine>
-              <div className="info">
-                <span>전화 번호</span>
-                <p>{phoneNumber ?? "정보 없음"}</p>
-              </div>
-              <button
-                onClick={() =>
-                  openModal(<ProfileModifyModal content="phoneNumber" placeholder="전화번호" />)
-                }>
-                {phoneNumber ? "수정" : "추가"}
-              </button>
-            </ProfileLine>
-            <ProfileLine>
-              <div className="info">
-                <p>비밀번호 변경</p>
-                <span>주기적으로 비밀번호를 변경하여 보안을 지키세요.</span>
-              </div>
-              <button
-                onClick={() =>
-                  openModal(<ProfileModifyModal content="password" placeholder="비밀번호" />)
-                }>
-                변경
-              </button>
-            </ProfileLine>
-          </ProfileBox>
-        </>
+          <ProfileLine>
+            <div className="info">
+              <span>이메일</span>
+              <p>{email}</p>
+            </div>
+          </ProfileLine>
+          <ProfileLine>
+            <div className="info">
+              <span>닉네임</span>
+              <p>{name}</p>
+            </div>
+            <button
+              onClick={() =>
+                openModal(<ProfileModifyModal content="nickname" placeholder="닉네임" />)
+              }>
+              수정
+            </button>
+          </ProfileLine>
+          <ProfileLine>
+            <div className="info">
+              <span>전화 번호</span>
+              <p>{phoneNumber ?? "정보 없음"}</p>
+            </div>
+            <button
+              onClick={() =>
+                openModal(<ProfileModifyModal content="phoneNumber" placeholder="전화번호" />)
+              }>
+              {phoneNumber ? "수정" : "추가"}
+            </button>
+          </ProfileLine>
+          <ProfileLine>
+            <div className="info">
+              <p>비밀번호 변경</p>
+              <span>주기적으로 비밀번호를 변경하여 보안을 지키세요.</span>
+            </div>
+            <button
+              onClick={() =>
+                openModal(<ProfileModifyModal content="password" placeholder="비밀번호" />)
+              }>
+              변경
+            </button>
+          </ProfileLine>
+        </ProfileBox>
       )}
       <ServiceList>
         <Title>
