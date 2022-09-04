@@ -279,25 +279,27 @@ const OpenModalBtn = styled.button`
 
 const ConfirmBtn = styled.button`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 30%;
-      padding: ${paddings.sm};
-      margin: 0.75vw auto 0.25vw auto;
+      width: 50%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin: ${margins.lg} auto;
 
-      border: 1px solid rgb(77, 77, 77);
-      border-radius: 2.5vw;
       cursor: pointer;
+      border-radius: ${fonts.size.sm};
+      background-color: ${colors.main.primary};
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      text-align: center;
+      color: ${colors.white};
+      font-size: ${fonts.size.sm};
 
-      font-weight: 100;
+      svg {
+        margin: auto ${margins.sm} auto 0vw;
+      }
 
       &:hover {
-        background: rgb(77, 77, 77);
-        color: #fff;
+        background-color: ${colors.main.tertiary};
+        font-weight: ${fonts.weight.bold};
       }
     `
   }}

@@ -123,7 +123,7 @@ const OptionList = styled.div`
   ${({ theme }) => {
     const { colors } = theme
     return css`
-      width: 70%;
+      width: 100%;
       margin: auto 0vw;
       background-color: ${colors.white};
 

@@ -107,7 +107,7 @@ const FileUploadBtn = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`
-      height: 100%;
+      height: 70%;
       padding: ${paddings.sm};
 
       border-radius: ${fonts.size.xsm};
@@ -129,7 +129,7 @@ const SliderBox = styled.div`
   ${({ theme }) => {
     const { margins } = theme
     return css`
-      margin: ${margins.lg} auto;
+      margin: ${margins.lg} auto 0vw auto;
       width: 90%;
 
       img {

@@ -80,7 +80,7 @@ const FileUploadBtn = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`
-      height: 100%;
+      height: 70%;
       padding: ${paddings.sm};
 
       border-radius: ${fonts.size.xsm};
