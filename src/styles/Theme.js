@@ -1,4 +1,5 @@
 const margins = {
+  xsm: ".25rem",
   sm: ".5rem",
   base: "1rem",
   lg: "2rem",
@@ -6,6 +7,7 @@ const margins = {
 }
 
 const paddings = {
+  xsm: ".25rem",
   sm: ".5rem",
   base: "1rem",
   lg: "2rem",

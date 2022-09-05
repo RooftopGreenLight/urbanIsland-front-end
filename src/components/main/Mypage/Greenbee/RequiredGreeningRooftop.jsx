@@ -54,45 +54,56 @@ const RequiredGreeningRooftop = () => {
     <Wrapper>
       {rooftopInfo && (
         <ViewPoint>
-          <OptionBox boxSize="lg">
-            <h5>옥상 시설 위치</h5>
-            <p>해당 시설의 위치 정보입니다.</p>
-            <span>{`${city} ${district}`}</span>
-            <span>{detail}</span>
-          </OptionBox>
-          <OptionBox boxSize="base">
-            <h5>옥상 시설 이미지</h5>
-            <p>해당 시설의 이미지입니다.</p>
-            <img src={structureImage?.fileUrl} alt="Loading" />
-          </OptionBox>
-          <OptionBox boxSize="base">
-            <h5>옥상 시설 소개</h5>
-            <p>해당 시설의 소개 정보입니다.</p>
-            <span>{ownerContent}</span>
-          </OptionBox>
-          <OptionBox boxSize="base">
-            <h5>옥상 시설 번호</h5>
-            <p>해당 시설 소유주의 전화 번호입니다.</p>
-            <span>{phoneNumber}</span>
-          </OptionBox>
-          <OptionBox boxSize="base">
-            <h5>옥상 시설 시공 일정</h5>
-            <p>시설 소유주가 요구하는 시공 일정입니다.</p>
-            <span>{RequestDeadLineDate[requiredTermType]}</span>
-          </OptionBox>
-          <OptionBox boxSize="base">
-            <h5>옥상 시설 면적</h5>
-            <p>옥상 시설의 면적입니다.</p>
-            <span>{`${width} m2`}</span>
-          </OptionBox>
-          <OptionBox boxSize="base">
-            <h5>옥상 시설 면적 당 시공가</h5>
-            <p>옥상 시설의 면적 당 시공가입니다.</p>
-            <span>{`${widthPrice} 원 / m2`}</span>
-          </OptionBox>
-          <OptionBox boxSize="lg">
-            <h5>시공 시 필요 시설</h5>
-            <p>시설 시공 시 필요 시설 목록입니다.</p>
+          <RooftopInfoBox>
+            <Title>
+              <h5>옥상 기본 정보</h5>
+            </Title>
+            <RooftopInfoLine>
+              <div className="info">
+                <span>옥상 위치</span>
+                <p>{`${city} ${district} ${detail}`}</p>
+              </div>
+            </RooftopInfoLine>
+            <RooftopInfoLine>
+              <div className="info">
+                <span>옥상 소유주 번호</span>
+                <p>{phoneNumber}</p>
+              </div>
+            </RooftopInfoLine>
+            <RooftopInfoLine>
+              <div className="info">
+                <span>옥상 시설 소개</span>
+                <pre>{ownerContent}</pre>
+              </div>
+            </RooftopInfoLine>
+          </RooftopInfoBox>
+          <RooftopInfoBox>
+            <Title>
+              <h5>시공 관련 정보</h5>
+            </Title>
+            <RooftopInfoLine>
+              <div className="info">
+                <span>요구 시공 일정</span>
+                <p>{RequestDeadLineDate[requiredTermType]}</p>
+              </div>
+            </RooftopInfoLine>
+            <RooftopInfoLine width={45}>
+              <div className="info">
+                <span>옥상 시설 면적</span>
+                <p>{`${width && width.toLocaleString()} m2`}</p>
+              </div>
+            </RooftopInfoLine>
+            <RooftopInfoLine width={45}>
+              <div className="info">
+                <span>희망 시공 가격</span>
+                <p>{`${widthPrice && widthPrice.toLocaleString()} 원 / m2`}</p>
+              </div>
+            </RooftopInfoLine>
+          </RooftopInfoBox>
+          <RooftopInfoBox>
+            <Title>
+              <h5>희망 세부 옵션</h5>
+            </Title>
             <DetailOptionList>
               {detailNums &&
                 RequiredRoofTopOption.map((elm, idx) => (
@@ -106,9 +117,15 @@ const RequiredGreeningRooftop = () => {
                   </div>
                 ))}
             </DetailOptionList>
-          </OptionBox>
-          <ApplyFeedback ref={feedbackMsg}></ApplyFeedback>
-          <ApplyBtn onClick={applyRooftopGreening}>시공 신청하기</ApplyBtn>
+          </RooftopInfoBox>
+          <RooftopInfoBox>
+            <Title>
+              <h5>시설 이미지</h5>
+            </Title>
+            <img src={structureImage?.fileUrl} alt="Loading" />
+            <ApplyFeedback ref={feedbackMsg}></ApplyFeedback>
+            <ApplyBtn onClick={applyRooftopGreening}>시공 신청하기</ApplyBtn>
+          </RooftopInfoBox>
         </ViewPoint>
       )}
     </Wrapper>
@@ -121,8 +138,6 @@ const Wrapper = styled.div`
 
   margin: auto;
   padding: 1rem;
-
-  background-color: #d3d3d3;
   text-align: center;
 `
 
@@ -136,43 +151,87 @@ const ViewPoint = styled.div`
   justify-content: space-between;
 `
 
-const OptionBox = styled.div`
-  ${({ theme, boxSize }) => {
-    const boxWidth = new Map([
-      ["sm", "20%"],
-      ["base", "45%"],
-      ["lg", "95%"],
-    ])
-    const { colors, fonts, margins, paddings } = theme
+const Title = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
     return css`
-      width: ${boxWidth.get(boxSize)};
-      margin: 0.5vw auto;
-      background-color: ${colors.white};
-      padding: ${paddings.base};
+      width: 100%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin-bottom: ${margins.sm};
+
+      display: flex;
+      border-bottom: 1px solid ${colors.main.primary}77;
+
+      color: ${colors.main.primary};
+      text-align: center;
 
       h5 {
-        font-size: ${fonts.size.base};
-      }
+        width: 90%;
 
-      p {
-        margin-bottom: ${margins.sm};
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
+        font-size: ${fonts.size.base};
+        font-weight: ${fonts.weight.bold};
+        text-align: left;
+      }
+    `
+  }}
+`
+
+const RooftopInfoBox = styled.div`
+  width: 100%;
+  margin-bottom: 5vh;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  text-align: left;
+
+  img {
+    width: 80%;
+    margin: 2vw auto;
+  }
+`
+
+const RooftopInfoLine = styled.div`
+  ${({ theme, width = 100 }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: ${width}%;
+      display: flex;
+      justify-content: space-between;
+      padding: ${paddings.base};
+
+      .info {
+        width: 90%;
       }
 
       span {
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
       }
 
-      img {
-        width: 50%;
+      p,
+      pre {
+        margin: ${margins.xsm} 0vw;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
+      }
 
-        background-size: cover;
-        object-fit: cover;
+      button {
+        width: 10%;
+        height: 75%;
+        margin: auto;
 
-        padding: ${paddings.sm};
-        margin: ${margins.sm} 0vw;
+        border-radius: ${fonts.size.xsm};
+        background-color: ${colors.main.secondary};
+
+        color: ${colors.white};
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+
+        &:hover {
+          background-color: ${colors.main.tertiary};
+          font-weight: ${fonts.weight.bold};
+        }
       }
     `
   }}
@@ -180,10 +239,10 @@ const OptionBox = styled.div`
 
 const DetailOptionList = styled.div`
   ${({ theme }) => {
-    const { margins } = theme
+    const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 70%;
-      margin: ${margins.base} auto;
+      width: 90%;
+      padding: ${paddings.base};
 
       display: flex;
       flex-wrap: wrap;
@@ -195,7 +254,44 @@ const DetailOptionList = styled.div`
 
         display: flex;
         justify-content: space-between;
+
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
         text-align: left;
+      }
+
+      input[type="checkbox"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+
+        background: ${colors.main.quaternary}88;
+        border-radius: 4px;
+
+        width: 16px;
+        height: 16px;
+
+        &::after {
+          border: solid #fff;
+          border-width: 0 2px 2px 0;
+          content: "";
+          display: none;
+
+          width: 15%;
+          height: 40%;
+
+          position: relative;
+          left: 35%;
+          top: 20%;
+          transform: rotate(45deg);
+        }
+
+        &:checked {
+          background: ${colors.main.tertiary};
+          &::after {
+            display: block;
+          }
+        }
       }
     `
   }}
@@ -218,25 +314,27 @@ const ApplyFeedback = styled.p`
 
 const ApplyBtn = styled.button`
   ${({ theme }) => {
-    const { colors, margins, paddings } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 30%;
-      padding: ${paddings.sm};
-      margin: ${margins.sm} auto;
+      width: 90%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin: ${margins.lg} auto;
 
-      border: 1px solid ${colors.black.secondary};
-      border-radius: 2.5vw;
       cursor: pointer;
+      border-radius: ${fonts.size.sm};
+      background-color: ${colors.main.primary};
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      text-align: center;
+      color: ${colors.white};
+      font-size: ${fonts.size.sm};
 
-      font-weight: 100;
+      svg {
+        margin: auto ${margins.sm} auto 0vw;
+      }
 
       &:hover {
-        background: rgb(77, 77, 77);
-        color: #fff;
+        background-color: ${colors.main.tertiary};
+        font-weight: ${fonts.weight.bold};
       }
     `
   }}

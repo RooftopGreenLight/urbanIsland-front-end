@@ -35,8 +35,8 @@ const RequestToGreenBee = () => {
     kidCount: 0,
     petCount: 0,
     totalCount: 0,
-    county: "",
     city: "",
+    district: "",
     detail: "",
     deadLineNum: 0,
     requiredItemNum: [],
@@ -87,38 +87,57 @@ const RequestToGreenBee = () => {
   return (
     <Wrapper>
       <ViewPoint>
-        <ApplySidoList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-        <ApplyBaseInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-        <InputBox boxSize="lg">
-          <h5>세부사항 : 필요 항목</h5>
-          <p>옥상 녹화 단계에 필요한 시설을 체크해주세요.</p>
-          <OpenModalBtn
-            onClick={() =>
-              openModal(
-                <SetRequiredOptionModal applyInfo={requiredInfo} changeInfo={setRequiredInfo} />,
-              )
-            }>
-            수정하기
-          </OpenModalBtn>
-        </InputBox>
-        <RequestDeadLine requiredInfo={requiredInfo} setRequiredInfo={setRequiredInfo} />
-        <ApplyImgList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-        <ApplyDetailView applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-        <InputBox boxSize="lg">
-          <h5>세부사항 : 옥상 설명 멘트</h5>
-          <p>고객에게 옥상 시설을 설명해주세요!</p>
-          <textarea
-            name="explainContent"
-            rows="4"
-            cols="50"
-            value={explainContent}
-            placeholder="자유롭게 옥상 설명을 작성해주세요."
-            onChange={changeInput}
-          />
-        </InputBox>
-        <ApplyAvailableInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-        <ApplyDetailInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-        <ApplyExtraOption applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <ServiceList>
+          <Title>
+            <h5>기본 정보 기입하기</h5>
+          </Title>
+          <ApplySidoList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+          <ApplyBaseInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        </ServiceList>
+        <ServiceList>
+          <Title>
+            <h5>시공 관련 정보 기입하기</h5>
+          </Title>
+          <InputBox>
+            <div className="title">
+              <h5>세부사항 : 필요 항목</h5>
+              <p>옥상 녹화 단계에 필요한 시설을 체크해주세요.</p>
+            </div>
+            <OpenModalBtn
+              onClick={() =>
+                openModal(
+                  <SetRequiredOptionModal applyInfo={requiredInfo} changeInfo={setRequiredInfo} />,
+                )
+              }>
+              수정하기
+            </OpenModalBtn>
+          </InputBox>
+          <RequestDeadLine requiredInfo={requiredInfo} setRequiredInfo={setRequiredInfo} />
+          <ApplyImgList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+          <ApplyDetailView applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+          <InputBox>
+            <div className="title">
+              <h5>세부사항 : 옥상 설명 멘트</h5>
+              <p>고객에게 옥상 시설을 설명해주세요!</p>
+            </div>
+            <textarea
+              name="explainContent"
+              rows="4"
+              cols="50"
+              value={explainContent}
+              placeholder="자유롭게 옥상 설명을 작성해주세요."
+              onChange={changeInput}
+            />
+          </InputBox>
+        </ServiceList>
+        <ServiceList>
+          <Title>
+            <h5>이용 관련 정보 기입하기</h5>
+          </Title>
+          <ApplyAvailableInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+          <ApplyDetailInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+          <ApplyExtraOption applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        </ServiceList>
         <ConfirmBtn onClick={submitRequest}>제출하기</ConfirmBtn>
       </ViewPoint>
     </Wrapper>
@@ -130,75 +149,120 @@ const Wrapper = styled.div`
   height: 80vh;
 
   margin: auto;
-  padding: 1rem;
 
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 
-  background-color: #d3d3d3;
   text-align: center;
 `
 
 const ViewPoint = styled.div`
   max-height: 80vh;
   overflow: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 
-const InputBox = styled.div`
-  ${({ theme, boxSize }) => {
-    const boxWidth = new Map([
-      ["sm", "20%"],
-      ["base", "40%"],
-      ["lg", "90%"],
-    ])
-    const { colors, fonts, margins, paddings } = theme
+const Title = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
     return css`
-      width: ${boxWidth.get(boxSize)};
-      margin: 1vw auto;
-      background-color: ${colors.white};
-      padding: ${paddings.base};
+      width: 100%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin-bottom: ${margins.sm};
+
+      display: flex;
+      border-bottom: 1px solid ${colors.main.primary}77;
+
+      color: ${colors.main.primary};
+      text-align: center;
 
       h5 {
+        width: 90%;
+
         font-size: ${fonts.size.base};
-      }
-
-      p {
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
-      }
-
-      input,
-      textarea {
-        width: 100%;
-        padding: ${paddings.sm};
-        margin: ${margins.sm} 0vw;
+        font-weight: ${fonts.weight.bold};
+        text-align: left;
       }
     `
   }}
 `
 
-const OpenModalBtn = styled.div`
-  ${({ theme }) => {
-    const { colors, margins, paddings } = theme
-    return css`
-      width: 30%;
-      padding: ${paddings.sm};
-      margin: 0.75vw auto 0.25vw auto;
+const ServiceList = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 7.5vh;
+`
 
-      border: 1px solid rgb(77, 77, 77);
-      border-radius: 2.5vw;
-      cursor: pointer;
+const InputBox = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, margins, paddings } = theme
+    return css`
+      width: 100%;
+      background-color: ${colors.white};
+      padding: ${paddings.base};
 
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-wrap: wrap;
+      justify-content: space-between;
 
-      font-weight: 100;
+      .title {
+        width: 80%;
+        margin-bottom: ${margins.sm};
+        text-align: left;
+      }
+
+      p {
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        margin-bottom: 0.25rem;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: ${paddings.sm} 0vw;
+        margin: ${margins.xsm} 0vw;
+
+        border: 0;
+        background-color: ${colors.main.tertiary}11;
+        border-bottom: 1px solid ${colors.main.secondary}44;
+
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+        text-align: center;
+      }
+    `
+  }}
+`
+
+const OpenModalBtn = styled.button`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 10%;
+      padding: 0vw ${paddings.xsm};
+      margin-bottom: 0.25rem;
+
+      border-radius: ${fonts.size.xsm};
+      background-color: ${colors.main.secondary};
+
+      color: ${colors.white};
+      font-size: ${fonts.size.xsm};
+      font-weight: ${fonts.weight.light};
 
       &:hover {
-        background: rgb(77, 77, 77);
-        color: #fff;
+        background-color: ${colors.main.tertiary};
+        font-weight: ${fonts.weight.bold};
       }
     `
   }}
@@ -206,25 +270,27 @@ const OpenModalBtn = styled.div`
 
 const ConfirmBtn = styled.button`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 30%;
-      padding: ${paddings.sm};
-      margin: 0.75vw auto 0.25vw auto;
+      width: 50%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin: ${margins.lg} auto;
 
-      border: 1px solid rgb(77, 77, 77);
-      border-radius: 2.5vw;
       cursor: pointer;
+      border-radius: ${fonts.size.sm};
+      background-color: ${colors.main.primary};
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      text-align: center;
+      color: ${colors.white};
+      font-size: ${fonts.size.sm};
 
-      font-weight: 100;
+      svg {
+        margin: auto ${margins.sm} auto 0vw;
+      }
 
       &:hover {
-        background: rgb(77, 77, 77);
-        color: #fff;
+        background-color: ${colors.main.tertiary};
+        font-weight: ${fonts.weight.bold};
       }
     `
   }}
