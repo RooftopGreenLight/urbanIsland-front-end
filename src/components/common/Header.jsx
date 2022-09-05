@@ -1,10 +1,11 @@
 import styled, { css } from "styled-components"
-import Navbar from "components/common/Navbar"
+import { useNavigate } from "react-router-dom"
 
 const Header = () => {
+  const navigate = useNavigate()
   return (
     <Wrapper>
-      <h5>Urban Island</h5>
+      <h5 onClick={() => navigate("/")}>Urban Island</h5>
     </Wrapper>
   )
 }
@@ -27,6 +28,7 @@ const Wrapper = styled.header`
       color: ${colors.main.primary};
 
       h5 {
+        cursor: pointer;
         font-size: ${fonts.size.base};
       }
     `
