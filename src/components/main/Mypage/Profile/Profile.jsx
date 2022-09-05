@@ -127,8 +127,8 @@ const Profile = () => {
 
 const Wrapper = styled.div`
   width: 35vw;
-  height: 75vh;
-  margin: auto;
+  height: 80vh;
+  margin: 0vh auto;
 
   display: flex;
   flex-direction: column;

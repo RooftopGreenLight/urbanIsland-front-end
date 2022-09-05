@@ -100,8 +100,8 @@ const Schedule = () => {
 
 const Wrapper = styled.div`
   width: 35vw;
-  height: 75vh;
-  margin: auto;
+  height: 80vh;
+  margin: 0vh auto;
 
   display: flex;
   flex-direction: column;
@@ -113,17 +113,7 @@ const ViewPoint = styled.div`
   overflow: auto;
 
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-    margin-left: 10px;
-    background: #ffffff;
-  }
-  ::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background-color: #ced4da;
-    &:hover {
-      background-color: #adb5bd;
-    }
+    display: none;
   }
 `
 

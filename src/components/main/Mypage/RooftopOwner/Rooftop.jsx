@@ -113,17 +113,7 @@ const ViewPoint = styled.div`
   overflow: auto;
 
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-    margin-left: 10px;
-    background: #ffffff;
-  }
-  ::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background-color: #ced4da;
-    &:hover {
-      background-color: #adb5bd;
-    }
+    display: none;
   }
 `
 
