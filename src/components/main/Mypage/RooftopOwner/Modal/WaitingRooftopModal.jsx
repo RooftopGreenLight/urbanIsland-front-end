@@ -39,7 +39,7 @@ const WaitingRooftopModal = () => {
           {rooftopStatus ? (
             rooftopStatus.map(({ city, detail, district, progress, rooftopDate }, idx) => (
               <StatusList>
-                <h5 key={district}>{`#${idx + 1}. ${city} ${district} ${detail}`}</h5>
+                <h5 key={district}>{`${city} ${district} ${detail}`}</h5>
                 <StatusBox key={idx}>
                   <div className="header">
                     <h5>옥상지기 분께 알리는 정보</h5>
@@ -152,21 +152,35 @@ const ModalContent = styled.main`
 `
 
 const StatusList = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1.5vh;
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1.5vh;
+
+      h5 {
+        width: 75%;
+        padding-bottom: ${paddings.sm};
+        margin: 0vw auto ${margins.sm} auto;
+
+        border-bottom: 1px solid ${colors.main.primary};
+        color: ${colors.main.secondary};
+        font-size: ${fonts.size.sm};
+      }
+    `
+  }}
 `
 
 const StatusBox = styled.div`
   ${({ theme }) => {
-    const { fonts, paddings, margins } = theme
+    const { colors, fonts, paddings, margins } = theme
     return css`
       width: 75%;
       padding: ${paddings.base};
       margin: ${margins.sm} auto;
 
-      background-color: #cdcdcd;
-      border-radius: 0.8rem;
+      background-color: ${colors.main.secondary}11;
       text-align: left;
 
       .header {
@@ -174,11 +188,15 @@ const StatusBox = styled.div`
         justify-content: space-between;
         vertical-align: bottom;
 
-        margin-bottom: ${margins.base};
+        margin-bottom: ${margins.sm};
 
         h5 {
+          width: 50%;
           margin: 0;
-          font-size: ${fonts.size.sm};
+
+          border-bottom: 0;
+          color: ${colors.black.secondary};
+          font-size: 1.25rem;
         }
 
         span {
