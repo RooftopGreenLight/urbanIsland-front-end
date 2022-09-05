@@ -1,78 +1,80 @@
 import styled, { css } from "styled-components"
 import { useState } from "react"
+import { useEffect } from "react"
 
 const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
-  const { optionContent, optionPrice } = applyInfo
-  const defaultExtraOptions =
-    optionContent.length > 0
-      ? Object.assign(...optionContent.map((option, idx) => ({ [option]: optionPrice[idx] })))
-      : {}
-
-  const [extraOptions, setExtraOptions] = useState(defaultExtraOptions)
+  const [extraOptions, setExtraOptions] = useState([])
   const [newExtraOption, setNewExtraOption] = useState({
     option: "",
     cost: 0,
+    count: 0,
   })
 
-  const { option, cost } = newExtraOption
+  const { option, cost, count } = newExtraOption
+
+  useEffect(() => {
+    const confirmExtraOption = () => {
+      changeInfo(prevInfo => ({
+        ...prevInfo,
+        optionContent: extraOptions.map(({ option }) => option),
+        optionPrice: extraOptions.map(({ cost }) => cost),
+        optionCount: extraOptions.map(({ count }) => count),
+      }))
+    }
+    confirmExtraOption()
+  }, [extraOptions])
 
   const changeInput = e => {
     const { name, value } = e.target
-    name === "cost"
+    name === "option"
       ? setNewExtraOption({
           ...newExtraOption,
-          [name]: isNaN(value) || value.length === 0 || value < 0 ? 0 : parseInt(value),
+          [name]: value,
         })
       : setNewExtraOption({
           ...newExtraOption,
-          [name]: value,
+          [name]: isNaN(value) || value.length === 0 || value < 0 ? 0 : parseInt(value),
         })
   }
 
   const addNewOption = () => {
-    if (option.length === 0 || cost <= 0) {
+    if (count * cost === 0 || extraOptions.includes(newExtraOption)) {
       return
     }
 
-    if (Object.keys(extraOptions).includes(option)) {
-      return
-    }
-
+    setExtraOptions(prevOptions => [...prevOptions, newExtraOption])
     setNewExtraOption({
       option: "",
       cost: 0,
+      count: 0,
     })
-    setExtraOptions({ ...extraOptions, [option]: cost })
+  }
 
-    const optionContent = Object.keys(extraOptions)
-    const optionPrice = Object.values(extraOptions)
-    const optionCount = optionContent.length
-
-    changeInfo({
-      ...applyInfo,
-      optionContent,
-      optionPrice,
-      optionCount,
-    })
+  const deleteExtraOption = e => {
+    setExtraOptions(extraOptions.filter(({ option }) => option !== e.target.dataset.option))
   }
 
   return (
     <Wrapper>
-      <Title>
+      <div className="title">
         <h5>옥상 부가 옵션</h5>
         <p>등록하려는 부가 서비스 옵션을 작성해주세요.</p>
-      </Title>
+      </div>
       <OptionList>
         {extraOptions && (
           <ExtraOptionList>
-            {Object.entries(extraOptions).map(([option, cost]) => (
-              <span key={option}>{`${option} ${cost}원`}</span>
+            {extraOptions.map(({ option, cost, count }) => (
+              <span
+                key={option}
+                data-option={option}
+                onClick={deleteExtraOption}>{`${option} ${cost}원 (최대 ${count} 개)`}</span>
             ))}
           </ExtraOptionList>
         )}
         <InsertNewOption>
-          <input name="option" value={option} placeholder="새로운 옵션" onChange={changeInput} />
-          <input name="cost" value={cost} placeholder="새로운 옵션 가격" onChange={changeInput} />
+          <input name="option" value={option} placeholder="옵션 이름" onChange={changeInput} />
+          <input name="cost" value={cost} placeholder="옵션 가격" onChange={changeInput} />
+          <input name="count" value={count} placeholder="옵션 최대 수량" onChange={changeInput} />
           <button onClick={addNewOption}>옵션 추가</button>
         </InsertNewOption>
       </OptionList>
@@ -81,27 +83,37 @@ const ApplyExtraOption = ({ applyInfo, changeInfo }) => {
 }
 
 const Wrapper = styled.div`
-  width: 90%;
-  padding: 2.5%;
-  margin: auto;
-
-  text-align: center;
-  background-color: #ffffff;
-`
-
-const Title = styled.div`
   ${({ theme }) => {
-    const { fonts, margins } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
-      margin: auto;
+      width: 100%;
+      background-color: ${colors.white};
+      padding: ${paddings.base};
 
-      h5 {
-        font-size: ${fonts.size.lg};
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .title {
+        width: 80%;
+        margin-bottom: ${margins.sm};
+        text-align: left;
       }
 
       p {
-        font-weight: 100;
-        margin-bottom: ${margins.sm};
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        margin-bottom: 0.25rem;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
+      }
+
+      img {
+        width: 80%;
+        margin: ${margins.lg} auto 0vw auto;
       }
     `
   }}
@@ -109,10 +121,10 @@ const Title = styled.div`
 
 const OptionList = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
+    const { colors } = theme
     return css`
-      width: 70%;
-      margin: auto;
+      width: 100%;
+      margin: auto 0vw;
       background-color: ${colors.white};
 
       display: flex;
@@ -142,7 +154,11 @@ const InsertNewOption = styled.div`
         }
 
         &[name="cost"] {
-          width: 20%;
+          width: 10%;
+        }
+
+        &[name="count"] {
+          width: 10%;
         }
       }
 

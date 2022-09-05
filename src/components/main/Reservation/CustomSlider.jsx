@@ -56,7 +56,7 @@ const CustomSlider = ({ STEP, MIN, MAX, imin, imax, unit, setValue, flag }) => {
   const [values, setValues] = useState([imin, imax])
   useEffect(() => {
     const onChange = () => {
-      setValues([MIN, MAX])
+      setValues([imin, imax])
     }
     onChange()
   }, [flag])

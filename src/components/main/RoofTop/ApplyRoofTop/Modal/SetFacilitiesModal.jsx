@@ -30,11 +30,14 @@ const SetFacilitiesModal = ({ applyInfo, changeInfo }) => {
         <ModalCloseBtn icon={faXmark} onClick={closeModal} />
       </ModalHeader>
       <ModalContent>
+        <h5>옥상 지원 세부 시설 목록</h5>
+        <p>해당 시설에서 지원하는 시설을 전부 체크해주세요.</p>
         <SetDetailSection>
           {RoofTopFacilities.map((facility, idx) => (
             <div className="select-section" key={facility}>
               <p>{facility}</p>
               <input
+                key={`${facility}-${detailFacilities.includes(idx)}`}
                 type="checkbox"
                 name={idx}
                 checked={detailFacilities.includes(idx)}
@@ -52,9 +55,8 @@ const SetFacilitiesModal = ({ applyInfo, changeInfo }) => {
 
 const Wrapper = styled.div`
   width: 30vw;
-
   margin: auto;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
 `
 
 const ModalHeader = styled.div`
@@ -64,15 +66,16 @@ const ModalHeader = styled.div`
       width: 100%;
       padding: ${paddings.base};
 
-      background-color: #000000;
+      background-color: ${colors.main.primary};
 
       display: flex;
       justify-content: space-between;
 
+      color: ${colors.white};
+      text-align: center;
+
       h5 {
-        color: ${colors.white};
         font-size: ${fonts.size.base};
-        text-align: center;
         vertical-align: center;
       }
     `
@@ -92,15 +95,21 @@ const ModalCloseBtn = styled(FontAwesomeIcon)`
 
 const ModalContent = styled.div`
   ${({ theme }) => {
-    const { fonts, margins, paddings } = theme
+    const { fonts, paddings, margins } = theme
     return css`
-      padding: ${paddings.xl};
+      padding: ${paddings.lg} ${paddings.xl};
       margin: auto;
 
       h5 {
-        font-size: ${fonts.size.base};
+        font-size: ${fonts.size.sm};
         text-align: center;
-        margin: ${margins.base} 0vw;
+      }
+
+      p {
+        margin-bottom: ${margins.lg};
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+        text-align: center;
       }
     `
   }}
@@ -108,9 +117,9 @@ const ModalContent = styled.div`
 
 const SetDetailSection = styled.div`
   ${({ theme }) => {
-    const { fonts, margins } = theme
+    const { colors, fonts, margins } = theme
     return css`
-      width: 75%;
+      width: 100%;
       margin: auto;
 
       display: flex;
@@ -120,7 +129,7 @@ const SetDetailSection = styled.div`
       text-align: center;
 
       .select-section {
-        width: 40%;
+        width: 35%;
 
         display: flex;
         justify-content: space-between;
@@ -136,14 +145,38 @@ const SetDetailSection = styled.div`
           font-weight: 100;
         }
 
-        input {
-          margin-left: auto;
+        input[type="checkbox"] {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
 
-          text-align: center;
-          font-size: ${fonts.size.sm};
+          background: ${colors.main.quaternary}88;
+          border-radius: 4px;
 
-          &::placeholder {
-            font-weight: 100;
+          width: 16px;
+          height: 16px;
+          margin: auto 0vw;
+
+          &::after {
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+            content: "";
+            display: none;
+
+            width: 15%;
+            height: 40%;
+
+            position: relative;
+            left: 37.5%;
+            top: 20%;
+            transform: rotate(45deg);
+          }
+
+          &:checked {
+            background: ${colors.main.tertiary};
+            &::after {
+              display: block;
+            }
           }
         }
       }
@@ -159,19 +192,28 @@ const ApplyDetailSection = styled.div`
 
 const ApplyDetailBtn = styled.button`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { colors, paddings, margins } = theme
     return css`
-      width: 25%;
+      width: 40%;
       padding: ${paddings.sm};
-      margin: ${margins.base} auto;
+      margin: ${margins.lg} auto 0vw auto;
 
-      background-color: ${colors.white};
-      border: 1px solid #7d7d7d;
-      border-radius: 25px;
+      background: ${colors.white};
+      border: 1px solid ${colors.main.primary};
+      border-radius: 2.5vw;
+      cursor: pointer;
 
-      text-align: center;
-      font-size: ${fonts.size.xsm};
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
       font-weight: 100;
+
+      &:hover {
+        border: 0px;
+        background: ${colors.main.tertiary};
+        color: ${colors.white};
+      }
     `
   }}
 `

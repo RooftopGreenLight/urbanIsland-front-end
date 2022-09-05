@@ -29,8 +29,8 @@ const ApplyRoofTop = () => {
     kidCount: 0,
     petCount: 0,
     totalCount: 0,
-    county: "",
     city: "",
+    district: "",
     detail: "",
     detailInfoNum: [],
     normalFile: [],
@@ -80,26 +80,43 @@ const ApplyRoofTop = () => {
   return (
     <Wrapper>
       <ViewPoint>
-        <ApplySidoList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-        <ApplyBaseInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-        <ApplyImgList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-        <ApplyDetailView applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-        <InputBox boxSize="lg">
-          <h5>세부사항 : 옥상 설명 멘트</h5>
-          <p>고객에게 옥상 시설을 설명해주세요!</p>
-          <textarea
-            name="explainContent"
-            rows="4"
-            cols="50"
-            value={explainContent}
-            placeholder="자유롭게 옥상 설명을 작성해주세요."
-            onChange={changeInput}
-          />
-        </InputBox>
-        <ApplyAvailableInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-        <ApplyDetailInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-        <ApplyExtraOption applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-        <ConfirmBtn onClick={sendRoofTopData}>옥상 신청하기</ConfirmBtn>
+        <ServiceList>
+          <Title>
+            <h5>기본 정보 기입하기</h5>
+          </Title>
+          <ApplySidoList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+          <ApplyBaseInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        </ServiceList>
+        <ServiceList>
+          <Title>
+            <h5>시설 정보 기입하기</h5>
+          </Title>
+          <ApplyImgList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+          <ApplyDetailView applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+          <InputBox>
+            <div className="title">
+              <h5>세부사항 : 옥상 설명 멘트</h5>
+              <p>고객에게 옥상 시설을 설명해주세요!</p>
+            </div>
+            <textarea
+              name="explainContent"
+              rows="4"
+              cols="50"
+              value={explainContent}
+              placeholder="자유롭게 옥상 설명을 작성해주세요."
+              onChange={changeInput}
+            />
+          </InputBox>
+        </ServiceList>
+        <ServiceList>
+          <Title>
+            <h5>운영 정보 기입하기</h5>
+          </Title>
+          <ApplyAvailableInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+          <ApplyDetailInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+          <ApplyExtraOption applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+          <ConfirmBtn onClick={sendRoofTopData}>옥상 신청하기</ConfirmBtn>
+        </ServiceList>
       </ViewPoint>
     </Wrapper>
   )
@@ -107,76 +124,129 @@ const ApplyRoofTop = () => {
 
 const Wrapper = styled.div`
   width: 50vw;
+  height: 80vh;
 
   margin: auto;
   padding: 1rem;
 
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 
-  background-color: #d3d3d3;
   text-align: center;
 `
 
 const ViewPoint = styled.div`
   max-height: 80vh;
   overflow: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`
+
+const Title = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin-bottom: ${margins.sm};
+
+      display: flex;
+      border-bottom: 1px solid ${colors.main.primary}77;
+
+      color: ${colors.main.primary};
+      text-align: center;
+
+      h5 {
+        width: 90%;
+
+        font-size: ${fonts.size.base};
+        font-weight: ${fonts.weight.bold};
+        text-align: left;
+      }
+    `
+  }}
+`
+
+const ServiceList = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 7.5vh;
 `
 
 const ConfirmBtn = styled.button`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 25%;
-      padding: ${paddings.sm};
-      margin: 2vw auto;
+      width: 50%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin: ${margins.lg} auto;
 
-      border: 1px solid rgb(77, 77, 77);
-      border-radius: 2.5vw;
       cursor: pointer;
+      border-radius: ${fonts.size.sm};
+      background-color: ${colors.main.primary};
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      text-align: center;
+      color: ${colors.white};
+      font-size: ${fonts.size.sm};
 
-      font-weight: 100;
+      svg {
+        margin: auto ${margins.sm} auto 0vw;
+      }
 
       &:hover {
-        background: rgb(77, 77, 77);
-        color: #fff;
+        background-color: ${colors.main.tertiary};
+        font-weight: ${fonts.weight.bold};
       }
     `
   }}
 `
 
 const InputBox = styled.div`
-  ${({ theme, boxSize }) => {
-    const boxWidth = new Map([
-      ["sm", "22.5%"],
-      ["base", "40%"],
-      ["lg", "90%"],
-    ])
+  ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: ${boxWidth.get(boxSize)};
-      margin: 1vw auto;
+      width: 100%;
       background-color: ${colors.white};
       padding: ${paddings.base};
 
-      h5 {
-        font-size: ${fonts.size.base};
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .title {
+        width: 80%;
+        margin-bottom: ${margins.sm};
+        text-align: left;
       }
 
       p {
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        margin-bottom: 0.25rem;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
       }
 
       input,
       textarea {
         width: 100%;
-        padding: ${paddings.sm};
-        margin: ${margins.sm} 0vw;
+        padding: ${paddings.sm} 0vw;
+        margin: ${margins.xsm} 0vw;
+
+        border: 0;
+        background-color: ${colors.main.tertiary}11;
+        border-bottom: 1px solid ${colors.main.secondary}44;
+
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+        text-align: center;
       }
     `
   }}

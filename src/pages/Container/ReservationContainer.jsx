@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom"
 
+import BaseTemplate from "components/template/BaseTemplate"
 import Reservation from "components/main/Reservation/Reservation"
 import ReservationDetail from "components/main/Reservation/ReservationDetail"
-import BaseTemplate from "components/template/BaseTemplate"
 
 export const ReservationContainer = () => {
   return (

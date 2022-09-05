@@ -3,14 +3,19 @@ import { useRecoilValue } from "recoil"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faXmark } from "@fortawesome/free-solid-svg-icons"
+import {
+  faAngleDown,
+  faAngleUp,
+  faHourglassEmpty,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons"
 
 import { ModalContext } from "module/Modal"
 import { AuthCheckMemberId } from "module/Auth"
 import { ownerControl } from "api/controls/ownerControl"
-import { modalShow } from "styles/Animation"
+import { modalShow, fadeIn } from "styles/Animation"
 
-import WaitingGreenbeeList from "../WaitingGreenbeeList"
+import WaitingGreenbeeList from "./WaitingGreenbeeList"
 
 const WaitingGreenbeeModal = () => {
   const { closeModal } = useContext(ModalContext)
@@ -52,20 +57,31 @@ const WaitingGreenbeeModal = () => {
           {waitingGreenBees.length > 0 ? (
             waitingGreenBees.map(({ city, district, detail, id }) => (
               <RooftopStatus>
-                <h5>{`${city} ${district}`}</h5>
-                <p>{detail}</p>
-                {selectedRooftopId === id ? (
+                <div className="rooftop-info">
+                  <h5>{`${city} ${district} ${detail}`}</h5>
+                  <ButtonList>
+                    {selectedRooftopId !== id ? (
+                      <FontAwesomeIcon
+                        icon={faAngleDown}
+                        onClick={() => setSelectedRooftopId(id)}
+                      />
+                    ) : (
+                      <FontAwesomeIcon icon={faAngleUp} onClick={cancelSelectRooftop} />
+                    )}
+                    <FontAwesomeIcon icon={faXmark} onClick={() => removeGreeningRooftop(id)} />
+                  </ButtonList>
+                </div>
+                {selectedRooftopId === id && (
                   <WaitingGreenbeeList rooftopId={id} cancelSelectRooftop={cancelSelectRooftop} />
-                ) : (
-                  <div className="button-list">
-                    <button onClick={() => setSelectedRooftopId(id)}>공고 상세 보기</button>
-                    <button onClick={() => removeGreeningRooftop(id)}>공고 내리기</button>
-                  </div>
                 )}
               </RooftopStatus>
             ))
           ) : (
-            <h5>옥상 녹화 신청 목록 없음</h5>
+            <NoticeEmptyIcon>
+              <FontAwesomeIcon icon={faHourglassEmpty} />
+              <h5>녹화 신청 목록 없음</h5>
+              <p>녹화 작업을 신청한 시설이 없습니다.</p>
+            </NoticeEmptyIcon>
           )}
         </ViewPoint>
       </ModalContent>
@@ -88,24 +104,38 @@ const Wrapper = styled.section`
 const ViewPoint = styled.div`
   max-height: 42.5vh;
   overflow: auto;
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background: #ffffff;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #ced4da;
+    &:hover {
+      background-color: #adb5bd;
+    }
+  }
 `
 
-const ModalHeader = styled.header`
+const ModalHeader = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`
       width: 100%;
       padding: ${paddings.base};
 
-      background-color: #000000;
+      background-color: ${colors.main.primary};
 
       display: flex;
       justify-content: space-between;
 
+      color: ${colors.white};
+      text-align: center;
+
       h5 {
-        color: ${colors.white};
         font-size: ${fonts.size.base};
-        text-align: center;
         vertical-align: center;
       }
     `
@@ -119,8 +149,6 @@ const ModalCloseBtn = styled(FontAwesomeIcon)`
       padding: ${paddings.sm};
       color: ${colors.white};
       font-size: ${fonts.size.xsm};
-
-      cursor: pointer;
     `
   }}
 `
@@ -148,36 +176,79 @@ const RooftopStatus = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      margin: ${margins.sm} 0vw;
+      padding: ${paddings.sm} ${paddings.base};
+      margin-bottom: ${margins.sm};
+      color: ${colors.main.primary};
 
-      color: ${colors.black.primary};
-      cursor: pointer;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
 
       h5 {
-        font-size: ${fonts.size.base};
-      }
-      p {
-        font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
-        margin-bottom: ${margins.sm};
+        width: 90%;
+        font-size: ${fonts.size.sm};
+        line-height: 150%;
+        text-align: left;
       }
 
-      .button-list {
-        width: 40%;
-        margin: ${margins.base} auto 0vw auto;
-
+      .rooftop-info {
+        width: 100%;
+        border-bottom: 1px solid ${colors.main.secondary};
         display: flex;
         justify-content: space-between;
       }
+    `
+  }}
+`
 
-      button {
-        width: 40%;
-        padding: ${paddings.sm};
-        background-color: #000000;
-        border-radius: 25px;
+const ButtonList = styled.div`
+  ${({ theme }) => {
+    const { colors } = theme
+    return css`
+      width: 10%;
+      margin: 0vw auto;
+
+      display: flex;
+      justify-content: space-between;
+      svg {
+        color: ${colors.main.primary};
+        margin: auto;
+      }
+    `
+  }}
+`
+
+const NoticeEmptyIcon = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      margin: ${margins.base} auto;
+
+      color: ${colors.main.primary};
+      text-align: center;
+
+      h5 {
+        font-size: ${fonts.size.base};
+        margin-bottom: ${margins.sm};
+      }
+
+      p {
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
+
+      svg {
+        width: 2.5vw;
+        height: 2.5vw;
+
+        margin-bottom: ${margins.base};
+        padding: ${paddings.lg};
+
+        background-color: ${colors.main.secondary};
+        border-radius: 20vw;
 
         color: ${colors.white};
-        font-size: ${fonts.size.xsm};
       }
     `
   }}

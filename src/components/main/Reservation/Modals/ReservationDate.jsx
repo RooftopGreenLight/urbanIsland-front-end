@@ -5,91 +5,57 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import Calendar from "react-calendar"
-import "react-calendar/dist/Calendar.css"
+import { CalenderContainer } from "styles/calender"
 import { useEffect } from "react"
 import moment from "moment"
-const ReservationDate = () => {
+const ReservationDate = ({ data, setData }) => {
   const [value, onChange] = useState(new Date())
-
   const { closeModal } = useContext(ModalContext)
-  const startDate = new Date()
-  useEffect(() => {}, [value])
-  const reset = e => {
-    onChange(new Date())
-  }
-  const confirm = e => {
-    closeModal()
-  }
+
+  useEffect(() => {
+    setData({ ...data, reservationDate: value })
+  }, [value])
+
   return (
     <Wrapper>
-      <header>
-        <ModalCloseBtn onClick={closeModal}>
-          <FontAwesomeIcon icon={faXmark} />
-        </ModalCloseBtn>
-      </header>
+      <ModalHeader>
+        <h5>예약 일자 설정</h5>
+        <ModalCloseBtn icon={faXmark} onClick={closeModal} />
+      </ModalHeader>
       <ModalContent>
-        <Box>
-          <CalendarBox>
+        <CalendarBox>
+          <CalenderContainer>
             <Calendar
-              minDate={startDate}
+              minDate={new Date()}
               onChange={onChange}
               value={value}
               selectRange={true}
               returnValue={"range"}
-            />{" "}
-          </CalendarBox>
-          <Detail>
-            <DetailBox>
-              {" "}
-              {moment(value[0]).format("MM/DD")}~{moment(value[1]).format("MM/DD")}
-              <div>{moment(value[1]).diff(moment(value[0]), "days")}일간</div>
-            </DetailBox>
-            <DetailBox>
-              <button onClick={reset}>초기화</button>
-              <button onClick={confirm}>적용하기</button>
-            </DetailBox>
-          </Detail>
-        </Box>
+            />
+          </CalenderContainer>
+        </CalendarBox>
+        <SelectedDate>
+          <div className="notice-data">
+            <span>체크인</span>
+            <p>{moment(value[0]).format("MM/DD")}</p>
+          </div>
+          <div className="notice-data">
+            <span>체크 아웃</span>
+            <p>{moment(value[1]).format("MM/DD")}</p>
+          </div>
+          <div className="total-date">
+            <span>예약 기간</span>
+            <p>총 {moment(value[1]).diff(moment(value[0]), "days")}일</p>
+          </div>
+        </SelectedDate>
+        <ButtonList>
+          <button onClick={() => onChange(new Date())}>초기화</button>
+          <button onClick={closeModal}>적용하기</button>
+        </ButtonList>
       </ModalContent>
     </Wrapper>
   )
 }
-const Box = styled.div`
-  display: flex;
-`
-const CalendarBox = styled.div`
-  flex-direction: column;
-  justify-content: center;
-  padding: 1rem;
-  width: 70%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
-const Detail = styled.div`
-  padding: 1rem;
-  width: 30%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
-const DetailBox = styled.div`
-  ${({ theme }) => {
-    const { paddings, margins } = theme
-    return css`
-      margin-top: 3rem;
-      padding: ${paddings.base};
-      height: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      button {
-        margin: ${margins.sm};
-        padding: ${paddings.sm};
-      }
-    `
-  }}
-`
 
 const Wrapper = styled.section`
   ${({ theme }) => {
@@ -104,28 +70,39 @@ const Wrapper = styled.section`
       animation: ${modalShow} 0.3s;
       animation-fill-mode: forwards;
       overflow: hidden;
+    `
+  }}
+`
+const ModalHeader = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.base};
 
-      header {
-        display: flex;
-        flex-direction: row-reverse;
+      background-color: ${colors.main.primary};
 
-        padding: ${paddings.sm} ${paddings.base};
-        background-color: #f1f1f1;
-        font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+
+      color: ${colors.white};
+      text-align: center;
+
+      h5 {
+        font-size: ${fonts.size.base};
+        vertical-align: center;
       }
     `
   }}
 `
-const ModalCloseBtn = styled.button`
+
+const ModalCloseBtn = styled(FontAwesomeIcon)`
   ${({ theme }) => {
-    const { fonts } = theme
+    const { colors, fonts, paddings } = theme
     return css`
-      margin: 0vw 0vw 0vw auto;
-      color: #999;
-      background-color: transparent;
+      padding: ${paddings.sm};
+      color: ${colors.white};
       font-size: ${fonts.size.xsm};
-      font-weight: 700;
-      text-align: center;
     `
   }}
 `
@@ -134,13 +111,72 @@ const ModalContent = styled.main`
   ${({ theme }) => {
     const { colors, paddings } = theme
     return css`
+      width: 100%;
+      padding: ${paddings.base};
+
+      display: grid;
+      grid-template-rows: 1fr 1fr 0.25fr;
+      grid-template-columns: repeat(4, 1fr);
+
+      background-color: ${colors.white};
+    `
+  }}
+`
+
+const CalendarBox = styled.div`
+  width: 90%;
+  margin: auto;
+  grid-column: 1 / 4;
+  grid-row: 1 / 3;
+`
+
+const ButtonList = styled.div`
+  ${({ theme }) => {
+    const { paddings, margins } = theme
+    return css`
+      padding: ${paddings.sm};
+      width: 100%;
+
+      grid-column: 1 / 5;
+      grid-row: 3 / 4;
+
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding: ${paddings.sm};
-      border-top: 1px solid #dee2e6;
-      background-color: ${colors.white};
-      width: 100%;
+      align-items: left;
+    `
+  }}
+`
+
+const SelectedDate = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts } = theme
+    return css`
+      width: 90%;
+      margin: 5% 10%;
+
+      grid-column: 4 / 5;
+      grid-row: 1 / 3;
+
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .notice-data {
+        text-align: left;
+      }
+
+      .total-date {
+        width: 100%;
+      }
+
+      span {
+        font-size: ${fonts.size.sm};
+        font-weight: ${fonts.weight.light};
+      }
+
+      p {
+        font-size: ${fonts.size.base};
+      }
     `
   }}
 `

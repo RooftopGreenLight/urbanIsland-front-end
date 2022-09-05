@@ -7,6 +7,8 @@ import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 
 import { greenbeeControl } from "api/controls/greenbeeControl"
+import { faEdit } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 const GreenbeeInfo = () => {
   const navigate = useNavigate()
@@ -19,136 +21,187 @@ const GreenbeeInfo = () => {
     loadGreenbeeInfo()
   }, [])
 
-  const moveToEditPage = () => {
-    navigate("/mypage/greenbee/info/edit")
+  const SlickSettings = {
+    dots: true,
+    lazyLoad: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
   }
 
   const { addressCity, addressDetail, addressDistrict, content, greenBeeImages, officeNumber } =
     myGreenbeeInfo
 
-  const sliderSettings = {
-    arrow: false,
-    dots: false,
-    infinite: false,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    swipeToSlide: true,
-  }
+  console.log(greenBeeImages)
 
   return (
     <Wrapper>
-      <OptionBox boxSize="lg">
-        <h5>사무소 대표 사진</h5>
-        <p>해당 사무소의 소개 사진입니다.</p>
-        {greenBeeImages && (
-          <Slider {...sliderSettings}>
-            {greenBeeImages.map((elm, idx) => (
-              <div key={elm}>
-                <img src={elm.fileUrl} alt="Img" key={idx} />
+      <GreenbeeInfoBox>
+        <Title>
+          <h5>나의 그린비 정보</h5>
+        </Title>
+        <GreenbeeInfoLine>
+          <div className="info">
+            <span>사무소 주소</span>
+            <p>
+              {myGreenbeeInfo ? `${addressCity} ${addressDistrict} ${addressDetail}` : `*******`}
+            </p>
+          </div>
+        </GreenbeeInfoLine>
+        <GreenbeeInfoLine>
+          <div className="info">
+            <span>사무소 연락처</span>
+            <p>{myGreenbeeInfo ? officeNumber : "*** - **** - ****"}</p>
+          </div>
+        </GreenbeeInfoLine>
+        <GreenbeeInfoLine>
+          <div className="info">
+            <span>사무소 소개</span>
+            <pre>{myGreenbeeInfo ? content : "****"}</pre>
+          </div>
+        </GreenbeeInfoLine>
+      </GreenbeeInfoBox>
+      <GreenbeeInfoBox>
+        <Title>
+          <h5>사무소 대표 사진 목록</h5>
+        </Title>
+        <SliderBox>
+          <Slider {...SlickSettings}>
+            {[...Array(4).keys()].map(idx => (
+              <div>
+                {greenBeeImages && greenBeeImages.length > idx ? (
+                  <img src={greenBeeImages[idx].fileUrl} alt="Img" key={idx} />
+                ) : (
+                  <Rectangle />
+                )}
               </div>
             ))}
           </Slider>
-        )}
-      </OptionBox>
-      <OptionBox boxSize="base">
-        <h5>사무소 주소</h5>
-        <p>해당 사무소의 주소입니다.</p>
-        <span>{`${addressCity} ${addressDistrict} ${addressDetail}`}</span>
-      </OptionBox>
-      <OptionBox boxSize="base">
-        <h5>사무소 연락처</h5>
-        <p>해당 사무소의 연락처입니다.</p>
-        <span>{officeNumber}</span>
-      </OptionBox>
-      <OptionBox boxSize="lg">
-        <h5>사무소 소개</h5>
-        <p>해당 사무소의 소개글입니다.</p>
-        <span>{content}</span>
-      </OptionBox>
-      <ModifyBtn onClick={moveToEditPage}>정보 수정하기</ModifyBtn>
+        </SliderBox>
+        <ModifyBtn onClick={() => navigate("/mypage/greenbee/edit")}>
+          <FontAwesomeIcon icon={faEdit} /> 정보 수정하기
+        </ModifyBtn>
+      </GreenbeeInfoBox>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 50vw;
-
+  width: 35vw;
+  height: 75vh;
   margin: auto;
-  padding: 1rem;
 
   display: flex;
-  flex-wrap: wrap;
-
-  background-color: #d3d3d3;
-  text-align: center;
+  flex-direction: column;
 `
 
-const OptionBox = styled.div`
-  ${({ theme, boxSize }) => {
-    const boxWidth = new Map([
-      ["sm", "20%"],
-      ["base", "40%"],
-      ["lg", "90%"],
-    ])
-    const { colors, fonts, margins, paddings } = theme
+const Title = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
     return css`
-      width: ${boxWidth.get(boxSize)};
-      margin: 1vw auto;
-      background-color: ${colors.white};
-      padding: ${paddings.base};
+      width: 100%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin-bottom: ${margins.sm};
+
+      display: flex;
+      border-bottom: 1px solid ${colors.main.primary}77;
+
+      color: ${colors.main.primary};
+      text-align: center;
 
       h5 {
-        font-size: ${fonts.size.base};
-      }
+        width: 90%;
 
-      p {
-        margin-bottom: ${margins.sm};
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
+        font-size: ${fonts.size.base};
+        font-weight: ${fonts.weight.bold};
+        text-align: left;
+      }
+    `
+  }}
+`
+
+const GreenbeeInfoBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2.5vh;
+`
+
+const GreenbeeInfoLine = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      display: flex;
+      justify-content: space-between;
+      padding: ${paddings.base};
+
+      .info {
+        width: 90%;
       }
 
       span {
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
       }
+
+      p,
+      pre {
+        margin: ${margins.xsm} 0vw;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
+      }
+    `
+  }}
+`
+
+const SliderBox = styled.div`
+  ${({ theme }) => {
+    const { margins } = theme
+    return css`
+      margin: ${margins.lg} auto;
+      width: 90%;
 
       img {
-        width: 50%;
-
-        background-size: cover;
-        object-fit: cover;
-
-        padding: ${paddings.sm};
-        margin: ${margins.sm} 0vw;
+        width: 10vw;
+        height: 10vw;
+        overflow: hidden;
       }
     `
   }}
 `
 
-const ModifyBtn = styled.button`
+const Rectangle = styled.div`
+  width: 10vw;
+  height: 10vw;
+  overflow: hidden;
+  background: linear-gradient(to top, grey, #d4d4d4);
+`
+
+const ModifyBtn = styled.div`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 30%;
-      padding: ${paddings.sm};
-      margin: 0.75vw auto 0.25vw auto;
+      width: 90%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin: ${margins.base} auto;
 
-      border: 1px solid rgb(77, 77, 77);
-      border-radius: 2.5vw;
       cursor: pointer;
+      border-radius: ${fonts.size.sm};
+      background-color: ${colors.main.primary};
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      text-align: center;
+      color: ${colors.white};
+      font-size: ${fonts.size.sm};
 
-      font-weight: 100;
+      svg {
+        margin: auto ${margins.sm} auto 0vw;
+      }
 
       &:hover {
-        background: rgb(77, 77, 77);
-        color: #fff;
+        background-color: ${colors.main.tertiary};
+        font-weight: ${fonts.weight.bold};
       }
     `
   }}
 `
-
 export default GreenbeeInfo

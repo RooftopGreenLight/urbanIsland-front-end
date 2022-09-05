@@ -26,7 +26,7 @@ const ChatRoomInfo = ({ chatRoomElm, currentMemberId }) => {
 
 const Wrapper = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
+    const { margins, paddings } = theme
     return css`
       padding: ${paddings.lg} ${paddings.base};
       margin-bottom: ${margins.base};
@@ -45,7 +45,7 @@ const Wrapper = styled.div`
 
 const ChatInfoTitle = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
+    const { fonts, margins } = theme
     return css`
       display: flex;
       justify-content: space-between;

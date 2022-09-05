@@ -1,30 +1,88 @@
 import styled, { css } from "styled-components"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-
 import Slider from "react-slick"
+
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 
 import { greenbeeControl } from "api/controls/greenbeeControl"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faEdit, faImage } from "@fortawesome/free-solid-svg-icons"
 
 const GreenbeeInfoEdit = () => {
   const navigate = useNavigate()
+  const [addImagesBase64, setAddImagesBase64] = useState([])
   const [currentInfo, setCurrentInfo] = useState({
-    addressCity: "",
-    addressDetail: "",
-    addressDistrict: "",
     content: "",
-    greenBeeImages: [],
     officeNumber: "",
+    greenBeeImages: [],
+    deleteImages: [],
+    addImages: [],
   })
+
   useEffect(() => {
     const loadCurrentInfo = async () => {
-      const loadedGreenbeeInfo = await greenbeeControl.getGreenbeeInfo()
-      setCurrentInfo(loadedGreenbeeInfo)
+      const { content, officeNumber, greenBeeImages } = await greenbeeControl.getGreenbeeInfo()
+      setCurrentInfo({
+        ...currentInfo,
+        content,
+        officeNumber,
+        greenBeeImages: greenBeeImages.filter(
+          ({ greenBeeImageType }) => greenBeeImageType === "NORMAL",
+        ),
+      })
     }
     loadCurrentInfo()
   }, [])
+
+  const { content, greenBeeImages, officeNumber, deleteImages, addImages } = currentInfo
+
+  // Blob 데이터를 추출하여 이미지를 띄우는 함수.
+  const addGreenbeeImage = e => {
+    const fileList = e.target.files
+    if (fileList.length > 0 && fileList.length <= 5 - greenBeeImages.length) {
+      setAddImagesBase64([])
+      setCurrentInfo(prevInfo => ({
+        ...prevInfo,
+        addImages: Array.from(fileList),
+      }))
+      Object.values(fileList).forEach(file => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onloadend = () => {
+          const base64Img = reader.result
+          const base64Sub = base64Img.toString()
+          setAddImagesBase64(prevImgList => [...prevImgList, base64Sub])
+        }
+      })
+    }
+  }
+
+  const removeGreenbeeImage = e => {
+    const { name } = e.target
+    const selectedImage = greenBeeImages[name]
+    if (selectedImage.greenBeeImageType === "NORMAL") {
+      setCurrentInfo(prevInfo => ({
+        ...prevInfo,
+        deleteImages: [...deleteImages, selectedImage.storeFilename],
+        greenBeeImages: [...greenBeeImages].filter(
+          ({ storeFilename }) => storeFilename !== selectedImage.storeFilename,
+        ),
+      }))
+    }
+  }
+
+  const removeAddedImage = e => {
+    const { name } = e.target
+    const selectedImage = addImages[name]
+    console.log(name)
+    setCurrentInfo(prevInfo => ({
+      ...prevInfo,
+      addImages: [...addImages].filter(({ name }) => name !== selectedImage.name),
+    }))
+    setAddImagesBase64([...addImagesBase64].filter((_, idx) => idx !== parseInt(name)))
+  }
 
   const changeInput = e => {
     const { name, value } = e.target
@@ -52,133 +110,243 @@ const GreenbeeInfoEdit = () => {
     }
   }
 
-  const { addressCity, addressDetail, addressDistrict, content, greenBeeImages, officeNumber } =
-    currentInfo
-
-  const sliderSettings = {
-    arrow: false,
-    dots: false,
-    infinite: false,
+  const SlickSettings = {
+    dots: true,
+    lazyLoad: true,
+    infinite: true,
+    speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
-    swipeToSlide: true,
   }
 
   return (
     <Wrapper>
-      <InputBox boxSize="lg">
-        <h5>사무소 대표 사진</h5>
-        <p>해당 사무소의 소개 사진입니다.</p>
-        {greenBeeImages && (
-          <Slider {...sliderSettings}>
-            {greenBeeImages.map((elm, idx) => (
-              <div key={elm}>
-                <img src={elm.fileUrl} alt="Img" key={idx} />
-              </div>
-            ))}
+      <GreenbeeInfoBox>
+        <Title>
+          <h5>내 그린비 정보 수정</h5>
+        </Title>
+        <GreenbeeInfoLine>
+          <div className="info">
+            <span>사무소 연락처</span>
+            <input name="officeNumber" value={officeNumber} onChange={changeInput} />
+          </div>
+        </GreenbeeInfoLine>
+        <GreenbeeInfoLine>
+          <div className="info">
+            <span>사무소 소개</span>
+            <textarea name="content" rows="4" cols="50" value={content} onChange={changeInput} />
+          </div>
+        </GreenbeeInfoLine>
+      </GreenbeeInfoBox>
+      <GreenbeeInfoBox>
+        <Title>
+          <h5>사무소 대표 이미지 수정</h5>
+        </Title>
+        <SliderBox>
+          <Slider {...SlickSettings}>
+            {greenBeeImages &&
+              greenBeeImages.map(({ fileUrl }, idx) => (
+                <div>
+                  <img
+                    src={fileUrl}
+                    alt="Img"
+                    key={idx}
+                    name={idx}
+                    onDoubleClick={removeGreenbeeImage}
+                  />
+                </div>
+              ))}
+            {addImagesBase64 &&
+              addImagesBase64.map((base64, idx) => (
+                <div>
+                  <img
+                    src={base64}
+                    alt="Img"
+                    key={idx}
+                    name={idx}
+                    onDoubleClick={removeAddedImage}
+                  />
+                </div>
+              ))}
           </Slider>
-        )}
-      </InputBox>
-      <InputBox boxSize="base">
-        <h5>사무소 주소</h5>
-        <p>해당 사무소의 주소입니다.</p>
-        <span>{`${addressCity} ${addressDistrict} ${addressDetail}`}</span>
-      </InputBox>
-      <InputBox boxSize="base">
-        <h5>사무소 연락처</h5>
-        <p>해당 사무소의 연락처입니다.</p>
-        <input name="officeNumber" value={officeNumber} onChange={changeInput} />
-      </InputBox>
-      <InputBox boxSize="lg">
-        <h5>사무소 소개</h5>
-        <p>해당 사무소의 소개글입니다.</p>
-        <input name="content" value={content} onChange={changeInput} />
-      </InputBox>
-      <ModifyBtn onClick={confirmSaveInfo}>수정 사항 적용하기</ModifyBtn>
+        </SliderBox>
+        <BtnList>
+          <label htmlFor="imgList">
+            <FileUploadBtn>
+              <FontAwesomeIcon icon={faImage} /> 사진 업로드
+            </FileUploadBtn>
+            <ModifyBtn onClick={confirmSaveInfo}>
+              <FontAwesomeIcon icon={faEdit} /> 정보 수정하기
+            </ModifyBtn>
+          </label>
+          <input
+            id="imgList"
+            type="file"
+            onChange={addGreenbeeImage}
+            multiple="multiple"
+            accept=".png,.jpg"
+          />
+        </BtnList>
+      </GreenbeeInfoBox>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 50vw;
-
+  width: 35vw;
+  height: 75vh;
   margin: auto;
-  padding: 1rem;
 
   display: flex;
-  flex-wrap: wrap;
-
-  background-color: #d3d3d3;
-  text-align: center;
+  flex-direction: column;
 `
 
-const InputBox = styled.div`
-  ${({ theme, boxSize }) => {
-    const boxWidth = new Map([
-      ["sm", "20%"],
-      ["base", "40%"],
-      ["lg", "90%"],
-    ])
-    const { colors, fonts, margins, paddings } = theme
+const Title = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
     return css`
-      width: ${boxWidth.get(boxSize)};
-      margin: 1vw auto;
-      background-color: ${colors.white};
-      padding: ${paddings.base};
+      width: 100%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin-bottom: ${margins.sm};
+
+      display: flex;
+      border-bottom: 1px solid ${colors.main.primary}77;
+
+      color: ${colors.main.primary};
+      text-align: center;
 
       h5 {
+        width: 90%;
+
         font-size: ${fonts.size.base};
+        font-weight: ${fonts.weight.bold};
+        text-align: left;
+      }
+    `
+  }}
+`
+
+const GreenbeeInfoBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2.5vh;
+`
+
+const GreenbeeInfoLine = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      display: flex;
+      justify-content: space-between;
+      padding: ${paddings.base};
+
+      .info {
+        width: 100%;
       }
 
-      p {
-        margin-bottom: ${margins.sm};
-        font-size: ${fonts.size.xsm};
+      span {
+        color: ${colors.black.quinary};
         font-weight: ${fonts.weight.light};
       }
 
       input,
       textarea {
         width: 100%;
-        padding: ${paddings.sm};
-        margin: ${margins.sm} 0vw;
+        padding: ${paddings.sm} 0vw;
+        margin: ${margins.xsm} 0vw;
 
-        font-weight: ${fonts.weight.light};
-      }
-
-      img {
-        width: 50%;
-
-        background-size: cover;
-        object-fit: cover;
-
-        padding: ${paddings.sm};
-        margin: ${margins.sm} 0vw;
+        border: 0;
+        border-bottom: 1px solid ${colors.main.secondary}44;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
       }
     `
   }}
 `
 
-const ModifyBtn = styled.button`
+const SliderBox = styled.div`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { margins } = theme
     return css`
-      width: 30%;
-      padding: ${paddings.sm};
-      margin: 0.75vw auto 0.25vw auto;
+      margin: ${margins.lg} auto;
+      width: 90%;
 
-      border: 1px solid rgb(77, 77, 77);
-      border-radius: 2.5vw;
+      img {
+        width: 10vw;
+        height: 10vw;
+        overflow: hidden;
+      }
+    `
+  }}
+`
+
+const FileUploadBtn = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 47.5%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin: ${margins.base} auto;
+
       cursor: pointer;
+      border-radius: ${fonts.size.sm};
+      background-color: ${colors.main.secondary};
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      text-align: center;
+      color: ${colors.white};
+      font-size: ${fonts.size.sm};
 
-      font-weight: 100;
+      svg {
+        margin: auto ${margins.sm} auto 0vw;
+      }
 
       &:hover {
-        background: rgb(77, 77, 77);
-        color: #fff;
+        background-color: ${colors.main.tertiary};
+        font-weight: ${fonts.weight.bold};
+      }
+    `
+  }}
+`
+
+const BtnList = styled.div`
+  display: flex;
+
+  label {
+    width: 90%;
+    margin: auto;
+
+    display: flex;
+    justify-content: space-between;
+  }
+
+  #imgList {
+    display: none;
+  }
+`
+
+const ModifyBtn = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, margins, paddings } = theme
+    return css`
+      width: 47.5%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin: ${margins.base} auto;
+
+      cursor: pointer;
+      border-radius: ${fonts.size.sm};
+      background-color: ${colors.main.primary};
+
+      text-align: center;
+      color: ${colors.white};
+      font-size: ${fonts.size.sm};
+
+      svg {
+        margin: auto ${margins.sm} auto 0vw;
+      }
+
+      &:hover {
+        background-color: ${colors.main.tertiary};
+        font-weight: ${fonts.weight.bold};
       }
     `
   }}

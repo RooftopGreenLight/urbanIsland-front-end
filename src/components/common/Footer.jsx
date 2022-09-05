@@ -6,7 +6,7 @@ const Footer = () => {
       <FooterContent>
         <p>Copyright © 2022 rooftopgreenlight.co.,Ltd. All rights reserved.</p>
         <p>
-          Contact author for more information. <strong>test@naver.com</strong>
+          Contact author for more information. <strong>kb.urbanisland@gmail.com</strong>
         </p>
       </FooterContent>
     </Wrapper>
@@ -18,11 +18,16 @@ const Wrapper = styled.footer`
     const { colors, fonts } = theme
     return css`
       min-height: 8vh;
-      background-color: ${colors.white};
+      background-color: ${colors.main.secondary};
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       text-align: center;
-      color: #000000;
+      color: ${colors.white};
       font-size: ${fonts.size.xsm};
+      font-weight: ${fonts.weight.light};
     `
   }}
 `
@@ -32,7 +37,7 @@ const FooterContent = styled.div`
     const { fonts, margins } = theme
     return css`
       height: 4vh;
-      margin: ${margins.base} 0vw;
+      margin: auto 0vw;
 
       strong {
         font-weight: ${fonts.weight.bold};
