@@ -39,59 +39,61 @@ const Rooftop = () => {
 
   return (
     <Wrapper>
-      <ServiceList>
-        <Title>
-          <h5>등록된 옥상 관리하기</h5>
-        </Title>
-        <SliderBox>
-          <Slider {...SlickSettings}>
-            {ownRooftopList.map((rooftopInfo, idx) => (
-              <div key={idx}>
-                <Link to={`/mypage/rooftop/supervise/${idx}`}>
-                  <OwnRooftop rooftopInfo={rooftopInfo} />
-                </Link>
+      <ViewPoint>
+        <ServiceList>
+          <Title>
+            <h5>등록된 옥상 관리하기</h5>
+          </Title>
+          <SliderBox>
+            <Slider {...SlickSettings}>
+              {ownRooftopList.map((rooftopInfo, idx) => (
+                <div key={idx}>
+                  <Link to={`/mypage/rooftop/supervise/${idx}`}>
+                    <OwnRooftop rooftopInfo={rooftopInfo} />
+                  </Link>
+                </div>
+              ))}
+            </Slider>
+          </SliderBox>
+        </ServiceList>
+        <ServiceList>
+          <Title>
+            <h5>내 서비스 관리하기</h5>
+          </Title>
+          <Link to="/mypage/rooftop/apply">
+            <ServiceBox>
+              <div className="introduce">
+                <h5>녹화된 옥상 등록하기</h5>
+                <p>이미 녹화된 옥상을 가지고 계신가요?</p>
               </div>
-            ))}
-          </Slider>
-        </SliderBox>
-      </ServiceList>
-      <ServiceList>
-        <Title>
-          <h5>내 서비스 관리하기</h5>
-        </Title>
-        <Link to="/mypage/rooftop/apply">
-          <ServiceBox>
+              <FontAwesomeIcon icon={faAngleRight} />
+            </ServiceBox>
+          </Link>
+          <Link to="/mypage/rooftop/request">
+            <ServiceBox>
+              <div className="introduce">
+                <h5>그린비 매칭 신청하기</h5>
+                <p>아직 옥상이 녹화 되어있지 않으신가요?</p>
+              </div>
+              <FontAwesomeIcon icon={faAngleRight} />
+            </ServiceBox>
+          </Link>
+          <ServiceBox onClick={() => openModal(<WaitingRooftopModal />)}>
             <div className="introduce">
-              <h5>녹화된 옥상 등록하기</h5>
-              <p>이미 녹화된 옥상을 가지고 계신가요?</p>
+              <h5>대기중인 옥상 등록 신청</h5>
+              <p>새롭게 등록한 옥상 시설의 진행 상황을 확인합니다</p>
             </div>
             <FontAwesomeIcon icon={faAngleRight} />
           </ServiceBox>
-        </Link>
-        <Link to="/mypage/rooftop/request">
-          <ServiceBox>
+          <ServiceBox onClick={() => openModal(<WaitingGreenbeeModal />)}>
             <div className="introduce">
-              <h5>그린비 매칭 신청하기</h5>
-              <p>아직 옥상이 녹화 되어있지 않으신가요?</p>
+              <h5>대기중인 그린비 찾기</h5>
+              <p>녹화를 신청한 시설을 작업할 그린비 목록을 확인합니다.</p>
             </div>
             <FontAwesomeIcon icon={faAngleRight} />
           </ServiceBox>
-        </Link>
-        <ServiceBox onClick={() => openModal(<WaitingRooftopModal />)}>
-          <div className="introduce">
-            <h5>대기중인 옥상 등록 신청</h5>
-            <p>새롭게 등록한 옥상 시설의 진행 상황을 확인합니다</p>
-          </div>
-          <FontAwesomeIcon icon={faAngleRight} />
-        </ServiceBox>
-        <ServiceBox onClick={() => openModal(<WaitingGreenbeeModal />)}>
-          <div className="introduce">
-            <h5>대기중인 그린비 찾기</h5>
-            <p>녹화를 신청한 시설을 작업할 그린비 목록을 확인합니다.</p>
-          </div>
-          <FontAwesomeIcon icon={faAngleRight} />
-        </ServiceBox>
-      </ServiceList>
+        </ServiceList>
+      </ViewPoint>
     </Wrapper>
   )
 }
@@ -103,6 +105,26 @@ const Wrapper = styled.div`
 
   display: flex;
   flex-direction: column;
+`
+
+const ViewPoint = styled.div`
+  max-height: 80vh;
+  padding: 0rem 1rem;
+  overflow: auto;
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    margin-left: 10px;
+    background: #ffffff;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #ced4da;
+    &:hover {
+      background-color: #adb5bd;
+    }
+  }
 `
 
 const Title = styled.div`

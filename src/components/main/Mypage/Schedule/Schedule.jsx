@@ -39,59 +39,61 @@ const Schedule = () => {
 
   return (
     <Wrapper>
-      <CalenderBox>
-        <Title>
-          <h5>내 예약 일정</h5>
-        </Title>
-        <CalenderContainer>
-          <Calendar onChange={setSeletedDate} value={selectedDate} />
-        </CalenderContainer>
-      </CalenderBox>
-      <InnerBox>
-        <Title>
-          <h5>예약 세부 정보</h5>
-        </Title>
-        {reservationInfo ? (
-          <>
-            <ScheduleDetail>
-              <p>
-                <FontAwesomeIcon icon={faBuilding} size="lg" />
-                예약 숙소
-              </p>
-              <span>경기도 화성시 시범중앙로 109 320동 601호</span>
-            </ScheduleDetail>
-            <ScheduleDetail>
-              <p>
-                <FontAwesomeIcon icon={faCalendar} size="lg" />
-                예약일자
-              </p>
-              <span>2022.9.22 - 2022.9.23</span>
-            </ScheduleDetail>
-            <ScheduleDetail>
-              <p>
-                <FontAwesomeIcon icon={faClock} size="lg" />
-                예약시간
-              </p>
-              <span>AM 11:00 ~ PM 8:00</span>
-            </ScheduleDetail>
-            <ScheduleDetail>
-              <p>
-                <FontAwesomeIcon icon={faUser} size="lg" /> 총 인원
-              </p>
-              <span>성인 2명, 유아 1명 (반려동물 1마리)</span>
-            </ScheduleDetail>
-          </>
-        ) : (
-          <NoticeEmptyIcon>
-            <FontAwesomeIcon icon={faBook} />
-            <h5>옥상 예약 정보 없음</h5>
-            <p>해당 일자에 옥상을 예약한 기록이 없습니다.</p>
-          </NoticeEmptyIcon>
-        )}
-      </InnerBox>
-      <SendMessageBtn onClick={() => openModal(<ChatRoomPage />)}>
-        <FontAwesomeIcon icon={faComments} /> 채팅 목록 열기
-      </SendMessageBtn>
+      <ViewPoint>
+        <CalenderBox>
+          <Title>
+            <h5>내 예약 일정</h5>
+          </Title>
+          <CalenderContainer>
+            <Calendar onChange={setSeletedDate} value={selectedDate} />
+          </CalenderContainer>
+        </CalenderBox>
+        <InnerBox>
+          <Title>
+            <h5>예약 세부 정보</h5>
+          </Title>
+          {reservationInfo ? (
+            <>
+              <ScheduleDetail>
+                <p>
+                  <FontAwesomeIcon icon={faBuilding} size="lg" />
+                  예약 숙소
+                </p>
+                <span>경기도 화성시 시범중앙로 109 320동 601호</span>
+              </ScheduleDetail>
+              <ScheduleDetail>
+                <p>
+                  <FontAwesomeIcon icon={faCalendar} size="lg" />
+                  예약일자
+                </p>
+                <span>2022.9.22 - 2022.9.23</span>
+              </ScheduleDetail>
+              <ScheduleDetail>
+                <p>
+                  <FontAwesomeIcon icon={faClock} size="lg" />
+                  예약시간
+                </p>
+                <span>AM 11:00 ~ PM 8:00</span>
+              </ScheduleDetail>
+              <ScheduleDetail>
+                <p>
+                  <FontAwesomeIcon icon={faUser} size="lg" /> 총 인원
+                </p>
+                <span>성인 2명, 유아 1명 (반려동물 1마리)</span>
+              </ScheduleDetail>
+            </>
+          ) : (
+            <NoticeEmptyIcon>
+              <FontAwesomeIcon icon={faBook} />
+              <h5>옥상 예약 정보 없음</h5>
+              <p>해당 일자에 옥상을 예약한 기록이 없습니다.</p>
+            </NoticeEmptyIcon>
+          )}
+        </InnerBox>
+        <SendMessageBtn onClick={() => openModal(<ChatRoomPage />)}>
+          <FontAwesomeIcon icon={faComments} /> 채팅 목록 열기
+        </SendMessageBtn>
+      </ViewPoint>
     </Wrapper>
   )
 }
@@ -103,6 +105,26 @@ const Wrapper = styled.div`
 
   display: flex;
   flex-direction: column;
+`
+
+const ViewPoint = styled.div`
+  max-height: 80vh;
+  padding: 0rem 1rem;
+  overflow: auto;
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    margin-left: 10px;
+    background: #ffffff;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #ced4da;
+    &:hover {
+      background-color: #adb5bd;
+    }
+  }
 `
 
 const Title = styled.div`
