@@ -3,7 +3,14 @@ import { useRecoilValue } from "recoil"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faHourglassEmpty, faXmark } from "@fortawesome/free-solid-svg-icons"
+import {
+  faAngleDown,
+  faAngleUp,
+  faArrowDown,
+  faCircleXmark,
+  faHourglassEmpty,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons"
 
 import { ModalContext } from "module/Modal"
 import { AuthCheckMemberId } from "module/Auth"
@@ -52,15 +59,22 @@ const WaitingGreenbeeModal = () => {
           {waitingGreenBees.length > 0 ? (
             waitingGreenBees.map(({ city, district, detail, id }) => (
               <RooftopStatus>
-                <h5>{`${city} ${district}`}</h5>
-                <p>{detail}</p>
-                {selectedRooftopId === id ? (
+                <div className="rooftop-info">
+                  <h5>{`${city} ${district} ${detail}`}</h5>
+                  <ButtonList>
+                    {selectedRooftopId !== id ? (
+                      <FontAwesomeIcon
+                        icon={faAngleDown}
+                        onClick={() => setSelectedRooftopId(id)}
+                      />
+                    ) : (
+                      <FontAwesomeIcon icon={faAngleUp} onClick={cancelSelectRooftop} />
+                    )}
+                    <FontAwesomeIcon icon={faXmark} onClick={() => removeGreeningRooftop(id)} />
+                  </ButtonList>
+                </div>
+                {selectedRooftopId === id && (
                   <WaitingGreenbeeList rooftopId={id} cancelSelectRooftop={cancelSelectRooftop} />
-                ) : (
-                  <div className="button-list">
-                    <button onClick={() => setSelectedRooftopId(id)}>공고 상세 보기</button>
-                    <button onClick={() => removeGreeningRooftop(id)}>공고 내리기</button>
-                  </div>
                 )}
               </RooftopStatus>
             ))
@@ -164,36 +178,43 @@ const RooftopStatus = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      margin: ${margins.sm} 0vw;
+      padding: ${paddings.sm} ${paddings.base};
+      margin-bottom: ${margins.sm};
+      color: ${colors.main.primary};
 
-      color: ${colors.black.primary};
-      cursor: pointer;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
 
       h5 {
-        font-size: ${fonts.size.base};
-      }
-      p {
-        font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
-        margin-bottom: ${margins.sm};
+        width: 90%;
+        font-size: ${fonts.size.sm};
+        line-height: 150%;
+        text-align: left;
       }
 
-      .button-list {
-        width: 40%;
-        margin: ${margins.base} auto 0vw auto;
-
+      .rooftop-info {
+        width: 100%;
+        border-bottom: 1px solid ${colors.main.secondary};
         display: flex;
         justify-content: space-between;
       }
+    `
+  }}
+`
 
-      button {
-        width: 40%;
-        padding: ${paddings.sm};
-        background-color: #000000;
-        border-radius: 25px;
+const ButtonList = styled.div`
+  ${({ theme }) => {
+    const { colors } = theme
+    return css`
+      width: 10%;
+      margin: 0vw auto;
 
-        color: ${colors.white};
-        font-size: ${fonts.size.xsm};
+      display: flex;
+      justify-content: space-between;
+      svg {
+        color: ${colors.main.primary};
+        margin: auto;
       }
     `
   }}

@@ -4,8 +4,10 @@ import styled, { css } from "styled-components"
 
 import { ownerControl } from "api/controls/ownerControl"
 import { ModalContext } from "module/Modal"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCalendar, faHome, faPhone } from "@fortawesome/free-solid-svg-icons"
 
-const WaitingGreenbeeList = ({ rooftopId, cancelSelectRooftop }) => {
+const WaitingGreenbeeList = ({ rooftopId }) => {
   const { closeModal } = useContext(ModalContext)
   const navigate = useNavigate()
   const [appliedGreenbees, setAppliedGreenbees] = useState([])
@@ -46,12 +48,22 @@ const WaitingGreenbeeList = ({ rooftopId, cancelSelectRooftop }) => {
             idx,
           ) => (
             <AppliedGreenbeeInfo key={idx}>
-              <h5>{`${officeCity} ${officeDistrict} ${officeDetail}`}</h5>
-              <p>{`연락처 : ${officeNumber}`}</p>
-              <p>{`신청 일자 : ${applyTime[0]}.${applyTime[1]}:${applyTime[2]} ${applyTime[3]}:${applyTime[4]}:${applyTime[5]}`}</p>
-              <button onClick={() => confirmMatchingGreenbee(rooftopId, greenBeeId)}>
-                사무소 확정하기
-              </button>
+              <div className="rooftop-title">
+                <h5>{`${officeCity} ${officeDistrict} ${officeDetail}`}</h5>
+                <FontAwesomeIcon icon={faHome} />
+              </div>
+              <div className="greenbee-info">
+                <p>
+                  <FontAwesomeIcon icon={faPhone} /> {`연락처 : ${officeNumber}`}
+                </p>
+                <p>
+                  <FontAwesomeIcon icon={faCalendar} />{" "}
+                  {`신청 일자 : ${applyTime[0]}.${applyTime[1]}:${applyTime[2]} ${applyTime[3]}:${applyTime[4]}:${applyTime[5]}`}
+                </p>
+              </div>
+              <ConfirmBtn onClick={() => confirmMatchingGreenbee(rooftopId, greenBeeId)}>
+                선택하기
+              </ConfirmBtn>
             </AppliedGreenbeeInfo>
           ),
         )
@@ -61,22 +73,22 @@ const WaitingGreenbeeList = ({ rooftopId, cancelSelectRooftop }) => {
           <p>해당 시설의 녹화를 신청한 사무소가 없습니다.</p>
         </NoticeEmptyList>
       )}
-      <button onClick={cancelSelectRooftop}>공고 닫기</button>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
+    const { colors, fonts, margins } = theme
     return css`
-      margin: ${margins.base} 0vw;
+      width: 100%;
+      margin: ${margins.base} auto;
 
       color: ${colors.black.primary};
       cursor: pointer;
 
       h5 {
-        font-size: ${fonts.size.base};
+        font-size: ${fonts.size.sm};
       }
       p {
         font-size: ${fonts.size.xsm};
@@ -109,31 +121,79 @@ const AppliedGreenbeeInfo = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      background-color: #d5d5d5;
-      padding: ${paddings.base} 0vw;
-      margin: ${margins.sm} 0vw;
+      width: 95%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin: ${margins.sm} auto;
 
+      display: flex;
+      flex-wrap: wrap;
+
+      background-color: ${colors.main.secondary}11;
       color: ${colors.black.primary};
+      text-align: left;
+
+      .rooftop-title {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        svg {
+          margin-top: ${margins.sm};
+          font-size: ${fonts.size.xsm};
+          color: ${colors.main.tertiary};
+        }
+      }
+
+      .greenbee-info {
+        width: 80%;
+        height: 100%;
+        margin: auto 0vw;
+      }
 
       h5 {
-        font-size: ${fonts.size.base};
+        font-size: ${fonts.size.sm};
+        margin-bottom: ${margins.sm};
       }
 
       p {
-        margin: 0;
+        margin-bottom: ${margins.sm};
         font-size: ${fonts.size.xsm};
         font-weight: ${fonts.weight.light};
       }
 
-      span {
-        position: relative;
-        top: 0;
+      svg {
+        margin: auto ${margins.xsm} auto auto;
         font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
+        color: ${colors.main.tertiary};
       }
+    `
+  }}
+`
 
-      button {
-        margin-top: ${margins.sm};
+const ConfirmBtn = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 20%;
+      height: 82.5%;
+      padding: ${paddings.xsm};
+      margin: auto;
+
+      border: 1px solid ${colors.main.primary};
+      border-radius: 2.5vw;
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
+
+      &:hover {
+        border: 0px;
+        background: ${colors.main.tertiary};
+        color: ${colors.white};
       }
     `
   }}
