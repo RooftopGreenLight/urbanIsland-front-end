@@ -80,8 +80,10 @@ const FindMyRooftopOwner = () => {
                 idx,
               ) => (
                 <RooftopInfo key={idx}>
-                  <h5>{`${rooftopCity} ${rooftopDistrict} ${rooftopDetail}`}</h5>
-                  <p>{`옥상지기 연락처 : ${ownerPhoneNumber ?? "번호 없음"}`}</p>
+                  <div className="rooftop-info">
+                    <h5>{`${rooftopCity} ${rooftopDistrict} ${rooftopDetail}`}</h5>
+                    <p>{`옥상지기 연락처 : ${ownerPhoneNumber ?? "번호 없음"}`}</p>
+                  </div>
                   <ConfirmBtn onClick={() => finishGreeningRooftop(rooftopId)}>
                     녹화 확정하기
                   </ConfirmBtn>
@@ -160,7 +162,7 @@ const ModalContent = styled.div`
   ${({ theme }) => {
     const { paddings } = theme
     return css`
-      padding: ${paddings.xl};
+      padding: ${paddings.lg} ${paddings.xl};
       margin: auto;
 
       display: flex;
@@ -238,14 +240,20 @@ const ConfirmBtn = styled.button`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`
-      width: 50%;
-      margin: 0vw auto;
-      padding: ${paddings.sm};
+      width: 20%;
+      height: 50%;
+      margin: auto;
+      padding: ${paddings.sm} 0vw;
       background-color: ${colors.main.primary};
       border-radius: 25px;
 
       color: ${colors.white};
-      font-size: ${fonts.size.xsm};
+      font-size: 0.875rem;
+      font-weight: ${fonts.weight.light};
+
+      &:hover {
+        background-color: ${colors.main.tertiary};
+      }
     `
   }}
 `

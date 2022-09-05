@@ -70,7 +70,6 @@ const Wrapper = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      padding: ${paddings.base} 0vw;
       margin: ${margins.base} 0vw;
 
       color: ${colors.black.primary};
@@ -92,10 +91,8 @@ const NoticeEmptyList = styled.div`
     const { colors, fonts, margins } = theme
     return css`
       margin: ${margins.sm} 0vw;
-
-      border: 1px solid ${colors.black.tertiary};
       border-radius: 25px;
-      color: ${colors.black.tertiary};
+      color: ${colors.main.secondary};
 
       h5 {
         font-size: ${fonts.size.base};

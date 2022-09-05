@@ -83,7 +83,15 @@ const SuperviseRooftop = () => {
   )
 }
 
-export default SuperviseRooftop
+const Wrapper = styled.div`
+  width: 35vw;
+  height: 75vh;
+  margin: auto;
+
+  display: flex;
+  flex-direction: column;
+`
+
 const UpperBox = styled.div`
   display: flex;
 `
@@ -178,8 +186,5 @@ const Image = styled.img`
     `
   }}
 `
-const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`
+
+export default SuperviseRooftop

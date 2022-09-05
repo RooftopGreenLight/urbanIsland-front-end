@@ -67,8 +67,8 @@ const WaitingGreenbeeModal = () => {
           ) : (
             <NoticeEmptyIcon>
               <FontAwesomeIcon icon={faHourglassEmpty} />
-              <h5>그린비 목록 없음</h5>
-              <p>녹화 작업을 신청한 그린비 업체가 없습니다.</p>
+              <h5>녹화 신청 목록 없음</h5>
+              <p>녹화 작업을 신청한 시설이 없습니다.</p>
             </NoticeEmptyIcon>
           )}
         </ViewPoint>

@@ -90,13 +90,13 @@ const RequiredGreeningRooftop = () => {
             <RooftopInfoLine width={45}>
               <div className="info">
                 <span>옥상 시설 면적</span>
-                <p>{`${width.toLocaleString()} m2`}</p>
+                <p>{`${width && width.toLocaleString()} m2`}</p>
               </div>
             </RooftopInfoLine>
             <RooftopInfoLine width={45}>
               <div className="info">
                 <span>희망 시공 가격</span>
-                <p>{`${widthPrice.toLocaleString()} 원 / m2`}</p>
+                <p>{`${widthPrice && widthPrice.toLocaleString()} 원 / m2`}</p>
               </div>
             </RooftopInfoLine>
           </RooftopInfoBox>
@@ -239,7 +239,7 @@ const RooftopInfoLine = styled.div`
 
 const DetailOptionList = styled.div`
   ${({ theme }) => {
-    const { fonts, paddings, margins } = theme
+    const { colors, fonts, paddings, margins } = theme
     return css`
       width: 90%;
       padding: ${paddings.base};
@@ -258,6 +258,40 @@ const DetailOptionList = styled.div`
         font-size: ${fonts.size.xsm};
         font-weight: ${fonts.weight.light};
         text-align: left;
+      }
+
+      input[type="checkbox"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+
+        background: ${colors.main.quaternary}88;
+        border-radius: 4px;
+
+        width: 16px;
+        height: 16px;
+
+        &::after {
+          border: solid #fff;
+          border-width: 0 2px 2px 0;
+          content: "";
+          display: none;
+
+          width: 15%;
+          height: 40%;
+
+          position: relative;
+          left: 35%;
+          top: 20%;
+          transform: rotate(45deg);
+        }
+
+        &:checked {
+          background: ${colors.main.tertiary};
+          &::after {
+            display: block;
+          }
+        }
       }
     `
   }}
