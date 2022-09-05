@@ -4,6 +4,8 @@ import styled, { css } from "styled-components"
 
 import { ownerControl } from "api/controls/ownerControl"
 import { ModalContext } from "module/Modal"
+import { fadeIn } from "styles/Animation"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCalendar, faHome, faPhone } from "@fortawesome/free-solid-svg-icons"
 
@@ -33,7 +35,7 @@ const WaitingGreenbeeList = ({ rooftopId }) => {
 
   return (
     <Wrapper>
-      {appliedGreenbees.length > 0 ? (
+      {appliedGreenbees && appliedGreenbees.length > 0 ? (
         appliedGreenbees.map(
           (
             {
@@ -54,11 +56,11 @@ const WaitingGreenbeeList = ({ rooftopId }) => {
               </div>
               <div className="greenbee-info">
                 <p>
-                  <FontAwesomeIcon icon={faPhone} /> {`연락처 : ${officeNumber}`}
+                  <FontAwesomeIcon icon={faPhone} /> {`${officeNumber}`}
                 </p>
                 <p>
                   <FontAwesomeIcon icon={faCalendar} />{" "}
-                  {`신청 일자 : ${applyTime[0]}.${applyTime[1]}:${applyTime[2]} ${applyTime[3]}:${applyTime[4]}:${applyTime[5]}`}
+                  {`${applyTime[0]}.${applyTime[1]}.${applyTime[2]} ${applyTime[3]}시 ${applyTime[4]}분 ${applyTime[5]}초 신청`}
                 </p>
               </div>
               <ConfirmBtn onClick={() => confirmMatchingGreenbee(rooftopId, greenBeeId)}>
@@ -86,6 +88,8 @@ const Wrapper = styled.div`
 
       color: ${colors.black.primary};
       cursor: pointer;
+
+      animation: ${fadeIn} 1s;
 
       h5 {
         font-size: ${fonts.size.sm};
@@ -138,9 +142,13 @@ const AppliedGreenbeeInfo = styled.div`
         justify-content: space-between;
 
         svg {
-          margin-top: ${margins.sm};
+          margin-top: ${margins.xsm};
+          padding: ${paddings.xsm};
+
           font-size: ${fonts.size.xsm};
-          color: ${colors.main.tertiary};
+          background-color: ${colors.main.tertiary};
+          border-radius: 10px;
+          color: ${colors.white};
         }
       }
 

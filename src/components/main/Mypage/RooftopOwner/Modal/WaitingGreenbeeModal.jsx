@@ -6,8 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faAngleDown,
   faAngleUp,
-  faArrowDown,
-  faCircleXmark,
   faHourglassEmpty,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons"
@@ -15,9 +13,9 @@ import {
 import { ModalContext } from "module/Modal"
 import { AuthCheckMemberId } from "module/Auth"
 import { ownerControl } from "api/controls/ownerControl"
-import { modalShow } from "styles/Animation"
+import { modalShow, fadeIn } from "styles/Animation"
 
-import WaitingGreenbeeList from "../WaitingGreenbeeList"
+import WaitingGreenbeeList from "./WaitingGreenbeeList"
 
 const WaitingGreenbeeModal = () => {
   const { closeModal } = useContext(ModalContext)
