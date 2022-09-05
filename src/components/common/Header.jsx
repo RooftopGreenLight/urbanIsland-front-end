@@ -17,10 +17,7 @@ const Wrapper = styled.header`
       width: 100vw;
       padding: ${paddings.base};
       margin: 0vw auto;
-
-      position: absolute;
-      top: 0;
-      border-bottom: 1px solid ${colors.main.secondary}33;
+      border-bottom: 1px solid ${colors.main.primary}22;
 
       display: flex;
       justify-content: space-between;

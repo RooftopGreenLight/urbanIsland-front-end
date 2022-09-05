@@ -164,7 +164,7 @@ const StatusList = styled.div`
         padding-bottom: ${paddings.sm};
         margin: 0vw auto ${margins.sm} auto;
 
-        border-bottom: 1px solid ${colors.main.primary};
+        border-bottom: 1px solid ${colors.main.primary}66;
         color: ${colors.main.secondary};
         font-size: ${fonts.size.sm};
       }

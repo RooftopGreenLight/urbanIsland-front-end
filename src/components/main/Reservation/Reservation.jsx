@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react"
 import styled, { css } from "styled-components"
 import { ModalContext } from "module/Modal"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faFilter } from "@fortawesome/free-solid-svg-icons"
+import { faClock, faFilter, faMap, faUser } from "@fortawesome/free-solid-svg-icons"
 import DetailFilterModal from "./Modals/DetailFilterModal"
 import { roofTopControl } from "api/controls/roofTopControl"
 import TimeFilterModal from "components/main/Reservation/Modals/TimeFilterModal"
@@ -32,41 +32,18 @@ const Reservation = () => {
     minWidth: 0,
     contentNum: [],
   })
-  // useEffect(() => {
-  //   var obj = new Object()
-  //   const getFilteredData = async event => {
-  //     Object.entries(filter).map(d => {
-  //       if (d[0] === "page" || d[0] === "cond") {
-  //         obj[d[0]] = d[1]
-  //       } else if (d[0] === "contentNum") {
-  //         if (d[1].length >= 1) {
-  //           obj[d[0]] = d[1]
-  //         }
-  //       } else if (d[1] === 0 || d[1] === "") {
-  //       } else {
-  //         obj[d[0]] = d[1]
-  //       }
-  //     })
-  //     console.log(obj)
-  //     try {
-  //       const result = await roofTopControl.getRooftopSearch(obj)
-  //       setData(result.rooftopResponses)
-  //     } catch (err) {
-  //       console.log(err.message)
-  //     }
-  //   }
-  //   getFilteredData()
-  // }, [filter])
+
+  const { city, district, adultCount, kidCount, startTime, endTime } = filter
+
   useEffect(() => {
     const getFilteredData = async () => {
       const searchFilter = Object.entries(filter).filter(([option, value]) => {
+        // page, cond의 경우 필수로 들어가는 값이므로 true.
         if (option === "page" || option === "cond") {
           return true
         }
-        if (option === "contentNum" && value.length < 1) {
-          return false
-        }
-        if (value === 0 || value === "") {
+        // contentNum의 배열이 비었거나, 값이 0 또는 빈 문자열일 경우 넣지 않음.
+        if ((option === "contentNum" && value.length < 1) || value === 0 || value === "") {
           return false
         }
         return true
@@ -96,25 +73,46 @@ const Reservation = () => {
     <Wrapper>
       <SearchBar>
         <InnerDiv>
-          <Button
+          <MainFilterBtn
             onClick={() => openModal(<RegionFilterModal filter={filter} setFilter={setFilter} />)}>
-            <span>지역 선택</span>
+            <div className="content">
+              <FontAwesomeIcon icon={faMap} />
+              <span>{city ? (district ? `${city} ${district}` : city) : "지역 선택"}</span>
+            </div>
             <FontAwesomeIcon icon={faAngleDown} />
-          </Button>
-          <Button
+          </MainFilterBtn>
+          <MainFilterBtn
             onClick={() => openModal(<TimeFilterModal filter={filter} setFilter={setFilter} />)}>
-            <span>시간 선택</span>
+            <div className="content">
+              <FontAwesomeIcon icon={faClock} />
+              <span>
+                {startTime
+                  ? endTime
+                    ? `${startTime.slice(0, 5)} - ${endTime.slice(0, 5)}`
+                    : `${startTime.slice(0, 5)} - 24:00`
+                  : "시간 선택"}
+              </span>
+            </div>
             <FontAwesomeIcon icon={faAngleDown} />
-          </Button>
-          <Button
+          </MainFilterBtn>
+          <MainFilterBtn
             onClick={() => openModal(<NumFilterModal filter={filter} setFilter={setFilter} />)}>
-            <span>인원 선택</span>
+            <div className="content">
+              <FontAwesomeIcon icon={faUser} />
+              <span>
+                {adultCount > 0
+                  ? kidCount > 0
+                    ? `어른 ${adultCount}명, 유아 ${kidCount} 명`
+                    : `어른 ${adultCount}명`
+                  : "인원 선택"}
+              </span>
+            </div>
             <FontAwesomeIcon icon={faAngleDown} />
-          </Button>
+          </MainFilterBtn>
         </InnerDiv>
 
         <InnerDiv>
-          <Select onChange={handleChange}>
+          {/* <Select onChange={handleChange}>
             {OPTIONS.map(option => (
               <option
                 key={option.value}
@@ -123,12 +121,11 @@ const Reservation = () => {
                 {option.name}
               </option>
             ))}
-          </Select>
-          <Button
+          </Select> */}
+          <FilterBtn
             onClick={() => openModal(<DetailFilterModal filter={filter} setFilter={setFilter} />)}>
-            <span>세부필터</span>
-            <FontAwesomeIcon icon={faFilter} />
-          </Button>
+            <FontAwesomeIcon icon={faFilter} /> 세부 필터
+          </FilterBtn>
         </InnerDiv>
       </SearchBar>
       <SearchResult>
@@ -141,21 +138,35 @@ const Reservation = () => {
     </Wrapper>
   )
 }
-export default Reservation
 
-const Button = styled.button`
+const Wrapper = styled.div`
+  width: 100%;
+`
+
+const MainFilterBtn = styled.button`
   ${({ theme }) => {
-    const { margins, paddings } = theme
+    const { colors, margins, paddings } = theme
     return css`
-      background-color: white;
-      border: 1px solid black;
+      width: 15vw;
+      height: 2.5rem;
+      margin: ${margins.sm};
       padding: ${paddings.sm};
-      border-radius: 0.5rem;
-      width: 9vw;
+
       display: flex;
       justify-content: space-between;
-      margin: ${margins.sm};
-      height: 2.2rem;
+      align-items: center;
+
+      background-color: ${colors.white};
+      border: 1px solid ${colors.main.primary}55;
+      border-radius: 0.25rem;
+
+      color: ${colors.black.tertiary}88;
+      font-weight: 200;
+
+      svg {
+        color: ${colors.main.secondary}88;
+        margin-right: 0.33rem;
+      }
     `
   }}
 `
@@ -181,20 +192,22 @@ const InnerDiv = styled.div`
     return css`
       display: flex;
       flex-direction: row;
-      margin: ${margins.sm};
+      margin: ${margins.sm} 0vw;
     `
   }}
 `
 const SearchBar = styled.div`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors, paddings, margins } = theme
     return css`
+      width: 100vw;
+      padding: ${paddings.base} 12.5vw;
+      margin: ${margins.base} 0vw;
+
       display: flex;
-      width: 100%;
       justify-content: space-between;
-      height: 3.4rem;
-      padding-bottom: ${paddings.sm};
-      border-bottom: 1px solid black;
+
+      border-bottom: 1px solid ${colors.main.primary}22;
     `
   }}
 `
@@ -202,14 +215,39 @@ const SearchResult = styled.div`
   ${({ theme }) => {
     const { margins } = theme
     return css`
-      width: 90vw;
-      margin: ${margins.sm};
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      width: 75vw;
+      margin: 0vw auto ${margins.xl} auto;
+      display: grid;
+
+      grid-gap: 5vh ${margins.sm};
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(4, 1fr);
     `
   }}
 `
-const Wrapper = styled.div`
-  width: 100%;
+
+const FilterBtn = styled.button`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 7.5vw;
+      height: 75%;
+      padding: 0vw ${paddings.base};
+      margin: auto;
+
+      border-radius: ${fonts.size.xsm};
+      background: ${colors.main.tertiary};
+
+      color: ${colors.white};
+      font-size: ${fonts.size.xsm};
+      font-weight: ${fonts.weight.light};
+
+      svg {
+        font-size: ${fonts.size.xsm};
+        margin: auto ${margins.xsm} auto 0vw;
+      }
+    `
+  }}
 `
+
+export default Reservation
