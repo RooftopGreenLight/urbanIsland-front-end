@@ -7,7 +7,7 @@ import Admin from "components/main/Mypage/Admin/Admin"
 import Greenbee from "components/main/Mypage/Greenbee/Greenbee"
 import GreenbeeInfo from "components/main/Mypage/Greenbee/GreenbeeInfo"
 import GreenbeeInfoEdit from "components/main/Mypage/Greenbee/GreenbeeInfoEdit"
-import MakeGreenbeeAccount from "components/main/Mypage/Profile/MakeGreenbeeAccount"
+import MakeGreenbeeAccount from "components/main/Mypage/Greenbee/MakeGreenbeeAccount"
 import RequiredGreeningList from "components/main/Mypage/Greenbee/RequiredGreeningList"
 import RequiredGreeningRooftop from "components/main/Mypage/Greenbee/RequiredGreeningRooftop"
 import RequestToGreenBee from "components/main/RoofTop/RequestToGreenBee"
@@ -23,7 +23,6 @@ export const MypageContainer = () => {
         <Route path="schedule" element={<Schedule />} />
         <Route path="greenbee/*" element={<GreenbeeContainer />} />
         <Route path="rooftop/*" element={<RooftopContainer />} />
-        <Route path="greenbeeapply" element={<MakeGreenbeeAccount />} />
         <Route path="admin" element={<Admin />} />
       </Routes>
     </MypageTemplate>
@@ -34,6 +33,7 @@ const GreenbeeContainer = () => {
   return (
     <Routes>
       <Route path="" element={<Greenbee />} />
+      <Route path="register" element={<MakeGreenbeeAccount />} />
       <Route path="info" element={<GreenbeeInfo />} />
       <Route path="edit" element={<GreenbeeInfoEdit />} />
       <Route path="required-greening" element={<RequiredGreeningList />} />

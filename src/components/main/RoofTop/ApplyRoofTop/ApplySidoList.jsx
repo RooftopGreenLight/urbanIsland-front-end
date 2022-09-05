@@ -6,17 +6,17 @@ import { SidoGunguList } from "constants/SidoGunguList"
 const ApplySidoList = ({ applyInfo, changeInfo }) => {
   const citySelect = useRef()
   const [sidoInfo, setSidoInfo] = useState({
-    county: "",
     city: "",
+    district: "",
     detail: "",
   })
-  const { county, city, detail } = sidoInfo
+  const { city, district, detail } = sidoInfo
 
   const changeSelect = e => {
     const { name, value } = e.target
-    if (name === "county") {
-      setSidoInfo({ ...sidoInfo, [name]: value, city: "", detail: "" })
-      changeInfo({ ...applyInfo, [name]: value, city: "", detail: "" })
+    if (name === "city") {
+      setSidoInfo({ ...sidoInfo, [name]: value, district: "", detail: "" })
+      changeInfo({ ...applyInfo, [name]: value, district: "", detail: "" })
       citySelect.current.value = "default"
       return
     }
@@ -37,7 +37,7 @@ const ApplySidoList = ({ applyInfo, changeInfo }) => {
         <p>등록하려는 옥상 시설의 주소를 설정해주세요.</p>
       </div>
       <SelectList>
-        <SelectBox name="county" onChange={changeSelect} defaultValue="default">
+        <SelectBox name="city" onChange={changeSelect} defaultValue="default">
           <option value="default" disabled>
             시 선택
           </option>
@@ -47,25 +47,29 @@ const ApplySidoList = ({ applyInfo, changeInfo }) => {
             </option>
           ))}
         </SelectBox>
-        {county ? (
-          <SelectBox name="city" onChange={changeSelect} defaultValue="default" ref={citySelect}>
+        {city ? (
+          <SelectBox
+            name="district"
+            onChange={changeSelect}
+            defaultValue="default"
+            ref={citySelect}>
             <option value="default" disabled>
               구 선택
             </option>
-            {SidoGunguList.get(county).map(sigun => (
+            {SidoGunguList.get(city).map(sigun => (
               <option key={sigun} value={sigun}>
                 {sigun}
               </option>
             ))}
           </SelectBox>
         ) : (
-          <SelectBox name="city" onChange={changeSelect} defaultValue="default">
+          <SelectBox name="district" onChange={changeSelect} defaultValue="default">
             <option value="default" disabled>
               시를 선택해주세요.
             </option>
           </SelectBox>
         )}
-        {city ? (
+        {district ? (
           <input
             type="texT"
             name="detail"
