@@ -360,7 +360,7 @@ const InputBoxList = styled.div`
 
 const InputBox = styled.div`
   ${({ theme }) => {
-    const { fonts, margins } = theme
+    const { colors, fonts, margins } = theme
     return css`
       width: 47.5%;
       margin: ${margins.xsm} auto;
@@ -375,9 +375,40 @@ const InputBox = styled.div`
         font-weight: ${fonts.weight.light};
         text-align: left;
       }
-      input {
-        width: 10%;
+
+      input[type="checkbox"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+
+        background: ${colors.main.quaternary}88;
+        border-radius: 4px;
+
+        width: 16px;
+        height: 16px;
         margin: auto;
+
+        &::after {
+          border: solid #fff;
+          border-width: 0 2px 2px 0;
+          content: "";
+          display: none;
+
+          width: 4px;
+          height: 6px;
+
+          position: relative;
+          right: 3px;
+          top: -4px;
+          transform: rotate(45deg);
+        }
+
+        &:checked {
+          background: ${colors.main.tertiary};
+          &::after {
+            display: block;
+          }
+        }
       }
     `
   }}
