@@ -109,13 +109,13 @@ const InputBox = styled.div`
 
 const OpenModalBtn = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
+    const { colors, paddings } = theme
     return css`
       width: 20%;
       padding: ${paddings.sm};
       margin: 0.75vw auto 0.25vw auto;
 
-      border: 1px solid rgb(77, 77, 77);
+      border: 1px solid ${colors.main.primary};
       border-radius: 2.5vw;
       cursor: pointer;
 
@@ -126,8 +126,9 @@ const OpenModalBtn = styled.div`
       font-weight: 100;
 
       &:hover {
-        background: rgb(77, 77, 77);
-        color: #fff;
+        border: 0px;
+        background: ${colors.main.tertiary};
+        color: ${colors.white};
       }
     `
   }}

@@ -78,27 +78,33 @@ const Wrapper = styled.div`
 
 const FileUploadBtn = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
+    const { colors, paddings } = theme
     return css`
-      height: 70%;
+      width: 100%;
       padding: ${paddings.sm};
 
-      border-radius: ${fonts.size.xsm};
-      background-color: ${colors.main.secondary};
+      border: 1px solid ${colors.main.primary};
+      border-radius: 2.5vw;
+      background: ${colors.white};
+      cursor: pointer;
 
-      color: ${colors.white};
-      font-size: ${fonts.size.xsm};
-      font-weight: ${fonts.weight.light};
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-weight: 100;
 
       &:hover {
-        background-color: ${colors.main.tertiary};
-        font-weight: ${fonts.weight.bold};
+        border: 0px;
+        background: ${colors.main.tertiary};
+        color: ${colors.white};
       }
     `
   }}
 `
 
 const BtnList = styled.div`
+  width: 20%;
   display: flex;
 
   label {
