@@ -1,74 +1,89 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faStar } from "@fortawesome/free-solid-svg-icons"
 import { Link } from "react-router-dom"
-const ReservationCard = ({ props }) => {
+const ReservationCard = ({ reservationInfo }) => {
+  const { id, mainImage, city, district, grade, totalPrice } = reservationInfo
   return (
     <Wrapper>
-      <Link to={"/reservation/" + props.id}>
-        <Image src={props.mainImage.fileUrl} />
-        <Location>
-          {props.city} {props.district}
-        </Location>
+      <Link to={"/reservation/" + id}>
+        <Image src={mainImage.fileUrl} />
         <Bottom>
+          <Location>{`${city} ${district}`}</Location>
           <StarRate>
-            <div>
-              <Star icon={faStar} />
-              <Starview>{props.grade}/5.0</Starview>
-            </div>
+            <Star icon={faStar} />
+            <Starview>{grade} / 5.0</Starview>
           </StarRate>
-          <Fee>{props.totalPrice}W</Fee>
+          <Fee>{totalPrice} KRW</Fee>
         </Bottom>
       </Link>
     </Wrapper>
   )
 }
 export default ReservationCard
+
 const Wrapper = styled.div`
   position: relative;
   width: 25vw;
   height: 25vw;
   margin: 2rem;
 `
-const Location = styled.div`
-  color: white;
-  position: absolute;
-  left: 5%;
-  top: 75%;
-  font-size: 1.1rem;
-  font-weight: bold;
+const Location = styled.p`
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      width: 100%;
+      margin-bottom: ${margins.sm};
+
+      color: ${colors.black.primary};
+      font-size: ${fonts.size.sm};
+      font-weight: bold;
+    `
+  }}
 `
 const Image = styled.img`
-  width: 100%;
+  width: 22.5vw;
+  height: 22.5vw;
   border-radius: 1.1rem;
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform: translate(50, 50);
-  width: 100%;
-  height: 100%;
   object-fit: cover;
   margin: auto;
 `
 const Bottom = styled.div`
-  position: absolute;
-  left: 23%;
-  width: 75%;
-  top: 85%;
-  display: flex;
-  justify-content: space-between;
-  font-size: 1.1rem;
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      width: 22.5vw;
+      margin-top: ${margins.sm};
+
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      color: ${colors.black.primary};
+      font-size: ${fonts.size.xsm};
+    `
+  }}
 `
+
 const Starview = styled.div`
   display: inline-block;
 `
 const StarRate = styled.div`
-  color: white;
+  color: black;
+  font-weight: 200;
 `
-const Fee = styled.div`
-  color: white;
+const Fee = styled.span`
+  color: black;
+  font-weight: 400;
 `
 const Star = styled(FontAwesomeIcon)`
-  color: white;
-  display: inline-block;
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      margin-right: ${margins.sm};
+      color: ${colors.black.primary};
+      font-size: ${fonts.size.xsm};
+      font-weight: bold;
+    `
+  }}
 `

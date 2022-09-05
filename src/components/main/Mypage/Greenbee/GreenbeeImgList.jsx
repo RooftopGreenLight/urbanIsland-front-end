@@ -5,7 +5,7 @@ import Slider from "react-slick"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 
-const ApplyImgList = ({ applyInfo, changeInfo }) => {
+const GreenbeeImgList = ({ applyInfo, changeInfo }) => {
   const [imgBase64, setImgBase64] = useState([])
 
   // Blob 데이터를 추출하여 이미지를 띄우는 함수.
@@ -16,7 +16,7 @@ const ApplyImgList = ({ applyInfo, changeInfo }) => {
       changeInfo(prevInfo => ({
         ...prevInfo,
         normalFile: Array.from(fileList),
-        mainFile: fileList[0],
+        confirmationFile: fileList[0],
       }))
       Object.values(fileList).forEach(file => {
         const reader = new FileReader()
@@ -39,13 +39,11 @@ const ApplyImgList = ({ applyInfo, changeInfo }) => {
     slidesToScroll: 1,
   }
 
-  console.log(imgBase64)
-
   return (
     <Wrapper>
       <div className="title">
-        <h5>옥상 사진 업로드</h5>
-        <p>등록하려는 옥상 시설 사진을 5장 업로드 해주세요.</p>
+        <h5>사무소 사진 업로드</h5>
+        <p>그린비 사무소 사진을 5장 업로드 해주세요.</p>
       </div>
       <BtnList>
         <label htmlFor="imgList">
@@ -134,7 +132,7 @@ const SliderBox = styled.div`
     const { margins } = theme
     return css`
       margin: ${margins.lg} auto 0vw auto;
-      width: 90%;
+      width: 95%;
 
       img {
         width: 10vw;
@@ -159,4 +157,4 @@ const BtnList = styled.div`
   }
 `
 
-export default ApplyImgList
+export default GreenbeeImgList

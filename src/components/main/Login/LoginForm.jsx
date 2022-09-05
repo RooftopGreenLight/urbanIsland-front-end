@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components"
 import { useState, useRef } from "react"
+import { useNavigate } from "react-router-dom"
 import { useSetRecoilState } from "recoil"
 
 import { AuthConfirmLogin } from "module/Auth"
@@ -7,6 +8,7 @@ import { accountControl } from "api/controls/accountControl"
 
 const LoginForm = () => {
   const feedbackMsg = useRef()
+  const navigate = useNavigate()
   const [loginInput, setLoginInput] = useState({
     id: "",
     pw: "",
@@ -27,6 +29,7 @@ const LoginForm = () => {
     try {
       const { accessToken, memberId, memberRole } = await accountControl.postLoginData(id, pw)
       confirmLogin({ token: accessToken, authenticated: true, memberId, memberRole })
+      navigate("/")
     } catch (err) {
       feedbackMsg.current.innerText = err.message
     }

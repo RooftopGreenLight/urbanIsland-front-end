@@ -3,7 +3,7 @@ import { useState } from "react"
 
 const ApplyBaseInfo = ({ applyInfo, changeInfo }) => {
   const [applyBaseInfo, setApplyBaseInfo] = useState(applyInfo)
-  const { phoneNumber, width, totalPrice, ownerContent, roofTopType } = applyBaseInfo
+  const { phoneNumber, width, widthPrice, totalPrice, ownerContent, rooftopType } = applyBaseInfo
 
   const changeInput = e => {
     const { name, value } = e.target
@@ -14,29 +14,52 @@ const ApplyBaseInfo = ({ applyInfo, changeInfo }) => {
   return (
     <Wrapper>
       <InputBox boxSize="lg">
-        <h5>연락처</h5>
-        <p>옥상 소유자의 연락처를 입력해주세요.</p>
+        <div className="title">
+          <h5>연락처</h5>
+          <p>옥상 소유자의 연락처를 입력해주세요.</p>
+        </div>
         <input name="phoneNumber" value={phoneNumber} placeholder="연락처" onChange={changeInput} />
       </InputBox>
       <InputBox boxSize="base">
-        <h5>건물 넓이</h5>
-        <p>등록하시려는 옥상의 넓이를 입력해주세요.</p>
+        <div className="title">
+          <h5>건물 면적 </h5>
+          <p>옥상의 면적을 입력해주세요. (단위 : m2)</p>
+        </div>
         <input name="width" value={width} placeholder="넓이" onChange={changeInput} />
       </InputBox>
-      <InputBox boxSize="base">
-        <h5>이용 가격</h5>
-        <p>등록하시려는 옥상의 이용가를 입력해주세요.</p>
-        <input name="totalPrice" value={totalPrice} placeholder="가격" onChange={changeInput} />
-      </InputBox>
+      {rooftopType === "G" ? (
+        <InputBox boxSize="base">
+          <div className="title">
+            <h5>이용 가격</h5>
+            <p>옥상의 1일 당 이용 금액을 입력해주세요.</p>
+          </div>
+          <input name="totalPrice" value={totalPrice} placeholder="가격" onChange={changeInput} />
+        </InputBox>
+      ) : (
+        <InputBox boxSize="base">
+          <div className="title">
+            <h5>시공 가격</h5>
+            <p>등록하시려는 옥상의 시공 가격을 입력해주세요.</p>
+          </div>
+          <input
+            name="widthPrice"
+            value={widthPrice}
+            placeholder="시공 가격"
+            onChange={changeInput}
+          />
+        </InputBox>
+      )}
       <InputBox boxSize="lg">
-        <h5>{roofTopType === "G" ? "옥상지기 측 멘트" : "그린비에게 보내는 멘트"}</h5>
-        <p>등록하시려는 옥상 시설에 대한 소개글을 작성해주세요.</p>
+        <div className="title">
+          <h5>{rooftopType === "G" ? "옥상지기 측 멘트" : "그린비에게 보내는 멘트"}</h5>
+          <p>등록하시려는 옥상 시설에 대한 소개글을 작성해주세요.</p>
+        </div>
         <textarea
           rows="4"
           cols="50"
           name="ownerContent"
           value={ownerContent}
-          placeholder="멘트"
+          placeholder="이곳에 자유롭게 소개글을 작성해주세요."
           onChange={changeInput}
         />
       </InputBox>
@@ -56,31 +79,46 @@ const Wrapper = styled.div`
 const InputBox = styled.div`
   ${({ theme, boxSize }) => {
     const boxWidth = new Map([
-      ["sm", "22.5%"],
-      ["base", "40%"],
-      ["lg", "90%"],
+      ["sm", "25%"],
+      ["base", "47.5%"],
+      ["lg", "100%"],
     ])
     const { colors, fonts, margins, paddings } = theme
     return css`
       width: ${boxWidth.get(boxSize)};
-      margin: 1vw auto;
       background-color: ${colors.white};
       padding: ${paddings.base};
 
-      h5 {
-        font-size: ${fonts.size.base};
+      .title {
+        margin-bottom: ${margins.sm};
+        text-align: left;
       }
 
       p {
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        margin-bottom: 0.25rem;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
       }
 
       input,
       textarea {
         width: 100%;
-        padding: ${paddings.sm};
-        margin: ${margins.sm} 0vw;
+        padding: ${paddings.sm} 0vw;
+        margin: ${margins.xsm} 0vw;
+
+        border: 0;
+        background-color: ${colors.main.tertiary}09;
+        border-bottom: 1px solid ${colors.main.secondary}44;
+
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+        text-align: center;
       }
     `
   }}
