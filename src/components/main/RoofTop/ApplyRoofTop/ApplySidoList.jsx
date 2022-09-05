@@ -1,9 +1,10 @@
 import styled, { css } from "styled-components"
-import { useState } from "react"
+import { useRef, useState } from "react"
 
 import { SidoGunguList } from "constants/SidoGunguList"
 
 const ApplySidoList = ({ applyInfo, changeInfo }) => {
+  const citySelect = useRef()
   const [sidoInfo, setSidoInfo] = useState({
     county: "",
     city: "",
@@ -16,6 +17,7 @@ const ApplySidoList = ({ applyInfo, changeInfo }) => {
     if (name === "county") {
       setSidoInfo({ ...sidoInfo, [name]: value, city: "", detail: "" })
       changeInfo({ ...applyInfo, [name]: value, city: "", detail: "" })
+      citySelect.current.value = "default"
       return
     }
     setSidoInfo({ ...sidoInfo, [name]: value })
@@ -46,7 +48,7 @@ const ApplySidoList = ({ applyInfo, changeInfo }) => {
           ))}
         </SelectBox>
         {county ? (
-          <SelectBox name="city" onChange={changeSelect} defaultValue="default">
+          <SelectBox name="city" onChange={changeSelect} defaultValue="default" ref={citySelect}>
             <option value="default" disabled>
               구 선택
             </option>
