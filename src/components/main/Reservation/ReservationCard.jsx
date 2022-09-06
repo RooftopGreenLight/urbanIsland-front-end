@@ -1,30 +1,30 @@
 import styled, { css } from "styled-components"
+import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+
 import { faStar } from "@fortawesome/free-solid-svg-icons"
-import { Link } from "react-router-dom"
-const ReservationCard = ({ reservationInfo }) => {
-  const { id, mainImage, city, district, detail, grade, totalPrice } = reservationInfo
+const ReservationCard = ({ rooftopInfo, filterInfo }) => {
+  const { id, mainImage, city, district, detail, grade, totalPrice } = rooftopInfo
+  const navigate = useNavigate()
   return (
-    <Link to={"/reservation/" + id}>
-      <Wrapper>
-        <Image src={mainImage.fileUrl} />
-        <Bottom>
-          <Location>
-            <h5>{`${city} ${district}`}</h5>
-            <p>{detail}</p>
-          </Location>
-          <DetailInfo>
-            <StarRate>
-              <FontAwesomeIcon icon={faStar} />
-              <span>{grade} / 5.0</span>
-            </StarRate>
-            <p>
-              <strong>{totalPrice.toLocaleString()}</strong> KRW
-            </p>
-          </DetailInfo>
-        </Bottom>
-      </Wrapper>
-    </Link>
+    <Wrapper onClick={() => navigate(`/reservation/${id}`, { state: { ...filterInfo } })}>
+      <Image src={mainImage.fileUrl} />
+      <Bottom>
+        <Location>
+          <h5>{`${city} ${district}`}</h5>
+          <p>{detail}</p>
+        </Location>
+        <DetailInfo>
+          <StarRate>
+            <FontAwesomeIcon icon={faStar} />
+            <span>{grade} / 5.0</span>
+          </StarRate>
+          <p>
+            <strong>{totalPrice.toLocaleString()}</strong> KRW
+          </p>
+        </DetailInfo>
+      </Bottom>
+    </Wrapper>
   )
 }
 export default ReservationCard

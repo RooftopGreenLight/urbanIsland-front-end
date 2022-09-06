@@ -16,7 +16,7 @@ import RegionFilterModal from "components/main/Reservation/Modals/RegionFilterMo
 
 const Reservation = () => {
   const { openModal } = useContext(ModalContext)
-  const [data, setData] = useState()
+  const [rooftopList, setRooftopList] = useState()
   const [filter, setFilter] = useState({
     page: 0,
     size: 9,
@@ -38,7 +38,7 @@ const Reservation = () => {
 
   console.log(filter)
 
-  const { city, district, adultCount, kidCount, startTime, endTime } = filter
+  const { city, district, adultCount, kidCount, petCount, startTime, endTime } = filter
 
   useEffect(() => {
     const getFilteredData = async () => {
@@ -55,7 +55,7 @@ const Reservation = () => {
       })
       try {
         const result = await roofTopControl.getRooftopSearch(Object.fromEntries(searchFilter))
-        setData(result)
+        setRooftopList(result)
       } catch (err) {
         console.log(err.message)
       }
@@ -101,7 +101,7 @@ const Reservation = () => {
               <span>
                 {adultCount > 0
                   ? kidCount > 0
-                    ? `어른 ${adultCount}명, 유아 ${kidCount} 명`
+                    ? `어른 ${adultCount}명, 유아 ${kidCount}명`
                     : `어른 ${adultCount}명`
                   : "인원 선택"}
               </span>
@@ -125,8 +125,14 @@ const Reservation = () => {
         </InnerDiv>
       </SearchBar>
       <SearchResult>
-        {data && data.length >= 1 ? (
-          data.map((d, index) => <ReservationCard reservationInfo={d} key={index} />)
+        {rooftopList && rooftopList.length >= 1 ? (
+          rooftopList.map((rooftopInfo, index) => (
+            <ReservationCard
+              rooftopInfo={rooftopInfo}
+              filterInfo={{ kidCount, adultCount, petCount, startTime, endTime }}
+              key={index}
+            />
+          ))
         ) : (
           <div>검색 결과가 없습니다</div>
         )}
