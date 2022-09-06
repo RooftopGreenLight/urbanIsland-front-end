@@ -220,20 +220,6 @@ const SetPersonSection = styled.div`
     `
   }}
 `
-
-const Box = styled.div`
-  padding: 1rem;
-`
-const Line = styled.div`
-  padding: 0.1rem;
-  display: flex;
-  justify-content: space-between;
-
-  div {
-    text-align: center;
-    width: 50%;
-  }
-`
 const Icons = styled(FontAwesomeIcon)`
   padding: 0 0.3rem;
 `

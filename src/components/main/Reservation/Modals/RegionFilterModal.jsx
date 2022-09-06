@@ -21,15 +21,25 @@ const RegionFilterModal = ({ filter, setFilter }) => {
     const { name, value } = e.target
     if (name === "city") {
       setSidoInfo({ ...sidoInfo, [name]: value, district: "" })
-      setFilter(prevFilter => ({ ...prevFilter, [name]: value, district: "" }))
       if (district !== "") {
         citySelect.current.value = "default"
       }
       return
     }
     setSidoInfo({ ...sidoInfo, [name]: value })
-    setFilter(prevFilter => ({ ...prevFilter, [name]: value }))
+  }
+
+  const resetSelect = () => {
+    setSidoInfo({ city: "", district: "" })
+    setFilter(prevFilter => ({ ...prevFilter, city: "", district: "" }))
     closeModal()
+  }
+
+  const confirmSelect = () => {
+    if (city !== "") {
+      setFilter(prevFilter => ({ ...prevFilter, city, district }))
+      closeModal()
+    }
   }
 
   return (
@@ -75,6 +85,10 @@ const RegionFilterModal = ({ filter, setFilter }) => {
             </SelectBox>
           )}
         </SelectList>
+        <BtnList>
+          <SettingBtn onClick={resetSelect}>초기화</SettingBtn>
+          <SettingBtn onClick={confirmSelect}>적용하기</SettingBtn>
+        </BtnList>
       </ModalContent>
     </Wrapper>
   )
@@ -157,8 +171,8 @@ const SelectList = styled.div`
   ${({ theme }) => {
     const { margins } = theme
     return css`
-      width: 60%;
-      margin: ${margins.base} auto ${margins.lg} auto;
+      width: 72.5%;
+      margin: ${margins.base} auto;
 
       display: flex;
       justify-content: space-between;
@@ -188,6 +202,46 @@ const SelectBox = styled.select`
       option {
         font-size: ${fonts.size.xsm};
         font-weight: 100;
+      }
+    `
+  }}
+`
+
+const BtnList = styled.div`
+  ${({ theme }) => {
+    const { margins } = theme
+    return css`
+      width: 80%;
+      margin: 0vw auto ${margins.base} auto;
+      display: flex;
+      justify-content: space-between;
+    `
+  }}
+`
+
+const SettingBtn = styled.button`
+  ${({ theme }) => {
+    const { colors, paddings, margins } = theme
+    return css`
+      width: 40%;
+      padding: ${paddings.sm};
+      margin: ${margins.sm} auto 0vw auto;
+
+      background: ${colors.white};
+      border: 1px solid ${colors.main.primary};
+      border-radius: 2.5vw;
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-weight: 100;
+
+      &:hover {
+        border: 0px;
+        background: ${colors.main.tertiary};
+        color: ${colors.white};
       }
     `
   }}
