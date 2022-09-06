@@ -42,7 +42,7 @@ const TimeFilterModal = ({ filter, setFilter }) => {
         <p>대여하려는 시설의 이용 시간을 설정해주세요.</p>
         <OptionBox>
           <h5>
-            시간 <span>(hr)</span>
+            이용 시간 <span>(hr)</span>
           </h5>
           <CustomRange
             STEP={1}

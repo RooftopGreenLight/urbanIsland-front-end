@@ -8,6 +8,7 @@ import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 
 const NumFilterModal = ({ filter, setFilter }) => {
+  const { closeModal } = useContext(ModalContext)
   const [availablePerson, setAvailablePerson] = useState({
     adultCount: filter.adultCount,
     kidCount: filter.kidCount,
@@ -16,21 +17,18 @@ const NumFilterModal = ({ filter, setFilter }) => {
 
   const { adultCount, kidCount, petCount } = availablePerson
 
-  const { closeModal } = useContext(ModalContext)
-  const onConfirm = () => {
+  const confirmCount = () => {
     setFilter({ ...filter, adultCount, kidCount, petCount })
     closeModal()
   }
-  const onChangePlus = (x, setX) => {
-    if (x >= 99) {
-      console.log("최대 99")
-    } else setX(x + 1)
-  }
-  const onChangeMinus = (x, setX) => {
-    setX(x - 1)
+
+  const changeCount = (option, value) => {
+    if (value >= 0 && value <= 99) {
+      setAvailablePerson(prevPerson => ({ ...prevPerson, [option]: value }))
+    }
   }
 
-  const onReset = () => {
+  const resetCount = () => {
     setAvailablePerson({
       adultCount: 0,
       kidCount: 0,
@@ -48,78 +46,76 @@ const NumFilterModal = ({ filter, setFilter }) => {
         <h5>이용 인원 선택</h5>
         <p>시설을 이용하려는 인원을 설정해주세요.</p>
         <SetPersonSection>
-          <span>성인</span>
-          <div>
-            {adultCount === 0 ? (
-              <Icons icon={faMinus} style={{ color: "gray" }} />
-            ) : (
-              <Icons
-                icon={faMinus}
-                value={adultCount}
-                onClick={() => onChangeMinus(adultCount, setAvailablePerson)}
-              />
-            )}
-            {adultCount}
-            <Icons
+          <h5>
+            성인 <span>(최소 1인 이상)</span>
+          </h5>
+          <CounterBox>
+            <FontAwesomeIcon
+              icon={faMinus}
+              value={adultCount}
+              onClick={() => changeCount("adultCount", adultCount - 1)}
+            />
+            <strong>{adultCount}</strong>
+            <FontAwesomeIcon
               icon={faPlus}
               value={adultCount}
-              onClick={() => onChangePlus(adultCount, setAvailablePerson)}
+              onClick={() => changeCount("adultCount", adultCount + 1)}
             />
-          </div>
+          </CounterBox>
         </SetPersonSection>
         <SetPersonSection>
-          <div>유아</div>
-          <div>
-            {kidCount === 0 ? (
-              <Icons icon={faMinus} style={{ color: "gray" }} />
-            ) : (
-              <Icons
-                icon={faMinus}
-                value={kidCount}
-                onClick={() => onChangePlus(kidCount, setAvailablePerson)}
-              />
-            )}
-            {kidCount}
-            <Icons
+          <h5>
+            유아 <span>(노 키즈 존일 시 0명)</span>
+          </h5>
+          <CounterBox>
+            <FontAwesomeIcon
+              icon={faMinus}
+              value={kidCount}
+              onClick={() => changeCount("kidCount", kidCount - 1)}
+            />
+            <strong>{kidCount}</strong>
+            <FontAwesomeIcon
               icon={faPlus}
               value={kidCount}
-              onClick={() => onChangePlus(kidCount, setAvailablePerson)}
+              onClick={() => changeCount("kidCount", kidCount + 1)}
             />
-          </div>
+          </CounterBox>
         </SetPersonSection>
         <SetPersonSection>
-          <div>반려동물</div>
-          <div>
-            {petCount === 0 ? (
-              <Icons icon={faMinus} style={{ color: "gray" }} />
-            ) : (
-              <Icons
-                icon={faMinus}
-                value={petCount}
-                onClick={() => onChangeMinus(petCount, setAvailablePerson)}
-              />
-            )}
-            {petCount}
-            <Icons
+          <h5>
+            반려 동물 <span>(반려동물 출입 금지 시 0명)</span>
+          </h5>
+          <CounterBox>
+            <FontAwesomeIcon
+              icon={faMinus}
+              value={petCount}
+              onClick={() => changeCount("petCount", petCount - 1)}
+            />
+            <strong>{petCount}</strong>
+            <FontAwesomeIcon
               icon={faPlus}
               value={petCount}
-              onClick={() => onChangePlus(petCount, setAvailablePerson)}
+              onClick={() => changeCount("petCount", petCount + 1)}
             />
-          </div>
+          </CounterBox>
         </SetPersonSection>
-        <Bottom>
-          <SettingBtn onClick={onReset}>초기화</SettingBtn>
-          <SettingBtn onClick={onConfirm}>적용하기</SettingBtn>
-        </Bottom>
+        <BtnList>
+          <SettingBtn onClick={resetCount}>초기화</SettingBtn>
+          <SettingBtn onClick={confirmCount}>적용하기</SettingBtn>
+        </BtnList>
       </ModalContent>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 30vw;
+  width: 33vw;
   margin: auto;
   background-color: #ffffff;
+
+  animation: ${modalShow} 0.3s;
+  animation-fill-mode: forwards;
+  overflow: hidden;
 `
 
 const ModalHeader = styled.div`
@@ -208,30 +204,63 @@ const SettingBtn = styled.button`
 
 const SetPersonSection = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins } = theme
+    const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 100%;
+      width: 90%;
       margin: auto;
+      padding: ${paddings.sm};
+      margin-bottom: ${margins.sm};
 
       display: flex;
-      justify-content: space-evenly;
+      justify-content: space-between;
 
-      text-align: center;
+      h5 {
+        width: 75%;
+
+        font-size: ${fonts.size.base};
+        line-height: 150%;
+        text-align: left;
+      }
+
+      span {
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
     `
   }}
 `
-const Icons = styled(FontAwesomeIcon)`
-  padding: 0 0.3rem;
+
+const CounterBox = styled.div`
+  ${({ theme }) => {
+    const { colors, paddings, margins } = theme
+    return css`
+      width: 25%;
+
+      border: 1px inset ${colors.main.primary}88;
+      border-radius: 0.25rem;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      svg {
+        width: 25%;
+        padding: ${paddings.sm};
+      }
+    `
+  }}
 `
 
-const Bottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  div {
-    text-align: center;
-    width: 50%;
-  }
+const BtnList = styled.div`
+  ${({ theme }) => {
+    const { margins } = theme
+    return css`
+      width: 80%;
+      margin: 0vw auto ${margins.base} auto;
+      display: flex;
+      justify-content: space-between;
+    `
+  }}
 `
 
 export default NumFilterModal

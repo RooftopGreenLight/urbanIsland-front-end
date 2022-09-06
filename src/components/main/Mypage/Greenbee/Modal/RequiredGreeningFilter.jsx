@@ -45,7 +45,7 @@ const RequiredGreeningFilter = ({ appliedFilter, setAppliedFilter }) => {
 
   const changeSelect = e => {
     const { name, value } = e.target
-    if (name === "county") {
+    if (name === "city") {
       setRooftopFilter(prevFilter => ({ ...prevFilter, [name]: value, city: "" }))
       return
     }
