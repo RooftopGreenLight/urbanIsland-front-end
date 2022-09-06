@@ -22,8 +22,18 @@ const ReservationModal = ({
   const [modifiedData, setModifiedData] = useState(reservationData)
   const { closeModal } = useContext(ModalContext)
 
-  const { adultCount, kidCount, petCount, selectedDate, extraOptions } = modifiedData
-  const limitExtraOption = rooftopOptions.reduce(
+  const {
+    adultCount,
+    kidCount,
+    petCount,
+    selectedDate,
+    extraOptions,
+    optionContent,
+    optionPrice,
+    optionCount,
+  } = modifiedData
+
+  const limitExtraOption = rooftopOptions?.reduce(
     (obj, { content, count }) => ({ ...obj, [content]: count }),
     {},
   )
@@ -42,18 +52,18 @@ const ReservationModal = ({
     }
   }
 
-  const changeExtraOption = (content, value) => {
-    if (!extraOptions[content]) {
+  const changeExtraOption = (option, value) => {
+    if (!extraOptions[option]) {
       setModifiedData(prevData => ({
         ...prevData,
-        extraOptions: { ...extraOptions, [content]: 1 },
+        extraOptions: { ...extraOptions, [option]: 1 },
       }))
       return
     }
-    if (limitExtraOption[content] > value) {
+    if (limitExtraOption[option] > value) {
       setModifiedData(prevData => ({
         ...prevData,
-        extraOptions: { ...extraOptions, [content]: value },
+        extraOptions: { ...extraOptions, [option]: value },
       }))
     }
   }
@@ -175,13 +185,13 @@ const ReservationModal = ({
               </CounterBox>
             </SetPersonSection>
           </OptionBox>
-          {rooftopOptions.length > 0 && (
+          {rooftopOptions?.length > 0 && (
             <OptionBox>
               <div className="title">
                 <h5>추가 옵션</h5>
                 <p>시설에서 지원하는 추가 옵션을 선택하세요.</p>
               </div>
-              {rooftopOptions.map(({ content, count, price }) => (
+              {rooftopOptions.map(({ content, count, price }, idx) => (
                 <SetPersonSection key={content}>
                   <h5>
                     {content} <span>{`(${price.toLocaleString()} KRW, 최대 ${count} 개)`}</span>
@@ -215,13 +225,13 @@ const ReservationModal = ({
 
 const Wrapper = styled.section`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors } = theme
     return css`
       width: 33vw;
       margin: auto;
 
-      border-radius: 0.3rem;
-      background-color: #fff;
+      border-radius: 0.25rem;
+      background-color: ${colors.white};
 
       animation: ${modalShow} 0.3s;
       animation-fill-mode: forwards;

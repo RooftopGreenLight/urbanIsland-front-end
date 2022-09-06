@@ -1,16 +1,17 @@
-import { useContext, useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useLocation, useParams } from "react-router-dom"
 import styled, { css } from "styled-components"
 
 import { KakaoPayControl } from "api/KakaoPay"
 
 const Payment = () => {
   const { rooftopId } = useParams()
-  const navigate = useNavigate()
+  const location = useLocation()
   const [paymentInfo, setPaymentInfo] = useState({
     userId: "",
     phoneNumber: "",
-    reservationDate: [],
+    selectedDate: [],
+    selectedTime: [],
     adultCount: 0,
     kidCount: 0,
     petCount: 0,
@@ -19,6 +20,10 @@ const Payment = () => {
     optionCount: [],
     totalPrice: 0,
   })
+
+  useEffect(() => {
+    setPaymentInfo(prevInfo => ({ ...prevInfo, ...location.reservationData }))
+  }, [])
 
   const readyToSetPayment = async () => {
     try {

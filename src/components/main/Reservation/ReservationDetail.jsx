@@ -44,6 +44,19 @@ const ReservationDetail = () => {
     width: 0,
   })
 
+  const [reservationData, setReservationData] = useState({
+    selectedDate: [new Date(), new Date()],
+    selectedTime: [0, 23],
+    extraOptions: {},
+    adultCount: 1,
+    kidCount: 0,
+    petCount: 0,
+    totalPrice: 0,
+    optionContent: [],
+    optionPrice: [],
+    optionCount: [],
+  })
+
   const {
     city,
     district,
@@ -66,25 +79,15 @@ const ReservationDetail = () => {
     rooftopOptions,
   } = rooftopData
 
-  const [reservationData, setReservationData] = useState({
-    selectedDate: [new Date(), new Date()],
-    selectedTime: [0, 23],
-    extraOptions: {},
-    adultCount: 1,
-    kidCount: 0,
-    petCount: 0,
-    totalPrice: 0,
-  })
-
-  const { extraOptions } = reservationData
-  const totalUseDay =
-    moment(reservationData.selectedDate[1]).diff(moment(reservationData.selectedDate[0]), "days") +
-    1
+  const { selectedDate, selectedTime, extraOptions, optionContent, optionPrice, optionCount } =
+    reservationData
+  const totalUseDay = moment(selectedDate[1]).diff(moment(selectedDate[0]), "days") + 1
 
   useEffect(() => {
     const loadRooftopData = async () => {
       try {
         const result = await roofTopControl.getRooftopDetail(id)
+        console.log(result)
         setRooftopData({ ...result, startTime: result.startTime[0], endTime: result.endTime[0] })
       } catch (err) {
         console.log(err.message)
@@ -93,6 +96,21 @@ const ReservationDetail = () => {
     setReservationData(prevData => ({ ...prevData, ...location.state }))
     loadRooftopData()
   }, [])
+
+  // extraOption이 변동될 때마다, 총 지불해야 할 금액을 업데이트 해주는 useEffect
+  useEffect(() => {
+    const needToPay =
+      totalPrice * totalUseDay +
+      (Object.keys(extraOptions).length > 0
+        ? rooftopOptions.reduce(
+            (result, { content, price }) => result + price * (extraOptions[content] ?? 0),
+            0,
+          )
+        : 0)
+    setReservationData(prevData => ({ ...prevData, totalPrice: needToPay }))
+  }, [extraOptions])
+
+  console.log(reservationData)
 
   const copyUrl = () => {
     if (navigator.clipboard) {
@@ -208,14 +226,14 @@ const ReservationDetail = () => {
           </div>
           <div className="option-list">
             <span>이용 일자 : </span>
-            <p>{`${moment(reservationData.selectedDate[0]).format("YYYY.MM.DD")} - ${moment(
-              reservationData.selectedDate[1],
-            ).format("YYYY.MM.DD")}`}</p>
+            <p>{`${moment(selectedDate[0]).format("YYYY.MM.DD")} - ${moment(selectedDate[1]).format(
+              "YYYY.MM.DD",
+            )}`}</p>
           </div>
           <div className="option-list">
             <span>이용 시간 : </span>
-            <p>{`${String(reservationData.selectedTime[0]).padStart(2, "0")}:00 - ${String(
-              reservationData.selectedTime[1],
+            <p>{`${String(selectedTime[0]).padStart(2, "0")}:00 - ${String(
+              selectedTime[1],
             ).padStart(2, "0")}:00`}</p>
           </div>
           <ReservationBtn
@@ -257,10 +275,29 @@ const ReservationDetail = () => {
             })}
           <div className="option-list">
             <span>총 합계 : </span>
-            <strong>{(totalPrice * totalUseDay + 14000).toLocaleString()} KRW</strong>
+            <strong>
+              {(
+                totalPrice * totalUseDay +
+                (Object.keys(extraOptions).length > 0
+                  ? rooftopOptions.reduce(
+                      (result, { content, price }) => result + price * (extraOptions[content] ?? 0),
+                      0,
+                    )
+                  : 0)
+              ).toLocaleString()}
+              KRW
+            </strong>
           </div>
           <ReservationBtn
-            onClick={() => navigate(`/payment/${id}`, { state: { ...reservationData } })}>
+            onClick={() =>
+              navigate(`/payment/${id}`, {
+                reservationData: {
+                  ...reservationData,
+                },
+                address: `${city} ${district} ${detail}`,
+                rooftopOptions: rooftopOptions ?? [],
+              })
+            }>
             예약 하기
           </ReservationBtn>
         </PaymentOptionBox>
