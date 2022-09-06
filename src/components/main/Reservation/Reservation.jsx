@@ -36,8 +36,6 @@ const Reservation = () => {
     contentNum: [],
   })
 
-  console.log(filter)
-
   const { city, district, adultCount, kidCount, petCount, startTime, endTime } = filter
 
   useEffect(() => {
@@ -129,7 +127,15 @@ const Reservation = () => {
           rooftopList.map((rooftopInfo, index) => (
             <ReservationCard
               rooftopInfo={rooftopInfo}
-              filterInfo={{ kidCount, adultCount, petCount, startTime, endTime }}
+              filterInfo={{
+                kidCount,
+                adultCount,
+                petCount,
+                selectedTime: [
+                  startTime ? parseInt(startTime.slice(0, 2)) : 0,
+                  endTime ? parseInt(endTime.slice(0, 2)) : 23,
+                ],
+              }}
               key={index}
             />
           ))

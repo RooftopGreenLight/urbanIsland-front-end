@@ -1,413 +1,566 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
-import { roofTopControl } from "api/controls/roofTopControl"
 import styled, { css } from "styled-components"
+import moment from "moment"
+
 import Slider from "react-slick"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faStar, faUser, faArrowsLeftRight, faMailBulk } from "@fortawesome/free-solid-svg-icons"
-import ReservationTime from "components/main/Reservation/Modals/ReservationTime"
+import { faStar, faUser, faMap, faShare, faCircleCheck } from "@fortawesome/free-solid-svg-icons"
+
 import { useContext } from "react"
 import { ModalContext } from "module/Modal"
+
+import { roofTopControl } from "api/controls/roofTopControl"
 import { RoofTopFacilities } from "constants/RoofTopFacilities"
-import ReservationNumber from "components/main/Reservation/Modals/ReservationNumber"
-import ReservationDate from "components/main/Reservation/Modals/ReservationDate"
-import Tooltip from "components/common/Tooltip"
-import ImageManage from "components/main/Reservation/ImageManage"
+import ReservationModal from "./Modals/ReservationModal"
 
 const ReservationDetail = () => {
   const navigate = useNavigate()
-  const { openModal } = useContext(ModalContext)
+  const location = useLocation()
   const { id } = useParams()
-  const [data, setData] = useState()
-  const settings = {
-    dots: false,
-    infinite: false,
-    arrows: true,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  }
-  const [reservation, setReservation] = useState({
-    reservationDate: [0, 0],
-    reservationTime: [],
-    adult: 0,
-    kid: 0,
-    pet: 0,
+
+  const { openModal } = useContext(ModalContext)
+  const [rooftopData, setRooftopData] = useState({
+    adultCount: 0,
+    kidCount: 0,
+    petCount: 0,
+    detailNums: [],
+    startTime: 0,
+    endTime: 23,
+    explainContent: "",
+    grade: 0,
+    mainImage: null,
+    refundContent: "",
+    roleContent: "",
+    rooftopImages: [],
+    rooftopReviews: [],
+    structureImage: null,
+    totalCount: 0,
+    totalPrice: 0,
+    width: 0,
+  })
+
+  const {
+    city,
+    district,
+    detail,
+    startTime,
+    endTime,
+    grade,
+    adultCount,
+    kidCount,
+    petCount,
+    width,
+    mainImage,
+    rooftopImages,
+    structureImage,
+    detailNums,
+    explainContent,
+    roleContent,
+    refundContent,
+    totalPrice,
+  } = rooftopData
+
+  const [reservationData, setReservationData] = useState({
+    selectedDate: [new Date(), new Date()],
+    selectedTime: [0, 23],
+    adultCount: 1,
+    kidCount: 0,
+    petCount: 0,
     totalPrice: 0,
   })
 
+  const totalUseDay =
+    moment(reservationData.selectedDate[1]).diff(moment(reservationData.selectedDate[0]), "days") +
+    1
+
   useEffect(() => {
-    const getData = async event => {
+    const loadRooftopData = async () => {
       try {
         const result = await roofTopControl.getRooftopDetail(id)
-        setData(result)
-        setReservation({
-          ...reservation,
-          reservationTime: [result.startTime[0], result.endTime[0]],
-        })
+        setRooftopData({ ...result, startTime: result.startTime[0], endTime: result.endTime[0] })
       } catch (err) {
         console.log(err.message)
       }
     }
-    getData()
+    setReservationData(prevData => ({ ...prevData, ...location.state }))
+    loadRooftopData()
   }, [])
 
-  const copyUrl = e => {
+  const copyUrl = () => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(window.location.href)
-      alert("URL 복사완료")
     }
   }
+
+  console.log(rooftopData)
+
+  const SlickSettings = {
+    dots: true,
+    lazyLoad: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  }
+
   return (
     <Wrapper>
-      {data && (
-        <>
-          <DetailTop>
-            {data.rooftopImages ? (
-              data.rooftopImages.map(d => (
-                <SliderWrapper {...settings}>
-                  <Image key={d} src={d.fileUrl} />
-                </SliderWrapper>
-              ))
-            ) : (
-              <DefaultSlider>
-                <Image src={data.mainImage.fileUrl} />
-              </DefaultSlider>
-            )}
-            <Location>
+      <RooftopInfoBox>
+        <RooftopTitle>
+          <h5>{`${city} ${district} ${detail}`}</h5>
+        </RooftopTitle>
+        <RooftopDetail>
+          <div className="detail-list">
+            <DetailInfo>
+              <FontAwesomeIcon icon={faStar} />
+              <span>{parseInt(grade).toFixed(1)} / 5.0</span>
+            </DetailInfo>
+            <DetailInfo>
+              <FontAwesomeIcon icon={faMap} />
+              <span>
+                {`${width.toLocaleString()} m`}
+                <sup style={{ fontSize: "0.5rem" }}>2</sup>
+              </span>
+            </DetailInfo>
+            <DetailInfo>
+              <FontAwesomeIcon icon={faUser} />
+              <span>
+                {`성인 ${adultCount}명, ${
+                  kidCount === 0 ? "노 키즈 존" : `유아 ${kidCount}명`
+                }, 반려동물 ${petCount === 0 ? "금지" : `${petCount}마리`}`}
+              </span>
+            </DetailInfo>
+          </div>
+          <CopyBtn onClick={copyUrl}>
+            <FontAwesomeIcon icon={faShare} /> 공유하기
+          </CopyBtn>
+        </RooftopDetail>
+      </RooftopInfoBox>
+      <ReservationInfoBox>
+        <SliderBox>
+          {mainImage !== null && (
+            <Slider {...SlickSettings}>
               <div>
-                <Share>
-                  <button onClick={copyUrl}>공유하기</button>
-                </Share>
-                {data.city} {data.district} {data.detail}
+                <img src={mainImage.fileUrl} alt="Img" key={mainImage.uploadFilename} />
               </div>
-              <LocationDetail>{data.explainContent}</LocationDetail>
-            </Location>
-          </DetailTop>
-          <InfoLine>
-            <div>
-              <Tooltip message={(data.width * 0.3025).toFixed(0) + "평"}>
-                <Icon icon={faArrowsLeftRight} />
-                <IconText>{data.width}m2</IconText>
-              </Tooltip>
-            </div>
-            <div>
-              <Tooltip message="0건">
-                <Icon icon={faStar} />
-                <IconText>{data.grade}/5.0</IconText>
-              </Tooltip>
-            </div>{" "}
-            <div>
-              <Tooltip message={"유아 최대 " + data.kidCount + "명"}>
-                <Icon icon={faUser} />
-                <IconText>{data.totalCount}인 까지</IconText>
-              </Tooltip>
-            </div>
-          </InfoLine>
-          <DetailBottom>
-            <LeftBox>
-              {data.rooftopReviews ? (
-                <Review>
-                  <ReviewHeader>
-                    <Icon icon={faStar} />
-                    <IconText>{data.rooftopReviews.length}개의 리뷰</IconText>
-                  </ReviewHeader>
-                  {data.rooftopReviews.map(d => (
-                    <ReviewBox key={d}>
-                      <div>
-                        <div>
-                          <Icon icon={faStar} />
-                          <IconText>{d.grade}</IconText>
-                        </div>
-                        <div>
-                          {d.createTime[0]}.{d.createTime[1]}.{d.createTime[2]}
-                        </div>
-                      </div>{" "}
-                      <div>{d.content}</div>
-                    </ReviewBox>
-                  ))}
-                </Review>
-              ) : (
-                <Review>
-                  <ReviewHeader>
-                    <IconText>아직 리뷰가 존재하지 않습니다</IconText>
-                  </ReviewHeader>
-                </Review>
-              )}
-              <BoxWrapper>
-                {data.detailNums.map((d, index) => (
-                  <Line key={index}>{RoofTopFacilities[d]}</Line>
+              {rooftopImages &&
+                rooftopImages.map(({ fileUrl, uploadFilename }) => (
+                  <div>
+                    <img src={fileUrl} alt="Img" key={uploadFilename} />
+                  </div>
                 ))}
-              </BoxWrapper>
-              <BoxWrapper>
-                <Title>추가 서비스 내용</Title>
-                <Line>
-                  <p>환불규정</p>
-                  {data.refundContent}
-                </Line>
-                <Line>
-                  <p>루프탑 이용규칙</p>
-                  {data.roleContent}
-                </Line>
-              </BoxWrapper>
-              <Button>건물주에게 문의하기</Button>
-              {data.structureImage ? (
-                <BoxWrapper>
-                  <Title>배치도</Title>
-                  <ImageManage width={"200px"} src={data.structureImage.fileUrl} />
-                </BoxWrapper>
-              ) : null}
-            </LeftBox>
-            <RightBox>
-              <ButtonBox>
-                <button
-                  onClick={() =>
-                    openModal(
-                      <ReservationTime
-                        startTime={data.startTime[0]}
-                        endTime={data.endTime[0]}
-                        data={reservation}
-                        setData={setReservation}
-                      />,
-                    )
-                  }>
-                  이용 가능시간
-                </button>
-                <button
-                  onClick={() =>
-                    openModal(
-                      <ReservationNumber
-                        data={reservation}
-                        setData={setReservation}
-                        adultCount={data.adultCount}
-                        kidCount={data.kidCount}
-                      />,
-                    )
-                  }>
-                  인원수 설정
-                </button>
-                <button
-                  onClick={() =>
-                    openModal(<ReservationDate data={reservation} setData={setReservation} />)
-                  }>
-                  기간 설정
-                </button>
-                <div>
-                  <Fee>{data.totalPrice}W</Fee>
-                </div>
-                <button className="pay" onClick={() => navigate(`/payment/${id}`)}>
-                  예약하기
-                </button>
-              </ButtonBox>
-            </RightBox>
-          </DetailBottom>
-        </>
-      )}
+            </Slider>
+          )}
+        </SliderBox>
+        <InformationBox>
+          <h5>옥상 소개</h5>
+          <pre>{explainContent}</pre>
+        </InformationBox>
+        <InformationBox>
+          <h5>옥상 시설 목록</h5>
+          <DetailOptionList>
+            {detailNums &&
+              RoofTopFacilities.map((elm, idx) => {
+                if (detailNums.includes(idx))
+                  return (
+                    <div key={idx} className="option">
+                      <span>{elm}</span>
+                      <FontAwesomeIcon icon={faCircleCheck} />
+                    </div>
+                  )
+                return null
+              })}
+          </DetailOptionList>
+        </InformationBox>
+        <InformationBox>
+          <h5>환불 안내</h5>
+          <pre>{refundContent}</pre>
+        </InformationBox>
+        <InformationBox>
+          <h5>이용 규칙 안내</h5>
+          <pre>{roleContent}</pre>
+        </InformationBox>
+        <InformationBox>
+          <h5>옥상 배치도</h5>
+          {structureImage && (
+            <img src={structureImage.fileUrl} alt="Img" key={structureImage.uploadFilename} />
+          )}
+        </InformationBox>
+      </ReservationInfoBox>
+      <PaymentInfoBox>
+        <PaymentOptionBox>
+          <h5>예약 설정</h5>
+          <div className="option-list">
+            <span>인원 : </span>
+            <p>
+              {reservationData.adultCount > 0
+                ? reservationData.kidCount > 0
+                  ? `어른 ${reservationData.adultCount}명, 유아 ${reservationData.kidCount}명`
+                  : `어른 ${reservationData.adultCount}명`
+                : "인원 미선택"}
+            </p>
+          </div>
+          <div className="option-list">
+            <span>이용 일자 : </span>
+            <p>{`${moment(reservationData.selectedDate[0]).format("YYYY.MM.DD")} - ${moment(
+              reservationData.selectedDate[1],
+            ).format("YYYY.MM.DD")}`}</p>
+          </div>
+          <div className="option-list">
+            <span>이용 시간 : </span>
+            <p>{`${String(reservationData.selectedTime[0]).padStart(2, "0")}:00 - ${String(
+              reservationData.selectedTime[1],
+            ).padStart(2, "0")}:00`}</p>
+          </div>
+          <ReservationBtn
+            onClick={() =>
+              openModal(
+                <ReservationModal
+                  limitTime={{ startTime, endTime }}
+                  limitCount={{ adultCount, kidCount, petCount }}
+                  reservationData={reservationData}
+                  setReservationData={setReservationData}
+                />,
+              )
+            }>
+            수정 하기
+          </ReservationBtn>
+        </PaymentOptionBox>
+        <PaymentOptionBox>
+          <h5>결제 항목</h5>
+          <div className="option-list">
+            <span>{`${totalUseDay}일 대여 :`}</span>
+            <p>{(totalPrice * totalUseDay).toLocaleString()} KRW</p>
+          </div>
+          <div className="option-list">
+            <span>바베큐 세팅 : </span>
+            <p>{Number(14000).toLocaleString()} KRW</p>
+          </div>
+          <div className="option-list">
+            <span>총 합계 : </span>
+            <strong>{(totalPrice * totalUseDay + 14000).toLocaleString()} KRW</strong>
+          </div>
+          <ReservationBtn onClick={() => navigate(`/payment/${id}`)}>예약 하기</ReservationBtn>
+        </PaymentOptionBox>
+      </PaymentInfoBox>
     </Wrapper>
   )
 }
 
-export default ReservationDetail
-const Button = styled.button`
-  ${({ theme }) => {
-    const { paddings, margins } = theme
-    return css`
-      width: 100%;
-      background-color: lightgray;
-      padding: ${paddings.base};
-      margin-top: ${margins.base};
-      border-radius: 1rem;
-    `
-  }}
-`
-const DefaultSlider = styled.div`
-  ${({ theme }) => {
-    const { margins } = theme
-    return css`
-      position: relative;
-      width: 25vw;
-      height: 25vw;
-      margin: ${margins.lg};
-    `
-  }}
-`
-const ButtonBox = styled.div`
-  ${({ theme }) => {
-    const { paddings } = theme
-    return css`
-      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
-      padding: ${paddings.lg};
-      .pay {
-        background-color: black;
-        color: white;
-      }
-    `
-  }}
-`
-const LeftBox = styled.div`
-  width: 50%;
-  background: white;
+const Wrapper = styled.div`
+  width: 60vw;
+  max-height: 100vh;
+  overflow: auto;
+
   display: flex;
+  margin: 0vw auto 10vh auto;
+
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`
+
+const RooftopInfoBox = styled.div`
+  width: 60vw;
+  margin: 5vh auto 3.5vh auto;
+
+  display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
 `
-const Fee = styled.div`
+
+const RooftopTitle = styled.div`
   ${({ theme }) => {
-    const { fonts } = theme
-    return css`
-      font-weight: bold;
-      font-size: ${fonts.size.sm};
-      float: right;
-    `
-  }}
-`
-const RightBox = styled.div`
-  ${({ theme }) => {
-    const { paddings } = theme
-    return css`
-      width: 50%;
-      background: white;
-      display: flex;
-      flex-direction: column;
-      border-radius: 2rem;
-      padding-left: ${paddings.base};
-      button {
-        width: 100%;
-        height: 2rem;
-        margin: 0.3rem;
-        border-radius: 0.3rem;
-      }
-    `
-  }}
-`
-const BoxWrapper = styled.div`
-  ${({ theme }) => {
-    const { paddings, margins } = theme
+    const { colors, fonts, margins } = theme
     return css`
       width: 100%;
-      background-color: gray;
-      padding: ${paddings.base};
-      margin-top: ${margins.base};
-      border-radius: 1rem;
-      img {
-        width: 100%;
-      }
-      button {
-        float: right;
-      }
-    `
-  }}
-`
-const Line = styled.div`
-  ${({ theme }) => {
-    const { fonts, margins } = theme
-    return css`
-      font-weight: ${fonts.weight.bold};
-      font-size: ${fonts.size.xsm};
       margin-bottom: ${margins.sm};
-      display: inline-block;
-      width: 50%;
+
+      h5 {
+        color: ${colors.main.primary};
+        font-size: ${fonts.size.lg};
+        font-weight: ${fonts.weight.bold};
+      }
     `
   }}
 `
-const ReviewHeader = styled.div`
-  text-align: center;
-`
-const ReviewBox = styled.div`
+
+const RooftopDetail = styled.div`
   ${({ theme }) => {
-    const { paddings, margins } = theme
+    const { colors, fonts, margins } = theme
     return css`
-      background-color: lightgray;
-      div {
+      width: 100%;
+      margin-bottom: ${margins.sm};
+
+      display: flex;
+      justify-content: space-between;
+
+      h5 {
+        color: ${colors.main.primary};
+        font-size: ${fonts.size.lg};
+        font-weight: ${fonts.weight.bold};
+      }
+
+      .detail-list {
+        width: 45%;
+
         display: flex;
         justify-content: space-between;
       }
-      margin: ${margins.base};
-      padding: ${paddings.base};
-      border-radius: 1rem;
     `
   }}
 `
-const Review = styled.div`
+
+const DetailInfo = styled.div`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors, fonts, margins } = theme
     return css`
-      border-radius: 1rem;
-      width: 100%;
-      background-color: gray;
-      padding: ${paddings.base};
+      color: ${colors.main.secondary};
+      font-weight: ${fonts.weight.light};
+
+      svg {
+        margin-right: ${margins.sm};
+        color: ${colors.main.tertiary};
+        font-size: ${fonts.size.xsm};
+        font-weight: bold;
+      }
     `
   }}
 `
-const Title = styled.p`
+
+const CopyBtn = styled.button`
   ${({ theme }) => {
-    const { fonts, margins } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
-      font-weight: ${fonts.weight.bold};
-      font-size: ${fonts.size.sm};
-      margin-bottom: ${margins.sm};
+      padding: ${paddings.sm} ${paddings.base};
+
+      border-radius: 0.25rem;
+      box-shadow: 0px 3px 0px ${colors.main.primary};
+      background-color: ${colors.main.tertiary};
+
+      color: ${colors.white};
+      font-size: ${fonts.size.xsm};
+      font-weight: ${fonts.weight.light};
+
+      svg {
+        margin-right: ${margins.xsm};
+      }
+
+      &:hover {
+        transform: translateY(2px);
+        box-shadow: 0px 1px 0px ${colors.main.primary};
+      }
     `
   }}
 `
-const Image = styled.img`
-  width: 100%;
-  border-radius: 1.1rem;
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform: translate(50, 50);
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  margin: auto;
-`
-const SliderWrapper = styled(Slider)`
-  width: 50%;
-`
-const DetailTop = styled.div`
-  display: flex;
-`
-const Location = styled.div`
-  width: 50%;
+
+const ReservationInfoBox = styled.div`
+  width: 35vw;
+
   display: flex;
   flex-direction: column;
-`
-const LocationDetail = styled.div`
-  height: 100%;
-  display: flex;
   align-items: center;
-  justify-content: center;
 `
-const InfoLine = styled.div`
+
+const SliderBox = styled.div`
+  margin: 0vw auto 7.5vh auto;
+  width: 100%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+`
+
+const InformationBox = styled.div`
   ${({ theme }) => {
-    const { margins, paddings, fonts } = theme
+    const { colors, fonts, paddings, margins } = theme
     return css`
+      width: 100%;
+      padding: ${paddings.sm} 0vw;
+      margin: ${margins.sm} 0vw;
+
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
-      padding: ${paddings.base};
-      font-size: ${fonts.size.sm}
-      border-radius: 1rem;
-      margin:  ${margins.base} 0;
-      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+
+      p {
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        width: 100%;
+        padding-bottom: ${paddings.xsm};
+        border-bottom: 1px solid ${colors.main.primary}55;
+
+        color: ${colors.main.secondary};
+        font-size: ${fonts.size.base};
+      }
+
+      svg {
+        margin: auto 0vw;
+        color: ${colors.main.primary};
+      }
+
+      pre {
+        padding: ${paddings.base} 0vw;
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      img {
+        width: 100%;
+        height: 40vh;
+        object-fit: cover;
+        margin: ${margins.lg} auto 0vw auto;
+      }
     `
   }}
 `
-const Share = styled.div`
-  display: flex;
-  justify-content: flex-end;
+
+const DetailOptionList = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.base};
+      margin: auto;
+
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .option {
+        width: 30%;
+        margin: ${margins.sm} 0vw;
+
+        display: flex;
+        justify-content: space-between;
+
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+        text-align: left;
+      }
+    `
+  }}
 `
-const Wrapper = styled.div`
-  width: 100%;
-  padding: 10vh 15vw;
+
+const PaymentInfoBox = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts } = theme
+    return css`
+      width: 22.5vw;
+      margin-bottom: auto;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      border: 1px solid ${colors.main.primary}33;
+      box-shadow: 0px 5px 8px ${colors.main.primary}33;
+
+      &::before {
+        width: 100%;
+        height: 6vh;
+
+        background-color: ${colors.main.tertiary};
+        content: "예약 결제 정보";
+
+        color: ${colors.white};
+        font-size: ${fonts.size.base};
+        text-align: center;
+        line-height: 225%;
+      }
+    `
+  }}
 `
-const Icon = styled(FontAwesomeIcon)`
-  color: black;
-  display: inline-block;
+
+const PaymentOptionBox = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.base} ${paddings.lg};
+      margin: ${margins.sm} 0vw;
+
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      h5 {
+        width: 100%;
+        padding-bottom: ${paddings.xsm};
+        margin-bottom: ${margins.base};
+        border-bottom: 1px solid ${colors.main.primary}55;
+
+        color: ${colors.main.secondary};
+        font-size: ${fonts.size.sm};
+      }
+
+      p {
+        color: ${colors.black.tertiary};
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      span {
+        color: ${colors.black.quinary};
+        font-size: 1.1rem;
+        font-weight: 300;
+      }
+
+      strong {
+        color: ${colors.main.secondary};
+        font-size: 1.1rem;
+      }
+
+      .option-list {
+        width: 100%;
+        margin: ${margins.xsm} 0vw;
+        display: flex;
+        justify-content: space-between;
+      }
+    `
+  }}
 `
-const DetailBottom = styled.div`
-  display: flex;
+
+const ReservationBtn = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.sm} ${paddings.lg};
+      margin: ${margins.lg} 0vw 0vw 0vw;
+
+      border-radius: 0.75rem;
+      background: ${colors.main.secondary};
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      color: ${colors.white};
+      font-size: ${fonts.size.sm};
+      font-weight: bold;
+
+      &:hover {
+        border: 0px;
+        background: ${colors.main.tertiary};
+        color: ${colors.white};
+      }
+    `
+  }}
 `
-const IconText = styled.div`
-  display: inline-block;
-`
+
+export default ReservationDetail

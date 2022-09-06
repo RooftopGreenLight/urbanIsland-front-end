@@ -6,8 +6,10 @@ import { faStar } from "@fortawesome/free-solid-svg-icons"
 const ReservationCard = ({ rooftopInfo, filterInfo }) => {
   const { id, mainImage, city, district, detail, grade, totalPrice } = rooftopInfo
   const navigate = useNavigate()
+
   return (
-    <Wrapper onClick={() => navigate(`/reservation/${id}`, { state: { ...filterInfo } })}>
+    <Wrapper
+      onClick={() => navigate(`/reservation/${id}`, { state: { ...filterInfo, totalPrice } })}>
       <Image src={mainImage.fileUrl} />
       <Bottom>
         <Location>
