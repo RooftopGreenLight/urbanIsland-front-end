@@ -24,7 +24,7 @@ const ReservationDetail = () => {
 
   const { openModal } = useContext(ModalContext)
   const [rooftopData, setRooftopData] = useState({
-    adultCount: 0,
+    adultCount: 1,
     kidCount: 0,
     petCount: 0,
     detailNums: [],
@@ -37,6 +37,7 @@ const ReservationDetail = () => {
     roleContent: "",
     rooftopImages: [],
     rooftopReviews: [],
+    rooftopOptions: [],
     structureImage: null,
     totalCount: 0,
     totalPrice: 0,
@@ -62,17 +63,20 @@ const ReservationDetail = () => {
     roleContent,
     refundContent,
     totalPrice,
+    rooftopOptions,
   } = rooftopData
 
   const [reservationData, setReservationData] = useState({
     selectedDate: [new Date(), new Date()],
     selectedTime: [0, 23],
+    extraOptions: {},
     adultCount: 1,
     kidCount: 0,
     petCount: 0,
     totalPrice: 0,
   })
 
+  const { extraOptions } = reservationData
   const totalUseDay =
     moment(reservationData.selectedDate[1]).diff(moment(reservationData.selectedDate[0]), "days") +
     1
@@ -95,8 +99,6 @@ const ReservationDetail = () => {
       navigator.clipboard.writeText(window.location.href)
     }
   }
-
-  console.log(rooftopData)
 
   const SlickSettings = {
     dots: true,
@@ -222,6 +224,7 @@ const ReservationDetail = () => {
                 <ReservationModal
                   limitTime={{ startTime, endTime }}
                   limitCount={{ adultCount, kidCount, petCount }}
+                  rooftopOptions={rooftopOptions}
                   reservationData={reservationData}
                   setReservationData={setReservationData}
                 />,
@@ -236,15 +239,30 @@ const ReservationDetail = () => {
             <span>{`${totalUseDay}일 대여 :`}</span>
             <p>{(totalPrice * totalUseDay).toLocaleString()} KRW</p>
           </div>
-          <div className="option-list">
-            <span>바베큐 세팅 : </span>
-            <p>{Number(14000).toLocaleString()} KRW</p>
-          </div>
+          {Object.keys(extraOptions).length > 0 &&
+            Object.entries(extraOptions).map(([option, value]) => {
+              if (value > 0) {
+                return (
+                  <div className="option-list">
+                    <span>{option} : </span>
+                    <p>
+                      {`${(
+                        rooftopOptions.find(({ content }) => content === option).price * value
+                      ).toLocaleString()} KRW`}
+                    </p>
+                  </div>
+                )
+              }
+              return null
+            })}
           <div className="option-list">
             <span>총 합계 : </span>
             <strong>{(totalPrice * totalUseDay + 14000).toLocaleString()} KRW</strong>
           </div>
-          <ReservationBtn onClick={() => navigate(`/payment/${id}`)}>예약 하기</ReservationBtn>
+          <ReservationBtn
+            onClick={() => navigate(`/payment/${id}`, { state: { ...reservationData } })}>
+            예약 하기
+          </ReservationBtn>
         </PaymentOptionBox>
       </PaymentInfoBox>
     </Wrapper>

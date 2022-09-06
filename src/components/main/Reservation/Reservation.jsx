@@ -129,7 +129,7 @@ const Reservation = () => {
               rooftopInfo={rooftopInfo}
               filterInfo={{
                 kidCount,
-                adultCount,
+                adultCount: adultCount > 1 ? adultCount : 1,
                 petCount,
                 selectedTime: [
                   startTime ? parseInt(startTime.slice(0, 2)) : 0,

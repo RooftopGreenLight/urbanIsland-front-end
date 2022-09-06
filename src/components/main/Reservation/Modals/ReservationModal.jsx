@@ -12,19 +12,49 @@ import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import CustomSlider from "components/main/Reservation/CustomSlider"
 
-const ReservationModal = ({ limitTime, limitCount, reservationData, setReservationData }) => {
+const ReservationModal = ({
+  limitTime,
+  limitCount,
+  rooftopOptions,
+  reservationData,
+  setReservationData,
+}) => {
   const [modifiedData, setModifiedData] = useState(reservationData)
   const { closeModal } = useContext(ModalContext)
 
-  const { adultCount, kidCount, petCount, selectedDate, selectedTime } = modifiedData
+  const { adultCount, kidCount, petCount, selectedDate, extraOptions } = modifiedData
+  const limitExtraOption = rooftopOptions.reduce(
+    (obj, { content, count }) => ({ ...obj, [content]: count }),
+    {},
+  )
 
-  useEffect(() => {
+  const confirmModify = () => {
     setReservationData(prevData => ({ ...prevData, ...modifiedData }))
-  }, [modifiedData])
+    closeModal()
+  }
 
   const changeCount = (option, value) => {
+    if (option === "adultCount" && value < 1) {
+      return
+    }
     if (value >= 0 && value <= limitCount[option]) {
       setModifiedData(prevData => ({ ...prevData, [option]: value }))
+    }
+  }
+
+  const changeExtraOption = (content, value) => {
+    if (!extraOptions[content]) {
+      setModifiedData(prevData => ({
+        ...prevData,
+        extraOptions: { ...extraOptions, [content]: 1 },
+      }))
+      return
+    }
+    if (limitExtraOption[content] > value) {
+      setModifiedData(prevData => ({
+        ...prevData,
+        extraOptions: { ...extraOptions, [content]: value },
+      }))
     }
   }
 
@@ -32,6 +62,7 @@ const ReservationModal = ({ limitTime, limitCount, reservationData, setReservati
     setModifiedData({
       selectedDate: [new Date(), new Date()],
       selectedTime: [0, 23],
+      extraOptions: {},
       adultCount: 1,
       kidCount: 0,
       petCount: 0,
@@ -144,9 +175,37 @@ const ReservationModal = ({ limitTime, limitCount, reservationData, setReservati
               </CounterBox>
             </SetPersonSection>
           </OptionBox>
+          {rooftopOptions.length > 0 && (
+            <OptionBox>
+              <div className="title">
+                <h5>추가 옵션</h5>
+                <p>시설에서 지원하는 추가 옵션을 선택하세요.</p>
+              </div>
+              {rooftopOptions.map(({ content, count, price }) => (
+                <SetPersonSection key={content}>
+                  <h5>
+                    {content} <span>{`(${price.toLocaleString()} KRW, 최대 ${count} 개)`}</span>
+                  </h5>
+                  <CounterBox>
+                    <FontAwesomeIcon
+                      icon={faMinus}
+                      value={extraOptions[content] ?? 0}
+                      onClick={() => changeExtraOption(content, (extraOptions[content] ?? 0) - 1)}
+                    />
+                    <strong>{extraOptions[content] ?? 0}</strong>
+                    <FontAwesomeIcon
+                      icon={faPlus}
+                      value={extraOptions[content] ?? 0}
+                      onClick={() => changeExtraOption(content, (extraOptions[content] ?? 0) + 1)}
+                    />
+                  </CounterBox>
+                </SetPersonSection>
+              ))}
+            </OptionBox>
+          )}
           <BtnList>
             <SettingBtn onClick={resetModifiedData}>초기화</SettingBtn>
-            <SettingBtn onClick={closeModal}>적용하기</SettingBtn>
+            <SettingBtn onClick={confirmModify}>적용하기</SettingBtn>
           </BtnList>
         </ModalContent>
       </ViewPoint>

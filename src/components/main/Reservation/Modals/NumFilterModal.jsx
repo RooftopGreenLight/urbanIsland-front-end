@@ -30,7 +30,7 @@ const NumFilterModal = ({ filter, setFilter }) => {
 
   const resetCount = () => {
     setAvailablePerson({
-      adultCount: 0,
+      adultCount: 1,
       kidCount: 0,
       petCount: 0,
     })
