@@ -1,15 +1,18 @@
 import React, { useContext, useEffect, useState } from "react"
 import styled, { css } from "styled-components"
+
 import { ModalContext } from "module/Modal"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faClock, faFilter, faMap, faUser } from "@fortawesome/free-solid-svg-icons"
-import DetailFilterModal from "./Modals/DetailFilterModal"
 import { roofTopControl } from "api/controls/roofTopControl"
+import { SortingRooftop } from "constants/SortingRooftop"
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faClock, faFilter, faMap, faAngleDown, faUser } from "@fortawesome/free-solid-svg-icons"
+
+import ReservationCard from "components/main/Reservation/ReservationCard"
+import DetailFilterModal from "./Modals/DetailFilterModal"
 import TimeFilterModal from "components/main/Reservation/Modals/TimeFilterModal"
 import NumFilterModal from "components/main/Reservation/Modals/NumFilterModal"
 import RegionFilterModal from "components/main/Reservation/Modals/RegionFilterModal"
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons"
-import ReservationCard from "components/main/Reservation/ReservationCard"
 
 const Reservation = () => {
   const { openModal } = useContext(ModalContext)
@@ -26,12 +29,14 @@ const Reservation = () => {
     endTime: "",
     city: "",
     district: "",
-    maxPrice: 0,
     minPrice: 0,
-    maxWidth: 0,
+    maxPrice: 50000000,
     minWidth: 0,
+    maxWidth: 333333,
     contentNum: [],
   })
+
+  console.log(filter)
 
   const { city, district, adultCount, kidCount, startTime, endTime } = filter
 
@@ -62,12 +67,6 @@ const Reservation = () => {
     setFilter({ ...filter, cond: e.target.value })
     console.log(filter.cond)
   }
-
-  const OPTIONS = [
-    { value: 1, name: "평점순" },
-    { value: 2, name: "낮은가격순" },
-    { value: 3, name: "높은가격순" },
-  ]
 
   return (
     <Wrapper>
@@ -112,16 +111,13 @@ const Reservation = () => {
         </InnerDiv>
 
         <InnerDiv>
-          {/* <Select onChange={handleChange}>
-            {OPTIONS.map(option => (
-              <option
-                key={option.value}
-                value={option.value}
-                defaultValue={OPTIONS === option.value}>
-                {option.name}
+          <SortingBtn onChange={handleChange}>
+            {SortingRooftop.map(({ name, value }) => (
+              <option key={name} value={value} defaultValue={value}>
+                {name}
               </option>
             ))}
-          </Select> */}
+          </SortingBtn>
           <FilterBtn
             onClick={() => openModal(<DetailFilterModal filter={filter} setFilter={setFilter} />)}>
             <FontAwesomeIcon icon={faFilter} /> 세부 필터
@@ -171,27 +167,12 @@ const MainFilterBtn = styled.button`
   }}
 `
 
-const Select = styled.select`
-  ${({ theme }) => {
-    const { margins, paddings } = theme
-    return css`
-      background-color: white;
-      border: 1px solid black;
-      padding: ${paddings.sm};
-      border-radius: 0.5rem;
-      display: flex;
-      justify-content: space-between;
-      margin: ${margins.sm};
-      height: 2.2rem;
-    `
-  }}
-`
 const InnerDiv = styled.div`
   ${({ theme }) => {
     const { margins } = theme
     return css`
       display: flex;
-      flex-direction: row;
+      justify-content: space-between;
       margin: ${margins.sm} 0vw;
     `
   }}
@@ -200,14 +181,15 @@ const SearchBar = styled.div`
   ${({ theme }) => {
     const { colors, paddings, margins } = theme
     return css`
-      width: 100vw;
+      width: 100%;
       padding: ${paddings.base} 12.5vw;
-      margin: ${margins.base} 0vw;
+      margin: 0vw 0vw ${margins.base} 0vw;
 
       display: flex;
       justify-content: space-between;
 
       border-bottom: 1px solid ${colors.main.primary}22;
+      background-color: ${colors.main.quaternary}09;
     `
   }}
 `
@@ -219,9 +201,49 @@ const SearchResult = styled.div`
       margin: 0vw auto ${margins.xl} auto;
       display: grid;
 
-      grid-gap: 5vh ${margins.sm};
+      grid-gap: 5vh ${margins.base};
       grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+    `
+  }}
+`
+
+const SortingBtn = styled.select`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 7.5vw;
+      height: 75%;
+      margin: auto 0vw auto ${margins.sm};
+      padding: 0vw ${paddings.base};
+
+      border: 0;
+      border-radius: ${fonts.size.xsm};
+      background: ${colors.main.secondary};
+
+      color: ${colors.white};
+      font-size: ${fonts.size.xsm};
+      font-weight: ${fonts.weight.light};
+
+      svg {
+        font-size: ${fonts.size.xsm};
+        margin: auto ${margins.xsm} auto 0vw;
+      }
+
+      option {
+        border: 0;
+        background: ${colors.white};
+
+        color: ${colors.main.tertiary};
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+
+        &:focus {
+          background: ${colors.main.quaternary};
+
+          color: ${colors.white};
+        }
+      }
     `
   }}
 `
@@ -232,8 +254,8 @@ const FilterBtn = styled.button`
     return css`
       width: 7.5vw;
       height: 75%;
+      margin: auto 0vw auto ${margins.sm};
       padding: 0vw ${paddings.base};
-      margin: auto;
 
       border-radius: ${fonts.size.xsm};
       background: ${colors.main.tertiary};

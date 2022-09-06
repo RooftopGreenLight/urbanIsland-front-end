@@ -34,7 +34,7 @@ const Wrapper = styled.div`
     const { colors } = theme
     return css`
       position: relative;
-      width: 16vw;
+      width: 100%;
       border-radius: 0.75rem 0.75rem 0px 0px;
       box-shadow: 0px 2px 4px ${colors.black.primary}33;
 
