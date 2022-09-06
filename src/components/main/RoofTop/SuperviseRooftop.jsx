@@ -1,5 +1,5 @@
-import { useParams } from "react-router-dom"
-import { useState, useEffect } from "react"
+import { Link, useParams } from "react-router-dom"
+import { useState } from "react"
 import styled, { css } from "styled-components"
 
 import defaultProfile from "assets/img/defaultProfile.png"
@@ -9,87 +9,88 @@ const SuperviseRooftop = () => {
   const { id } = useParams()
   const startDate = new Date()
   const [value, onChange] = useState(new Date())
-  const [price, setPrice] = useState(0)
-  const onChangeInput = e => {
-    setPrice(e.target.value)
-  }
   return (
     <Wrapper>
-      <UpperBox>
-        <SideBox>
-          <Image src={defaultProfile} />
-          <BoxWrapper color="white">
-            <Title>예약내역</Title>
-            <div>주문자:김ㅇㅇ</div>
-            <div>주문자 번호:010-0000-0000</div>
-            <div>대여시간: 13:00~21:00</div>
-            <div>대여기간: 22.01.01~22.04.03</div>
-          </BoxWrapper>
-          <BoxWrapper>
-            <Title>채팅내역</Title>
-            채팅은 추후 업데이트
-          </BoxWrapper>
-          <Button>내 옥상 수정하기</Button>
-        </SideBox>
-        <SideBox>
-          {" "}
-          <BoxWrapper color="white">
-            <Calendar
-              minDate={startDate}
-              onChange={onChange}
-              value={value}
-              selectRange={true}
-              returnValue={"range"}
-            />
-          </BoxWrapper>
-          <BoxWrapper>
-            <Title>문의 알림란</Title>
-            <InnerBox>
-              <InnerTop>
-                <InnerTitle>문의</InnerTitle>
-                <div>22.07.20 11:20</div>
-              </InnerTop>
-              <InnerMessage>
-                혹시 애견인 모임으로 활용하려 하는데 xx개의 좌석 확보할 수 있을까요?
-              </InnerMessage>
-            </InnerBox>
-            <InnerBox>
-              <InnerTop>
-                <InnerTitle>문의</InnerTitle>
-                <div>22.07.20 11:20</div>
-              </InnerTop>
-              <InnerMessage>
-                혹시 애견인 모임으로 활용하려 하는데 xx개의 좌석 확보할 수 있을까요?
-              </InnerMessage>
-            </InnerBox>
-          </BoxWrapper>
-          <BoxWrapper>
-            <Title>조경업체</Title>
-            <div>서울특별시 동구 테스트 주소 어쩌구</div>
-            <div>전화번호: 010-1111-2222</div>
-          </BoxWrapper>
-          <div>
-            1일당 가격 책정하기 <input type="text" onChange={onChangeInput} />원
-          </div>
-        </SideBox>
-      </UpperBox>
-      <BottomBox>
-        <Title>수수료 산정 공지</Title>
-        <p>현재 옥상에 대한 수수료 10%</p>
-        수수료 재산정의 경우 어쩌구 저쩌구
-        <Button>수수료 재산정 요청</Button>
-      </BottomBox>
+      <ViewPoint>
+        <UpperBox>
+          <SideBox>
+            <Image src={defaultProfile} />
+            <BoxWrapper color="white">
+              <Title>예약내역</Title>
+              <div>주문자:김ㅇㅇ</div>
+              <div>주문자 번호:010-0000-0000</div>
+              <div>대여시간: 13:00~21:00</div>
+              <div>대여기간: 22.01.01~22.04.03</div>
+            </BoxWrapper>
+            <BoxWrapper>
+              <Title>채팅내역</Title>
+              채팅은 추후 업데이트
+            </BoxWrapper>
+            <Link to={`/mypage/rooftop/supervise/detail/${id}`}>
+              <Button>내 옥상 수정하기</Button>
+            </Link>
+          </SideBox>
+          <SideBox>
+            <BoxWrapper color="white">
+              <Calendar
+                minDate={startDate}
+                onChange={onChange}
+                value={value}
+                selectRange={true}
+                returnValue={"range"}
+              />
+            </BoxWrapper>
+            <BoxWrapper>
+              <Title>문의 알림란</Title>
+              <InnerBox>
+                <InnerTop>
+                  <InnerTitle>문의</InnerTitle>
+                  <div>22.07.20 11:20</div>
+                </InnerTop>
+                <InnerMessage>
+                  혹시 애견인 모임으로 활용하려 하는데 xx개의 좌석 확보할 수 있을까요?
+                </InnerMessage>
+              </InnerBox>
+              <InnerBox>
+                <InnerTop>
+                  <InnerTitle>문의</InnerTitle>
+                  <div>22.07.20 11:20</div>
+                </InnerTop>
+                <InnerMessage>
+                  혹시 애견인 모임으로 활용하려 하는데 xx개의 좌석 확보할 수 있을까요?
+                </InnerMessage>
+              </InnerBox>
+            </BoxWrapper>
+            <BoxWrapper>
+              <Title>조경업체</Title>
+              <div>서울특별시 동구 테스트 주소 어쩌구</div>
+              <div>전화번호: 010-1111-2222</div>
+            </BoxWrapper>
+          </SideBox>
+        </UpperBox>
+        <BottomBox>
+          <Title>수수료 산정 공지</Title>
+          <p>현재 옥상에 대한 수수료 10%</p>
+          수수료 재산정의 경우 어쩌구 저쩌구
+          <Button>수수료 재산정 요청</Button>
+        </BottomBox>
+      </ViewPoint>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 35vw;
-  height: 75vh;
   margin: auto;
-
   display: flex;
   flex-direction: column;
+`
+const ViewPoint = styled.div`
+  max-height: 80vh;
+  overflow: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const UpperBox = styled.div`

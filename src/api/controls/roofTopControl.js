@@ -56,4 +56,36 @@ export const roofTopControl = {
       throw new Error(err)
     }
   },
+
+  patchRooftopDetail: async (id, formdata) => {
+    try {
+      const response = await axiosInstance({
+        method: "patch",
+        url: "/rooftops/detail/" + id,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        data: formdata,
+      })
+      return response.data
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+  postRoofTopPayoption: async (id, formdata) => {
+    try {
+      await axiosInstance({
+        method: "POST",
+        url: `/rooftops/detail/option/${id}`,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        data: formdata,
+      })
+    } catch (err) {
+      console.log(err)
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
 }

@@ -14,6 +14,7 @@ import RequestToGreenBee from "components/main/RoofTop/RequestToGreenBee"
 import Rooftop from "components/main/Mypage/RooftopOwner/Rooftop"
 import ApplyRoofTop from "components/main/RoofTop/ApplyRoofTop"
 import SuperviseRooftop from "components/main/RoofTop/SuperviseRooftop"
+import SuperviseDetailRooftop from "components/main/RoofTop/SuperviseDetailRooftop"
 
 export const MypageContainer = () => {
   return (
@@ -49,6 +50,7 @@ const RooftopContainer = () => {
       <Route path="apply" element={<ApplyRoofTop />} />
       <Route path="request" element={<RequestToGreenBee />} />
       <Route path="supervise/:id" element={<SuperviseRooftop />} />
+      <Route path="supervise/detail/:id" element={<SuperviseDetailRooftop />} />
     </Routes>
   )
 }
