@@ -1,197 +1,264 @@
-import { useEffect, useRef, useContext, useState } from "react"
+import { useContext, useState } from "react"
 import styled, { css } from "styled-components"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons"
+import { faPlus, faMinus, faXmark } from "@fortawesome/free-solid-svg-icons"
+
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 
 const NumFilterModal = ({ filter, setFilter }) => {
-  const [kid, setKid] = useState(0)
-  const [adult, setAdult] = useState(0)
-  const [pet, setPet] = useState(0)
-
   const { closeModal } = useContext(ModalContext)
-  const onConfirm = () => {
-    setFilter({ ...filter, kid: kid, adult: adult, pet: pet })
+  const [availablePerson, setAvailablePerson] = useState({
+    adultCount: filter.adultCount,
+    kidCount: filter.kidCount,
+    petCount: filter.petCount,
+  })
+
+  const { adultCount, kidCount, petCount } = availablePerson
+
+  const confirmCount = () => {
+    setFilter({ ...filter, adultCount, kidCount, petCount })
     closeModal()
   }
-  const onChangePlus = (x, setX) => {
-    if (x >= 99) {
-      console.log("최대 99")
-    } else setX(x + 1)
-  }
-  const onChangeMinus = (x, setX) => {
-    setX(x - 1)
+
+  const changeCount = (option, value) => {
+    if (value >= 0 && value <= 99) {
+      setAvailablePerson(prevPerson => ({ ...prevPerson, [option]: value }))
+    }
   }
 
-  const onReset = () => {
-    setAdult(0)
-    setPet(0)
-    setKid(0)
+  const resetCount = () => {
+    setAvailablePerson({
+      adultCount: 1,
+      kidCount: 0,
+      petCount: 0,
+    })
   }
 
-  const ref = useRef(null)
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (ref.current && !ref.current.contains(event.target)) {
-        closeModal()
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [ref])
   return (
-    <Wrapper ref={ref}>
+    <Wrapper>
+      <ModalHeader>
+        <h5>이용 인원 설정</h5>
+        <ModalCloseBtn icon={faXmark} onClick={closeModal} />
+      </ModalHeader>
       <ModalContent>
-        {" "}
-        <Title>
-          <span>인원선택</span>
-        </Title>
-        <Box>
-          <Line>
-            <div>성인</div>
-            <div>
-              {adult === 0 ? (
-                <Icons icon={faMinus} style={{ color: "gray" }} />
-              ) : (
-                <Icons
-                  icon={faMinus}
-                  value={adult}
-                  onClick={() => onChangeMinus(adult, setAdult)}
-                />
-              )}
-              {adult}
-              <Icons icon={faPlus} value={adult} onClick={() => onChangePlus(adult, setAdult)} />
-            </div>
-          </Line>
-          <Line>
-            <div>유아</div>
-            <div>
-              {kid === 0 ? (
-                <Icons icon={faMinus} style={{ color: "gray" }} />
-              ) : (
-                <Icons icon={faMinus} value={kid} onClick={() => onChangePlus(kid, setKid)} />
-              )}
-              {kid}
-              <Icons icon={faPlus} value={kid} onClick={() => onChangePlus(kid, setKid)} />
-            </div>{" "}
-          </Line>
-          <Line>
-            <div>반려동물</div>
-            <div>
-              {pet === 0 ? (
-                <Icons icon={faMinus} style={{ color: "gray" }} />
-              ) : (
-                <Icons icon={faMinus} value={pet} onClick={() => onChangeMinus(pet, setPet)} />
-              )}
-              {pet}
-              <Icons icon={faPlus} value={pet} onClick={() => onChangePlus(pet, setPet)} />
-            </div>{" "}
-          </Line>
-        </Box>
-        <Bottom>
-          <div onClick={onReset}>초기화</div>
-          <div onClick={onConfirm}>적용하기</div>
-        </Bottom>
+        <h5>이용 인원 선택</h5>
+        <p>시설을 이용하려는 인원을 설정해주세요.</p>
+        <SetPersonSection>
+          <h5>
+            성인 <span>(최소 1인 이상)</span>
+          </h5>
+          <CounterBox>
+            <FontAwesomeIcon
+              icon={faMinus}
+              value={adultCount}
+              onClick={() => changeCount("adultCount", adultCount - 1)}
+            />
+            <strong>{adultCount}</strong>
+            <FontAwesomeIcon
+              icon={faPlus}
+              value={adultCount}
+              onClick={() => changeCount("adultCount", adultCount + 1)}
+            />
+          </CounterBox>
+        </SetPersonSection>
+        <SetPersonSection>
+          <h5>
+            유아 <span>(노 키즈 존일 시 0명)</span>
+          </h5>
+          <CounterBox>
+            <FontAwesomeIcon
+              icon={faMinus}
+              value={kidCount}
+              onClick={() => changeCount("kidCount", kidCount - 1)}
+            />
+            <strong>{kidCount}</strong>
+            <FontAwesomeIcon
+              icon={faPlus}
+              value={kidCount}
+              onClick={() => changeCount("kidCount", kidCount + 1)}
+            />
+          </CounterBox>
+        </SetPersonSection>
+        <SetPersonSection>
+          <h5>
+            반려 동물 <span>(반려동물 출입 금지 시 0명)</span>
+          </h5>
+          <CounterBox>
+            <FontAwesomeIcon
+              icon={faMinus}
+              value={petCount}
+              onClick={() => changeCount("petCount", petCount - 1)}
+            />
+            <strong>{petCount}</strong>
+            <FontAwesomeIcon
+              icon={faPlus}
+              value={petCount}
+              onClick={() => changeCount("petCount", petCount + 1)}
+            />
+          </CounterBox>
+        </SetPersonSection>
+        <BtnList>
+          <SettingBtn onClick={resetCount}>초기화</SettingBtn>
+          <SettingBtn onClick={confirmCount}>적용하기</SettingBtn>
+        </BtnList>
       </ModalContent>
     </Wrapper>
   )
 }
-const Box = styled.div`
-  padding: 1rem;
-`
-const Line = styled.div`
-  padding: 0.1rem;
-  display: flex;
-  justify-content: space-between;
 
-  div {
-    text-align: center;
-    width: 50%;
-  }
-`
-const Icons = styled(FontAwesomeIcon)`
-  padding: 0 0.3rem;
+const Wrapper = styled.div`
+  width: 33vw;
+  margin: auto;
+  background-color: #ffffff;
+
+  animation: ${modalShow} 0.3s;
+  animation-fill-mode: forwards;
+  overflow: hidden;
 `
 
-const Title = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 0.3rem;
-  span {
-    font-weight: bold;
-    font-size: 1.2rem;
-  }
-`
-const Bottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  div {
-    text-align: center;
-    width: 50%;
-  }
-`
-const Wrapper = styled.section`
+const ModalHeader = styled.div`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors, fonts, paddings } = theme
     return css`
-      width: 30%;
-      margin: auto;
+      width: 100%;
+      padding: ${paddings.base};
 
-      border-radius: 0.3rem;
-      background-color: #fff;
+      background-color: ${colors.main.primary};
 
-      animation: ${modalShow} 0.3s;
-      animation-fill-mode: forwards;
-      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
 
-      header {
-        display: flex;
-        flex-direction: row-reverse;
+      color: ${colors.white};
+      text-align: center;
 
-        padding: ${paddings.sm} ${paddings.base};
-        background-color: #f1f1f1;
-        font-weight: 700;
+      h5 {
+        font-size: ${fonts.size.base};
+        vertical-align: center;
       }
     `
   }}
 `
 
-const ModalContent = styled.main`
+const ModalCloseBtn = styled(FontAwesomeIcon)`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      padding: ${paddings.sm};
+      color: ${colors.white};
+      font-size: ${fonts.size.xsm};
+    `
+  }}
+`
+
+const ModalContent = styled.div`
+  ${({ theme }) => {
+    const { fonts, paddings, margins } = theme
+    return css`
+      padding: ${paddings.lg} ${paddings.xl};
+      margin: auto;
+
+      h5 {
+        font-size: ${fonts.size.sm};
+        text-align: center;
+      }
+
+      p {
+        margin-bottom: ${margins.lg};
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+        text-align: center;
+      }
+    `
+  }}
+`
+
+const SettingBtn = styled.button`
+  ${({ theme }) => {
+    const { colors, paddings, margins } = theme
+    return css`
+      width: 40%;
+      padding: ${paddings.sm};
+      margin: ${margins.lg} auto 0vw auto;
+
+      background: ${colors.white};
+      border: 1px solid ${colors.main.primary};
+      border-radius: 2.5vw;
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-weight: 100;
+
+      &:hover {
+        border: 0px;
+        background: ${colors.main.tertiary};
+        color: ${colors.white};
+      }
+    `
+  }}
+`
+
+const SetPersonSection = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
+      width: 90%;
+      margin: auto;
       padding: ${paddings.sm};
-      border-top: 1px solid #dee2e6;
-      background-color: ${colors.white};
-      text-align: center;
+      margin-bottom: ${margins.sm};
 
-      input {
-        width: 90%;
-        padding: ${paddings.sm};
-        margin: 0vw auto ${margins.base} auto;
+      display: flex;
+      justify-content: space-between;
 
-        background-color: transparent;
-        border: 0;
-        border-bottom: 1px solid #232323;
+      h5 {
+        width: 75%;
 
-        &::placeholder {
-          color: #3e3e3e;
-          text-align: left;
-          font-weight: 100;
-        }
-
-        &::before {
-          background-color: #d9d9d9;
-        }
+        font-size: ${fonts.size.base};
+        line-height: 150%;
+        text-align: left;
       }
+
+      span {
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
+    `
+  }}
+`
+
+const CounterBox = styled.div`
+  ${({ theme }) => {
+    const { colors, paddings, margins } = theme
+    return css`
+      width: 25%;
+
+      border: 1px inset ${colors.main.primary}88;
+      border-radius: 0.25rem;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      svg {
+        width: 25%;
+        padding: ${paddings.sm};
+      }
+    `
+  }}
+`
+
+const BtnList = styled.div`
+  ${({ theme }) => {
+    const { margins } = theme
+    return css`
+      width: 80%;
+      margin: 0vw auto ${margins.base} auto;
+      display: flex;
+      justify-content: space-between;
     `
   }}
 `

@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export const KakaoPayControl = {
-  postRequestToPay: async rooftopId => {
+  postRequestToPay: async (rooftopId, total_amount, item_name) => {
     let response
     try {
       response = await axios({
@@ -16,14 +16,14 @@ export const KakaoPayControl = {
           cid: "TC0ONETIME",
           partner_order_id: "partner_order_id",
           partner_user_id: "partner_user_id",
-          item_name: "테스트숙소예약",
+          item_name,
           quantity: 1,
-          total_amount: 22000,
+          total_amount,
           vat_amount: 0,
           tax_free_amount: 0,
-          approval_url: `http://localhost:3000/reservation/payment/${rooftopId}/success`,
-          fail_url: `http://localhost:3000/reservation/payment/${rooftopId}/fail`,
-          cancel_url: `http://localhost:3000/reservation/payment/${rooftopId}/fail`,
+          approval_url: `http://localhost:3000/payment/${rooftopId}/success`,
+          fail_url: `http://localhost:3000/payment/${rooftopId}/fail`,
+          cancel_url: `http://localhost:3000/payment/${rooftopId}/fail`,
         },
       })
       return response.data
