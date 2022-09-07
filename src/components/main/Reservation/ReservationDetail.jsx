@@ -96,6 +96,13 @@ const ReservationDetail = () => {
             optionCount: [...Array(rooftopOptions.length).fill(0)],
           }))
         }
+        setReservationData(prevData => ({
+          ...prevData,
+          selectedTime: [
+            Math.max(startTime[0], prevData.selectedTime[0]),
+            Math.min(endTime[0], prevData.selectedTime[1]),
+          ],
+        }))
       } catch (err) {
         console.log(err.message)
       }
