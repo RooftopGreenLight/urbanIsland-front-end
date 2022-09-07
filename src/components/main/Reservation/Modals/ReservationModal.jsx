@@ -22,22 +22,7 @@ const ReservationModal = ({
   const [modifiedData, setModifiedData] = useState(reservationData)
   const { closeModal } = useContext(ModalContext)
 
-  const {
-    adultCount,
-    kidCount,
-    petCount,
-    selectedDate,
-    extraOptions,
-    optionContent,
-    optionPrice,
-    optionCount,
-  } = modifiedData
-
-  const limitExtraOption = rooftopOptions?.reduce(
-    (obj, { content, count }) => ({ ...obj, [content]: count }),
-    {},
-  )
-
+  const { adultCount, kidCount, petCount, selectedDate, optionCount } = modifiedData
   const limitExtraOptionCount = rooftopOptions.map(({ count }) => count)
 
   const confirmModify = () => {

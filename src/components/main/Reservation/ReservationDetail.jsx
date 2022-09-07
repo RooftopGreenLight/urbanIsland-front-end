@@ -47,7 +47,6 @@ const ReservationDetail = () => {
   const [reservationData, setReservationData] = useState({
     selectedDate: [new Date(), new Date()],
     selectedTime: [0, 23],
-    extraOptions: {},
     adultCount: 1,
     kidCount: 0,
     petCount: 0,
@@ -276,11 +275,10 @@ const ReservationDetail = () => {
           <ReservationBtn
             onClick={() =>
               navigate(`/payment/${id}`, {
-                reservationData: {
-                  ...reservationData,
+                state: {
+                  reservationData: { ...reservationData },
+                  address: `${city} ${district} ${detail}`,
                 },
-                address: `${city} ${district} ${detail}`,
-                rooftopOptions: rooftopOptions ?? [],
               })
             }>
             예약 하기

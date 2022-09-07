@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useLocation, useParams } from "react-router-dom"
 import styled, { css } from "styled-components"
+import moment from "moment/moment"
 
 import { KakaoPayControl } from "api/KakaoPay"
 
@@ -21,9 +22,26 @@ const Payment = () => {
     totalPrice: 0,
   })
 
+  console.log(paymentInfo)
+
+  const {
+    adultCount,
+    kidCount,
+    petCount,
+    selectedTime,
+    selectedDate,
+    optionContent,
+    optionPrice,
+    optionCount,
+    totalPrice,
+  } = paymentInfo
+
   useEffect(() => {
-    setPaymentInfo(prevInfo => ({ ...prevInfo, ...location.reservationData }))
+    console.log(location)
+    setPaymentInfo(prevInfo => ({ ...prevInfo, ...location.state.reservationData }))
   }, [])
+
+  const totalUseDay = moment(selectedDate[1]).diff(moment(selectedDate[0]), "days") + 1
 
   const readyToSetPayment = async () => {
     try {
@@ -41,66 +59,82 @@ const Payment = () => {
       <UserInfo>
         <h5>예약자 정보</h5>
         <p>예약자의 정보를 안내합니다.</p>
-        <BasicInformation>
+        <PaymentOptionBox>
           <div className="option-list">
-            <p>예약자 성명 :</p>
-            <p>예약자 휴대번호 :</p>
+            <span>인원 : </span>
+            <p>
+              {adultCount > 0
+                ? kidCount > 0
+                  ? `어른 ${adultCount}명, 유아 ${kidCount}명`
+                  : `어른 ${adultCount}명`
+                : "인원 미선택"}
+            </p>
           </div>
-          <div className="value-list">
-            <p>{`백광인`}</p>
-            <p>{`010-7167-0851`}</p>
+          <div className="option-list">
+            <span>이용 일자 : </span>
+            <p>{`${moment(selectedDate[0]).format("YYYY.MM.DD")} - ${moment(selectedDate[1]).format(
+              "YYYY.MM.DD",
+            )}`}</p>
           </div>
-        </BasicInformation>
+          <div className="option-list">
+            <span>이용 시간 : </span>
+            <p>{`${String(selectedTime[0]).padStart(2, "0")}:00 - ${String(
+              selectedTime[1],
+            ).padStart(2, "0")}:00`}</p>
+          </div>
+        </PaymentOptionBox>
       </UserInfo>
       <ReservationInfo>
         <h5>예약 안내</h5>
         <p>옥상 시설 예약 정보를 안내합니다.</p>
-        <BasicInformation>
+        <PaymentOptionBox>
           <div className="option-list">
-            <p>예약 일자 :</p>
-            <p>예약 시간 :</p>
-            <p>예약 인원 :</p>
+            <span>{`${totalUseDay}일 대여 :`}</span>
+            <p>{(totalPrice * totalUseDay).toLocaleString()} KRW</p>
           </div>
-          <div className="value-list">
-            <p>{`7:26 ~ 7:28`}</p>
-            <p>{`AM 11:00 ~ PM 8:00`}</p>
-            <p>{`성인 1명, 유아 0명, 반려동물 0명`}</p>
-          </div>
-        </BasicInformation>
+        </PaymentOptionBox>
       </ReservationInfo>
       <OptionInfo>
         <h5>추가 옵션 안내</h5>
         <p>추가하실 옵션 정보를 안내합니다.</p>
-        <BasicInformation>
-          <div className="option-list">
-            <p>바베큐 장비</p>
-            <p>야외 무대 시설</p>
-            <p>침구류 추가</p>
-          </div>
-          <div className="value-list">
-            <p>KRW {`15,000`}</p>
-            <p>KRW {`125,000`}</p>
-            <p>KRW {`5,000`}</p>
-          </div>
-        </BasicInformation>
+        <PaymentOptionBox>
+          {optionCount
+            .filter(count => count > 0)
+            .map((count, idx) => (
+              <div className="option-list">
+                <span>{`${optionContent[idx]} :`}</span>
+                <p>{`${(count * optionPrice[idx]).toLocaleString()} KRW`}</p>
+              </div>
+            ))}
+        </PaymentOptionBox>
       </OptionInfo>
       <PaymentConfirm>
         <h5>최종 예약 결제</h5>
         <p>추가하실 옵션 정보를 안내합니다.</p>
-        <BasicInformation>
+        <PaymentOptionBox>
           <div className="option-list">
-            <p>시설 대여</p>
-            <p>야외 무대 시설</p>
-            <p>침구류 추가</p>
-            <p>최종 금액</p>
+            <span>{`${totalUseDay}일 대여 :`}</span>
+            <p>{(totalPrice * totalUseDay).toLocaleString()} KRW</p>
           </div>
-          <div className="value-list">
-            <p>KRW {`275,000 (KRW 75,000 * 3)`}</p>
-            <p>KRW {`125,000`}</p>
-            <p>KRW {`15,000 (KRW 5,000 * 3)`}</p>
-            <p>KRW {`415,000`}</p>
+          {optionCount
+            .filter(count => count > 0)
+            .map((count, idx) => (
+              <div className="option-list">
+                <span>{`${optionContent[idx]} :`}</span>
+                <p>{`${(count * optionPrice[idx]).toLocaleString()} KRW`}</p>
+              </div>
+            ))}
+          <div className="option-list">
+            <span>총 합계 : </span>
+            <strong>
+              {(
+                totalPrice * totalUseDay +
+                optionCount.reduce((sum, count, idx) => (sum += count * optionPrice[idx]), 0)
+              ).toLocaleString()}
+              KRW
+            </strong>
           </div>
-        </BasicInformation>
+        </PaymentOptionBox>
         <ConfirmBtn onClick={readyToSetPayment}>결제하기</ConfirmBtn>
       </PaymentConfirm>
     </Wrapper>
@@ -109,11 +143,10 @@ const Payment = () => {
 
 const Wrapper = styled.div`
   width: 60vw;
-  max-height: 80vh;
-  margin: auto;
+  margin: 7.5vh auto;
 
   display: grid;
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;
 `
@@ -126,7 +159,7 @@ const ReservationInfo = styled.div`
 
       background-color: #e8e8e8;
       grid-column: 1 / 3;
-      grid-row: 2 / 4;
+      grid-row: 2 / 3;
 
       h5 {
         font-size: ${fonts.size.base};
@@ -149,12 +182,61 @@ const UserInfo = styled(ReservationInfo)`
 
 const OptionInfo = styled(ReservationInfo)`
   grid-column: 1 / 3;
-  grid-row: 4 / 6;
+  grid-row: 3 / 4;
 `
 
 const PaymentConfirm = styled(ReservationInfo)`
   grid-column: 3 / 5;
-  grid-row: 1 / 6;
+  grid-row: 1 / 4;
+`
+
+const PaymentOptionBox = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.base} ${paddings.lg};
+      margin: ${margins.sm} 0vw;
+
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      h5 {
+        width: 100%;
+        padding-bottom: ${paddings.xsm};
+        margin-bottom: ${margins.base};
+        border-bottom: 1px solid ${colors.main.primary}55;
+
+        color: ${colors.main.secondary};
+        font-size: ${fonts.size.sm};
+      }
+
+      p {
+        color: ${colors.black.tertiary};
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      span {
+        color: ${colors.black.quinary};
+        font-size: 1.1rem;
+        font-weight: 300;
+      }
+
+      strong {
+        color: ${colors.main.secondary};
+        font-size: 1.1rem;
+      }
+
+      .option-list {
+        width: 100%;
+        margin: ${margins.xsm} 0vw;
+        display: flex;
+        justify-content: space-between;
+      }
+    `
+  }}
 `
 
 const BasicInformation = styled.div`
