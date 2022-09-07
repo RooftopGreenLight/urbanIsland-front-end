@@ -22,7 +22,34 @@ export const reservationControl = {
         method: "GET",
         url: `/reservations/${reservationId}`,
       })
+      console.log(response)
       return response?.data ?? null
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
+  getWaitingResevationInfo: async () => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/reservations/members/waiting`,
+      })
+      console.log(response)
+      return response?.data ?? []
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
+  getCompletedResevationInfo: async () => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/reservations/members/completed`,
+      })
+      console.log(response)
+      return response?.data ?? []
     } catch (err) {
       const errorMessage = err.response.data.message
       throw new Error(errorMessage)
