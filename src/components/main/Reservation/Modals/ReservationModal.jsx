@@ -38,6 +38,8 @@ const ReservationModal = ({
     {},
   )
 
+  const limitExtraOptionCount = rooftopOptions.map(({ count }) => count)
+
   const confirmModify = () => {
     setReservationData(prevData => ({ ...prevData, ...modifiedData }))
     closeModal()
@@ -52,19 +54,10 @@ const ReservationModal = ({
     }
   }
 
-  const changeExtraOption = (option, value) => {
-    if (!extraOptions[option]) {
-      setModifiedData(prevData => ({
-        ...prevData,
-        extraOptions: { ...extraOptions, [option]: 1 },
-      }))
-      return
-    }
-    if (limitExtraOption[option] > value) {
-      setModifiedData(prevData => ({
-        ...prevData,
-        extraOptions: { ...extraOptions, [option]: value },
-      }))
+  const changeExtraOption = (idx, value) => {
+    if (value >= 0 && value <= limitExtraOptionCount[idx]) {
+      optionCount[idx] = value
+      setModifiedData(prevData => ({ ...prevData, optionCount }))
     }
   }
 
@@ -199,14 +192,14 @@ const ReservationModal = ({
                   <CounterBox>
                     <FontAwesomeIcon
                       icon={faMinus}
-                      value={extraOptions[content] ?? 0}
-                      onClick={() => changeExtraOption(content, (extraOptions[content] ?? 0) - 1)}
+                      value={optionCount[idx]}
+                      onClick={() => changeExtraOption(idx, optionCount[idx] - 1)}
                     />
-                    <strong>{extraOptions[content] ?? 0}</strong>
+                    <strong>{optionCount[idx]}</strong>
                     <FontAwesomeIcon
                       icon={faPlus}
-                      value={extraOptions[content] ?? 0}
-                      onClick={() => changeExtraOption(content, (extraOptions[content] ?? 0) + 1)}
+                      value={optionCount[idx]}
+                      onClick={() => changeExtraOption(idx, optionCount[idx] + 1)}
                     />
                   </CounterBox>
                 </SetPersonSection>

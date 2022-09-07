@@ -79,16 +79,24 @@ const ReservationDetail = () => {
     rooftopOptions,
   } = rooftopData
 
-  const { selectedDate, selectedTime, extraOptions, optionContent, optionPrice, optionCount } =
-    reservationData
+  const { selectedDate, selectedTime, optionContent, optionPrice, optionCount } = reservationData
   const totalUseDay = moment(selectedDate[1]).diff(moment(selectedDate[0]), "days") + 1
 
   useEffect(() => {
     const loadRooftopData = async () => {
       try {
         const result = await roofTopControl.getRooftopDetail(id)
-        console.log(result)
-        setRooftopData({ ...result, startTime: result.startTime[0], endTime: result.endTime[0] })
+        const { startTime, endTime, rooftopOptions } = result
+        setRooftopData({ ...result, startTime: startTime[0], endTime: endTime[0] })
+        // rooftopOptions 이 존재할 경우, 이를 분해하여 option Array로 저장시킴.
+        if (rooftopOptions && rooftopOptions.length > 0) {
+          setReservationData(prevData => ({
+            ...prevData,
+            optionContent: rooftopOptions.map(({ content }) => content),
+            optionPrice: rooftopOptions.map(({ price }) => price),
+            optionCount: [...Array(rooftopOptions.length).fill(0)],
+          }))
+        }
       } catch (err) {
         console.log(err.message)
       }
@@ -96,19 +104,6 @@ const ReservationDetail = () => {
     setReservationData(prevData => ({ ...prevData, ...location.state }))
     loadRooftopData()
   }, [])
-
-  // extraOption이 변동될 때마다, 총 지불해야 할 금액을 업데이트 해주는 useEffect
-  useEffect(() => {
-    const needToPay =
-      totalPrice * totalUseDay +
-      (Object.keys(extraOptions).length > 0
-        ? rooftopOptions.reduce(
-            (result, { content, price }) => result + price * (extraOptions[content] ?? 0),
-            0,
-          )
-        : 0)
-    setReservationData(prevData => ({ ...prevData, totalPrice: needToPay }))
-  }, [extraOptions])
 
   console.log(reservationData)
 
@@ -257,33 +252,23 @@ const ReservationDetail = () => {
             <span>{`${totalUseDay}일 대여 :`}</span>
             <p>{(totalPrice * totalUseDay).toLocaleString()} KRW</p>
           </div>
-          {Object.keys(extraOptions).length > 0 &&
-            Object.entries(extraOptions).map(([option, value]) => {
-              if (value > 0) {
-                return (
-                  <div className="option-list">
-                    <span>{option} : </span>
-                    <p>
-                      {`${(
-                        rooftopOptions.find(({ content }) => content === option).price * value
-                      ).toLocaleString()} KRW`}
-                    </p>
-                  </div>
-                )
-              }
-              return null
-            })}
+          {optionCount.map((count, idx) => {
+            if (count > 0) {
+              return (
+                <div className="option-list">
+                  <span>{optionContent[idx]} : </span>
+                  <p>{`${(optionPrice[idx] * count).toLocaleString()} KRW`}</p>
+                </div>
+              )
+            }
+            return null
+          })}
           <div className="option-list">
             <span>총 합계 : </span>
             <strong>
               {(
                 totalPrice * totalUseDay +
-                (Object.keys(extraOptions).length > 0
-                  ? rooftopOptions.reduce(
-                      (result, { content, price }) => result + price * (extraOptions[content] ?? 0),
-                      0,
-                    )
-                  : 0)
+                optionCount.reduce((sum, count, idx) => (sum += count * optionPrice[idx]), 0)
               ).toLocaleString()}
               KRW
             </strong>
