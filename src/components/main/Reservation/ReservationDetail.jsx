@@ -278,6 +278,8 @@ const ReservationDetail = () => {
                 state: {
                   reservationData: { ...reservationData },
                   address: `${city} ${district} ${detail}`,
+                  grade,
+                  width,
                 },
               })
             }>
@@ -348,7 +350,7 @@ const RooftopDetail = styled.div`
       }
 
       .detail-list {
-        width: 45%;
+        width: 32.5vw;
 
         display: flex;
         justify-content: space-between;
@@ -509,7 +511,7 @@ const PaymentInfoBox = styled.div`
 
       &::before {
         width: 100%;
-        height: 6vh;
+        padding: 0vw;
 
         background-color: ${colors.main.tertiary};
         content: "예약 결제 정보";

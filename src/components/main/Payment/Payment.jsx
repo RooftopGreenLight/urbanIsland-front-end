@@ -4,6 +4,8 @@ import styled, { css } from "styled-components"
 import moment from "moment/moment"
 
 import { KakaoPayControl } from "api/KakaoPay"
+import { faMap, faShare, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 const Payment = () => {
   const { rooftopId } = useParams()
@@ -34,6 +36,8 @@ const Payment = () => {
     totalPrice,
   } = paymentInfo
 
+  const { address, width, grade } = location.state
+
   useEffect(() => {
     console.log(location)
     setPaymentInfo(prevInfo => ({ ...prevInfo, ...location.state.reservationData }))
@@ -61,61 +65,105 @@ const Payment = () => {
 
   return (
     <Wrapper>
-      <UserInfo>
-        <h5>예약자 정보</h5>
-        <p>예약자의 정보를 안내합니다.</p>
-        <PaymentOptionBox></PaymentOptionBox>
-      </UserInfo>
-      <ReservationInfo>
-        <h5>예약 안내</h5>
-        <p>옥상 시설 예약 정보를 안내합니다.</p>
-        <PaymentOptionBox>
-          <div className="option-list">
-            <span>인원 : </span>
-            <p>
-              {adultCount > 0
-                ? kidCount > 0
-                  ? `어른 ${adultCount}명, 유아 ${kidCount}명`
-                  : `어른 ${adultCount}명`
-                : "인원 미선택"}
-            </p>
+      <RooftopInfoBox>
+        <RooftopTitle>
+          <h5>{`${address}`}</h5>
+        </RooftopTitle>
+        <RooftopDetail>
+          <div className="detail-list">
+            <DetailInfo>
+              <FontAwesomeIcon icon={faStar} />
+              <span>{parseInt(grade).toFixed(1)} / 5.0</span>
+            </DetailInfo>
+            <DetailInfo>
+              <FontAwesomeIcon icon={faMap} />
+              <span>
+                {`${width.toLocaleString()} m`}
+                <sup style={{ fontSize: "0.5rem" }}>2</sup>
+              </span>
+            </DetailInfo>
+            <DetailInfo>
+              <FontAwesomeIcon icon={faUser} />
+              <span>
+                {`성인 ${adultCount}명, ${
+                  kidCount === 0 ? "노 키즈 존" : `유아 ${kidCount}명`
+                }, 반려동물 ${petCount === 0 ? "금지" : `${petCount}마리`}`}
+              </span>
+            </DetailInfo>
           </div>
-          <div className="option-list">
-            <span>이용 일자 : </span>
-            <p>{`${moment(selectedDate[0]).format("YYYY.MM.DD")} - ${moment(selectedDate[1]).format(
-              "YYYY.MM.DD",
-            )}`}</p>
+        </RooftopDetail>
+      </RooftopInfoBox>
+      <ReservationInfoBox>
+        <ReservationInfo>
+          <div className="title">
+            <h5>예약자 정보</h5>
+            <p>예약자의 정보를 안내합니다.</p>
           </div>
-          <div className="option-list">
-            <span>이용 시간 : </span>
-            <p>{`${String(selectedTime[0]).padStart(2, "0")}:00 - ${String(
-              selectedTime[1],
-            ).padStart(2, "0")}:00`}</p>
+          <OptionBox>
+            <div className="option-list">
+              <span>예약자 성함 : </span>
+              <p>백광인</p>
+            </div>
+            <div className="option-list">
+              <span>예약자 전화번호 : </span>
+              <p>010 - 7167 - 0851</p>
+            </div>
+          </OptionBox>
+        </ReservationInfo>
+        <ReservationInfo>
+          <div className="title">
+            <h5>예약 안내</h5>
+            <p>옥상 시설 예약 정보를 안내합니다.</p>
           </div>
-        </PaymentOptionBox>
-      </ReservationInfo>
-      <OptionInfo>
-        <h5>결제 금액 안내</h5>
-        <p>결제하실 금액 목록을 안내합니다.</p>
-        <PaymentOptionBox>
-          <div className="option-list">
-            <span>{`${totalUseDay}일 대여 :`}</span>
-            <p>{(totalPrice * totalUseDay).toLocaleString()} KRW</p>
+          <OptionBox>
+            <div className="option-list">
+              <span>인원 : </span>
+              <p>
+                {adultCount > 0
+                  ? kidCount > 0
+                    ? `어른 ${adultCount}명, 유아 ${kidCount}명`
+                    : `어른 ${adultCount}명`
+                  : "인원 미선택"}
+              </p>
+            </div>
+            <div className="option-list">
+              <span>이용 일자 : </span>
+              <p>{`${moment(selectedDate[0]).format("YYYY.MM.DD")} - ${moment(
+                selectedDate[1],
+              ).format("YYYY.MM.DD")}`}</p>
+            </div>
+            <div className="option-list">
+              <span>이용 시간 : </span>
+              <p>{`${String(selectedTime[0]).padStart(2, "0")}:00 - ${String(
+                selectedTime[1],
+              ).padStart(2, "0")}:00`}</p>
+            </div>
+          </OptionBox>
+        </ReservationInfo>
+        <ReservationInfo>
+          <div className="title">
+            <h5>결제 금액 안내</h5>
+            <p>결제하실 금액 목록을 안내합니다.</p>
           </div>
-          {optionCount
-            .filter(count => count > 0)
-            .map((count, idx) => (
-              <div className="option-list">
-                <span>{`${optionContent[idx]} :`}</span>
-                <p>{`${(count * optionPrice[idx]).toLocaleString()} KRW`}</p>
-              </div>
-            ))}
-        </PaymentOptionBox>
-      </OptionInfo>
+          <OptionBox>
+            <div className="option-list">
+              <span>시설 대여 비용 :</span>
+              <p>{`${totalPrice.toLocaleString()} KRW × ${totalUseDay}일`}</p>
+            </div>
+            {optionCount
+              .filter(count => count > 0)
+              .map((count, idx) => (
+                <div className="option-list">
+                  <span>{`${optionContent[idx]} :`}</span>
+                  <p>{`${(count * optionPrice[idx]).toLocaleString()} KRW`}</p>
+                </div>
+              ))}
+          </OptionBox>
+        </ReservationInfo>
+      </ReservationInfoBox>
       <PaymentConfirm>
-        <h5>최종 예약 결제</h5>
-        <p>추가하실 옵션 정보를 안내합니다.</p>
-        <PaymentOptionBox>
+        <OptionBox>
+          <h5>최종 결제 내역</h5>
           <div className="option-list">
             <span>{`${totalUseDay}일 대여 :`}</span>
             <p>{(totalPrice * totalUseDay).toLocaleString()} KRW</p>
@@ -135,8 +183,8 @@ const Payment = () => {
               KRW
             </strong>
           </div>
-        </PaymentOptionBox>
-        <ConfirmBtn onClick={readyToSetPayment}>결제하기</ConfirmBtn>
+          <ConfirmBtn onClick={readyToSetPayment}>결제하기</ConfirmBtn>
+        </OptionBox>
       </PaymentConfirm>
     </Wrapper>
   )
@@ -144,54 +192,177 @@ const Payment = () => {
 
 const Wrapper = styled.div`
   width: 60vw;
-  margin: 7.5vh auto;
+  max-height: 100vh;
+  overflow: auto;
 
-  display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 20px;
+  display: flex;
+  margin: 0vw auto 10vh auto;
+
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
-const ReservationInfo = styled.div`
+
+const RooftopInfoBox = styled.div`
+  width: 60vw;
+  margin: 5vh auto 3.5vh auto;
+
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: left;
+`
+
+const RooftopTitle = styled.div`
   ${({ theme }) => {
-    const { fonts, margins, paddings } = theme
+    const { colors, fonts, margins } = theme
     return css`
       width: 100%;
-      padding: ${paddings.base};
-
-      background-color: #e8e8e8;
-      grid-column: 1 / 3;
-      grid-row: 2 / 3;
+      margin-bottom: ${margins.sm};
 
       h5 {
-        font-size: ${fonts.size.base};
-      }
-
-      p,
-      span {
-        margin-bottom: ${margins.sm};
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
+        color: ${colors.main.primary};
+        font-size: ${fonts.size.lg};
+        font-weight: ${fonts.weight.bold};
       }
     `
   }}
 `
 
-const UserInfo = styled(ReservationInfo)`
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
+const RooftopDetail = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      width: 100%;
+      margin-bottom: ${margins.sm};
+
+      display: flex;
+      justify-content: space-between;
+
+      h5 {
+        color: ${colors.main.primary};
+        font-size: ${fonts.size.lg};
+        font-weight: ${fonts.weight.bold};
+      }
+
+      .detail-list {
+        width: 32.5vw;
+
+        display: flex;
+        justify-content: space-between;
+      }
+    `
+  }}
 `
 
-const OptionInfo = styled(ReservationInfo)`
-  grid-column: 1 / 3;
-  grid-row: 3 / 4;
+const DetailInfo = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      color: ${colors.main.secondary};
+      font-weight: ${fonts.weight.light};
+
+      svg {
+        margin-right: ${margins.sm};
+        color: ${colors.main.tertiary};
+        font-size: ${fonts.size.xsm};
+        font-weight: bold;
+      }
+    `
+  }}
 `
 
-const PaymentConfirm = styled(ReservationInfo)`
-  grid-column: 3 / 5;
-  grid-row: 1 / 4;
+const ReservationInfoBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
 `
 
-const PaymentOptionBox = styled.div`
+const ReservationInfo = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 32.5vw;
+      padding: ${paddings.sm} 0vw;
+      margin: ${margins.sm} 0vw auto 0vw;
+
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+
+      .title {
+        border-bottom: 1px solid ${colors.main.primary}55;
+        p {
+          margin: ${margins.xsm} 0vw ${margins.sm} 0vw;
+        }
+      }
+
+      p {
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        width: 100%;
+        color: ${colors.main.secondary};
+        font-size: ${fonts.size.base};
+      }
+
+      svg {
+        margin: auto 0vw;
+        color: ${colors.main.primary};
+      }
+
+      pre {
+        padding: ${paddings.base} 0vw;
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      img {
+        width: 100%;
+        height: 40vh;
+        object-fit: cover;
+        margin: ${margins.lg} auto 0vw auto;
+      }
+    `
+  }}
+`
+
+const PaymentConfirm = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 22.5vw;
+      margin-bottom: auto;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      border: 1px solid ${colors.main.primary}33;
+      box-shadow: 0px 5px 8px ${colors.main.primary}33;
+
+      &::before {
+        width: 100%;
+        padding: 0vw;
+
+        background-color: ${colors.main.tertiary};
+        content: "최종 결제 내역";
+
+        color: ${colors.white};
+        font-size: ${fonts.size.base};
+        text-align: center;
+        line-height: 225%;
+      }
+    `
+  }}
+`
+
+const OptionBox = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
@@ -240,60 +411,16 @@ const PaymentOptionBox = styled.div`
   }}
 `
 
-const BasicInformation = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      width: 100%;
-
-      padding: ${paddings.sm};
-      margin: 1vw auto;
-
-      display: flex;
-      justify-content: space-between;
-
-      border: 1px solid #000000;
-      background-color: ${colors.white};
-
-      p {
-        margin: 0;
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
-      }
-
-      .option-list {
-        padding: ${paddings.sm};
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: ${paddings.base} 0px;
-
-        p {
-          font-weight: ${fonts.weight.bold};
-        }
-      }
-
-      .value-list {
-        padding: ${paddings.sm};
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        text-align: right;
-      }
-    `
-  }}
-`
-
 const ConfirmBtn = styled.button`
   ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
+    const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 75%;
-      padding: ${paddings.sm};
-      margin: 0.75vw auto 0.25vw auto;
+      width: 100%;
+      padding: ${paddings.sm} ${paddings.lg};
+      margin: ${margins.lg} 0vw 0vw 0vw;
 
-      background-color: ${colors.black.primary};
-      border-radius: 2.5vw;
+      border-radius: 0.75rem;
+      background: ${colors.main.secondary};
       cursor: pointer;
 
       display: flex;
@@ -301,7 +428,14 @@ const ConfirmBtn = styled.button`
       justify-content: center;
 
       color: ${colors.white};
-      font-weight: ${fonts.weight.light};
+      font-size: ${fonts.size.sm};
+      font-weight: bold;
+
+      &:hover {
+        border: 0px;
+        background: ${colors.main.tertiary};
+        color: ${colors.white};
+      }
     `
   }}
 `
