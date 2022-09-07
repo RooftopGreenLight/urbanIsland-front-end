@@ -214,7 +214,13 @@ const Payment = () => {
               .map((count, idx) => (
                 <div className="option-list">
                   <span>{`${optionContent[idx]} :`}</span>
-                  <p>{`${(count * optionPrice[idx]).toLocaleString()} KRW`}</p>
+                  <p>
+                    {`${
+                      count > 1
+                        ? `${optionPrice[idx].toLocaleString()} KRW × ${count}개`
+                        : `${optionPrice[idx].toLocaleString()} KRW`
+                    }`}
+                  </p>
                 </div>
               ))}
           </OptionBox>

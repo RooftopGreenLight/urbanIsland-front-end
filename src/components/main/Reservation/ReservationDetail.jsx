@@ -272,11 +272,10 @@ const ReservationDetail = () => {
           <div className="option-list">
             <span>총 합계 : </span>
             <strong>
-              {(
+              {`${(
                 totalPrice * totalUseDay +
                 optionCount.reduce((sum, count, idx) => (sum += count * optionPrice[idx]), 0)
-              ).toLocaleString()}
-              KRW
+              ).toLocaleString()} KRW`}
             </strong>
           </div>
           <ReservationBtn
