@@ -17,24 +17,31 @@ import { CalenderContainer } from "styles/calender"
 import { ModalContext } from "module/Modal"
 import { reservationControl } from "api/controls/reservationControl"
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
+import moment from "moment"
 
 const Schedule = () => {
   const [selectedDate, setSeletedDate] = useState(new Date())
-  const [reservationInfo, setReservationInfo] = useState({})
+  const [reservationInfo, setReservationInfo] = useState(null)
+  const [waitingReservation, setWaitingReservation] = useState([])
+  const [completedReservation, setCompletedReservation] = useState([])
   const { openModal } = useContext(ModalContext)
 
   useEffect(() => {
-    const getDetailReservationInfo = async () => {
+    const getReservationInfo = async () => {
       try {
+        const loadedWaitingInfo = await reservationControl.getWaitingResevationInfo()
+        const loadedCompletedInfo = await reservationControl.getCompletedResevationInfo()
         const loadedInfo = await reservationControl.getReservationInfo(
           selectedDate.toISOString().split("T")[0],
         )
+        setWaitingReservation(loadedWaitingInfo)
+        setCompletedReservation(loadedCompletedInfo)
         setReservationInfo(loadedInfo)
       } catch (err) {
         console.log(err)
       }
     }
-    getDetailReservationInfo()
+    getReservationInfo()
   }, [selectedDate])
 
   return (
@@ -45,7 +52,15 @@ const Schedule = () => {
             <h5>내 예약 일정</h5>
           </Title>
           <CalenderContainer>
-            <Calendar onChange={setSeletedDate} value={selectedDate} />
+            <Calendar
+              formatDay={(_, date) => moment(date).format("DD")}
+              minDetail="month"
+              maxDetail="month"
+              navigationLabel={null}
+              showNeighboringMonth={false}
+              onChange={setSeletedDate}
+              value={selectedDate}
+            />
           </CalenderContainer>
         </CalenderBox>
         <InnerBox>
@@ -59,27 +74,33 @@ const Schedule = () => {
                   <FontAwesomeIcon icon={faBuilding} size="lg" />
                   예약 숙소
                 </p>
-                <span>경기도 화성시 시범중앙로 109 320동 601호</span>
+                <span>{`${reservationInfo.city} ${reservationInfo.district} ${reservationInfo.detail}`}</span>
               </ScheduleDetail>
               <ScheduleDetail>
                 <p>
                   <FontAwesomeIcon icon={faCalendar} size="lg" />
                   예약일자
                 </p>
-                <span>2022.9.22 - 2022.9.23</span>
+                <span>{`${reservationInfo.startDate[0]}.${reservationInfo.startDate[1]}.${reservationInfo.startDate[2]} - ${reservationInfo.endDate[0]}.${reservationInfo.endDate[1]}.${reservationInfo.endDate[2]}`}</span>
               </ScheduleDetail>
               <ScheduleDetail>
                 <p>
                   <FontAwesomeIcon icon={faClock} size="lg" />
                   예약시간
                 </p>
-                <span>AM 11:00 ~ PM 8:00</span>
+                <span>{`${String(reservationInfo.startTime[0]).padStart(2, "0")}:00 ~ ${String(
+                  reservationInfo.endTime[0],
+                ).padStart(2, "0")}:00`}</span>
               </ScheduleDetail>
               <ScheduleDetail>
                 <p>
                   <FontAwesomeIcon icon={faUser} size="lg" /> 총 인원
                 </p>
-                <span>성인 2명, 유아 1명 (반려동물 1마리)</span>
+                <span>
+                  {reservationInfo.kidCount > 0
+                    ? `어른 ${reservationInfo.adultCount}명, 유아 ${reservationInfo.kidCount}명`
+                    : `어른 ${reservationInfo.adultCount}명`}
+                </span>
               </ScheduleDetail>
             </>
           ) : (
@@ -179,7 +200,7 @@ const ScheduleDetail = styled.div`
       }
 
       p {
-        width: 40%;
+        width: 70%;
         margin: ${margins.xsm} 0vw;
         font-size: ${fonts.size.xsm};
         font-weight: ${fonts.weight.light};
