@@ -128,7 +128,10 @@ const ReservationModal = ({
             </SetPersonSection>
             <SetPersonSection>
               <h5>
-                유아 <span>{`(최대 ${limitCount.kidCount} 명)`}</span>
+                유아
+                <span>{` ${
+                  limitCount.kidCount === 0 ? "(노 키즈 존)" : `(최대 ${limitCount.kidCount} 명)`
+                }`}</span>
               </h5>
               <CounterBox isDisabled={limitCount.kidCount === 0}>
                 <FontAwesomeIcon
@@ -146,7 +149,12 @@ const ReservationModal = ({
             </SetPersonSection>
             <SetPersonSection>
               <h5>
-                반려 동물 <span>{`(최대 ${limitCount.petCount} 마리)`}</span>
+                반려 동물
+                <span>{` ${
+                  limitCount.petCount === 0
+                    ? "(반려동물 출입 금지)"
+                    : `(최대 ${limitCount.petCount} 마리)`
+                }`}</span>
               </h5>
               <CounterBox isDisabled={limitCount.petCount === 0}>
                 <FontAwesomeIcon
@@ -172,7 +180,7 @@ const ReservationModal = ({
               {rooftopOptions.map(({ content, count, price }, idx) => (
                 <SetPersonSection key={content}>
                   <h5>
-                    {content} <span>{`(${price.toLocaleString()} KRW, 최대 ${count} 개)`}</span>
+                    {content} <span>{`(${price.toLocaleString()} KRW, 최대 ${count}개)`}</span>
                   </h5>
                   <CounterBox>
                     <FontAwesomeIcon
