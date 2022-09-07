@@ -21,9 +21,9 @@ export const KakaoPayControl = {
           total_amount,
           vat_amount: 0,
           tax_free_amount: 0,
-          approval_url: `http://localhost:3000/reservation/payment/${rooftopId}/success`,
-          fail_url: `http://localhost:3000/reservation/payment/${rooftopId}/fail`,
-          cancel_url: `http://localhost:3000/reservation/payment/${rooftopId}/fail`,
+          approval_url: `http://localhost:3000/payment/${rooftopId}/success`,
+          fail_url: `http://localhost:3000/payment/${rooftopId}/fail`,
+          cancel_url: `http://localhost:3000/payment/${rooftopId}/fail`,
         },
       })
       return response.data

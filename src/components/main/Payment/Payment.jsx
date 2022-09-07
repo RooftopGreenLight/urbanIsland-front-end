@@ -4,7 +4,9 @@ import styled, { css } from "styled-components"
 import moment from "moment/moment"
 
 import { KakaoPayControl } from "api/KakaoPay"
-import { faMap, faShare, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
+import { reservationControl } from "api/controls/reservationControl"
+
+import { faMap, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 const Payment = () => {
@@ -53,11 +55,16 @@ const Payment = () => {
       const { next_redirect_pc_url, tid } = await KakaoPayControl.postRequestToPay(
         rooftopId,
         needToPay,
-        location.state.address,
+        address,
+      )
+      const { reservationId } = await reservationControl.postNewReservation(
+        tid,
+        rooftopId,
+        needToPay,
+        paymentInfo,
       )
       window.location.href = next_redirect_pc_url
-      localStorage.setItem("tid", tid)
-      localStorage.setItem("payment_information", JSON.stringify(paymentInfo))
+      localStorage.setItem("reservationId", reservationId)
     } catch (err) {
       console.log(err)
     }
@@ -163,7 +170,7 @@ const Payment = () => {
       </ReservationInfoBox>
       <PaymentConfirm>
         <OptionBox>
-          <h5>최종 결제 내역</h5>
+          <h5>결제 항목</h5>
           <div className="option-list">
             <span>{`${totalUseDay}일 대여 :`}</span>
             <p>{(totalPrice * totalUseDay).toLocaleString()} KRW</p>
@@ -178,10 +185,7 @@ const Payment = () => {
             ))}
           <div className="option-list">
             <span>총 합계 : </span>
-            <strong>
-              {needToPay.toLocaleString()}
-              KRW
-            </strong>
+            <strong>{`${needToPay.toLocaleString()} KRW`}</strong>
           </div>
           <ConfirmBtn onClick={readyToSetPayment}>결제하기</ConfirmBtn>
         </OptionBox>
