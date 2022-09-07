@@ -22,8 +22,6 @@ const Payment = () => {
     totalPrice: 0,
   })
 
-  console.log(paymentInfo)
-
   const {
     adultCount,
     kidCount,
@@ -42,10 +40,17 @@ const Payment = () => {
   }, [])
 
   const totalUseDay = moment(selectedDate[1]).diff(moment(selectedDate[0]), "days") + 1
+  const needToPay =
+    totalPrice * totalUseDay +
+    optionCount.reduce((sum, count, idx) => (sum += count * optionPrice[idx]), 0)
 
   const readyToSetPayment = async () => {
     try {
-      const { next_redirect_pc_url, tid } = await KakaoPayControl.postRequestToPay(rooftopId)
+      const { next_redirect_pc_url, tid } = await KakaoPayControl.postRequestToPay(
+        rooftopId,
+        needToPay,
+        location.state.address,
+      )
       window.location.href = next_redirect_pc_url
       localStorage.setItem("tid", tid)
       localStorage.setItem("payment_information", JSON.stringify(paymentInfo))
@@ -59,6 +64,11 @@ const Payment = () => {
       <UserInfo>
         <h5>예약자 정보</h5>
         <p>예약자의 정보를 안내합니다.</p>
+        <PaymentOptionBox></PaymentOptionBox>
+      </UserInfo>
+      <ReservationInfo>
+        <h5>예약 안내</h5>
+        <p>옥상 시설 예약 정보를 안내합니다.</p>
         <PaymentOptionBox>
           <div className="option-list">
             <span>인원 : </span>
@@ -83,21 +93,15 @@ const Payment = () => {
             ).padStart(2, "0")}:00`}</p>
           </div>
         </PaymentOptionBox>
-      </UserInfo>
-      <ReservationInfo>
-        <h5>예약 안내</h5>
-        <p>옥상 시설 예약 정보를 안내합니다.</p>
+      </ReservationInfo>
+      <OptionInfo>
+        <h5>결제 금액 안내</h5>
+        <p>결제하실 금액 목록을 안내합니다.</p>
         <PaymentOptionBox>
           <div className="option-list">
             <span>{`${totalUseDay}일 대여 :`}</span>
             <p>{(totalPrice * totalUseDay).toLocaleString()} KRW</p>
           </div>
-        </PaymentOptionBox>
-      </ReservationInfo>
-      <OptionInfo>
-        <h5>추가 옵션 안내</h5>
-        <p>추가하실 옵션 정보를 안내합니다.</p>
-        <PaymentOptionBox>
           {optionCount
             .filter(count => count > 0)
             .map((count, idx) => (
@@ -127,10 +131,7 @@ const Payment = () => {
           <div className="option-list">
             <span>총 합계 : </span>
             <strong>
-              {(
-                totalPrice * totalUseDay +
-                optionCount.reduce((sum, count, idx) => (sum += count * optionPrice[idx]), 0)
-              ).toLocaleString()}
+              {needToPay.toLocaleString()}
               KRW
             </strong>
           </div>
