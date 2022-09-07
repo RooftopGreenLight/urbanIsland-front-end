@@ -1,16 +1,22 @@
-import { useContext, useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useLocation, useParams } from "react-router-dom"
 import styled, { css } from "styled-components"
+import moment from "moment/moment"
 
 import { KakaoPayControl } from "api/KakaoPay"
+import { reservationControl } from "api/controls/reservationControl"
+
+import { faMap, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 const Payment = () => {
   const { rooftopId } = useParams()
-  const navigate = useNavigate()
+  const location = useLocation()
   const [paymentInfo, setPaymentInfo] = useState({
     userId: "",
     phoneNumber: "",
-    reservationDate: [],
+    selectedDate: [],
+    selectedTime: [],
     adultCount: 0,
     kidCount: 0,
     petCount: 0,
@@ -20,12 +26,45 @@ const Payment = () => {
     totalPrice: 0,
   })
 
+  const {
+    adultCount,
+    kidCount,
+    petCount,
+    selectedTime,
+    selectedDate,
+    optionContent,
+    optionPrice,
+    optionCount,
+    totalPrice,
+  } = paymentInfo
+
+  const { address, width, grade } = location.state
+
+  useEffect(() => {
+    console.log(location)
+    setPaymentInfo(prevInfo => ({ ...prevInfo, ...location.state.reservationData }))
+  }, [])
+
+  const totalUseDay = moment(selectedDate[1]).diff(moment(selectedDate[0]), "days") + 1
+  const needToPay =
+    totalPrice * totalUseDay +
+    optionCount.reduce((sum, count, idx) => (sum += count * optionPrice[idx]), 0)
+
   const readyToSetPayment = async () => {
     try {
-      const { next_redirect_pc_url, tid } = await KakaoPayControl.postRequestToPay(rooftopId)
+      const { next_redirect_pc_url, tid } = await KakaoPayControl.postRequestToPay(
+        rooftopId,
+        needToPay,
+        address,
+      )
+      const { reservationId } = await reservationControl.postNewReservation(
+        tid,
+        rooftopId,
+        needToPay,
+        paymentInfo,
+      )
       window.location.href = next_redirect_pc_url
-      localStorage.setItem("tid", tid)
-      localStorage.setItem("payment_information", JSON.stringify(paymentInfo))
+      localStorage.setItem("reservationId", reservationId)
     } catch (err) {
       console.log(err)
     }
@@ -33,70 +72,123 @@ const Payment = () => {
 
   return (
     <Wrapper>
-      <UserInfo>
-        <h5>예약자 정보</h5>
-        <p>예약자의 정보를 안내합니다.</p>
-        <BasicInformation>
-          <div className="option-list">
-            <p>예약자 성명 :</p>
-            <p>예약자 휴대번호 :</p>
+      <RooftopInfoBox>
+        <RooftopTitle>
+          <h5>{`${address}`}</h5>
+        </RooftopTitle>
+        <RooftopDetail>
+          <div className="detail-list">
+            <DetailInfo>
+              <FontAwesomeIcon icon={faStar} />
+              <span>{parseInt(grade).toFixed(1)} / 5.0</span>
+            </DetailInfo>
+            <DetailInfo>
+              <FontAwesomeIcon icon={faMap} />
+              <span>
+                {`${width.toLocaleString()} m`}
+                <sup style={{ fontSize: "0.5rem" }}>2</sup>
+              </span>
+            </DetailInfo>
+            <DetailInfo>
+              <FontAwesomeIcon icon={faUser} />
+              <span>
+                {`성인 ${adultCount}명, ${
+                  kidCount === 0 ? "노 키즈 존" : `유아 ${kidCount}명`
+                }, 반려동물 ${petCount === 0 ? "금지" : `${petCount}마리`}`}
+              </span>
+            </DetailInfo>
           </div>
-          <div className="value-list">
-            <p>{`백광인`}</p>
-            <p>{`010-7167-0851`}</p>
+        </RooftopDetail>
+      </RooftopInfoBox>
+      <ReservationInfoBox>
+        <ReservationInfo>
+          <div className="title">
+            <h5>예약자 정보</h5>
+            <p>예약자의 정보를 안내합니다.</p>
           </div>
-        </BasicInformation>
-      </UserInfo>
-      <ReservationInfo>
-        <h5>예약 안내</h5>
-        <p>옥상 시설 예약 정보를 안내합니다.</p>
-        <BasicInformation>
-          <div className="option-list">
-            <p>예약 일자 :</p>
-            <p>예약 시간 :</p>
-            <p>예약 인원 :</p>
+          <OptionBox>
+            <div className="option-list">
+              <span>예약자 성함 : </span>
+              <p>백광인</p>
+            </div>
+            <div className="option-list">
+              <span>예약자 전화번호 : </span>
+              <p>010 - 7167 - 0851</p>
+            </div>
+          </OptionBox>
+        </ReservationInfo>
+        <ReservationInfo>
+          <div className="title">
+            <h5>예약 안내</h5>
+            <p>옥상 시설 예약 정보를 안내합니다.</p>
           </div>
-          <div className="value-list">
-            <p>{`7:26 ~ 7:28`}</p>
-            <p>{`AM 11:00 ~ PM 8:00`}</p>
-            <p>{`성인 1명, 유아 0명, 반려동물 0명`}</p>
+          <OptionBox>
+            <div className="option-list">
+              <span>인원 : </span>
+              <p>
+                {adultCount > 0
+                  ? kidCount > 0
+                    ? `어른 ${adultCount}명, 유아 ${kidCount}명`
+                    : `어른 ${adultCount}명`
+                  : "인원 미선택"}
+              </p>
+            </div>
+            <div className="option-list">
+              <span>이용 일자 : </span>
+              <p>{`${moment(selectedDate[0]).format("YYYY.MM.DD")} - ${moment(
+                selectedDate[1],
+              ).format("YYYY.MM.DD")}`}</p>
+            </div>
+            <div className="option-list">
+              <span>이용 시간 : </span>
+              <p>{`${String(selectedTime[0]).padStart(2, "0")}:00 - ${String(
+                selectedTime[1],
+              ).padStart(2, "0")}:00`}</p>
+            </div>
+          </OptionBox>
+        </ReservationInfo>
+        <ReservationInfo>
+          <div className="title">
+            <h5>결제 금액 안내</h5>
+            <p>결제하실 금액 목록을 안내합니다.</p>
           </div>
-        </BasicInformation>
-      </ReservationInfo>
-      <OptionInfo>
-        <h5>추가 옵션 안내</h5>
-        <p>추가하실 옵션 정보를 안내합니다.</p>
-        <BasicInformation>
-          <div className="option-list">
-            <p>바베큐 장비</p>
-            <p>야외 무대 시설</p>
-            <p>침구류 추가</p>
-          </div>
-          <div className="value-list">
-            <p>KRW {`15,000`}</p>
-            <p>KRW {`125,000`}</p>
-            <p>KRW {`5,000`}</p>
-          </div>
-        </BasicInformation>
-      </OptionInfo>
+          <OptionBox>
+            <div className="option-list">
+              <span>시설 대여 비용 :</span>
+              <p>{`${totalPrice.toLocaleString()} KRW × ${totalUseDay}일`}</p>
+            </div>
+            {optionCount
+              .filter(count => count > 0)
+              .map((count, idx) => (
+                <div className="option-list">
+                  <span>{`${optionContent[idx]} :`}</span>
+                  <p>{`${(count * optionPrice[idx]).toLocaleString()} KRW`}</p>
+                </div>
+              ))}
+          </OptionBox>
+        </ReservationInfo>
+      </ReservationInfoBox>
       <PaymentConfirm>
-        <h5>최종 예약 결제</h5>
-        <p>추가하실 옵션 정보를 안내합니다.</p>
-        <BasicInformation>
+        <OptionBox>
+          <h5>결제 항목</h5>
           <div className="option-list">
-            <p>시설 대여</p>
-            <p>야외 무대 시설</p>
-            <p>침구류 추가</p>
-            <p>최종 금액</p>
+            <span>{`${totalUseDay}일 대여 :`}</span>
+            <p>{(totalPrice * totalUseDay).toLocaleString()} KRW</p>
           </div>
-          <div className="value-list">
-            <p>KRW {`275,000 (KRW 75,000 * 3)`}</p>
-            <p>KRW {`125,000`}</p>
-            <p>KRW {`15,000 (KRW 5,000 * 3)`}</p>
-            <p>KRW {`415,000`}</p>
+          {optionCount
+            .filter(count => count > 0)
+            .map((count, idx) => (
+              <div className="option-list">
+                <span>{`${optionContent[idx]} :`}</span>
+                <p>{`${(count * optionPrice[idx]).toLocaleString()} KRW`}</p>
+              </div>
+            ))}
+          <div className="option-list">
+            <span>총 합계 : </span>
+            <strong>{`${needToPay.toLocaleString()} KRW`}</strong>
           </div>
-        </BasicInformation>
-        <ConfirmBtn onClick={readyToSetPayment}>결제하기</ConfirmBtn>
+          <ConfirmBtn onClick={readyToSetPayment}>결제하기</ConfirmBtn>
+        </OptionBox>
       </PaymentConfirm>
     </Wrapper>
   )
@@ -104,93 +196,220 @@ const Payment = () => {
 
 const Wrapper = styled.div`
   width: 60vw;
-  max-height: 80vh;
-  margin: auto;
+  max-height: 100vh;
+  overflow: auto;
 
-  display: grid;
-  grid-template-rows: repeat(5, 1fr);
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 20px;
+  display: flex;
+  margin: 0vw auto 10vh auto;
+
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
-const ReservationInfo = styled.div`
+
+const RooftopInfoBox = styled.div`
+  width: 60vw;
+  margin: 5vh auto 3.5vh auto;
+
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: left;
+`
+
+const RooftopTitle = styled.div`
   ${({ theme }) => {
-    const { fonts, margins, paddings } = theme
+    const { colors, fonts, margins } = theme
     return css`
       width: 100%;
-      padding: ${paddings.base};
-
-      background-color: #e8e8e8;
-      grid-column: 1 / 3;
-      grid-row: 2 / 4;
+      margin-bottom: ${margins.sm};
 
       h5 {
-        font-size: ${fonts.size.base};
-      }
-
-      p,
-      span {
-        margin-bottom: ${margins.sm};
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
+        color: ${colors.main.primary};
+        font-size: ${fonts.size.lg};
+        font-weight: ${fonts.weight.bold};
       }
     `
   }}
 `
 
-const UserInfo = styled(ReservationInfo)`
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-`
-
-const OptionInfo = styled(ReservationInfo)`
-  grid-column: 1 / 3;
-  grid-row: 4 / 6;
-`
-
-const PaymentConfirm = styled(ReservationInfo)`
-  grid-column: 3 / 5;
-  grid-row: 1 / 6;
-`
-
-const BasicInformation = styled.div`
+const RooftopDetail = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
+    const { colors, fonts, margins } = theme
     return css`
       width: 100%;
-
-      padding: ${paddings.sm};
-      margin: 1vw auto;
+      margin-bottom: ${margins.sm};
 
       display: flex;
       justify-content: space-between;
 
-      border: 1px solid #000000;
-      background-color: ${colors.white};
-
-      p {
-        margin: 0;
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
+      h5 {
+        color: ${colors.main.primary};
+        font-size: ${fonts.size.lg};
+        font-weight: ${fonts.weight.bold};
       }
 
-      .option-list {
-        padding: ${paddings.sm};
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: ${paddings.base} 0px;
+      .detail-list {
+        width: 32.5vw;
 
+        display: flex;
+        justify-content: space-between;
+      }
+    `
+  }}
+`
+
+const DetailInfo = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      color: ${colors.main.secondary};
+      font-weight: ${fonts.weight.light};
+
+      svg {
+        margin-right: ${margins.sm};
+        color: ${colors.main.tertiary};
+        font-size: ${fonts.size.xsm};
+        font-weight: bold;
+      }
+    `
+  }}
+`
+
+const ReservationInfoBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+`
+
+const ReservationInfo = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 32.5vw;
+      padding: ${paddings.sm} 0vw;
+      margin: ${margins.sm} 0vw auto 0vw;
+
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+
+      .title {
+        border-bottom: 1px solid ${colors.main.primary}55;
         p {
-          font-weight: ${fonts.weight.bold};
+          margin: ${margins.xsm} 0vw ${margins.sm} 0vw;
         }
       }
 
-      .value-list {
-        padding: ${paddings.sm};
+      p {
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        width: 100%;
+        color: ${colors.main.secondary};
+        font-size: ${fonts.size.base};
+      }
+
+      svg {
+        margin: auto 0vw;
+        color: ${colors.main.primary};
+      }
+
+      pre {
+        padding: ${paddings.base} 0vw;
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      img {
+        width: 100%;
+        height: 40vh;
+        object-fit: cover;
+        margin: ${margins.lg} auto 0vw auto;
+      }
+    `
+  }}
+`
+
+const PaymentConfirm = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 22.5vw;
+      margin-bottom: auto;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      border: 1px solid ${colors.main.primary}33;
+      box-shadow: 0px 5px 8px ${colors.main.primary}33;
+
+      &::before {
+        width: 100%;
+        padding: 0vw;
+
+        background-color: ${colors.main.tertiary};
+        content: "최종 결제 내역";
+
+        color: ${colors.white};
+        font-size: ${fonts.size.base};
+        text-align: center;
+        line-height: 225%;
+      }
+    `
+  }}
+`
+
+const OptionBox = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.base} ${paddings.lg};
+      margin: ${margins.sm} 0vw;
+
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      h5 {
+        width: 100%;
+        padding-bottom: ${paddings.xsm};
+        margin-bottom: ${margins.base};
+        border-bottom: 1px solid ${colors.main.primary}55;
+
+        color: ${colors.main.secondary};
+        font-size: ${fonts.size.sm};
+      }
+
+      p {
+        color: ${colors.black.tertiary};
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      span {
+        color: ${colors.black.quinary};
+        font-size: 1.1rem;
+        font-weight: 300;
+      }
+
+      strong {
+        color: ${colors.main.secondary};
+        font-size: 1.1rem;
+      }
+
+      .option-list {
+        width: 100%;
+        margin: ${margins.xsm} 0vw;
         display: flex;
-        flex-direction: column;
         justify-content: space-between;
-        text-align: right;
       }
     `
   }}
@@ -198,14 +417,14 @@ const BasicInformation = styled.div`
 
 const ConfirmBtn = styled.button`
   ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
+    const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 75%;
-      padding: ${paddings.sm};
-      margin: 0.75vw auto 0.25vw auto;
+      width: 100%;
+      padding: ${paddings.sm} ${paddings.lg};
+      margin: ${margins.lg} 0vw 0vw 0vw;
 
-      background-color: ${colors.black.primary};
-      border-radius: 2.5vw;
+      border-radius: 0.75rem;
+      background: ${colors.main.secondary};
       cursor: pointer;
 
       display: flex;
@@ -213,7 +432,14 @@ const ConfirmBtn = styled.button`
       justify-content: center;
 
       color: ${colors.white};
-      font-weight: ${fonts.weight.light};
+      font-size: ${fonts.size.sm};
+      font-weight: bold;
+
+      &:hover {
+        border: 0px;
+        background: ${colors.main.tertiary};
+        color: ${colors.white};
+      }
     `
   }}
 `

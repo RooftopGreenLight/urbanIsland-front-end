@@ -1,91 +1,125 @@
 import { useContext, useState } from "react"
 import styled, { css } from "styled-components"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
+
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
-import CustomSlider from "components/main/Reservation/CustomSlider"
-import FilterCheckbox from "components/main/Reservation/FilterCheckBox"
+import { RoofTopFacilities } from "constants/RoofTopFacilities"
+
+import CustomRange from "components/main/Mypage/Greenbee/Modal/CustomRange"
+import { useEffect } from "react"
 
 const DetailFilterModal = ({ filter, setFilter }) => {
   const { closeModal } = useContext(ModalContext)
+  const [detailFilter, setDetailFilter] = useState({
+    minPrice: filter.minPrice,
+    maxPrice: filter.maxPrice,
+    minWidth: filter.minWidth,
+    maxWidth: filter.maxWidth,
+    contentNum: filter.contentNum,
+  })
 
-  const [price, setPrice] = useState([0, 5000000])
-  const [width, setWidth] = useState([0, 3333])
-  const [set, setSet] = useState(new Set())
-  const onSubmit = () => {
-    setFilter({
-      ...filter,
-      minPrice: price[0],
-      maxPrice: price[1],
-      minWidth: width[0],
-      maxWidth: width[1],
-      contentNum: Array.from(set),
-    })
+  const { minPrice, maxPrice, minWidth, maxWidth, contentNum } = detailFilter
+
+  useEffect(() => {
+    setFilter(prevFilter => ({
+      ...prevFilter,
+      minPrice,
+      maxPrice,
+      minWidth,
+      maxWidth,
+      contentNum,
+    }))
+  }, [detailFilter])
+
+  const confirmFilter = () => {
     closeModal()
   }
-  const [flag, setFlag] = useState(false)
-  const clear = () => {
-    setFlag(!flag)
-    setFilter({
-      ...filter,
+
+  const resetFilter = () => {
+    setDetailFilter({
       minPrice: 0,
-      maxPrice: 0,
+      maxPrice: 50000000,
       minWidth: 0,
-      maxWidth: 0,
+      maxWidth: 333333,
       contentNum: [],
     })
   }
+
+  const changeCheck = e => {
+    const { name, checked } = e.target
+    checked
+      ? setDetailFilter(prevOptions => ({
+          ...prevOptions,
+          contentNum: [...contentNum, parseInt(name)],
+        }))
+      : setDetailFilter(prevOptions => ({
+          ...prevOptions,
+          contentNum: [...contentNum].filter(item => item !== parseInt(name)),
+        }))
+  }
   return (
     <Wrapper>
-      <header>
-        <ModalCloseBtn onClick={closeModal}>
-          <FontAwesomeIcon icon={faXmark} />
-        </ModalCloseBtn>
-      </header>
+      <ModalHeader>
+        <h5>세부 옵션 설정</h5>
+        <ModalCloseBtn icon={faXmark} onClick={closeModal} />
+      </ModalHeader>
       <ModalContent>
-        <ModalBody>
-          <Title>
-            <span>가격</span>
-          </Title>
-          <Box>
-            <CustomSlider
-              STEP={1}
-              MIN={0}
-              MAX={5000000}
-              unit={"W"}
-              setValue={setPrice}
-              flag={flag}
-              imin={0}
-              imax={500000}
-            />
-          </Box>
-          <Title>
-            <span>넓이</span>
-          </Title>
-          <Box>
-            <CustomSlider
-              STEP={1}
-              MIN={0}
-              MAX={3333}
-              unit={"M^2"}
-              setValue={setWidth}
-              flag={flag}
-              imin={0}
-              imax={3333}
-            />
-          </Box>
-          <Title>
-            <span>편의요소</span>
-          </Title>
-          <Box>
-            <FilterCheckbox setSet={setSet} flag={flag} />
-          </Box>
-        </ModalBody>
-        <Bottom>
-          <span onClick={clear}>초기화</span>
-          <button onClick={onSubmit}>적용하기</button>
-        </Bottom>
+        <OptionBox>
+          <h5>
+            가격 <span>(KRW)</span>
+          </h5>
+          <CustomRange
+            STEP={1}
+            MIN={0}
+            MAX={50000000}
+            unit={"KRW"}
+            setValue={setDetailFilter}
+            minOption="minPrice"
+            maxOption="maxPrice"
+            imin={minPrice}
+            imax={maxPrice}
+          />
+        </OptionBox>
+        <OptionBox>
+          <h5>
+            넓이 <span>(m2)</span>
+          </h5>
+          <CustomRange
+            STEP={1}
+            MIN={0}
+            MAX={333333}
+            unit={"m2"}
+            setValue={setDetailFilter}
+            minOption="minWidth"
+            maxOption="maxWidth"
+            imin={minWidth}
+            imax={maxWidth}
+          />
+        </OptionBox>
+        <OptionBox>
+          <h5>세부 옵션 설정</h5>
+          <InputBoxList>
+            {RoofTopFacilities.map((option, idx) => (
+              <InputBox key={option}>
+                <p>{option}</p>
+                <input
+                  key={`${option} + ${contentNum.includes(idx)}`}
+                  type="checkbox"
+                  name={idx}
+                  checked={contentNum.includes(idx)}
+                  onChange={changeCheck}
+                />
+              </InputBox>
+            ))}
+          </InputBoxList>
+        </OptionBox>
+        <BtnList>
+          <SettingBtn onClick={resetFilter}>초기화</SettingBtn>
+          <SettingBtn onClick={confirmFilter}>적용하기</SettingBtn>
+        </BtnList>
       </ModalContent>
     </Wrapper>
   )
@@ -95,7 +129,7 @@ const Wrapper = styled.section`
   ${({ theme }) => {
     const { paddings } = theme
     return css`
-      width: 50%;
+      width: 33%;
       margin: auto;
 
       overflow: hidden;
@@ -104,30 +138,39 @@ const Wrapper = styled.section`
 
       animation: ${modalShow} 0.3s;
       animation-fill-mode: forwards;
+    `
+  }}
+`
+const ModalHeader = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.base};
 
-      header {
-        display: flex;
-        flex-direction: row-reverse;
+      background-color: ${colors.main.primary};
 
-        padding: ${paddings.sm} ${paddings.base};
-        background-color: #f1f1f1;
-        font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+
+      color: ${colors.white};
+      text-align: center;
+
+      h5 {
+        font-size: ${fonts.size.base};
+        vertical-align: center;
       }
     `
   }}
 `
-const ModalCloseBtn = styled.button`
+
+const ModalCloseBtn = styled(FontAwesomeIcon)`
   ${({ theme }) => {
-    const { fonts } = theme
+    const { colors, fonts, paddings } = theme
     return css`
-      margin: 0vw 0vw 0vw auto
-
-      color: #999;
-      background-color: transparent;
-
+      padding: ${paddings.sm};
+      color: ${colors.white};
       font-size: ${fonts.size.xsm};
-      font-weight: 700;
-      text-align: center;
     `
   }}
 `
@@ -168,42 +211,134 @@ const ModalContent = styled.main`
   }}
 `
 
-const Box = styled.div`
-  margin: 0 3rem;
-  span {
-    float: right;
-  }
-`
-const ModalBody = styled.div`
-  height: 80vh;
-  overflow-y: scroll;
-  margin: 1rem;
-`
-const Title = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 0.3rem;
-  span {
-    font-weight: bold;
-    font-size: 1.2rem;
-  }
-`
-const Bottom = styled.div`
-  display: flex;
-  justify-content: space-between;
+const OptionBox = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 90%;
+      margin: auto;
+      padding: ${paddings.sm};
 
-  div {
-    text-align: center;
-    width: 50%;
-  }
-  span {
-    padding: 1rem;
-  }
-  button {
-    padding: 1rem;
-    margin: 0.3rem 0.5rem;
-    border-radius: 0.3rem;
-  }
+      h5 {
+        border-bottom: 1px solid ${colors.main.secondary};
+        margin-bottom: ${margins.sm};
+
+        font-size: ${fonts.size.base};
+        line-height: 150%;
+        text-align: left;
+      }
+
+      span {
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
+    `
+  }}
+`
+
+const InputBoxList = styled.div`
+  width: 80%;
+  margin: 1vw auto 0vw auto;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+`
+
+const InputBox = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      width: 40%;
+      margin: ${margins.xsm} auto;
+
+      display: flex;
+      justify-content: space-evenly;
+
+      p {
+        width: 80%;
+        margin: 0;
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+        text-align: left;
+      }
+
+      input[type="checkbox"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+
+        background: ${colors.main.quaternary}88;
+        border-radius: 4px;
+
+        width: 16px;
+        height: 16px;
+        margin: auto;
+
+        &::after {
+          border: solid #fff;
+          border-width: 0 2px 2px 0;
+          content: "";
+          display: none;
+
+          width: 4px;
+          height: 6px;
+
+          position: relative;
+          right: 3px;
+          top: -4px;
+          transform: rotate(45deg);
+        }
+
+        &:checked {
+          background: ${colors.main.tertiary};
+          &::after {
+            display: block;
+          }
+        }
+      }
+    `
+  }}
+`
+
+const BtnList = styled.div`
+  ${({ theme }) => {
+    const { margins } = theme
+    return css`
+      width: 80%;
+      margin: 0vw auto ${margins.lg} auto;
+      display: flex;
+      justify-content: space-between;
+    `
+  }}
+`
+
+const SettingBtn = styled.button`
+  ${({ theme }) => {
+    const { colors, paddings, margins } = theme
+    return css`
+      width: 40%;
+      padding: ${paddings.sm};
+      margin: ${margins.sm} auto 0vw auto;
+
+      background: ${colors.white};
+      border: 1px solid ${colors.main.primary};
+      border-radius: 2.5vw;
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-weight: 100;
+
+      &:hover {
+        border: 0px;
+        background: ${colors.main.tertiary};
+        color: ${colors.white};
+      }
+    `
+  }}
 `
 
 export default DetailFilterModal

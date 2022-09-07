@@ -13,7 +13,7 @@ import {
 import { ModalContext } from "module/Modal"
 import { AuthCheckMemberId } from "module/Auth"
 import { ownerControl } from "api/controls/ownerControl"
-import { modalShow, fadeIn } from "styles/Animation"
+import { modalShow } from "styles/Animation"
 
 import WaitingGreenbeeList from "./WaitingGreenbeeList"
 

@@ -1,119 +1,140 @@
 import { useContext, useState, useRef, useEffect } from "react"
 import styled, { css } from "styled-components"
+
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import { SidoGunguList } from "constants/SidoGunguList"
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faXmark } from "@fortawesome/free-solid-svg-icons"
+
 const RegionFilterModal = ({ filter, setFilter }) => {
   const { closeModal } = useContext(ModalContext)
-  const ref = useRef(null)
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (ref.current && !ref.current.contains(event.target)) {
-        closeModal()
+  const citySelect = useRef()
+  const [sidoInfo, setSidoInfo] = useState({
+    city: filter.city,
+    district: filter.district,
+  })
+  const { city, district } = sidoInfo
+
+  const changeSelect = e => {
+    const { name, value } = e.target
+    if (name === "city") {
+      setSidoInfo({ ...sidoInfo, [name]: value, district: "" })
+      if (district !== "") {
+        citySelect.current.value = "default"
       }
+      return
     }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [ref])
-
-  const clear = e => {
-    setSido("")
-    setGungu("")
-    setFilter({ ...filter, city: "", district: "" })
+    setSidoInfo({ ...sidoInfo, [name]: value })
   }
 
-  const [sido, setSido] = useState("")
-  const [gungu, setGungu] = useState("")
-  const onClickSido = d => {
-    setSido(d)
-    setFilter({ ...filter, city: d })
-  }
-  const onClickGungu = d => {
-    setGungu(d)
-    setFilter({ ...filter, district: d })
+  const resetSelect = () => {
+    setSidoInfo({ city: "", district: "" })
+    setFilter(prevFilter => ({ ...prevFilter, city: "", district: "" }))
     closeModal()
   }
+
+  const confirmSelect = () => {
+    if (city !== "") {
+      setFilter(prevFilter => ({ ...prevFilter, city, district }))
+      closeModal()
+    }
+  }
+
   return (
-    <Wrapper ref={ref}>
+    <Wrapper>
+      <ModalHeader>
+        <h5>옥상 위치 찾기</h5>
+        <ModalCloseBtn icon={faXmark} onClick={closeModal} />
+      </ModalHeader>
       <ModalContent>
-        <Title>
-          <span>지역선택</span>
-          <button onClick={clear}>초기화</button>
-        </Title>
-        <BoxWrapper>
-          <Box>
-            {Array.from(SidoGunguList.keys()).map((d, i) => (
-              <Line key={i} onClick={() => onClickSido(d)}>
-                {d}
-              </Line>
+        <h5>옥상 위치 선택</h5>
+        <p>검색하려는 옥상의 위치를 지정해주세요.</p>
+        <SelectList>
+          <SelectBox name="city" onChange={changeSelect} defaultValue={city || "default"}>
+            <option value="default" disabled>
+              시 선택
+            </option>
+            {Array.from(SidoGunguList.keys()).map(sido => (
+              <option key={sido} value={sido}>
+                {sido}
+              </option>
             ))}
-          </Box>
-          {sido && (
-            <Box>
-              {SidoGunguList.get(sido).map((d, i) => (
-                <Line key={i} onClick={() => onClickGungu(d)}>
-                  {d}
-                </Line>
+          </SelectBox>
+          {city ? (
+            <SelectBox
+              name="district"
+              onChange={changeSelect}
+              defaultValue={district || "default"}
+              ref={citySelect}>
+              <option value="default" disabled>
+                구 선택
+              </option>
+              {SidoGunguList.get(city).map(sigun => (
+                <option key={sigun} value={sigun}>
+                  {sigun}
+                </option>
               ))}
-            </Box>
+            </SelectBox>
+          ) : (
+            <SelectBox name="district" onChange={changeSelect} defaultValue="default">
+              <option value="default" disabled>
+                시를 선택해주세요.
+              </option>
+            </SelectBox>
           )}
-        </BoxWrapper>
+        </SelectList>
+        <BtnList>
+          <SettingBtn onClick={resetSelect}>초기화</SettingBtn>
+          <SettingBtn onClick={confirmSelect}>적용하기</SettingBtn>
+        </BtnList>
       </ModalContent>
     </Wrapper>
   )
 }
-const BoxWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
+
+const Wrapper = styled.div`
+  width: 33vw;
+
+  margin: auto;
+  background-color: #f5f5f5;
+
+  animation: ${modalShow} 0.3s;
+  animation-fill-mode: forwards;
+  overflow: hidden;
 `
-const Box = styled.div`
-  text-align: center;
-  width: 50%;
-  margin: 0.1rem;
-`
-const Line = styled.div`
-  padding: 0.1rem;
-`
-const Title = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 0.3rem;
-  span {
-    font-weight: bold;
-    font-size: 1.2rem;
-  }
-  button {
-    border: 1px solid black;
-    padding: 0.2rem;
-    border-radius: 0.3rem;
-    background-color: white;
-  }
-`
-const Wrapper = styled.section`
+
+const ModalHeader = styled.div`
   ${({ theme }) => {
-    const { paddings } = theme
+    const { colors, fonts, paddings } = theme
     return css`
-      width: 30%;
-      margin: auto;
+      width: 100%;
+      padding: ${paddings.base};
 
-      border-radius: 0.3rem;
-      background-color: #fff;
+      background-color: ${colors.main.primary};
 
-      animation: ${modalShow} 0.3s;
-      animation-fill-mode: forwards;
-      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
 
-      header {
-        display: flex;
-        flex-direction: row-reverse;
+      color: ${colors.white};
+      text-align: center;
 
-        padding: ${paddings.sm} ${paddings.base};
-        background-color: #f1f1f1;
-        font-weight: 700;
+      h5 {
+        font-size: ${fonts.size.base};
+        vertical-align: center;
       }
+    `
+  }}
+`
+
+const ModalCloseBtn = styled(FontAwesomeIcon)`
+  ${({ theme }) => {
+    const { colors, fonts, paddings } = theme
+    return css`
+      padding: ${paddings.sm};
+      color: ${colors.white};
+      font-size: ${fonts.size.xsm};
     `
   }}
 `
@@ -130,6 +151,98 @@ const ModalContent = styled.main`
       border-top: 1px solid #dee2e6;
       background-color: ${colors.white};
       text-align: center;
+
+      h5 {
+        margin: ${margins.base} 0vw ${margins.xsm} 0vw;
+        font-size: ${fonts.size.sm};
+        text-align: center;
+      }
+
+      p {
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+        text-align: center;
+      }
+    `
+  }}
+`
+
+const SelectList = styled.div`
+  ${({ theme }) => {
+    const { margins } = theme
+    return css`
+      width: 72.5%;
+      margin: ${margins.base} auto;
+
+      display: flex;
+      justify-content: space-between;
+    `
+  }}
+`
+
+const SelectBox = styled.select`
+  ${({ theme }) => {
+    const { fonts, margins, paddings } = theme
+    return css`
+      width: 47.5%;
+      margin: ${margins.sm} 0vw;
+      padding: ${paddings.sm};
+
+      border: 1px solid #999;
+      border-radius: 0px;
+
+      font-weight: 100;
+      font-size: ${fonts.size.xsm};
+      text-align: center;
+
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+
+      option {
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
+    `
+  }}
+`
+
+const BtnList = styled.div`
+  ${({ theme }) => {
+    const { margins } = theme
+    return css`
+      width: 80%;
+      margin: 0vw auto ${margins.base} auto;
+      display: flex;
+      justify-content: space-between;
+    `
+  }}
+`
+
+const SettingBtn = styled.button`
+  ${({ theme }) => {
+    const { colors, paddings, margins } = theme
+    return css`
+      width: 40%;
+      padding: ${paddings.sm};
+      margin: ${margins.sm} auto 0vw auto;
+
+      background: ${colors.white};
+      border: 1px solid ${colors.main.primary};
+      border-radius: 2.5vw;
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-weight: 100;
+
+      &:hover {
+        border: 0px;
+        background: ${colors.main.tertiary};
+        color: ${colors.white};
+      }
     `
   }}
 `
