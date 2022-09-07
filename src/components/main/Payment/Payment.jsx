@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useLocation, useParams } from "react-router-dom"
 import styled, { css } from "styled-components"
 import moment from "moment/moment"
@@ -8,10 +8,13 @@ import { reservationControl } from "api/controls/reservationControl"
 
 import { faMap, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { ModalContext } from "module/Modal"
+import ReservationModal from "../Reservation/Modals/ReservationModal"
 
 const Payment = () => {
   const { rooftopId } = useParams()
   const location = useLocation()
+  const { openModal } = useContext(ModalContext)
   const [paymentInfo, setPaymentInfo] = useState({
     userId: "",
     phoneNumber: "",
@@ -38,7 +41,7 @@ const Payment = () => {
     totalPrice,
   } = paymentInfo
 
-  const { address, width, grade } = location.state
+  const { address, width, grade, limitTime, limitCount, rooftopOptions } = location.state
 
   useEffect(() => {
     console.log(location)
@@ -63,7 +66,8 @@ const Payment = () => {
         needToPay,
         paymentInfo,
       )
-      window.location.href = next_redirect_pc_url
+      // window.location.href = next_redirect_pc_url
+      window.open(next_redirect_pc_url, "카카오페이 결제")
       localStorage.setItem("reservationId", reservationId)
     } catch (err) {
       console.log(err)
@@ -92,9 +96,13 @@ const Payment = () => {
             <DetailInfo>
               <FontAwesomeIcon icon={faUser} />
               <span>
-                {`성인 ${adultCount}명, ${
-                  kidCount === 0 ? "노 키즈 존" : `유아 ${kidCount}명`
-                }, 반려동물 ${petCount === 0 ? "금지" : `${petCount}마리`}`}
+                {`성인 ${limitCount.adultCount}명, ${
+                  limitCount.kidCount === 0 ? "노 키즈 존" : `유아 ${limitCount.kidCount}명`
+                }, ${
+                  limitCount.petCount === 0
+                    ? "반려동물 금지"
+                    : `반려동물 ${limitCount.petCount}마리`
+                }`}
               </span>
             </DetailInfo>
           </div>
@@ -120,7 +128,21 @@ const Payment = () => {
         <ReservationInfo>
           <div className="title">
             <h5>예약 안내</h5>
-            <p>옥상 시설 예약 정보를 안내합니다.</p>
+            <p>옥상 시설 예약 정보를 안내합니다.</p>{" "}
+            <span
+              onClick={() =>
+                openModal(
+                  <ReservationModal
+                    limitTime={limitTime}
+                    limitCount={limitCount}
+                    rooftopOptions={rooftopOptions}
+                    reservationData={paymentInfo}
+                    setReservationData={setPaymentInfo}
+                  />,
+                )
+              }>
+              수정하기
+            </span>
           </div>
           <OptionBox>
             <div className="option-list">
@@ -299,8 +321,30 @@ const ReservationInfo = styled.div`
 
       .title {
         border-bottom: 1px solid ${colors.main.primary}55;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
         p {
+          width: 70%;
           margin: ${margins.xsm} 0vw ${margins.sm} 0vw;
+        }
+
+        span {
+          margin-bottom: auto;
+          padding: ${paddings.xsm};
+
+          background-color: ${colors.main.secondary};
+          border-radius: 0.5rem;
+
+          color: ${colors.white};
+          font-size: 0.8rem;
+          text-align: right;
+
+          &:hover {
+            background-color: ${colors.main.tertiary};
+            font-weight: ${fonts.weight.bold};
+          }
         }
       }
 

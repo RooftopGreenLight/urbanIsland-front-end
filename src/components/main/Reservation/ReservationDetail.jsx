@@ -277,6 +277,9 @@ const ReservationDetail = () => {
               navigate(`/payment/${id}`, {
                 state: {
                   reservationData: { ...reservationData },
+                  limitTime: { startTime, endTime },
+                  limitCount: { adultCount, kidCount, petCount },
+                  rooftopOptions,
                   address: `${city} ${district} ${detail}`,
                   grade,
                   width,
