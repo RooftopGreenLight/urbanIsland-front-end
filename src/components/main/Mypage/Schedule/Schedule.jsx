@@ -57,7 +57,6 @@ const Schedule = () => {
               minDetail="month"
               maxDetail="month"
               navigationLabel={null}
-              showNeighboringMonth={false}
               onChange={setSeletedDate}
               value={selectedDate}
             />
