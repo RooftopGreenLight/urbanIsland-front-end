@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { useLocation, useParams } from "react-router-dom"
 import styled, { css } from "styled-components"
 import moment from "moment/moment"
@@ -14,7 +14,13 @@ import ReservationModal from "../Reservation/Modals/ReservationModal"
 const Payment = () => {
   const { rooftopId } = useParams()
   const location = useLocation()
+
+  const feedbackMsg = useRef()
   const { openModal } = useContext(ModalContext)
+  const [customerInfo, setCustomerInfo] = useState({
+    name: "",
+    phoneNumber: "",
+  })
   const [paymentInfo, setPaymentInfo] = useState({
     userId: "",
     phoneNumber: "",
@@ -41,6 +47,7 @@ const Payment = () => {
     totalPrice,
   } = paymentInfo
 
+  const { name, phoneNumber } = customerInfo
   const { address, width, grade, limitTime, limitCount, rooftopOptions } = location.state
 
   useEffect(() => {
@@ -53,7 +60,20 @@ const Payment = () => {
     totalPrice * totalUseDay +
     optionCount.reduce((sum, count, idx) => (sum += count * optionPrice[idx]), 0)
 
+  const changeInput = e => {
+    const { name, value } = e.target
+    setCustomerInfo(prevInfo => ({ ...prevInfo, [name]: value }))
+  }
+
   const readyToSetPayment = async () => {
+    if (!name || !phoneNumber) {
+      feedbackMsg.current.innerText = "이름과 전화번호는 꼭 입력해주셔야 합니다."
+      return
+    }
+    if (!phoneNumber.match("/d{2,3}-d{3,4}-d{4}/g")) {
+      feedbackMsg.current.innerText = "올바른 전화번호 양식이 아닙니다."
+      return
+    }
     try {
       const { next_redirect_pc_url, tid } = await KakaoPayControl.postRequestToPay(
         rooftopId,
@@ -117,11 +137,21 @@ const Payment = () => {
           <OptionBox>
             <div className="option-list">
               <span>예약자 성함 : </span>
-              <p>백광인</p>
+              <input
+                value={name}
+                name="name"
+                onChange={changeInput}
+                placeholder="성함을 입력해주세요."
+              />
             </div>
             <div className="option-list">
               <span>예약자 전화번호 : </span>
-              <p>010 - 7167 - 0851</p>
+              <input
+                value={phoneNumber}
+                name="phoneNumber"
+                onChange={changeInput}
+                placeholder="전화번호를 입력해주세요."
+              />
             </div>
           </OptionBox>
         </ReservationInfo>
@@ -209,6 +239,7 @@ const Payment = () => {
             <span>총 합계 : </span>
             <strong>{`${needToPay.toLocaleString()} KRW`}</strong>
           </div>
+          <ConfirmFeedBack ref={feedbackMsg} />
           <ConfirmBtn onClick={readyToSetPayment}>결제하기</ConfirmBtn>
         </OptionBox>
       </PaymentConfirm>
@@ -325,6 +356,12 @@ const ReservationInfo = styled.div`
         flex-wrap: wrap;
         justify-content: space-between;
 
+        h5 {
+          width: 100%;
+          color: ${colors.main.secondary};
+          font-size: ${fonts.size.base};
+        }
+
         p {
           width: 70%;
           margin: ${margins.xsm} 0vw ${margins.sm} 0vw;
@@ -353,28 +390,18 @@ const ReservationInfo = styled.div`
         font-weight: ${fonts.weight.light};
       }
 
-      h5 {
-        width: 100%;
-        color: ${colors.main.secondary};
-        font-size: ${fonts.size.base};
-      }
+      input {
+        width: 45%;
+        padding: ${paddings.xsm} 0vw;
 
-      svg {
-        margin: auto 0vw;
-        color: ${colors.main.primary};
-      }
+        border: 0;
+        border-bottom: 1px solid ${colors.main.secondary}44;
+        background-color: ${colors.main.quaternary}11;
 
-      pre {
-        padding: ${paddings.base} 0vw;
-        color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
-      }
-
-      img {
-        width: 100%;
-        height: 40vh;
-        object-fit: cover;
-        margin: ${margins.lg} auto 0vw auto;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.xsm};
+        font-weight: 200;
+        text-align: center;
       }
     `
   }}
@@ -432,29 +459,43 @@ const OptionBox = styled.div`
         font-size: ${fonts.size.sm};
       }
 
-      p {
-        color: ${colors.black.tertiary};
-        font-size: 1.1rem;
-        font-weight: 500;
-      }
-
-      span {
-        color: ${colors.black.quinary};
-        font-size: 1.1rem;
-        font-weight: 300;
-      }
-
-      strong {
-        color: ${colors.main.secondary};
-        font-size: 1.1rem;
-      }
-
       .option-list {
         width: 100%;
         margin: ${margins.xsm} 0vw;
         display: flex;
         justify-content: space-between;
+
+        p {
+          color: ${colors.black.tertiary};
+          font-size: 1.1rem;
+          font-weight: 500;
+        }
+
+        span {
+          color: ${colors.black.quinary};
+          font-size: 1.1rem;
+          font-weight: 300;
+        }
+
+        strong {
+          color: ${colors.main.secondary};
+          font-size: 1.1rem;
+        }
       }
+    `
+  }}
+`
+
+const ConfirmFeedBack = styled.p`
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      margin: ${margins.lg} auto 0vw auto;
+
+      text-align: center;
+      color: ${colors.main.secondary};
+      font-size: ${fonts.size.xsm};
+      font-weight: 200;
     `
   }}
 `
@@ -465,7 +506,7 @@ const ConfirmBtn = styled.button`
     return css`
       width: 100%;
       padding: ${paddings.sm} ${paddings.lg};
-      margin: ${margins.lg} 0vw 0vw 0vw;
+      margin: ${margins.base} 0vw 0vw 0vw;
 
       border-radius: 0.75rem;
       background: ${colors.main.secondary};
