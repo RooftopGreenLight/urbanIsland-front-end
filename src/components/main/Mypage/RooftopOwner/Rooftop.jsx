@@ -7,7 +7,7 @@ import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faAngleRight } from "@fortawesome/free-solid-svg-icons"
+import { faAngleRight, faBuilding } from "@fortawesome/free-solid-svg-icons"
 import { ModalContext } from "module/Modal"
 
 import WaitingRooftopModal from "./Modal/WaitingRooftopModal"
@@ -45,15 +45,23 @@ const Rooftop = () => {
             <h5>등록된 옥상 관리하기</h5>
           </Title>
           <SliderBox>
-            <Slider {...SlickSettings}>
-              {ownRooftopList.map((rooftopInfo, idx) => (
-                <div key={idx}>
-                  <Link to={`/mypage/rooftop/supervise/${rooftopInfo.id}`}>
-                    <OwnRooftop rooftopInfo={rooftopInfo} />
-                  </Link>
-                </div>
-              ))}
-            </Slider>
+            {ownRooftopList.length > 0 ? (
+              <Slider {...SlickSettings}>
+                {ownRooftopList.map((rooftopInfo, idx) => (
+                  <div key={idx}>
+                    <Link to={`/mypage/rooftop/supervise/${rooftopInfo.id}`}>
+                      <OwnRooftop rooftopInfo={rooftopInfo} />
+                    </Link>
+                  </div>
+                ))}
+              </Slider>
+            ) : (
+              <NoticeEmptyIcon>
+                <FontAwesomeIcon icon={faBuilding} />
+                <h5>등록된 옥상 없음</h5>
+                <p>아직 Urban Island에 등록한 옥상이 없습니다.</p>
+              </NoticeEmptyIcon>
+            )}
           </SliderBox>
         </ServiceList>
         <ServiceList>
@@ -199,6 +207,42 @@ const SliderBox = styled.div`
     return css`
       margin: ${margins.lg} auto;
       width: 95%;
+    `
+  }}
+`
+
+const NoticeEmptyIcon = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      margin: ${margins.base} auto 0vw auto;
+
+      color: ${colors.main.primary};
+      text-align: center;
+
+      h5 {
+        font-size: ${fonts.size.base};
+        margin-bottom: ${margins.sm};
+      }
+
+      p {
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
+
+      svg {
+        width: 2.5vw;
+        height: 2.5vw;
+
+        margin-bottom: ${margins.base};
+        padding: ${paddings.lg};
+
+        background-color: ${colors.main.secondary};
+        border-radius: 20vw;
+
+        color: ${colors.white};
+      }
     `
   }}
 `
