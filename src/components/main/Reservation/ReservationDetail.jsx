@@ -122,6 +122,7 @@ const ReservationDetail = () => {
         }))
       } catch (err) {
         console.log(err.message)
+        navigate("/reservation/not_exist")
       }
     }
     setReservationData(prevData => ({ ...prevData, ...location.state }))
