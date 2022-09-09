@@ -92,14 +92,16 @@ const ReservationDetail = () => {
 
         // 이미 예약된 일자인 bookedDate를 Set에 하나씩 저장하는 과정.
         let bookedDate = new Set()
-        reservations.forEach(bookingInfo => {
-          const { startDates, endDates } = bookingInfo
-          const betweenDates = DateUtil.getDatesBetweenTwoDates(
-            DateUtil.createDate(startDates),
-            DateUtil.createDate(endDates),
-          )
-          bookedDate = new Set([...bookedDate, ...betweenDates.map(date => date.toDateString())])
-        })
+        if (reservations && reservations.length > 0) {
+          reservations.forEach(bookingInfo => {
+            const { startDates, endDates } = bookingInfo
+            const betweenDates = DateUtil.getDatesBetweenTwoDates(
+              DateUtil.createDate(startDates),
+              DateUtil.createDate(endDates),
+            )
+            bookedDate = new Set([...bookedDate, ...betweenDates.map(date => date.toDateString())])
+          })
+        }
 
         setRooftopData({ ...result, startTime: startTime[0], endTime: endTime[0], bookedDate })
         // rooftopOptions 이 존재할 경우, 이를 분해하여 option Array로 저장시킴.
