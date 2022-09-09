@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import styled, { css } from "styled-components"
+import moment from "moment"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
@@ -16,11 +17,12 @@ import { CalenderContainer } from "styles/calender"
 
 import { ModalContext } from "module/Modal"
 import { reservationControl } from "api/controls/reservationControl"
+import DateUtil from "util/DateUtil"
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
-import moment from "moment"
 
 const Schedule = () => {
   const [selectedDate, setSeletedDate] = useState(new Date())
+  const [bookingDates, setBookingDates] = useState(new Set())
   const [reservationInfo, setReservationInfo] = useState(null)
   const [waitingReservation, setWaitingReservation] = useState([])
   const [completedReservation, setCompletedReservation] = useState([])
@@ -30,9 +32,19 @@ const Schedule = () => {
     const getReservationInfo = async () => {
       try {
         const loadedWaitingInfo = await reservationControl.getWaitingResevationInfo()
+        loadedWaitingInfo.map(({ startDate, endDate }) => {
+          const betweenDates = DateUtil.getDatesBetweenTwoDates(
+            DateUtil.createDate(startDate),
+            DateUtil.createDate(endDate),
+          )
+          setBookingDates(
+            new Set([...bookingDates, ...betweenDates.map(date => date.toDateString())]),
+          )
+        })
+
         const loadedCompletedInfo = await reservationControl.getCompletedResevationInfo()
         const loadedInfo = await reservationControl.getReservationInfo(
-          selectedDate.toISOString().split("T")[0],
+          moment(selectedDate).format("YYYY-MM-DD"),
         )
         setWaitingReservation(loadedWaitingInfo)
         setCompletedReservation(loadedCompletedInfo)
@@ -54,11 +66,16 @@ const Schedule = () => {
           <CalenderContainer>
             <Calendar
               formatDay={(_, date) => moment(date).format("DD")}
-              minDetail="month"
-              maxDetail="month"
               navigationLabel={null}
               onChange={setSeletedDate}
               value={selectedDate}
+              tileContent={({ date }) => {
+                let html = []
+                if (bookingDates.has(date.toDateString())) {
+                  html.push(<BookingDot key={date} />)
+                }
+                return <>{html}</>
+              }}
             />
           </CalenderContainer>
         </CalenderBox>
@@ -193,7 +210,7 @@ const ScheduleDetail = styled.div`
       color: ${colors.black.secondary};
 
       span {
-        width: 55%;
+        width: 100%;
         font-weight: 300;
         text-align: right;
       }
@@ -210,6 +227,23 @@ const ScheduleDetail = styled.div`
         color: ${colors.main.primary};
         margin: auto ${margins.base} auto 0vw;
       }
+    `
+  }}
+`
+
+const BookingDot = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, margins, paddings } = theme
+    return css`
+      height: ${fonts.size.xxsm};
+      width: ${fonts.size.xxsm};
+      margin: ${margins.xsm} auto 0vw auto;
+
+      position: relative;
+      bottom: 0;
+
+      background-color: ${colors.main.tertiary};
+      border-radius: 50%;
     `
   }}
 `
