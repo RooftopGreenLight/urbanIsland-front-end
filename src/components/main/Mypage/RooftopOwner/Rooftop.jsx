@@ -49,7 +49,7 @@ const Rooftop = () => {
               <Slider {...SlickSettings}>
                 {ownRooftopList.map((rooftopInfo, idx) => (
                   <div key={idx}>
-                    <Link to={`/mypage/rooftop/supervise/${idx}`}>
+                    <Link to={`/mypage/rooftop/supervise/${rooftopInfo.id}`}>
                       <OwnRooftop rooftopInfo={rooftopInfo} />
                     </Link>
                   </div>
