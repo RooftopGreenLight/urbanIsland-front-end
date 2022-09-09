@@ -8,7 +8,9 @@ import { reservationControl } from "api/controls/reservationControl"
 
 import { faMap, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+
 import { ModalContext } from "module/Modal"
+import DateUtil from "util/DateUtil"
 import ReservationModal from "../Reservation/Modals/ReservationModal"
 
 const Payment = () => {
@@ -48,7 +50,8 @@ const Payment = () => {
   } = paymentInfo
 
   const { name, phoneNumber } = customerInfo
-  const { address, width, grade, limitTime, limitCount, rooftopOptions } = location.state
+  const { address, width, grade, limitTime, limitCount, bookedDate, rooftopOptions } =
+    location.state
 
   useEffect(() => {
     console.log(location)
@@ -70,10 +73,11 @@ const Payment = () => {
       feedbackMsg.current.innerText = "이름과 전화번호는 꼭 입력해주셔야 합니다."
       return
     }
-    if (!phoneNumber.match("/d{2,3}-d{3,4}-d{4}/g")) {
-      feedbackMsg.current.innerText = "올바른 전화번호 양식이 아닙니다."
-      return
-    }
+    // const phoneNumberReg = /d{2,3}-d{3,4}-d{4}/g
+    // if (!phoneNumberReg.test(phoneNumber)) {
+    //   feedbackMsg.current.innerText = "올바른 전화번호 양식이 아닙니다."
+    //   return
+    // }
     try {
       const { next_redirect_pc_url, tid } = await KakaoPayControl.postRequestToPay(
         rooftopId,
@@ -165,6 +169,7 @@ const Payment = () => {
                   <ReservationModal
                     limitTime={limitTime}
                     limitCount={limitCount}
+                    bookedDate={bookedDate}
                     rooftopOptions={rooftopOptions}
                     reservationData={paymentInfo}
                     setReservationData={setPaymentInfo}
@@ -187,15 +192,15 @@ const Payment = () => {
             </div>
             <div className="option-list">
               <span>이용 일자 : </span>
-              <p>{`${moment(selectedDate[0]).format("YYYY.MM.DD")} - ${moment(
+              <p>{`${DateUtil.getDateFormat(selectedDate[0])} - ${DateUtil.getDateFormat(
                 selectedDate[1],
-              ).format("YYYY.MM.DD")}`}</p>
+              )}`}</p>
             </div>
             <div className="option-list">
               <span>이용 시간 : </span>
-              <p>{`${String(selectedTime[0]).padStart(2, "0")}:00 - ${String(
+              <p>{`${DateUtil.getTimeFormat(selectedTime[0])}:00 - ${DateUtil.getTimeFormat(
                 selectedTime[1],
-              ).padStart(2, "0")}:00`}</p>
+              )}:00`}</p>
             </div>
           </OptionBox>
         </ReservationInfo>
@@ -212,7 +217,7 @@ const Payment = () => {
             {optionCount
               .filter(count => count > 0)
               .map((count, idx) => (
-                <div className="option-list">
+                <div className="option-list" key={optionContent[idx]}>
                   <span>{`${optionContent[idx]} :`}</span>
                   <p>
                     {`${
@@ -236,7 +241,7 @@ const Payment = () => {
           {optionCount
             .filter(count => count > 0)
             .map((count, idx) => (
-              <div className="option-list">
+              <div className="option-list" key={optionContent[idx]}>
                 <span>{`${optionContent[idx]} :`}</span>
                 <p>{`${(count * optionPrice[idx]).toLocaleString()} KRW`}</p>
               </div>

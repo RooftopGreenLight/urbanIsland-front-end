@@ -84,14 +84,13 @@ const ReservationModal = ({
                   const selectedDates = [
                     ...DateUtil.getDatesBetweenTwoDates(startDate, endDate),
                   ].map(date => date.toDateString())
-                  console.log(selectedDates.some(selectedDate => !bookedDate.has(selectedDate)))
-                  if (selectedDates.some(selectedDate => !bookedDate.has(selectedDate))) {
+                  // 만약 선택한 일자 범주에 예약 불가능한 일이 있다면, 선택을 취소함.
+                  if (selectedDates.every(selectedDate => !bookedDate.has(selectedDate))) {
                     return setModifiedData(prevData => ({
                       ...prevData,
                       selectedDate: [startDate, endDate],
                     }))
                   }
-                  return null
                 }}
                 tileDisabled={({ date, view }) =>
                   view === "month" && bookedDate.has(date.toDateString())
