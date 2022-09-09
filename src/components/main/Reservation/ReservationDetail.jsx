@@ -12,6 +12,7 @@ import { faStar, faUser, faMap, faShare, faCircleCheck } from "@fortawesome/free
 
 import { useContext } from "react"
 import { ModalContext } from "module/Modal"
+import DateUtil from "util/DateUtil"
 
 import { roofTopControl } from "api/controls/roofTopControl"
 import { RoofTopFacilities } from "constants/RoofTopFacilities"
@@ -33,6 +34,7 @@ const ReservationDetail = () => {
     explainContent: "",
     grade: 0,
     mainImage: null,
+    bookedDate: new Set(),
     refundContent: "",
     roleContent: "",
     rooftopImages: [],
@@ -76,6 +78,7 @@ const ReservationDetail = () => {
     refundContent,
     totalPrice,
     rooftopOptions,
+    bookedDate,
   } = rooftopData
 
   const { selectedDate, selectedTime, optionContent, optionPrice, optionCount } = reservationData
@@ -85,8 +88,20 @@ const ReservationDetail = () => {
     const loadRooftopData = async () => {
       try {
         const result = await roofTopControl.getRooftopDetail(id)
-        const { startTime, endTime, rooftopOptions } = result
-        setRooftopData({ ...result, startTime: startTime[0], endTime: endTime[0] })
+        const { startTime, endTime, rooftopOptions, reservations } = result
+
+        // 이미 예약된 일자인 bookedDate를 Set에 하나씩 저장하는 과정.
+        let bookedDate = new Set()
+        reservations.forEach(bookingInfo => {
+          const { startDates, endDates } = bookingInfo
+          const betweenDates = DateUtil.getDatesBetweenTwoDates(
+            DateUtil.createDate(startDates),
+            DateUtil.createDate(endDates),
+          )
+          bookedDate = new Set([...bookedDate, ...betweenDates.map(date => date.toDateString())])
+        })
+
+        setRooftopData({ ...result, startTime: startTime[0], endTime: endTime[0], bookedDate })
         // rooftopOptions 이 존재할 경우, 이를 분해하여 option Array로 저장시킴.
         if (rooftopOptions && rooftopOptions.length > 0) {
           setReservationData(prevData => ({
@@ -96,6 +111,13 @@ const ReservationDetail = () => {
             optionCount: [...Array(rooftopOptions.length).fill(0)],
           }))
         }
+        setReservationData(prevData => ({
+          ...prevData,
+          selectedTime: [
+            Math.max(startTime[0], prevData.selectedTime[0]),
+            Math.min(endTime[0], prevData.selectedTime[1]),
+          ],
+        }))
       } catch (err) {
         console.log(err.message)
       }
@@ -103,8 +125,6 @@ const ReservationDetail = () => {
     setReservationData(prevData => ({ ...prevData, ...location.state }))
     loadRooftopData()
   }, [])
-
-  console.log(reservationData)
 
   const copyUrl = () => {
     if (navigator.clipboard) {
@@ -163,7 +183,7 @@ const ReservationDetail = () => {
               </div>
               {rooftopImages &&
                 rooftopImages.map(({ fileUrl, uploadFilename }) => (
-                  <div>
+                  <div key={uploadFilename}>
                     <img src={fileUrl} alt="Img" key={uploadFilename} />
                   </div>
                 ))}
@@ -220,8 +240,8 @@ const ReservationDetail = () => {
           </div>
           <div className="option-list">
             <span>이용 일자 : </span>
-            <p>{`${moment(selectedDate[0]).format("YYYY.MM.DD")} - ${moment(selectedDate[1]).format(
-              "YYYY.MM.DD",
+            <p>{`${DateUtil.getDateFormat(selectedDate[0])} - ${DateUtil.getDateFormat(
+              selectedDate[1],
             )}`}</p>
           </div>
           <div className="option-list">
@@ -236,6 +256,7 @@ const ReservationDetail = () => {
                 <ReservationModal
                   limitTime={{ startTime, endTime }}
                   limitCount={{ adultCount, kidCount, petCount }}
+                  bookedDate={bookedDate}
                   rooftopOptions={rooftopOptions}
                   reservationData={reservationData}
                   setReservationData={setReservationData}
@@ -265,11 +286,10 @@ const ReservationDetail = () => {
           <div className="option-list">
             <span>총 합계 : </span>
             <strong>
-              {(
+              {`${(
                 totalPrice * totalUseDay +
                 optionCount.reduce((sum, count, idx) => (sum += count * optionPrice[idx]), 0)
-              ).toLocaleString()}
-              KRW
+              ).toLocaleString()} KRW`}
             </strong>
           </div>
           <ReservationBtn
@@ -277,6 +297,10 @@ const ReservationDetail = () => {
               navigate(`/payment/${id}`, {
                 state: {
                   reservationData: { ...reservationData },
+                  limitTime: { startTime, endTime },
+                  limitCount: { adultCount, kidCount, petCount },
+                  bookedDate,
+                  rooftopOptions,
                   address: `${city} ${district} ${detail}`,
                   grade,
                   width,

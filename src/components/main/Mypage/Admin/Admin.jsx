@@ -55,7 +55,7 @@ const Admin = () => {
     }
 
     getAdminInformation()
-  }, [rooftopList, ownerList, greenbeeList])
+  }, [])
 
   const applyGreenbeeApprove = async id => {
     try {
