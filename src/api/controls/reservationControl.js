@@ -35,7 +35,6 @@ export const reservationControl = {
         method: "GET",
         url: `/reservations/members/waiting`,
       })
-      console.log(response)
       return response?.data ?? []
     } catch (err) {
       const errorMessage = err.response.data.message
@@ -48,7 +47,6 @@ export const reservationControl = {
         method: "GET",
         url: `/reservations/members/completed`,
       })
-      console.log(response)
       return response?.data ?? []
     } catch (err) {
       const errorMessage = err.response.data.message

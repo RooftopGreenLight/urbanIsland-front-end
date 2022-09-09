@@ -10,11 +10,13 @@ import { faXmark, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons"
 
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
+import DateUtil from "util/DateUtil"
 import CustomSlider from "components/main/Reservation/CustomSlider"
 
 const ReservationModal = ({
   limitTime,
   limitCount,
+  bookedDate,
   rooftopOptions,
   reservationData,
   setReservationData,
@@ -58,6 +60,8 @@ const ReservationModal = ({
     })
   }
 
+  console.log(bookedDate)
+
   return (
     <Wrapper>
       <ModalHeader>
@@ -75,10 +79,22 @@ const ReservationModal = ({
               <Calendar
                 formatDay={(_, date) => moment(date).format("DD")}
                 showNeighboringMonth={false}
-                navigationLabel={null}
                 minDate={new Date()}
-                onChange={newDate =>
-                  setModifiedData(prevData => ({ ...prevData, selectedDate: newDate }))
+                onChange={([startDate, endDate]) => {
+                  const selectedDates = [
+                    ...DateUtil.getDatesBetweenTwoDates(startDate, endDate),
+                  ].map(date => date.toDateString())
+                  console.log(selectedDates.some(selectedDate => !bookedDate.has(selectedDate)))
+                  if (selectedDates.some(selectedDate => !bookedDate.has(selectedDate))) {
+                    return setModifiedData(prevData => ({
+                      ...prevData,
+                      selectedDate: [startDate, endDate],
+                    }))
+                  }
+                  return null
+                }}
+                tileDisabled={({ date, view }) =>
+                  view === "month" && bookedDate.has(date.toDateString())
                 }
                 value={selectedDate}
                 selectRange={true}
