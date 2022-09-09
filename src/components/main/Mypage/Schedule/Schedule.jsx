@@ -17,8 +17,10 @@ import { CalenderContainer } from "styles/calender"
 
 import { ModalContext } from "module/Modal"
 import { reservationControl } from "api/controls/reservationControl"
+import { chattingControl } from "api/controls/chattingControl"
+
 import DateUtil from "util/DateUtil"
-import ChatRoomPage from "components/main/Chat/ChatRoomPage"
+import ChatModal from "components/main/Chat/ChatModal"
 
 const Schedule = () => {
   const [selectedDate, setSeletedDate] = useState(new Date())
@@ -55,6 +57,15 @@ const Schedule = () => {
     }
     getReservationInfo()
   }, [selectedDate])
+
+  const getChatroom = async () => {
+    console.log(reservationInfo)
+    const { reservationId, ownerId } = reservationInfo
+    const roomId = await chattingControl.getCheckChatExist(reservationId, ownerId)
+    if (roomId) {
+      openModal(<ChatModal roomId={roomId} />)
+    }
+  }
 
   return (
     <Wrapper>
@@ -118,6 +129,9 @@ const Schedule = () => {
                     : `어른 ${reservationInfo.adultCount}명`}
                 </span>
               </ScheduleDetail>
+              <SendMessageBtn onClick={getChatroom}>
+                <FontAwesomeIcon icon={faComments} /> 채팅 목록 열기
+              </SendMessageBtn>
             </>
           ) : (
             <NoticeEmptyIcon>
@@ -127,9 +141,6 @@ const Schedule = () => {
             </NoticeEmptyIcon>
           )}
         </InnerBox>
-        <SendMessageBtn onClick={() => openModal(<ChatRoomPage />)}>
-          <FontAwesomeIcon icon={faComments} /> 채팅 목록 열기
-        </SendMessageBtn>
       </ViewPoint>
     </Wrapper>
   )

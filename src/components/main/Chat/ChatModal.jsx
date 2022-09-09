@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState, useRef } from "react"
+import { useRecoilValue } from "recoil"
 import styled, { css } from "styled-components"
 import { Client } from "@stomp/stompjs"
 
@@ -9,10 +10,12 @@ import ChatRoomPage from "components/main/Chat/ChatRoomPage"
 import NoticeEmptyChatMessage from "components/main/Chat/NoticeEmpty/NoticeEmptyChatMessage"
 
 import { ModalContext } from "module/Modal"
+import { AuthCheckMemberId } from "module/Auth"
 import { modalShow } from "styles/Animation"
 
-const ChatModal = ({ roomId, memberId }) => {
+const ChatModal = ({ roomId }) => {
   const { openModal } = useContext(ModalContext)
+  const memberId = useRecoilValue(AuthCheckMemberId)
   const [chatMessages, setChatMessages] = useState([
     { memberId, content: "ㅎㅇ", sendTime: [2022, 8, 9, 21, 51, 10, 10000] },
   ])
@@ -71,6 +74,7 @@ const ChatModal = ({ roomId, memberId }) => {
       `/queue/${roomId}`,
       ({ body }) => {
         const { memberId, content, sendTime } = JSON.parse(body)
+        console.log(body)
         setChatMessages(prevMsgList => [...prevMsgList, { memberId, content, sendTime }])
       },
       jwtHeader,
