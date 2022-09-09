@@ -18,7 +18,8 @@ const PaymentFailure = () => {
         console.log(err.message)
       }
     }
-    cancelPayment()
+    console.log("결제 실패")
+    setTimeout(() => cancelPayment(), 1000)
   }, [])
   return (
     <Wrapper>

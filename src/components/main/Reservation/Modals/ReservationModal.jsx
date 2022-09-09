@@ -10,11 +10,13 @@ import { faXmark, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons"
 
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
+import DateUtil from "util/DateUtil"
 import CustomSlider from "components/main/Reservation/CustomSlider"
 
 const ReservationModal = ({
   limitTime,
   limitCount,
+  bookedDate,
   rooftopOptions,
   reservationData,
   setReservationData,
@@ -23,7 +25,7 @@ const ReservationModal = ({
   const { closeModal } = useContext(ModalContext)
 
   const { adultCount, kidCount, petCount, selectedDate, optionCount } = modifiedData
-  const limitExtraOptionCount = rooftopOptions.map(({ count }) => count)
+  const limitExtraOptionCount = rooftopOptions?.map(({ count }) => count)
 
   const confirmModify = () => {
     setReservationData(prevData => ({ ...prevData, ...modifiedData }))
@@ -58,6 +60,8 @@ const ReservationModal = ({
     })
   }
 
+  console.log(bookedDate)
+
   return (
     <Wrapper>
       <ModalHeader>
@@ -75,10 +79,21 @@ const ReservationModal = ({
               <Calendar
                 formatDay={(_, date) => moment(date).format("DD")}
                 showNeighboringMonth={false}
-                navigationLabel={null}
                 minDate={new Date()}
-                onChange={newDate =>
-                  setModifiedData(prevData => ({ ...prevData, selectedDate: newDate }))
+                onChange={([startDate, endDate]) => {
+                  const selectedDates = [
+                    ...DateUtil.getDatesBetweenTwoDates(startDate, endDate),
+                  ].map(date => date.toDateString())
+                  // 만약 선택한 일자 범주에 예약 불가능한 일이 있다면, 선택을 취소함.
+                  if (selectedDates.every(selectedDate => !bookedDate.has(selectedDate))) {
+                    return setModifiedData(prevData => ({
+                      ...prevData,
+                      selectedDate: [startDate, endDate],
+                    }))
+                  }
+                }}
+                tileDisabled={({ date, view }) =>
+                  view === "month" && bookedDate.has(date.toDateString())
                 }
                 value={selectedDate}
                 selectRange={true}
@@ -128,7 +143,10 @@ const ReservationModal = ({
             </SetPersonSection>
             <SetPersonSection>
               <h5>
-                유아 <span>{`(최대 ${limitCount.kidCount} 명)`}</span>
+                유아
+                <span>{` ${
+                  limitCount.kidCount === 0 ? "(노 키즈 존)" : `(최대 ${limitCount.kidCount} 명)`
+                }`}</span>
               </h5>
               <CounterBox isDisabled={limitCount.kidCount === 0}>
                 <FontAwesomeIcon
@@ -146,7 +164,12 @@ const ReservationModal = ({
             </SetPersonSection>
             <SetPersonSection>
               <h5>
-                반려 동물 <span>{`(최대 ${limitCount.petCount} 마리)`}</span>
+                반려 동물
+                <span>{` ${
+                  limitCount.petCount === 0
+                    ? "(반려동물 출입 금지)"
+                    : `(최대 ${limitCount.petCount} 마리)`
+                }`}</span>
               </h5>
               <CounterBox isDisabled={limitCount.petCount === 0}>
                 <FontAwesomeIcon
@@ -172,7 +195,7 @@ const ReservationModal = ({
               {rooftopOptions.map(({ content, count, price }, idx) => (
                 <SetPersonSection key={content}>
                   <h5>
-                    {content} <span>{`(${price.toLocaleString()} KRW, 최대 ${count} 개)`}</span>
+                    {content} <span>{`(${price.toLocaleString()} KRW, 최대 ${count}개)`}</span>
                   </h5>
                   <CounterBox>
                     <FontAwesomeIcon
