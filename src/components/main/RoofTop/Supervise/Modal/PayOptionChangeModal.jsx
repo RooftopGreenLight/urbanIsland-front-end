@@ -5,7 +5,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import { roofTopControl } from "api/controls/roofTopControl"
-import ApplyExtraOption from "./ApplyRoofTop/ApplyExtraOption"
+import ApplyExtraOption from "components/main/RoofTop/ApplyRoofTop/ApplyExtraOption"
 const PayOptionChangeModal = ({ rooftopid }) => {
   const { closeModal } = useContext(ModalContext)
 

@@ -13,8 +13,8 @@ import RequiredGreeningRooftop from "components/main/Mypage/Greenbee/RequiredGre
 import RequestToGreenBee from "components/main/RoofTop/RequestToGreenBee"
 import Rooftop from "components/main/Mypage/RooftopOwner/Rooftop"
 import ApplyRoofTop from "components/main/RoofTop/ApplyRoofTop"
-import SuperviseRooftop from "components/main/RoofTop/SuperviseRooftop"
-import SuperviseDetailRooftop from "components/main/RoofTop/SuperviseDetailRooftop"
+import SuperviseRooftop from "components/main/RoofTop/Supervise/SuperviseRooftop"
+import SuperviseDetailRooftop from "components/main/RoofTop/Supervise/SuperviseDetailRooftop"
 
 export const MypageContainer = () => {
   return (
