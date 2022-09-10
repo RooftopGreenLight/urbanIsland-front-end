@@ -14,13 +14,14 @@ const NoticeEmptyChatMessage = () => {
 
 const Wrapper = styled.div`
   ${({ theme }) => {
-    const { fonts, margins } = theme
+    const { colors, fonts, margins } = theme
     return css`
       width: 75%;
-      height: 50%;
 
       margin: auto;
       text-align: center;
+
+      color: ${colors.main.primary};
 
       h5 {
         font-size: ${fonts.size.xl};
@@ -41,10 +42,10 @@ const EmptyIcon = styled(FontAwesomeIcon)`
       width: 10%;
       height: 10%;
 
-      margin-bottom: ${margins.xl};
+      margin-bottom: ${margins.lg};
       padding: ${paddings.lg};
 
-      background-color: #000000;
+      background-color: ${colors.main.primary};
       border-radius: 20vw;
 
       color: ${colors.white};

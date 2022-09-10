@@ -26,6 +26,7 @@ import { chattingControl } from "api/controls/chattingControl"
 
 import { RoofTopFacilities } from "constants/RoofTopFacilities"
 import ReservationModal from "./Modals/ReservationModal"
+import ChatModal from "../Chat/ChatModal"
 
 const ReservationDetail = () => {
   const navigate = useNavigate()
@@ -150,8 +151,10 @@ const ReservationDetail = () => {
   const sendRequestMessage = async () => {
     try {
       console.log(ownerId)
-      const { roomId } = await chattingControl.getCheckRequestChatExist(rooftopId, ownerId)
-      console.log(roomId)
+      const roomId = await chattingControl.getCheckRequestChatExist(rooftopId, ownerId)
+      if (roomId) {
+        openModal(<ChatModal roomId={roomId} />)
+      }
     } catch (err) {
       console.error(err.message)
     }

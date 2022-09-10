@@ -16,9 +16,7 @@ import { modalShow } from "styles/Animation"
 const ChatModal = ({ roomId }) => {
   const { openModal } = useContext(ModalContext)
   const memberId = useRecoilValue(AuthCheckMemberId)
-  const [chatMessages, setChatMessages] = useState([
-    { memberId, content: "ㅎㅇ", sendTime: [2022, 8, 9, 21, 51, 10, 10000] },
-  ])
+  const [chatMessages, setChatMessages] = useState([])
   const [content, setContent] = useState("")
   const client = useRef({})
 
@@ -149,22 +147,23 @@ const Wrapper = styled.section`
   }}
 `
 
-const ModalHeader = styled.header`
+const ModalHeader = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`
       width: 100%;
       padding: ${paddings.base};
 
-      background-color: #000000;
+      background-color: ${colors.main.primary};
 
       display: flex;
       justify-content: space-between;
 
+      color: ${colors.white};
+      text-align: center;
+
       h5 {
-        color: ${colors.white};
         font-size: ${fonts.size.base};
-        text-align: center;
         vertical-align: center;
       }
     `
@@ -178,8 +177,6 @@ const ModalCloseBtn = styled(FontAwesomeIcon)`
       padding: ${paddings.sm};
       color: ${colors.white};
       font-size: ${fonts.size.xsm};
-
-      cursor: pointer;
     `
   }}
 `
@@ -188,11 +185,12 @@ const ModalContent = styled.main`
   ${({ theme }) => {
     const { colors, paddings } = theme
     return css`
-      min-height: 50vh;
-
       padding: ${paddings.sm};
       border-top: 1px solid #dee2e6;
       background-color: ${colors.white};
+
+      display: flex;
+      flex-direction: column;
     `
   }}
 `

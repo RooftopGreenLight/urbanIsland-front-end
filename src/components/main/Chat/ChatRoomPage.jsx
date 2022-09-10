@@ -28,10 +28,10 @@ const ChatRoomPage = () => {
 
   return (
     <Wrapper>
-      <ChatRoomHeader>
+      <ModalHeader>
         <h5>문의 내역 목록</h5>
-        <ChatCloseBtn icon={faXmark} onClick={closeModal} />
-      </ChatRoomHeader>
+        <ModalCloseBtn icon={faXmark} onClick={closeModal} />
+      </ModalHeader>
       <ChatRoomList isEmpty={currentRoomList.length > 0}>
         {currentRoomList.length > 0 ? (
           currentRoomList.map((chatRoomElm, idx) => {
@@ -54,29 +54,30 @@ const Wrapper = styled.div`
   background-color: #f5f5f5;
 `
 
-const ChatRoomHeader = styled.div`
+const ModalHeader = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`
       width: 100%;
       padding: ${paddings.base};
 
-      background-color: #000000;
+      background-color: ${colors.main.primary};
 
       display: flex;
       justify-content: space-between;
 
+      color: ${colors.white};
+      text-align: center;
+
       h5 {
-        color: ${colors.white};
         font-size: ${fonts.size.base};
-        text-align: center;
         vertical-align: center;
       }
     `
   }}
 `
 
-const ChatCloseBtn = styled(FontAwesomeIcon)`
+const ModalCloseBtn = styled(FontAwesomeIcon)`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`
