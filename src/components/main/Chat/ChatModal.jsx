@@ -16,9 +16,7 @@ import { modalShow } from "styles/Animation"
 const ChatModal = ({ roomId }) => {
   const { openModal } = useContext(ModalContext)
   const memberId = useRecoilValue(AuthCheckMemberId)
-  const [chatMessages, setChatMessages] = useState([
-    { memberId, content: "ㅎㅇ", sendTime: [2022, 8, 9, 21, 51, 10, 10000] },
-  ])
+  const [chatMessages, setChatMessages] = useState([])
   const [content, setContent] = useState("")
   const client = useRef({})
 
@@ -42,7 +40,6 @@ const ChatModal = ({ roomId }) => {
       onStompError: function (frame) {
         console.log("Broker reported error: " + frame.headers["message"])
         console.log("Additional details: " + frame.body)
-        // setTimeout(() => closeModal(), 500)
       },
 
       onWebSocketError: function (frame) {
@@ -121,7 +118,7 @@ const ChatModal = ({ roomId }) => {
         <ChatSend>
           <input
             type="text"
-            placeholder="Enter your Message"
+            placeholder="메세지를 입력해주세요..."
             value={content}
             onChange={e => setContent(e.target.value)}
           />
@@ -149,22 +146,23 @@ const Wrapper = styled.section`
   }}
 `
 
-const ModalHeader = styled.header`
+const ModalHeader = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`
       width: 100%;
       padding: ${paddings.base};
 
-      background-color: #000000;
+      background-color: ${colors.main.primary};
 
       display: flex;
       justify-content: space-between;
 
+      color: ${colors.white};
+      text-align: center;
+
       h5 {
-        color: ${colors.white};
         font-size: ${fonts.size.base};
-        text-align: center;
         vertical-align: center;
       }
     `
@@ -178,8 +176,6 @@ const ModalCloseBtn = styled(FontAwesomeIcon)`
       padding: ${paddings.sm};
       color: ${colors.white};
       font-size: ${fonts.size.xsm};
-
-      cursor: pointer;
     `
   }}
 `
@@ -188,11 +184,13 @@ const ModalContent = styled.main`
   ${({ theme }) => {
     const { colors, paddings } = theme
     return css`
-      min-height: 50vh;
-
       padding: ${paddings.sm};
       border-top: 1px solid #dee2e6;
       background-color: ${colors.white};
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     `
   }}
 `
@@ -246,18 +244,12 @@ const ChatMessage = styled.div`
 
 const ChatSend = styled.div`
   ${({ theme }) => {
-    const { margins } = theme
+    const { colors, margins } = theme
     return css`
       width: 100%;
 
-      position: absolute;
-      left: 0;
-      bottom: 0;
-
       display: flex;
       justify-content: space-between;
-
-      border-top: 1px solid #232323;
 
       input {
         width: 75%;
@@ -265,10 +257,10 @@ const ChatSend = styled.div`
 
         background-color: transparent;
         border: 0;
-        border-bottom: 1px solid #232323;
+        border-bottom: 1px solid ${colors.main.primary};
 
         &::placeholder {
-          color: #3e3e3e;
+          color: ${colors.main.primary};
           text-align: left;
           font-weight: 100;
         }
@@ -289,11 +281,15 @@ const ChatSendBtn = styled(FontAwesomeIcon)`
       padding: ${paddings.sm};
       margin: ${margins.base} auto;
 
-      background-color: #000000;
+      background-color: ${colors.main.primary};
       border-radius: 25px;
       text-align: center;
       color: ${colors.white};
       font-size: ${fonts.size.xsm};
+
+      &:hover {
+        background-color: ${colors.main.tertiary};
+      }
     `
   }}
 `

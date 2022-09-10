@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react"
+import { useContext, useState } from "react"
 import styled, { css } from "styled-components"
 import moment from "moment"
 
@@ -24,7 +24,13 @@ const ReservationModal = ({
   const [modifiedData, setModifiedData] = useState(reservationData)
   const { closeModal } = useContext(ModalContext)
 
-  const { adultCount, kidCount, petCount, selectedDate, optionCount } = modifiedData
+  const { adultCount, kidCount, petCount, selectedTime, selectedDate, optionCount } = modifiedData
+  const { startTime: limitStartTime, endTime: limitEndTime } = limitTime
+  const {
+    adultCount: limitAdultCount,
+    kidCount: limitKidCount,
+    petCount: limitPetCount,
+  } = limitCount
   const limitExtraOptionCount = rooftopOptions?.map(({ count }) => count)
 
   const confirmModify = () => {
@@ -49,18 +55,17 @@ const ReservationModal = ({
   }
 
   const resetModifiedData = () => {
-    setModifiedData({
-      selectedDate: [new Date(), new Date()],
-      selectedTime: [0, 23],
-      extraOptions: {},
+    setModifiedData(prevData => ({
+      ...prevData,
+      selectedDate: [],
+      selectedTime: [limitStartTime, limitEndTime],
       adultCount: 1,
       kidCount: 0,
       petCount: 0,
       totalPrice: 0,
-    })
+      optionCount: [...Array(rooftopOptions.length).fill(0)],
+    }))
   }
-
-  console.log(bookedDate)
 
   return (
     <Wrapper>
@@ -108,14 +113,14 @@ const ReservationModal = ({
             </div>
             <CustomSlider
               STEP={1}
-              MIN={limitTime.startTime}
-              MAX={limitTime.endTime}
+              MIN={limitStartTime}
+              MAX={limitEndTime}
               unit={":00"}
               setValue={newSelectedTime =>
                 setModifiedData(prevData => ({ ...prevData, selectedTime: newSelectedTime }))
               }
-              imin={limitTime.startTime}
-              imax={limitTime.endTime}
+              imin={selectedTime[0]}
+              imax={selectedTime[1]}
             />
           </OptionBox>
           <OptionBox>
@@ -125,9 +130,9 @@ const ReservationModal = ({
             </div>
             <SetPersonSection>
               <h5>
-                성인 <span>{`(최대 ${limitCount.adultCount} 명)`}</span>
+                성인 <span>{`(최대 ${limitAdultCount} 명)`}</span>
               </h5>
-              <CounterBox isDisabled={limitCount.adultCount === 0}>
+              <CounterBox isDisabled={limitAdultCount === 0}>
                 <FontAwesomeIcon
                   icon={faMinus}
                   value={adultCount}
@@ -145,10 +150,10 @@ const ReservationModal = ({
               <h5>
                 유아
                 <span>{` ${
-                  limitCount.kidCount === 0 ? "(노 키즈 존)" : `(최대 ${limitCount.kidCount} 명)`
+                  limitKidCount === 0 ? "(노 키즈 존)" : `(최대 ${limitKidCount} 명)`
                 }`}</span>
               </h5>
-              <CounterBox isDisabled={limitCount.kidCount === 0}>
+              <CounterBox isDisabled={limitKidCount === 0}>
                 <FontAwesomeIcon
                   icon={faMinus}
                   value={kidCount}
@@ -166,12 +171,10 @@ const ReservationModal = ({
               <h5>
                 반려 동물
                 <span>{` ${
-                  limitCount.petCount === 0
-                    ? "(반려동물 출입 금지)"
-                    : `(최대 ${limitCount.petCount} 마리)`
+                  limitPetCount === 0 ? "(반려동물 출입 금지)" : `(최대 ${limitPetCount} 마리)`
                 }`}</span>
               </h5>
-              <CounterBox isDisabled={limitCount.petCount === 0}>
+              <CounterBox isDisabled={limitPetCount === 0}>
                 <FontAwesomeIcon
                   icon={faMinus}
                   value={petCount}
@@ -307,7 +310,7 @@ const ModalContent = styled.main`
 
 const OptionBox = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { colors, fonts, margins } = theme
     return css`
       width: 90%;
       margin: ${margins.base} 0vw;

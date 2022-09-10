@@ -2,14 +2,11 @@ import { useEffect, useState } from "react"
 import { Range, getTrackBackground } from "react-range"
 import styled, { css } from "styled-components"
 
-const CustomSlider = ({ STEP, MIN, MAX, imin, imax, unit, setValue, flag }) => {
+const CustomSlider = ({ STEP, MIN, MAX, imin, imax, unit, setValue }) => {
   const [values, setValues] = useState([imin, imax])
   useEffect(() => {
-    const onChange = () => {
-      setValues([imin, imax])
-    }
-    onChange()
-  }, [flag])
+    setValues([imin, imax])
+  }, [imin, imax])
   return (
     <Wrapper>
       <Range
