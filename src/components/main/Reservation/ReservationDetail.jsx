@@ -51,6 +51,7 @@ const ReservationDetail = () => {
     rooftopImages: [],
     rooftopReviews: [],
     rooftopOptions: [],
+    rooftopReviews: [],
     structureImage: null,
     totalCount: 0,
     totalPrice: 0,
@@ -89,6 +90,7 @@ const ReservationDetail = () => {
     refundContent,
     totalPrice,
     rooftopOptions,
+    rooftopReviews,
     bookedDate,
     ownerId,
   } = rooftopData
@@ -257,6 +259,18 @@ const ReservationDetail = () => {
             <img src={structureImage.fileUrl} alt="Img" key={structureImage.uploadFilename} />
           )}
         </InformationBox>
+        {rooftopReviews.length > 0 && (
+          <InformationBox>
+            <h5>시설 리뷰</h5>
+            {rooftopReviews.map(({ content, createTime, grade }) => (
+              <ReviewBox>
+                <FontAwesomeIcon icon={faStar} />
+                <span>{`${grade} / 5.0`}</span>
+                <pre>{content}</pre>
+              </ReviewBox>
+            ))}
+          </InformationBox>
+        )}
       </ReservationInfoBox>
       <PaymentInfoBox>
         <PaymentOptionBox>
@@ -526,6 +540,41 @@ const InformationBox = styled.div`
         height: 40vh;
         object-fit: cover;
         margin: ${margins.lg} auto 0vw auto;
+      }
+    `
+  }}
+`
+
+const ReviewBox = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.sm} 0vw;
+      margin: ${margins.sm} 0vw;
+
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      h5 {
+        width: 100%;
+        padding-bottom: ${paddings.xsm};
+        border-bottom: 1px solid ${colors.main.primary}55;
+
+        color: ${colors.main.secondary};
+        font-size: ${fonts.size.base};
+      }
+
+      svg {
+        margin: auto 0vw;
+        color: ${colors.main.primary};
+      }
+
+      pre {
+        padding: ${paddings.base} 0vw;
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
       }
     `
   }}
