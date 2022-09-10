@@ -50,12 +50,20 @@ const Payment = () => {
   } = paymentInfo
 
   const { name, phoneNumber } = customerInfo
-  const { address, width, grade, limitTime, limitCount, bookedDate, rooftopOptions } =
-    location.state
+  const {
+    address,
+    width,
+    grade,
+    limitTime,
+    limitCount,
+    bookedDate,
+    rooftopOptions,
+    reservationData,
+  } = location.state
 
   useEffect(() => {
-    console.log(location)
-    setPaymentInfo(prevInfo => ({ ...prevInfo, ...location.state.reservationData }))
+    console.log(location.state)
+    setPaymentInfo(prevInfo => ({ ...prevInfo, ...reservationData }))
   }, [])
 
   const totalUseDay = moment(selectedDate[1]).diff(moment(selectedDate[0]), "days") + 1

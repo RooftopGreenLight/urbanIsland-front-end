@@ -1,22 +1,25 @@
 import styled, { css } from "styled-components"
 import { useContext } from "react"
+import { useRecoilValue } from "recoil"
 
 import ChatModal from "components/main/Chat/ChatModal"
 
 import { ModalContext } from "module/Modal"
+import { AuthCheckMemberId } from "module/Auth"
 
-const ChatRoomInfo = ({ chatRoomElm, currentMemberId }) => {
+const ChatRoomInfo = ({ chatRoomElm }) => {
   const { openModal } = useContext(ModalContext)
-  const { content, memberId, roomId, sendTime } = chatRoomElm
+  const { content, memberId: senderId, roomId, sendTime } = chatRoomElm
+  const memberId = useRecoilValue(AuthCheckMemberId)
 
   const enterChatRoom = async () => {
-    openModal(<ChatModal roomId={roomId} memberId={currentMemberId} />)
+    openModal(<ChatModal roomId={roomId} />)
   }
 
   return (
     <Wrapper onClick={enterChatRoom}>
       <ChatInfoTitle>
-        <h5>{memberId === currentMemberId ? "문의 내용" : "문의 응답"}</h5>
+        <h5>{senderId === memberId ? "문의 내용" : "문의 응답"}</h5>
         <span>{`${sendTime[0]}.${sendTime[1]}.${sendTime[2]} ${sendTime[3]}:${sendTime[4]}`}</span>
       </ChatInfoTitle>
       <p>{content}</p>

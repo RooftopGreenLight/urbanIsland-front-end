@@ -11,6 +11,7 @@ import Signup from "components/main/Signup/Signup"
 import SocialAuthConfirm from "components/main/Auth/SocialAuthConfirm"
 import { ReservationContainer } from "pages/Container/ReservationContainer"
 import { PaymentContainer } from "pages/Container/PaymentContainer"
+import NotFound from "components/common/Modal/NotFound"
 
 // 오직 로그인이 되었을때만 접근이 가능하도록 하는 Route
 const PrivateRoute = ({ isLogin }) => {
@@ -41,6 +42,7 @@ const MainPage = () => {
         <Route path="/reservation/*" element={<ReservationContainer />} />
         <Route path="/payment/*" element={<PaymentContainer />} />
       </Route>
+      <Route path="/*" element={<NotFound />} />
     </Routes>
   )
 }

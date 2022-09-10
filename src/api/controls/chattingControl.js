@@ -17,16 +17,49 @@ export const chattingControl = {
       throw new Error(errorMessage)
     }
   },
+  getCheckChatExist: async (reservationId, ownerId) => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/chat/inquiry/reservation/${reservationId}`,
+        params: {
+          ownerId,
+        },
+      })
+      console.log(response)
+      const roomId = response.data
+      return roomId
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
 
-  getChatRoomList: async memberId => {
+  getCheckRequestChatExist: async (rooftopId, ownerId) => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/chat/inquiry/reservation/${rooftopId}`,
+        params: {
+          ownerId,
+        },
+      })
+      console.log(response)
+      const roomId = response.data
+      return roomId
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
+
+  getChatRoomList: async () => {
     try {
       const response = await axiosInstance({
         method: "GET",
         url: "/chat/inquiry/response",
-        param: {
-          memberId,
-        },
       })
+      console.log(response)
       // 만약 사용자가 소속된 방이 없다면, 빈 배열 리턴
       if (!response.data) {
         return []

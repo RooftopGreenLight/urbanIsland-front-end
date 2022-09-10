@@ -4,6 +4,7 @@ import moment from "moment"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
+  faAngleRight,
   faBook,
   faBuilding,
   faCalendar,
@@ -17,7 +18,10 @@ import { CalenderContainer } from "styles/calender"
 
 import { ModalContext } from "module/Modal"
 import { reservationControl } from "api/controls/reservationControl"
+import { chattingControl } from "api/controls/chattingControl"
+
 import DateUtil from "util/DateUtil"
+import ChatModal from "components/main/Chat/ChatModal"
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
 
 const Schedule = () => {
@@ -56,9 +60,37 @@ const Schedule = () => {
     getReservationInfo()
   }, [selectedDate])
 
+  const getChatroom = async () => {
+    console.log(reservationInfo)
+    const { reservationId, ownerId } = reservationInfo
+    const roomId = await chattingControl.getCheckChatExist(reservationId, ownerId)
+    if (roomId) {
+      openModal(<ChatModal roomId={roomId} />)
+    }
+  }
+
   return (
     <Wrapper>
       <ViewPoint>
+        <InnerBox>
+          <Title>
+            <h5>내 예약 관리하기</h5>
+          </Title>
+          <ServiceBox onClick={() => openModal(<ChatRoomPage />)}>
+            <div className="introduce">
+              <h5>문의 내역 확인하기</h5>
+              <p>옥상 시설 별 문의 및 채팅 내역을 확인합니다.</p>
+            </div>
+            <FontAwesomeIcon icon={faAngleRight} />
+          </ServiceBox>
+          <ServiceBox>
+            <div className="introduce">
+              <h5>이용 후기 작성하기</h5>
+              <p>최근 이용한 옥상 시설의 후기를 작성합니다.</p>
+            </div>
+            <FontAwesomeIcon icon={faAngleRight} />
+          </ServiceBox>
+        </InnerBox>
         <CalenderBox>
           <Title>
             <h5>내 예약 일정</h5>
@@ -118,6 +150,9 @@ const Schedule = () => {
                     : `어른 ${reservationInfo.adultCount}명`}
                 </span>
               </ScheduleDetail>
+              <SendMessageBtn onClick={getChatroom}>
+                <FontAwesomeIcon icon={faComments} /> 채팅 목록 열기
+              </SendMessageBtn>
             </>
           ) : (
             <NoticeEmptyIcon>
@@ -127,9 +162,6 @@ const Schedule = () => {
             </NoticeEmptyIcon>
           )}
         </InnerBox>
-        <SendMessageBtn onClick={() => openModal(<ChatRoomPage />)}>
-          <FontAwesomeIcon icon={faComments} /> 채팅 목록 열기
-        </SendMessageBtn>
       </ViewPoint>
     </Wrapper>
   )
@@ -146,7 +178,6 @@ const Wrapper = styled.div`
 
 const ViewPoint = styled.div`
   max-height: 80vh;
-  padding: 0rem 1rem;
   overflow: auto;
 
   ::-webkit-scrollbar {
@@ -200,6 +231,35 @@ const InnerBox = styled.div`
     `
   }}
 `
+
+const ServiceBox = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      display: flex;
+      justify-content: space-between;
+      padding: ${paddings.base};
+      border-bottom: 1px solid ${colors.main.primary}55;
+
+      p {
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        margin-bottom: 0.25rem;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
+      }
+
+      svg {
+        margin: auto 0vw;
+        color: ${colors.main.primary};
+      }
+    `
+  }}
+`
+
 const ScheduleDetail = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
