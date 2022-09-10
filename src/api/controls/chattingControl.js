@@ -26,7 +26,6 @@ export const chattingControl = {
           ownerId,
         },
       })
-      console.log(response)
       const roomId = response.data
       return roomId
     } catch (err) {

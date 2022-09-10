@@ -2,10 +2,9 @@ import { useContext, useEffect, useState } from "react"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faXmark } from "@fortawesome/free-solid-svg-icons"
+import { faCommentDots, faXmark } from "@fortawesome/free-solid-svg-icons"
 
 import ChatRoomInfo from "components/main/Chat/ChatRoomInfo"
-import NoticeEmptyChatRoom from "components/main/Chat/NoticeEmpty/NoticeEmptyChatRoom"
 
 import { ModalContext } from "module/Modal"
 import { chattingControl } from "api/controls/chattingControl"
@@ -40,7 +39,11 @@ const ChatRoomPage = () => {
             }
           })
         ) : (
-          <NoticeEmptyChatRoom />
+          <NoticeEmptyIcon>
+            <FontAwesomeIcon icon={faCommentDots} />
+            <h5>개설된 채팅방 없음</h5>
+            <p>새로운 채팅방을 개설하시면 목록이 나옵니다.</p>
+          </NoticeEmptyIcon>
         )}
       </ChatRoomList>
     </Wrapper>
@@ -98,6 +101,42 @@ const ChatRoomList = styled.div`
       display: flex;
       justify-content: ${isEmpty ? "center" : "flex-start"};
       flex-direction: column;
+    `
+  }}
+`
+
+const NoticeEmptyIcon = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      margin: ${margins.base} auto;
+
+      color: ${colors.main.primary};
+      text-align: center;
+
+      h5 {
+        font-size: ${fonts.size.base};
+        margin-bottom: ${margins.sm};
+      }
+
+      p {
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
+
+      svg {
+        width: 2.5vw;
+        height: 2.5vw;
+
+        margin-bottom: ${margins.base};
+        padding: ${paddings.lg};
+
+        background-color: ${colors.main.secondary};
+        border-radius: 20vw;
+
+        color: ${colors.white};
+      }
     `
   }}
 `
