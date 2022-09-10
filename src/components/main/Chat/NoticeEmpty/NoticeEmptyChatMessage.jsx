@@ -14,9 +14,10 @@ const NoticeEmptyChatMessage = () => {
 
 const Wrapper = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins } = theme
+    const { colors, fonts, paddings, margins } = theme
     return css`
       width: 75%;
+      padding: ${paddings.xl} 0vw;
 
       margin: auto;
       text-align: center;
@@ -25,7 +26,7 @@ const Wrapper = styled.div`
 
       h5 {
         font-size: ${fonts.size.xl};
-        margin-bottom: ${margins.sm};
+        margin-bottom: ${margins.xsm};
       }
 
       p {
@@ -37,16 +38,16 @@ const Wrapper = styled.div`
 
 const EmptyIcon = styled(FontAwesomeIcon)`
   ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
+    const { colors, margins, paddings } = theme
     return css`
-      width: 10%;
-      height: 10%;
+      width: 12.5%;
+      height: 12.5%;
 
-      margin-bottom: ${margins.lg};
+      margin-bottom: ${margins.base};
       padding: ${paddings.lg};
 
       background-color: ${colors.main.primary};
-      border-radius: 20vw;
+      border-radius: 15vw;
 
       color: ${colors.white};
     `

@@ -40,7 +40,6 @@ const ChatModal = ({ roomId }) => {
       onStompError: function (frame) {
         console.log("Broker reported error: " + frame.headers["message"])
         console.log("Additional details: " + frame.body)
-        // setTimeout(() => closeModal(), 500)
       },
 
       onWebSocketError: function (frame) {
@@ -119,7 +118,7 @@ const ChatModal = ({ roomId }) => {
         <ChatSend>
           <input
             type="text"
-            placeholder="Enter your Message"
+            placeholder="메세지를 입력해주세요..."
             value={content}
             onChange={e => setContent(e.target.value)}
           />
@@ -191,6 +190,7 @@ const ModalContent = styled.main`
 
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
     `
   }}
 `
@@ -244,18 +244,12 @@ const ChatMessage = styled.div`
 
 const ChatSend = styled.div`
   ${({ theme }) => {
-    const { margins } = theme
+    const { colors, margins } = theme
     return css`
       width: 100%;
 
-      position: absolute;
-      left: 0;
-      bottom: 0;
-
       display: flex;
       justify-content: space-between;
-
-      border-top: 1px solid #232323;
 
       input {
         width: 75%;
@@ -263,10 +257,10 @@ const ChatSend = styled.div`
 
         background-color: transparent;
         border: 0;
-        border-bottom: 1px solid #232323;
+        border-bottom: 1px solid ${colors.main.primary};
 
         &::placeholder {
-          color: #3e3e3e;
+          color: ${colors.main.primary};
           text-align: left;
           font-weight: 100;
         }
@@ -287,11 +281,15 @@ const ChatSendBtn = styled(FontAwesomeIcon)`
       padding: ${paddings.sm};
       margin: ${margins.base} auto;
 
-      background-color: #000000;
+      background-color: ${colors.main.primary};
       border-radius: 25px;
       text-align: center;
       color: ${colors.white};
       font-size: ${fonts.size.xsm};
+
+      &:hover {
+        background-color: ${colors.main.tertiary};
+      }
     `
   }}
 `
