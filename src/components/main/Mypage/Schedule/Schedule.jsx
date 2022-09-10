@@ -23,6 +23,7 @@ import { chattingControl } from "api/controls/chattingControl"
 import DateUtil from "util/DateUtil"
 import ChatModal from "components/main/Chat/ChatModal"
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
+import ShowMyReservationModal from "./Modal/ShowMyReservationModal"
 
 const Schedule = () => {
   const [selectedDate, setSeletedDate] = useState(new Date())
@@ -83,7 +84,7 @@ const Schedule = () => {
             </div>
             <FontAwesomeIcon icon={faAngleRight} />
           </ServiceBox>
-          <ServiceBox>
+          <ServiceBox onClick={() => openModal(<ShowMyReservationModal />)}>
             <div className="introduce">
               <h5>이용 후기 작성하기</h5>
               <p>최근 이용한 옥상 시설의 후기를 작성합니다.</p>
