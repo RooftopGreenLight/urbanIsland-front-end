@@ -11,7 +11,7 @@ export const ReservationContainer = () => {
       <Routes>
         <Route path="" element={<Reservation />} />
         <Route path="not_exist" element={<NotFound />} />
-        <Route path=":id" element={<ReservationDetail />} />
+        <Route path=":rooftopId" element={<ReservationDetail />} />
       </Routes>
     </BaseTemplate>
   )

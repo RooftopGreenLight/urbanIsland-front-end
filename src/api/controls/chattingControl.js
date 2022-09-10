@@ -35,6 +35,24 @@ export const chattingControl = {
     }
   },
 
+  getCheckRequestChatExist: async (rooftopId, ownerId) => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/chat/inquiry/reservation/${rooftopId}`,
+        params: {
+          ownerId,
+        },
+      })
+      console.log(response)
+      const roomId = response.data
+      return roomId
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
+
   getChatRoomList: async () => {
     try {
       const response = await axiosInstance({

@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react"
+import { useContext, useState } from "react"
 import styled, { css } from "styled-components"
 import moment from "moment"
 
@@ -66,8 +66,6 @@ const ReservationModal = ({
       optionCount: [...Array(rooftopOptions.length).fill(0)],
     }))
   }
-
-  console.log(bookedDate)
 
   return (
     <Wrapper>
@@ -312,7 +310,7 @@ const ModalContent = styled.main`
 
 const OptionBox = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { colors, fonts, margins } = theme
     return css`
       width: 90%;
       margin: ${margins.base} 0vw;

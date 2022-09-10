@@ -8,23 +8,33 @@ import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faStar, faUser, faMap, faShare, faCircleCheck } from "@fortawesome/free-solid-svg-icons"
+import {
+  faStar,
+  faUser,
+  faMap,
+  faShare,
+  faCircleCheck,
+  faComment,
+} from "@fortawesome/free-solid-svg-icons"
 
 import { useContext } from "react"
 import { ModalContext } from "module/Modal"
 import DateUtil from "util/DateUtil"
 
 import { roofTopControl } from "api/controls/roofTopControl"
+import { chattingControl } from "api/controls/chattingControl"
+
 import { RoofTopFacilities } from "constants/RoofTopFacilities"
 import ReservationModal from "./Modals/ReservationModal"
 
 const ReservationDetail = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { id } = useParams()
+  const { rooftopId } = useParams()
 
   const { openModal } = useContext(ModalContext)
   const [rooftopData, setRooftopData] = useState({
+    ownerId: null,
     adultCount: 1,
     kidCount: 0,
     petCount: 0,
@@ -79,6 +89,7 @@ const ReservationDetail = () => {
     totalPrice,
     rooftopOptions,
     bookedDate,
+    ownerId,
   } = rooftopData
 
   const { selectedDate, selectedTime, optionContent, optionPrice, optionCount } = reservationData
@@ -87,8 +98,8 @@ const ReservationDetail = () => {
   useEffect(() => {
     const loadRooftopData = async () => {
       try {
-        const result = await roofTopControl.getRooftopDetail(id)
-        const { startTime, endTime, rooftopOptions, reservations } = result
+        const result = await roofTopControl.getRooftopDetail(rooftopId)
+        const { startTime, endTime, rooftopOptions, reservations, totalPrice } = result
 
         // 이미 예약된 일자인 bookedDate를 Set에 하나씩 저장하는 과정.
         let bookedDate = new Set()
@@ -115,6 +126,7 @@ const ReservationDetail = () => {
         }
         setReservationData(prevData => ({
           ...prevData,
+          totalPrice: totalPrice,
           selectedTime: [
             Math.max(startTime[0], prevData.selectedTime[0]),
             Math.min(endTime[0], prevData.selectedTime[1]),
@@ -132,6 +144,16 @@ const ReservationDetail = () => {
   const copyUrl = () => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(window.location.href)
+    }
+  }
+
+  const sendRequestMessage = async () => {
+    try {
+      console.log(ownerId)
+      const { roomId } = await chattingControl.getCheckRequestChatExist(rooftopId, ownerId)
+      console.log(roomId)
+    } catch (err) {
+      console.error(err.message)
     }
   }
 
@@ -172,9 +194,14 @@ const ReservationDetail = () => {
               </span>
             </DetailInfo>
           </div>
-          <CopyBtn onClick={copyUrl}>
-            <FontAwesomeIcon icon={faShare} /> 공유하기
-          </CopyBtn>
+          <div className="btn-list">
+            <CopyBtn onClick={sendRequestMessage}>
+              <FontAwesomeIcon icon={faComment} /> 문의하기
+            </CopyBtn>
+            <CopyBtn onClick={copyUrl}>
+              <FontAwesomeIcon icon={faShare} /> 공유하기
+            </CopyBtn>
+          </div>
         </RooftopDetail>
       </RooftopInfoBox>
       <ReservationInfoBox>
@@ -297,7 +324,7 @@ const ReservationDetail = () => {
           </div>
           <ReservationBtn
             onClick={() =>
-              navigate(`/payment/${id}`, {
+              navigate(`/payment/${rooftopId}`, {
                 state: {
                   reservationData: { ...reservationData },
                   limitTime: { startTime, endTime },
@@ -379,6 +406,12 @@ const RooftopDetail = styled.div`
       .detail-list {
         width: 32.5vw;
 
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .btn-list {
+        width: 14.5vw;
         display: flex;
         justify-content: space-between;
       }
