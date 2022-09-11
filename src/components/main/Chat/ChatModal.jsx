@@ -27,9 +27,10 @@ const ChatModal = ({ roomId }) => {
   useEffect(() => {
     const loadChattingLog = async () => {
       try {
-        const loadedChatList = await chattingControl.getPreChattingLog(roomId)
-        console.log(loadedChatList)
-        setChatMessages([...chatMessages, ...loadedChatList])
+        const { city, district, detail, messageResponses } =
+          await chattingControl.getPreChattingLog(roomId)
+        const address = `${city} ${district} ${detail}`
+        setChatMessages([...chatMessages, ...messageResponses])
       } catch (err) {
         console.error(err.message)
       }
@@ -116,7 +117,7 @@ const ChatModal = ({ roomId }) => {
   return (
     <Wrapper>
       <ModalHeader>
-        <h5>테스트 채팅방</h5>
+        <h5>옥상지기 문의 채팅</h5>
         <ModalCloseBtn icon={faXmark} onClick={goBackToChatRoomPage} />
       </ModalHeader>
       <ModalContent>

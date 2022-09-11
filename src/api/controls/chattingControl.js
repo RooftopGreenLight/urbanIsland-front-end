@@ -39,9 +39,7 @@ export const chattingControl = {
         method: "GET",
         url: `/chat/inquiry/room/${roomId}`,
       })
-      console.log(response)
-      const { city, district, detail, messageResponses } = response.data
-      return messageResponses
+      return response.data
     } catch (err) {
       const errorMessage = err.response.data.message
       throw new Error(errorMessage)
