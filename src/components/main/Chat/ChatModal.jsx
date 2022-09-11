@@ -12,6 +12,7 @@ import NoticeEmptyChatMessage from "components/main/Chat/NoticeEmpty/NoticeEmpty
 import { ModalContext } from "module/Modal"
 import { AuthCheckMemberId } from "module/Auth"
 import { modalShow } from "styles/Animation"
+import { chattingControl } from "api/controls/chattingControl"
 
 const ChatModal = ({ roomId }) => {
   const { openModal } = useContext(ModalContext)
@@ -24,6 +25,16 @@ const ChatModal = ({ roomId }) => {
   const jwtHeader = { Authorization: `Bearer ${accessToken}` }
 
   useEffect(() => {
+    const loadChattingLog = async () => {
+      try {
+        const loadedChatList = await chattingControl.getPreChattingLog(roomId)
+        console.log(loadedChatList)
+        setChatMessages([...chatMessages, ...loadedChatList])
+      } catch (err) {
+        console.error(err.message)
+      }
+    }
+    loadChattingLog()
     connect()
     return () => disconnect()
   }, [])
@@ -91,6 +102,12 @@ const ChatModal = ({ roomId }) => {
     setContent("")
   }
 
+  const sendMessage = e => {
+    if (e.keyCode == 13) {
+      publish()
+    }
+  }
+
   const goBackToChatRoomPage = () => {
     disconnect()
     openModal(<ChatRoomPage />)
@@ -103,24 +120,29 @@ const ChatModal = ({ roomId }) => {
         <ModalCloseBtn icon={faXmark} onClick={goBackToChatRoomPage} />
       </ModalHeader>
       <ModalContent>
-        {chatMessages.length > 0 ? (
-          <ChatMessageList>
-            {chatMessages.slice(-10).map(({ memberId, content, sendTime }, idx) => (
-              <ChatMessage key={idx} memberId={memberId}>
-                <p>{content}</p>
-                <span>{`${sendTime[0]}.${sendTime[1]}.${sendTime[2]} ${sendTime[3]}:${sendTime[4]}`}</span>
-              </ChatMessage>
-            ))}
-          </ChatMessageList>
-        ) : (
-          <NoticeEmptyChatMessage />
-        )}
+        <ViewPoint>
+          {chatMessages.length > 0 ? (
+            <ChatMessageList>
+              {chatMessages.slice(-10).map(({ memberId: senderId, content, sendTime }, idx) => {
+                return (
+                  <ChatMessage key={idx} isMyMessage={memberId === senderId}>
+                    <p>{content}</p>
+                    <span>{`${sendTime[0]}.${sendTime[1]}.${sendTime[2]} ${sendTime[3]}:${sendTime[4]}`}</span>
+                  </ChatMessage>
+                )
+              })}
+            </ChatMessageList>
+          ) : (
+            <NoticeEmptyChatMessage />
+          )}
+        </ViewPoint>
         <ChatSend>
           <input
             type="text"
             placeholder="메세지를 입력해주세요..."
             value={content}
             onChange={e => setContent(e.target.value)}
+            onKeyUp={sendMessage}
           />
           <ChatSendBtn icon={faPaperPlane} onClick={publish} />
         </ChatSend>
@@ -133,7 +155,7 @@ const Wrapper = styled.section`
   ${({ theme }) => {
     const { colors } = theme
     return css`
-      width: 30%;
+      width: 33vw;
       margin: auto;
 
       border-radius: 0.3rem;
@@ -144,6 +166,21 @@ const Wrapper = styled.section`
       overflow: hidden;
     `
   }}
+`
+
+const ViewPoint = styled.div`
+  width: 33vw;
+  max-height: 50vh;
+  padding: 0rem 1rem;
+  overflow: auto;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const ModalHeader = styled.div`
@@ -184,6 +221,7 @@ const ModalContent = styled.main`
   ${({ theme }) => {
     const { colors, paddings } = theme
     return css`
+      width: 100%;
       padding: ${paddings.sm};
       border-top: 1px solid #dee2e6;
       background-color: ${colors.white};
@@ -199,14 +237,14 @@ const ChatMessageList = styled.div`
   ${({ theme }) => {
     const { paddings } = theme
     return css`
-      height: 80%;
+      width: 100%;
 
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
 
       p {
-        width: 70%;
+        width: 80%;
         padding: ${paddings.sm};
 
         background-color: #d6d6d6;
@@ -216,11 +254,12 @@ const ChatMessageList = styled.div`
 `
 
 const ChatMessage = styled.div`
-  ${({ theme }) => {
-    const { paddings } = theme
+  ${({ theme, isMyMessage }) => {
+    const { colors, paddings, margins } = theme
     return css`
-      width: 60%;
+      width: 40%;
       padding: ${paddings.sm};
+      margin-left: ${isMyMessage ? "auto" : "0vw"};
 
       display: flex;
       flex-direction: column;
@@ -230,10 +269,11 @@ const ChatMessage = styled.div`
         padding: ${paddings.base};
 
         border-radius: 0.5vw;
-        background-color: #d6d6d6;
+        background-color: ${colors.main.secondary}33;
       }
 
       span {
+        margin-top: ${margins.xsm};
         text-align: right;
         font-size: 0.8rem;
         font-weight: 100;
@@ -247,6 +287,7 @@ const ChatSend = styled.div`
     const { colors, margins } = theme
     return css`
       width: 100%;
+      margin-top: ${margins.sm};
 
       display: flex;
       justify-content: space-between;
