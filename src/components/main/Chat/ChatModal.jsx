@@ -95,7 +95,7 @@ const ChatModal = ({ roomId }) => {
     }
 
     client.current.publish({
-      destination: `/app/inquiry/room/${roomId}`,
+      destination: `/app/inquiry/room`,
       body: JSON.stringify({ roomId, content, memberId }),
       headers: jwtHeader,
     })
