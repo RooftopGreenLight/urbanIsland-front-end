@@ -259,7 +259,7 @@ const ReservationDetail = () => {
             <img src={structureImage.fileUrl} alt="Img" key={structureImage.uploadFilename} />
           )}
         </InformationBox>
-        {rooftopReviews.length > 0 && (
+        {rooftopReviews && rooftopReviews.length > 0 && (
           <InformationBox>
             <h5>시설 리뷰</h5>
             {rooftopReviews.map(({ content, createTime, grade }) => (
