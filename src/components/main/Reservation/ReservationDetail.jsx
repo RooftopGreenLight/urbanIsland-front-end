@@ -264,13 +264,13 @@ const ReservationDetail = () => {
             <h5>시설 리뷰</h5>
             {rooftopReviews.map(({ content, createTime, grade }) => (
               <ReviewBox key={content}>
-                <p>
-                  <FontAwesomeIcon icon={faStar} /> {`${grade} / 5.0`}
-                </p>
-                <p>{`${createTime[0]}.${createTime[1]}.${createTime[2]} ${DateUtil.getTimeFormat(
-                  createTime.slice(3, -1),
-                )}`}</p>
-                <pre>{content}</pre>
+                <div className="content">
+                  <p className="grade">
+                    <FontAwesomeIcon icon={faStar} /> {`${parseInt(grade).toFixed(1)} / 5.0`}
+                  </p>
+                  <pre> {content}</pre>
+                </div>
+                <p>{`${createTime[0]}년 ${createTime[1]}월 ${createTime[2]}일`}</p>
               </ReviewBox>
             ))}
           </InformationBox>
@@ -561,28 +561,26 @@ const ReviewBox = styled.div`
       flex-wrap: wrap;
       justify-content: space-between;
 
-      h5 {
-        width: 100%;
-        padding-bottom: ${paddings.xsm};
-        border-bottom: 1px solid ${colors.main.primary}55;
-
-        color: ${colors.main.secondary};
-        font-size: ${fonts.size.base};
-      }
-
       svg {
         margin: auto ${margins.xsm} auto 0vw;
-        color: ${colors.main.primary};
+        color: ${colors.main.tertiary};
       }
 
-      p {
-        width: 30%;
+      .content {
+        display: flex;
+        width: 70%;
+      }
+
+      .grade {
+        margin-right: ${margins.sm};
+        color: ${colors.main.tertiary};
+        font-weight: bold;
       }
 
       pre {
         padding: 0vw;
         color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
+        font-weight: 200;
       }
     `
   }}
