@@ -259,14 +259,18 @@ const ReservationDetail = () => {
             <img src={structureImage.fileUrl} alt="Img" key={structureImage.uploadFilename} />
           )}
         </InformationBox>
-        {rooftopReviews.length > 0 && (
+        {rooftopReviews && rooftopReviews.length > 0 && (
           <InformationBox>
             <h5>시설 리뷰</h5>
             {rooftopReviews.map(({ content, createTime, grade }) => (
-              <ReviewBox>
-                <FontAwesomeIcon icon={faStar} />
-                <span>{`${grade} / 5.0`}</span>
-                <pre>{content}</pre>
+              <ReviewBox key={content}>
+                <div className="content">
+                  <p className="grade">
+                    <FontAwesomeIcon icon={faStar} /> {`${parseInt(grade).toFixed(1)} / 5.0`}
+                  </p>
+                  <pre> {content}</pre>
+                </div>
+                <p>{`${createTime[0]}년 ${createTime[1]}월 ${createTime[2]}일`}</p>
               </ReviewBox>
             ))}
           </InformationBox>
@@ -557,24 +561,26 @@ const ReviewBox = styled.div`
       flex-wrap: wrap;
       justify-content: space-between;
 
-      h5 {
-        width: 100%;
-        padding-bottom: ${paddings.xsm};
-        border-bottom: 1px solid ${colors.main.primary}55;
-
-        color: ${colors.main.secondary};
-        font-size: ${fonts.size.base};
+      svg {
+        margin: auto ${margins.xsm} auto 0vw;
+        color: ${colors.main.tertiary};
       }
 
-      svg {
-        margin: auto 0vw;
-        color: ${colors.main.primary};
+      .content {
+        display: flex;
+        width: 70%;
+      }
+
+      .grade {
+        margin-right: ${margins.sm};
+        color: ${colors.main.tertiary};
+        font-weight: bold;
       }
 
       pre {
-        padding: ${paddings.base} 0vw;
+        padding: 0vw;
         color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
+        font-weight: 200;
       }
     `
   }}

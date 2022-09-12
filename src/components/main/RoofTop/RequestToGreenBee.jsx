@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import styled, { css } from "styled-components"
 
@@ -19,6 +19,7 @@ import SetRequiredOptionModal from "components/main/RoofTop/RequestGreenBee/Moda
 const RequestToGreenBee = () => {
   const { openModal } = useContext(ModalContext)
   const navigate = useNavigate()
+  const feedbackMsg = useRef()
   const [requiredInfo, setRequiredInfo] = useState({
     rooftopType: "NG",
     width: 0,
@@ -49,9 +50,19 @@ const RequestToGreenBee = () => {
     optionPrice: [],
   })
 
-  console.log(requiredInfo)
-
-  const { explainContent } = requiredInfo
+  const {
+    city,
+    district,
+    detail,
+    adultCount,
+    explainContent,
+    normalFile,
+    structureFile,
+    width,
+    totalPrice,
+    widthPrice,
+    phoneNumber,
+  } = requiredInfo
 
   const changeInput = e => {
     const { name, value } = e.target
@@ -59,6 +70,41 @@ const RequestToGreenBee = () => {
   }
 
   const submitRequest = async () => {
+    if (!city || !district || !detail) {
+      feedbackMsg.current.innerText = "등록할 옥상 주소는 필히 설정해야 합니다."
+      return
+    }
+
+    if (phoneNumber === "") {
+      feedbackMsg.current.innerText = "소유주의 전화번호는 필히 기입해야 합니다."
+      return
+    }
+
+    if (adultCount === 0) {
+      feedbackMsg.current.innerText = "등록할 옥상의 이용 가능 인원을 설정해주세요."
+      return
+    }
+
+    if (normalFile.length < 1) {
+      feedbackMsg.current.innerText = "등록할 옥상의 이미지는 필히 올려야 합니다."
+      return
+    }
+
+    if (!structureFile) {
+      feedbackMsg.current.innerText = "등록할 옥상의 조경도는 필히 올려야 합니다."
+      return
+    }
+
+    if (width * totalPrice * widthPrice === 0) {
+      feedbackMsg.current.innerText = "옥상의 넓이와 시공 가격은 필히 기입해야 합니다."
+      return
+    }
+
+    if (totalPrice === 0) {
+      feedbackMsg.current.innerText = "옥상의 이용 가격은 필히 기입해야 합니다."
+      return
+    }
+
     const reqFormData = new FormData()
     for (const [option, value] of Object.entries(requiredInfo)) {
       // 배열의 경우 append를 통해 같은 옵션에 값을 추가해주어야 함
@@ -138,6 +184,7 @@ const RequestToGreenBee = () => {
           <ApplyDetailInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
           <ApplyExtraOption applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
         </ServiceList>
+        <FeedBackMsg ref={feedbackMsg} />
         <ConfirmBtn onClick={submitRequest}>제출하기</ConfirmBtn>
       </ViewPoint>
     </Wrapper>
@@ -268,13 +315,25 @@ const OpenModalBtn = styled.button`
   }}
 `
 
+const FeedBackMsg = styled.p`
+  ${({ theme }) => {
+    const { fonts, margins } = theme
+    return css`
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
+
+      margin: ${margins.sm} auto;
+    `
+  }}
+`
+
 const ConfirmBtn = styled.button`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
       width: 50%;
       padding: ${paddings.sm} ${paddings.base};
-      margin: ${margins.lg} auto;
+      margin: ${margins.sm} auto ${margins.lg} auto;
 
       cursor: pointer;
       border-radius: ${fonts.size.sm};
@@ -295,4 +354,5 @@ const ConfirmBtn = styled.button`
     `
   }}
 `
+
 export default RequestToGreenBee

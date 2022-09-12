@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState, useRef } from "react"
 import { useRecoilValue } from "recoil"
+import moment from "moment"
 import styled, { css } from "styled-components"
 import { Client } from "@stomp/stompjs"
 
@@ -13,6 +14,7 @@ import { ModalContext } from "module/Modal"
 import { AuthCheckMemberId } from "module/Auth"
 import { modalShow } from "styles/Animation"
 import { chattingControl } from "api/controls/chattingControl"
+import DateUtil from "util/DateUtil"
 
 const ChatModal = ({ roomId }) => {
   const { openModal } = useContext(ModalContext)
@@ -27,10 +29,10 @@ const ChatModal = ({ roomId }) => {
   useEffect(() => {
     const loadChattingLog = async () => {
       try {
-        const { city, district, detail, messageResponses } =
-          await chattingControl.getPreChattingLog(roomId)
-        const address = `${city} ${district} ${detail}`
-        setChatMessages([...chatMessages, ...messageResponses])
+        const { messageResponses } = await chattingControl.getPreChattingLog(roomId)
+        if (messageResponses.length > 0) {
+          setChatMessages([...chatMessages, ...messageResponses])
+        }
       } catch (err) {
         console.error(err.message)
       }
@@ -39,6 +41,23 @@ const ChatModal = ({ roomId }) => {
     connect()
     return () => disconnect()
   }, [])
+
+  const checkMessageDate = sendDate => {
+    const currentDate = moment()
+    const passedDay = currentDate.date() - sendDate.date()
+    console.log(sendDate, passedDay)
+    if (passedDay > 365) {
+      return `${parseInt(passedDay / 365)}년 전`
+    }
+    if (passedDay > 30) {
+      return `${parseInt(passedDay / 30)}달 전`
+    }
+    if (currentDate.date() !== sendDate.date()) {
+      return `${passedDay}일 전`
+    }
+    console.log(sendDate)
+    return moment(sendDate).format("HH:mm")
+  }
 
   const connect = () => {
     client.current = new Client({
@@ -104,7 +123,7 @@ const ChatModal = ({ roomId }) => {
   }
 
   const sendMessage = e => {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       publish()
     }
   }
@@ -125,10 +144,11 @@ const ChatModal = ({ roomId }) => {
           {chatMessages.length > 0 ? (
             <ChatMessageList>
               {chatMessages.slice(-10).map(({ memberId: senderId, content, sendTime }, idx) => {
+                let sendDate = moment(DateUtil.createDetailDate(sendTime)).add(9, "hours")
                 return (
                   <ChatMessage key={idx} isMyMessage={memberId === senderId}>
                     <p>{content}</p>
-                    <span>{`${sendTime[0]}.${sendTime[1]}.${sendTime[2]} ${sendTime[3]}:${sendTime[4]}`}</span>
+                    <span>{`${checkMessageDate(sendDate)}`}</span>
                   </ChatMessage>
                 )
               })}

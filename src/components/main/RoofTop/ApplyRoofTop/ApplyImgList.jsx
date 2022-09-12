@@ -39,8 +39,6 @@ const ApplyImgList = ({ applyInfo, changeInfo }) => {
     slidesToScroll: 1,
   }
 
-  console.log(imgBase64)
-
   return (
     <Wrapper>
       <div className="title">

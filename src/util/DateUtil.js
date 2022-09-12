@@ -11,6 +11,10 @@ const DateUtil = {
     const [year, month, day] = dateArray
     return new Date(year, month - 1, day)
   },
+  createDetailDate(dateArray) {
+    const [year, month, day, hour, minute, second] = dateArray
+    return new Date(year, month - 1, day, hour, minute, second)
+  },
   getDatesBetweenTwoDates(startDate, endDate) {
     const date = new Date(startDate.getTime())
     const betweenDates = []
