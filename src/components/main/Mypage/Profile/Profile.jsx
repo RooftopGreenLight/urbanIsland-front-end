@@ -84,7 +84,7 @@ const Profile = () => {
           <h5>서비스 등록하기</h5>
         </Title>
 
-        {authority === "ROLE_ALL" || "ROLE_GREENBEE" ? (
+        {["ROLE_ADMIN", "ROLE_ALL", "ROLE_GREENBEE"].includes(authority) ? (
           <ServiceBox>
             <div className="introduce">
               <h5>그린비 등록하기</h5>
@@ -93,17 +93,17 @@ const Profile = () => {
             <FontAwesomeIcon icon={faCircleCheck} />
           </ServiceBox>
         ) : (
-          <ServiceBox onClick={() => openModal(<ApplyModal />)}>
-            <Link to="/mypage/greenbee/register">
+          <Link to="/mypage/greenbee/register">
+            <ServiceBox>
               <div className="introduce">
                 <h5>그린비 등록하기</h5>
                 <p>"조경이 가능한 건축사무소를 운영중이신가요?</p>
               </div>
               <FontAwesomeIcon icon={faAngleRight} />
-            </Link>
-          </ServiceBox>
+            </ServiceBox>
+          </Link>
         )}
-        {authority === "ROLE_ALL" || "ROLE_ROOFTOPOWNER" ? (
+        {["ROLE_ADMIN", "ROLE_ALL", "ROLE_ROOFTOPOWNER"].includes(authority) ? (
           <ServiceBox>
             <div className="introduce">
               <h5>옥상지기 등록하기</h5>
