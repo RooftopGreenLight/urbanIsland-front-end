@@ -24,19 +24,19 @@ const GreenbeeInfoEdit = () => {
   useEffect(() => {
     const loadCurrentInfo = async () => {
       const { content, officeNumber, greenBeeImages } = await greenbeeControl.getGreenbeeInfo()
+      console.log(greenBeeImages)
       setCurrentInfo({
         ...currentInfo,
         content,
         officeNumber,
-        greenBeeImages: greenBeeImages.filter(
-          ({ greenBeeImageType }) => greenBeeImageType === "NORMAL",
-        ),
+        greenBeeImages,
       })
     }
     loadCurrentInfo()
   }, [])
 
   const { content, greenBeeImages, officeNumber, deleteImages, addImages } = currentInfo
+  const totalImgAmount = greenBeeImages.length + addImagesBase64.length
 
   // Blob 데이터를 추출하여 이미지를 띄우는 함수.
   const addGreenbeeImage = e => {
@@ -115,7 +115,7 @@ const GreenbeeInfoEdit = () => {
     lazyLoad: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: totalImgAmount > 2 ? 3 : totalImgAmount,
     slidesToScroll: 1,
   }
 
@@ -146,7 +146,7 @@ const GreenbeeInfoEdit = () => {
           <Slider {...SlickSettings}>
             {greenBeeImages &&
               greenBeeImages.map(({ fileUrl }, idx) => (
-                <div>
+                <div key={fileUrl}>
                   <img
                     src={fileUrl}
                     alt="Img"
@@ -158,7 +158,7 @@ const GreenbeeInfoEdit = () => {
               ))}
             {addImagesBase64 &&
               addImagesBase64.map((base64, idx) => (
-                <div>
+                <div key={base64}>
                   <img
                     src={base64}
                     alt="Img"
@@ -175,10 +175,10 @@ const GreenbeeInfoEdit = () => {
             <FileUploadBtn>
               <FontAwesomeIcon icon={faImage} /> 사진 업로드
             </FileUploadBtn>
-            <ModifyBtn onClick={confirmSaveInfo}>
-              <FontAwesomeIcon icon={faEdit} /> 정보 수정하기
-            </ModifyBtn>
           </label>
+          <ModifyBtn onClick={confirmSaveInfo}>
+            <FontAwesomeIcon icon={faEdit} /> 정보 수정하기
+          </ModifyBtn>
           <input
             id="imgList"
             type="file"
@@ -257,6 +257,7 @@ const GreenbeeInfoLine = styled.div`
 
         border: 0;
         border-bottom: 1px solid ${colors.main.secondary}44;
+        background-color: ${colors.main.tertiary}11;
         color: ${colors.black.secondary};
         font-size: ${fonts.size.sm};
       }
@@ -284,7 +285,7 @@ const FileUploadBtn = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 47.5%;
+      width: 80%;
       padding: ${paddings.sm} ${paddings.base};
       margin: ${margins.base} auto;
 
@@ -312,8 +313,7 @@ const BtnList = styled.div`
   display: flex;
 
   label {
-    width: 90%;
-    margin: auto;
+    width: 50%;
 
     display: flex;
     justify-content: space-between;
@@ -328,7 +328,7 @@ const ModifyBtn = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 47.5%;
+      width: 40%;
       padding: ${paddings.sm} ${paddings.base};
       margin: ${margins.base} auto;
 
