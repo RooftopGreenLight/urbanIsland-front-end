@@ -28,7 +28,7 @@ const AdminGreenedRooftopModal = ({ id, phoneNum, photo, ment, approve, disappro
         <p>세부사항 : 옥상지기측 멘트</p>
         <div>{ment}</div>
         <p>조성/식생 상세도</p>
-        <img src={photo} />
+        {photo && <img src={photo} />}
         <button onClick={onClickOk}>승인</button>
         <button onClick={onClickNo}>거절</button>
       </ModalContent>
