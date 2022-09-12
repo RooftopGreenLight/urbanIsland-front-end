@@ -31,7 +31,6 @@ const ChatModal = ({ roomId }) => {
         const { city, district, detail, messageResponses } =
           await chattingControl.getPreChattingLog(roomId)
         const address = `${city} ${district} ${detail}`
-        console.log(messageResponses)
         if (messageResponses.length > 0) {
           setChatMessages([...chatMessages, ...messageResponses])
         }
