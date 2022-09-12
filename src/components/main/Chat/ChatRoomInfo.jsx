@@ -9,7 +9,7 @@ import { AuthCheckMemberId } from "module/Auth"
 
 const ChatRoomInfo = ({ chatRoomElm }) => {
   const { openModal } = useContext(ModalContext)
-  const { content, memberId: senderId, roomId, sendTime } = chatRoomElm
+  const { content, memberId: senderId, roomId, rooftopId, sendTime } = chatRoomElm
   const memberId = useRecoilValue(AuthCheckMemberId)
 
   const enterChatRoom = async () => {
@@ -29,14 +29,12 @@ const ChatRoomInfo = ({ chatRoomElm }) => {
 
 const Wrapper = styled.div`
   ${({ theme }) => {
-    const { margins, paddings } = theme
+    const { colors, margins, paddings } = theme
     return css`
-      padding: ${paddings.lg} ${paddings.base};
+      padding: ${paddings.base};
       margin-bottom: ${margins.base};
 
-      background-color: #d6d5d5;
-      border-radius: 1vw;
-
+      background-color: ${colors.main.secondary}11;
       cursor: pointer;
 
       p {

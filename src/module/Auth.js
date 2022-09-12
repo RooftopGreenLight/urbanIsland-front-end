@@ -7,7 +7,7 @@ export const AuthState = atom({
   default: {
     token: access_token,
     authenticated: access_token ? true : false,
-    memberId: localStorage.getItem("memberId"),
+    memberId: JSON.parse(localStorage.getItem("memberId")),
     memberRole: localStorage.getItem("memberRole"),
   },
 })

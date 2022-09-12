@@ -26,7 +26,6 @@ export const chattingControl = {
           ownerId,
         },
       })
-      console.log(response)
       const roomId = response.data
       return roomId
     } catch (err) {
@@ -34,7 +33,18 @@ export const chattingControl = {
       throw new Error(errorMessage)
     }
   },
-
+  getPreChattingLog: async roomId => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/chat/inquiry/room/${roomId}`,
+      })
+      return response.data
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
   getCheckRequestChatExist: async (rooftopId, ownerId) => {
     try {
       const response = await axiosInstance({
@@ -52,7 +62,6 @@ export const chattingControl = {
       throw new Error(errorMessage)
     }
   },
-
   getChatRoomList: async () => {
     try {
       const response = await axiosInstance({
@@ -70,7 +79,6 @@ export const chattingControl = {
       throw new Error(errorMessage)
     }
   },
-
   getChatRoomLog: async roomId => {
     try {
       const response = await axiosInstance({
