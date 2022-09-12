@@ -8,7 +8,7 @@ import { ModalContext } from "module/Modal"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleRight, faCircleCheck } from "@fortawesome/free-solid-svg-icons"
 
-import ApplyModal from "./Modal/ApplyModal"
+import ApplyRooftopOwnerModal from "./Modal/ApplyRooftopOwnerModal"
 import ProfileModifyModal from "./Modal/ProfileModifyModal"
 
 const Profile = () => {
@@ -112,7 +112,7 @@ const Profile = () => {
             <FontAwesomeIcon icon={faCircleCheck} />
           </ServiceBox>
         ) : (
-          <ServiceBox onClick={() => openModal(<ApplyModal />)}>
+          <ServiceBox onClick={() => openModal(<ApplyRooftopOwnerModal />)}>
             <div className="introduce">
               <h5>옥상지기 등록하기</h5>
               <p>"른 옥상을 만들 공간이 있으신가요?</p>
