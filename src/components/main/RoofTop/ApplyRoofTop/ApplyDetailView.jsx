@@ -1,18 +1,16 @@
 import styled, { css } from "styled-components"
-import { useState } from "react"
-import { useEffect } from "react"
+import { useState, useRef } from "react"
 
-const ApplyDetailView = ({ applyInfo, changeInfo }) => {
+const ApplyDetailView = ({ changeInfo }) => {
   const [imgBase64, setImgBase64] = useState(null)
-
-  useEffect(() => {
-    changeInfo(prevInfo => ({ ...prevInfo, structureFile: imgBase64 }))
-  }, [imgBase64])
+  const fileUploadInput = useRef()
 
   // Blob 데이터를 추출하여 이미지를 띄우는 함수.
   const addRoofTopDetailView = e => {
     const file = e.target.files[0]
     const reader = new FileReader()
+    console.log(file)
+    changeInfo(prevInfo => ({ ...prevInfo, structureFile: file }))
     reader.readAsDataURL(file)
     reader.onloadend = () => {
       const base64Img = reader.result
@@ -23,6 +21,8 @@ const ApplyDetailView = ({ applyInfo, changeInfo }) => {
 
   const removeStructImg = () => {
     setImgBase64(null)
+    fileUploadInput.current.value = null
+    changeInfo(prevInfo => ({ ...prevInfo, structureFile: null }))
   }
 
   return (
@@ -35,7 +35,13 @@ const ApplyDetailView = ({ applyInfo, changeInfo }) => {
         <label htmlFor="detailView">
           <FileUploadBtn>사진 업로드</FileUploadBtn>
         </label>
-        <input type="file" id="detailView" onChange={addRoofTopDetailView} accept=".png,.jpg" />
+        <input
+          type="file"
+          id="detailView"
+          onChange={addRoofTopDetailView}
+          ref={fileUploadInput}
+          accept=".png,.jpg"
+        />
       </BtnList>
       {imgBase64 && <img src={imgBase64} alt="None" onClick={removeStructImg} />}
     </Wrapper>
