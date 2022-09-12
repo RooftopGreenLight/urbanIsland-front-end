@@ -263,9 +263,13 @@ const ReservationDetail = () => {
           <InformationBox>
             <h5>시설 리뷰</h5>
             {rooftopReviews.map(({ content, createTime, grade }) => (
-              <ReviewBox>
-                <FontAwesomeIcon icon={faStar} />
-                <span>{`${grade} / 5.0`}</span>
+              <ReviewBox key={content}>
+                <p>
+                  <FontAwesomeIcon icon={faStar} /> {`${grade} / 5.0`}
+                </p>
+                <p>{`${createTime[0]}.${createTime[1]}.${createTime[2]} ${DateUtil.getTimeFormat(
+                  createTime.slice(3, -1),
+                )}`}</p>
                 <pre>{content}</pre>
               </ReviewBox>
             ))}
@@ -567,12 +571,16 @@ const ReviewBox = styled.div`
       }
 
       svg {
-        margin: auto 0vw;
+        margin: auto ${margins.xsm} auto 0vw;
         color: ${colors.main.primary};
       }
 
+      p {
+        width: 30%;
+      }
+
       pre {
-        padding: ${paddings.base} 0vw;
+        padding: 0vw;
         color: ${colors.black.quinary};
         font-weight: ${fonts.weight.light};
       }
