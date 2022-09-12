@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState, useRef } from "react"
 import { useRecoilValue } from "recoil"
+import moment from "moment"
 import styled, { css } from "styled-components"
 import { Client } from "@stomp/stompjs"
 
@@ -30,7 +31,10 @@ const ChatModal = ({ roomId }) => {
         const { city, district, detail, messageResponses } =
           await chattingControl.getPreChattingLog(roomId)
         const address = `${city} ${district} ${detail}`
-        setChatMessages([...chatMessages, ...messageResponses])
+        console.log(messageResponses)
+        if (messageResponses.length > 0) {
+          setChatMessages([...chatMessages, ...messageResponses])
+        }
       } catch (err) {
         console.error(err.message)
       }
@@ -104,7 +108,7 @@ const ChatModal = ({ roomId }) => {
   }
 
   const sendMessage = e => {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       publish()
     }
   }
@@ -125,10 +129,13 @@ const ChatModal = ({ roomId }) => {
           {chatMessages.length > 0 ? (
             <ChatMessageList>
               {chatMessages.slice(-10).map(({ memberId: senderId, content, sendTime }, idx) => {
+                console.log(sendTime)
+                let sendDate = new Date(...sendTime)
+                console.log(sendDate)
                 return (
                   <ChatMessage key={idx} isMyMessage={memberId === senderId}>
                     <p>{content}</p>
-                    <span>{`${sendTime[0]}.${sendTime[1]}.${sendTime[2]} ${sendTime[3]}:${sendTime[4]}`}</span>
+                    <span>{`${moment(sendDate).format("YYYY-MM-DD HH:MM")}`}</span>
                   </ChatMessage>
                 )
               })}
