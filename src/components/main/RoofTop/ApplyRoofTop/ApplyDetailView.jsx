@@ -1,13 +1,17 @@
 import styled, { css } from "styled-components"
 import { useState } from "react"
+import { useEffect } from "react"
 
 const ApplyDetailView = ({ applyInfo, changeInfo }) => {
   const [imgBase64, setImgBase64] = useState(null)
 
+  useEffect(() => {
+    changeInfo(prevInfo => ({ ...prevInfo, structureFile: imgBase64 }))
+  }, [imgBase64])
+
   // Blob 데이터를 추출하여 이미지를 띄우는 함수.
   const addRoofTopDetailView = e => {
     const file = e.target.files[0]
-    changeInfo({ ...applyInfo, structureFile: file })
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onloadend = () => {
@@ -19,7 +23,6 @@ const ApplyDetailView = ({ applyInfo, changeInfo }) => {
 
   const removeStructImg = () => {
     setImgBase64(null)
-    changeInfo({ ...applyInfo, structureFile: null })
   }
 
   return (
