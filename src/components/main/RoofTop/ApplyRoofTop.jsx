@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { roofTopControl } from "api/controls/roofTopControl"
@@ -14,6 +14,7 @@ import ApplyExtraOption from "components/main/RoofTop/ApplyRoofTop/ApplyExtraOpt
 
 const ApplyRoofTop = () => {
   const navigate = useNavigate()
+  const feedbackMsg = useRef()
   const [applyRoofTopInfo, setApplyRoofTopInfo] = useState({
     rooftopType: "G",
     width: 0,
@@ -41,7 +42,18 @@ const ApplyRoofTop = () => {
     optionPrice: [],
   })
 
-  const { explainContent } = applyRoofTopInfo
+  const {
+    city,
+    district,
+    detail,
+    adultCount,
+    explainContent,
+    normalFile,
+    structureFile,
+    width,
+    totalPrice,
+    phoneNumber,
+  } = applyRoofTopInfo
 
   const changeInput = e => {
     const { name, value } = e.target
@@ -49,6 +61,41 @@ const ApplyRoofTop = () => {
   }
 
   const sendRoofTopData = async () => {
+    if (!city || !district || !detail) {
+      feedbackMsg.current.innerText = "등록할 옥상 주소는 필히 설정해야 합니다."
+      return
+    }
+
+    if (phoneNumber === "") {
+      feedbackMsg.current.innerText = "소유주의 전화번호는 필히 기입해야 합니다."
+      return
+    }
+
+    if (adultCount === 0) {
+      feedbackMsg.current.innerText = "등록할 옥상의 이용 가능 인원을 설정해주세요."
+      return
+    }
+
+    if (normalFile.length < 1) {
+      feedbackMsg.current.innerText = "등록할 옥상의 이미지는 필히 올려야 합니다."
+      return
+    }
+
+    if (!structureFile) {
+      feedbackMsg.current.innerText = "등록할 옥상의 조경도는 필히 올려야 합니다."
+      return
+    }
+
+    if (width === 0) {
+      feedbackMsg.current.innerText = "등록할 옥상의 넓이는 필히 기입해야 합니다."
+      return
+    }
+
+    if (totalPrice === 0) {
+      feedbackMsg.current.innerText = "옥상의 이용 가격은 필히 기입해야 합니다."
+      return
+    }
+
     const applyFormData = new FormData()
 
     for (const [option, value] of Object.entries(applyRoofTopInfo)) {
@@ -115,6 +162,7 @@ const ApplyRoofTop = () => {
           <ApplyAvailableInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
           <ApplyDetailInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
           <ApplyExtraOption applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+          <FeedBackMsg ref={feedbackMsg} />
           <ConfirmBtn onClick={sendRoofTopData}>옥상 신청하기</ConfirmBtn>
         </ServiceList>
       </ViewPoint>
@@ -176,13 +224,25 @@ const ServiceList = styled.div`
   margin-bottom: 7.5vh;
 `
 
+const FeedBackMsg = styled.p`
+  ${({ theme }) => {
+    const { fonts, margins } = theme
+    return css`
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
+
+      margin: ${margins.sm} auto;
+    `
+  }}
+`
+
 const ConfirmBtn = styled.button`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
       width: 50%;
       padding: ${paddings.sm} ${paddings.base};
-      margin: ${margins.lg} auto;
+      margin: ${margins.sm} auto ${margins.lg} auto;
 
       cursor: pointer;
       border-radius: ${fonts.size.sm};
