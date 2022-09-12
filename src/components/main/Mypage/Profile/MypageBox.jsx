@@ -82,16 +82,20 @@ const MypageBox = () => {
           <p>내 일정 관리</p>
           <FontAwesomeIcon icon={faAngleRight} size="sm" fixedWidth />
         </NavStyle>
-        <NavStyle to="/mypage/greenbee">
-          <FontAwesomeIcon icon={faSeedling} size="xl" fixedWidth />
-          <p>그린비 정보 관리</p>
-          <FontAwesomeIcon icon={faAngleRight} size="sm" fixedWidth />
-        </NavStyle>
-        <NavStyle to="/mypage/rooftop">
-          <FontAwesomeIcon icon={faBuilding} size="xl" fixedWidth />
-          <p>옥상지기 정보 관리</p>
-          <FontAwesomeIcon icon={faAngleRight} size="sm" fixedWidth />
-        </NavStyle>
+        {["ROLE_ADMIN", "ROLE_ALL", "ROLE_GREENBEE"].includes(authority) && (
+          <NavStyle to="/mypage/greenbee">
+            <FontAwesomeIcon icon={faSeedling} size="xl" fixedWidth />
+            <p>그린비 정보 관리</p>
+            <FontAwesomeIcon icon={faAngleRight} size="sm" fixedWidth />
+          </NavStyle>
+        )}
+        {["ROLE_ADMIN", "ROLE_ALL", "ROLE_ROOFTOPOWNER"].includes(authority) && (
+          <NavStyle to="/mypage/rooftop">
+            <FontAwesomeIcon icon={faBuilding} size="xl" fixedWidth />
+            <p>옥상지기 정보 관리</p>
+            <FontAwesomeIcon icon={faAngleRight} size="sm" fixedWidth />
+          </NavStyle>
+        )}
         {authority === "ROLE_ADMIN" && (
           <NavStyle to="/mypage/admin">
             <FontAwesomeIcon icon={faPeopleArrows} size="xl" fixedWidth />
