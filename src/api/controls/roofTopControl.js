@@ -60,8 +60,8 @@ export const roofTopControl = {
   patchRooftopDetail: async (id, formdata) => {
     try {
       const response = await axiosInstance({
-        method: "patch",
-        url: "/rooftops/detail/" + id,
+        method: "PATCH",
+        url: `/rooftops/detail/${id}`,
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -81,6 +81,48 @@ export const roofTopControl = {
           "Content-Type": "multipart/form-data",
         },
         data: formdata,
+      })
+    } catch (err) {
+      console.log(err)
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
+  getRooftopReviews: async (page = 0) => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/rooftops/reviews`,
+        params: {
+          page,
+        },
+      })
+      return response.data
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+  postRooftopReview: async (rooftopId, content, grade) => {
+    try {
+      await axiosInstance({
+        method: "POST",
+        url: `/rooftops/reviews/${rooftopId}`,
+        data: {
+          content,
+          grade,
+        },
+      })
+    } catch (err) {
+      console.log(err)
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
+  deleteRooftopReview: async (rooftopId, reviewId) => {
+    try {
+      await axiosInstance({
+        method: "DELETE",
+        url: `/rooftops/reviews/${rooftopId}/${reviewId}`,
       })
     } catch (err) {
       console.log(err)
