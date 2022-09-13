@@ -6,7 +6,7 @@ import AdminGreenbeeModal from "./Modal/AdminGreenbeeModal"
 import AdminRooftopModal from "./Modal/AdminRooftopModal"
 import AdminGreenedRooftopModal from "./Modal/AdminGreenedRooftopModal"
 import { adminControl } from "api/controls/adminControl"
-import Pagination from "../Pagination"
+import Pagination from "components/common/Pagination"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBuilding, faSeedling, faUser } from "@fortawesome/free-solid-svg-icons"
 

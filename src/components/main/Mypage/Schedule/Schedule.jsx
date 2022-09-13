@@ -22,6 +22,7 @@ import { reservationControl } from "api/controls/reservationControl"
 import { chattingControl } from "api/controls/chattingControl"
 
 import DateUtil from "util/DateUtil"
+import Pagination from "components/common/Pagination"
 import ChatModal from "components/main/Chat/ChatModal"
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
 import ShowMyReservationModal from "./Modal/ShowMyReservationModal"
@@ -32,9 +33,13 @@ const Schedule = () => {
   const [selectedDate, setSeletedDate] = useState(new Date())
   const [bookingDates, setBookingDates] = useState(new Set())
 
+  // 예정된 예약, 사용 완료된 예약, 선택한 일자의 예약 목록을 각각 담은 state
   const [waitingReservation, setWaitingReservation] = useState([])
   const [completedReservation, setCompletedReservation] = useState([])
-  const [reservationInfo, setReservationInfo] = useState({
+  const [currentReservation, setCurrentReservation] = useState([])
+
+  // 현재 일자의 예약 목록 중, 사용자가 열람 중인 예약 내역
+  const [selectedReservation, setSelectedReservation] = useState({
     city: "",
     district: "",
     detail: "",
@@ -63,19 +68,23 @@ const Schedule = () => {
         })
 
         const loadedCompletedInfo = await reservationControl.getCompletedResevationInfo()
-        const loadedInfo = await reservationControl.getReservationInfo(
+        const loadedCurrentInfo = await reservationControl.getReservationInfo(
           moment(selectedDate).format("YYYY-MM-DD"),
         )
 
         setWaitingReservation(loadedWaitingInfo)
         setCompletedReservation(loadedCompletedInfo)
-        loadedInfo && setReservationInfo(loadedInfo)
+        loadedCurrentInfo && setCurrentReservation([loadedCurrentInfo])
+        // 임시 작성 코드, 추후 수정해야 함 (pagination 적용 예정)
+        loadedCurrentInfo && setSelectedReservation(loadedCurrentInfo)
       } catch (err) {
         console.log(err)
       }
     }
     getReservationInfo()
   }, [selectedDate])
+
+  console.log(currentReservation)
 
   const {
     city,
@@ -89,7 +98,7 @@ const Schedule = () => {
     kidCount,
     reservationId,
     ownerId,
-  } = reservationInfo
+  } = selectedReservation
 
   const getChatroom = async () => {
     const roomId = await chattingControl.getCheckChatExist(reservationId, ownerId)
@@ -102,7 +111,7 @@ const Schedule = () => {
     try {
       await reservationControl.deleteCancelReservation(reservationId)
       const loadedWaitingInfo = await reservationControl.getWaitingResevationInfo()
-      const loadedInfo = await reservationControl.getReservationInfo(
+      const loadedCurrentInfo = await reservationControl.getReservationInfo(
         moment(selectedDate).format("YYYY-MM-DD"),
       )
       setBookingDates(new Set())
@@ -117,20 +126,7 @@ const Schedule = () => {
         )
       })
       setWaitingReservation(loadedWaitingInfo)
-      loadedInfo
-        ? setReservationInfo(loadedInfo)
-        : setReservationInfo({
-            city: "",
-            district: "",
-            detail: "",
-            startDate: [],
-            endDate: [],
-            startTime: [],
-            endTime: [],
-            adultCount: 0,
-            kidCount: 0,
-            reservationId: null,
-          })
+      loadedCurrentInfo ? setCurrentReservation(loadedCurrentInfo) : setCurrentReservation([])
     } catch (err) {
       console.log(err.message)
     }
