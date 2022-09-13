@@ -115,7 +115,7 @@ const MypageBox = () => {
 
 const Wrapper = styled.div`
   width: 30vw;
-  height: 80vh;
+  margin: 7.5vh auto auto auto;
 
   display: flex;
   flex-direction: column;

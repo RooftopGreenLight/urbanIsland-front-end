@@ -87,8 +87,7 @@ const GreenbeeInfo = () => {
 
 const Wrapper = styled.div`
   width: 35vw;
-  height: 75vh;
-  margin: auto;
+  margin: 7.5vh auto auto auto;
 
   display: flex;
   flex-direction: column;
