@@ -83,10 +83,10 @@ const Reservation = () => {
             <div className="content">
               <FontAwesomeIcon icon={faClock} />
               <span>
-                {startTime
-                  ? endTime
-                    ? `${startTime.slice(0, 5)} - ${endTime.slice(0, 5)}`
-                    : `${startTime.slice(0, 5)} - 24:00`
+                {startTime || endTime
+                  ? `${startTime ? `${startTime.slice(0, 5)}` : `00:00`} - ${
+                      endTime ? `${endTime.slice(0, 5)}` : "24:00"
+                    }`
                   : "시간 선택"}
               </span>
             </div>
