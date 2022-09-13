@@ -34,7 +34,7 @@ const ApplyRooftopOwnerModal = () => {
     fileUploadInput.current.value = null
   }
 
-  const onClickSubmit = async () => {
+  const submitOwnerImage = async () => {
     if (!rooftopOwnerImg) {
       feedbackMsg.current.innerText = "건축물 대장 확인증을 업로드 해주세요."
       return
@@ -67,15 +67,14 @@ const ApplyRooftopOwnerModal = () => {
           <input
             type="file"
             id="imgList"
-            name="imgList"
             onChange={addNewImage}
             accept=".png, .jpg"
             ref={fileUploadInput}
           />
         </BtnList>
         {imgBase64 && <img src={imgBase64} alt="None" onDoubleClick={removeImage} />}
-        <FeedBackMsg ref={feedbackMsg}>건축물 대장 확인증을 업로드 해주세요.</FeedBackMsg>
-        <ApplyModifyBtn onClick={onClickSubmit}>
+        <FeedBackMsg ref={feedbackMsg} />
+        <ApplyModifyBtn onClick={submitOwnerImage}>
           <FontAwesomeIcon icon={faBuilding} /> 옥상지기 신청하기
         </ApplyModifyBtn>
       </ModalContent>
@@ -155,16 +154,6 @@ const ModalContent = styled.main`
         font-weight: ${fonts.weight.light};
         text-align: center;
       }
-
-      form {
-        width: 70%;
-        padding: ${paddings.sm};
-        margin: ${margins.lg} auto;
-
-        background-color: transparent;
-        border: 0;
-        text-align: center;
-      }
     `
   }}
 `
@@ -188,7 +177,7 @@ const Title = styled.div`
   }}
 `
 
-const FileUploadBtn = styled.button`
+const FileUploadBtn = styled.div`
   ${({ theme }) => {
     const { colors, paddings } = theme
     return css`
@@ -216,12 +205,12 @@ const FileUploadBtn = styled.button`
 `
 
 const BtnList = styled.form`
-  width: 20%;
+  width: 50%;
   display: flex;
-  margin: auto;
+  margin: 2rem auto 1rem auto;
 
   label {
-    width: 75%;
+    width: 100%;
     margin: auto;
   }
 
