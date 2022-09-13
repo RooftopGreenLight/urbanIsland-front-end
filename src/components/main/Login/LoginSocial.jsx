@@ -3,6 +3,10 @@ import styled, { css } from "styled-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGoogle } from "@fortawesome/free-brands-svg-icons"
 
+import kakaoLogo from "assets/icon/kakaotalk.png"
+import googleLogo from "assets/icon/google.png"
+import naverLogo from "assets/icon/naver.png"
+
 import { OAuthControl } from "api/oAuth"
 
 const LoginSocial = () => {
@@ -10,21 +14,9 @@ const LoginSocial = () => {
     <Wrapper>
       <p>다른 소셜 계정으로 로그인</p>
       <SocialIconList>
-        <SocialIcon
-          icon={faGoogle}
-          color={"#006aff"}
-          onClick={() => OAuthControl.getCodeFromSocial("google")}
-        />
-        <SocialIcon
-          icon={faGoogle}
-          color={"#09ff00"}
-          onClick={() => OAuthControl.getCodeFromSocial("naver")}
-        />
-        <SocialIcon
-          icon={faGoogle}
-          color={"#dbd800"}
-          onClick={() => OAuthControl.getCodeFromSocial("kakao")}
-        />
+        <SocialImage src={googleLogo} onClick={() => OAuthControl.getCodeFromSocial("google")} />
+        <SocialImage src={naverLogo} onClick={() => OAuthControl.getCodeFromSocial("naver")} />
+        <SocialImage src={kakaoLogo} onClick={() => OAuthControl.getCodeFromSocial("kakao")} />
       </SocialIconList>
     </Wrapper>
   )
@@ -34,7 +26,7 @@ const Wrapper = styled.div`
   ${({ theme }) => {
     const { fonts, margins } = theme
     return css`
-      width: 60%;
+      width: 70%;
       margin: ${margins.lg} auto;
       text-align: center;
 
@@ -54,18 +46,18 @@ const SocialIconList = styled.div`
   justify-content: space-evenly;
 `
 
-const SocialIcon = styled(FontAwesomeIcon)`
-  ${({ theme, color }) => {
-    const { colors, fonts, paddings } = theme
+const SocialImage = styled.img`
+  ${({ theme }) => {
+    const { paddings } = theme
     return css`
-      width: 1.65vw;
-      height: 1.65vw;
+      width: 4vw;
+      height: 4vw;
 
       padding: ${paddings.sm};
+      box-shadow: 0px 2px 2px #d5d5d5;
       border-radius: 100px;
 
-      background-color: ${color};
-      color: ${colors.white};
+      cursor: pointer;
     `
   }}
 `

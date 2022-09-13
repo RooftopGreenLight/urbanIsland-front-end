@@ -127,8 +127,7 @@ const Profile = () => {
 
 const Wrapper = styled.div`
   width: 35vw;
-  height: 80vh;
-  margin: 0vh auto;
+  margin: 7.5vh auto auto auto;
 
   display: flex;
   flex-direction: column;
@@ -227,7 +226,9 @@ const ProfileLine = styled.div`
 
       button {
         width: 10%;
-        height: 75%;
+        height: 100%;
+
+        padding: ${paddings.xsm};
         margin: auto;
 
         border-radius: ${fonts.size.xsm};

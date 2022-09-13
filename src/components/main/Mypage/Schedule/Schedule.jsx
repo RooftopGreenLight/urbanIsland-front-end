@@ -72,118 +72,106 @@ const Schedule = () => {
 
   return (
     <Wrapper>
-      <ViewPoint>
-        <InnerBox>
-          <Title>
-            <h5>내 예약 관리하기</h5>
-          </Title>
-          <ServiceBox onClick={() => openModal(<ChatRoomPage />)}>
-            <div className="introduce">
-              <h5>문의 내역 확인하기</h5>
-              <p>옥상 시설 별 문의 및 채팅 내역을 확인합니다.</p>
-            </div>
-            <FontAwesomeIcon icon={faAngleRight} />
-          </ServiceBox>
-          <ServiceBox onClick={() => openModal(<ShowMyReservationModal />)}>
-            <div className="introduce">
-              <h5>이용 후기 작성하기</h5>
-              <p>최근 이용한 옥상 시설의 후기를 작성합니다.</p>
-            </div>
-            <FontAwesomeIcon icon={faAngleRight} />
-          </ServiceBox>
-        </InnerBox>
-        <CalenderBox>
-          <Title>
-            <h5>내 예약 일정</h5>
-          </Title>
-          <CalenderContainer>
-            <Calendar
-              formatDay={(_, date) => moment(date).format("DD")}
-              navigationLabel={null}
-              onChange={setSeletedDate}
-              value={selectedDate}
-              tileContent={({ date }) => {
-                let html = []
-                if (bookingDates.has(date.toDateString())) {
-                  html.push(<BookingDot key={date} />)
-                }
-                return <>{html}</>
-              }}
-            />
-          </CalenderContainer>
-        </CalenderBox>
-        <InnerBox>
-          <Title>
-            <h5>예약 세부 정보</h5>
-          </Title>
-          {reservationInfo ? (
-            <>
-              <ScheduleDetail>
-                <p>
-                  <FontAwesomeIcon icon={faBuilding} size="lg" />
-                  예약 숙소
-                </p>
-                <span>{`${reservationInfo.city} ${reservationInfo.district} ${reservationInfo.detail}`}</span>
-              </ScheduleDetail>
-              <ScheduleDetail>
-                <p>
-                  <FontAwesomeIcon icon={faCalendar} size="lg" />
-                  예약일자
-                </p>
-                <span>{`${reservationInfo.startDate[0]}.${reservationInfo.startDate[1]}.${reservationInfo.startDate[2]} - ${reservationInfo.endDate[0]}.${reservationInfo.endDate[1]}.${reservationInfo.endDate[2]}`}</span>
-              </ScheduleDetail>
-              <ScheduleDetail>
-                <p>
-                  <FontAwesomeIcon icon={faClock} size="lg" />
-                  예약시간
-                </p>
-                <span>{`${String(reservationInfo.startTime[0]).padStart(2, "0")}:00 ~ ${String(
-                  reservationInfo.endTime[0],
-                ).padStart(2, "0")}:00`}</span>
-              </ScheduleDetail>
-              <ScheduleDetail>
-                <p>
-                  <FontAwesomeIcon icon={faUser} size="lg" /> 총 인원
-                </p>
-                <span>
-                  {reservationInfo.kidCount > 0
-                    ? `어른 ${reservationInfo.adultCount}명, 유아 ${reservationInfo.kidCount}명`
-                    : `어른 ${reservationInfo.adultCount}명`}
-                </span>
-              </ScheduleDetail>
-              <SendMessageBtn onClick={getChatroom}>
-                <FontAwesomeIcon icon={faComments} /> 채팅 목록 열기
-              </SendMessageBtn>
-            </>
-          ) : (
-            <NoticeEmptyIcon>
-              <FontAwesomeIcon icon={faBook} />
-              <h5>옥상 예약 정보 없음</h5>
-              <p>해당 일자에 옥상을 예약한 기록이 없습니다.</p>
-            </NoticeEmptyIcon>
-          )}
-        </InnerBox>
-      </ViewPoint>
+      <InnerBox>
+        <Title>
+          <h5>내 예약 관리하기</h5>
+        </Title>
+        <ServiceBox onClick={() => openModal(<ChatRoomPage />)}>
+          <div className="introduce">
+            <h5>문의 내역 확인하기</h5>
+            <p>옥상 시설 별 문의 및 채팅 내역을 확인합니다.</p>
+          </div>
+          <FontAwesomeIcon icon={faAngleRight} />
+        </ServiceBox>
+        <ServiceBox onClick={() => openModal(<ShowMyReservationModal />)}>
+          <div className="introduce">
+            <h5>이용 후기 작성하기</h5>
+            <p>최근 이용한 옥상 시설의 후기를 작성합니다.</p>
+          </div>
+          <FontAwesomeIcon icon={faAngleRight} />
+        </ServiceBox>
+      </InnerBox>
+      <CalenderBox>
+        <Title>
+          <h5>내 예약 일정</h5>
+        </Title>
+        <CalenderContainer>
+          <Calendar
+            formatDay={(_, date) => moment(date).format("DD")}
+            navigationLabel={null}
+            onChange={setSeletedDate}
+            value={selectedDate}
+            tileContent={({ date }) => {
+              let html = []
+              if (bookingDates.has(date.toDateString())) {
+                html.push(<BookingDot key={date} />)
+              }
+              return <>{html}</>
+            }}
+          />
+        </CalenderContainer>
+      </CalenderBox>
+      <InnerBox>
+        <Title>
+          <h5>예약 세부 정보</h5>
+        </Title>
+        {reservationInfo ? (
+          <>
+            <ScheduleDetail>
+              <p>
+                <FontAwesomeIcon icon={faBuilding} size="lg" />
+                예약 숙소
+              </p>
+              <span>{`${reservationInfo.city} ${reservationInfo.district} ${reservationInfo.detail}`}</span>
+            </ScheduleDetail>
+            <ScheduleDetail>
+              <p>
+                <FontAwesomeIcon icon={faCalendar} size="lg" />
+                예약일자
+              </p>
+              <span>{`${reservationInfo.startDate[0]}.${reservationInfo.startDate[1]}.${reservationInfo.startDate[2]} - ${reservationInfo.endDate[0]}.${reservationInfo.endDate[1]}.${reservationInfo.endDate[2]}`}</span>
+            </ScheduleDetail>
+            <ScheduleDetail>
+              <p>
+                <FontAwesomeIcon icon={faClock} size="lg" />
+                예약시간
+              </p>
+              <span>{`${String(reservationInfo.startTime[0]).padStart(2, "0")}:00 ~ ${String(
+                reservationInfo.endTime[0],
+              ).padStart(2, "0")}:00`}</span>
+            </ScheduleDetail>
+            <ScheduleDetail>
+              <p>
+                <FontAwesomeIcon icon={faUser} size="lg" /> 총 인원
+              </p>
+              <span>
+                {reservationInfo.kidCount > 0
+                  ? `어른 ${reservationInfo.adultCount}명, 유아 ${reservationInfo.kidCount}명`
+                  : `어른 ${reservationInfo.adultCount}명`}
+              </span>
+            </ScheduleDetail>
+            <SendMessageBtn onClick={getChatroom}>
+              <FontAwesomeIcon icon={faComments} /> 채팅 목록 열기
+            </SendMessageBtn>
+          </>
+        ) : (
+          <NoticeEmptyIcon>
+            <FontAwesomeIcon icon={faBook} />
+            <h5>옥상 예약 정보 없음</h5>
+            <p>해당 일자에 옥상을 예약한 기록이 없습니다.</p>
+          </NoticeEmptyIcon>
+        )}
+      </InnerBox>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
   width: 35vw;
-  height: 80vh;
-  margin: 0vh auto;
+  margin: 7.5vh auto auto auto;
 
   display: flex;
   flex-direction: column;
-`
-
-const ViewPoint = styled.div`
-  max-height: 80vh;
-  overflow: auto;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
 `
 
 const Title = styled.div`
@@ -222,15 +210,9 @@ const CalenderBox = styled.div`
 `
 
 const InnerBox = styled.div`
-  ${({ theme }) => {
-    const { margins } = theme
-    return css`
-      margin: ${margins.base} 0vw;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    `
-  }}
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `
 
 const ServiceBox = styled.div`
@@ -315,7 +297,7 @@ const SendMessageBtn = styled.div`
     return css`
       width: 90%;
       padding: ${paddings.sm} ${paddings.base};
-      margin: ${margins.lg} auto;
+      margin: ${margins.lg} auto ${margins.xl} auto;
 
       cursor: pointer;
       border-radius: ${fonts.size.sm};

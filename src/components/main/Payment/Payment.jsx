@@ -222,20 +222,22 @@ const Payment = () => {
               <span>시설 대여 비용 :</span>
               <p>{`${totalPrice.toLocaleString()} KRW × ${totalUseDay}일`}</p>
             </div>
-            {optionCount
-              .filter(count => count > 0)
-              .map((count, idx) => (
-                <div className="option-list" key={optionContent[idx]}>
-                  <span>{`${optionContent[idx]} :`}</span>
-                  <p>
-                    {`${
-                      count > 1
-                        ? `${optionPrice[idx].toLocaleString()} KRW × ${count}개`
-                        : `${optionPrice[idx].toLocaleString()} KRW`
-                    }`}
-                  </p>
-                </div>
-              ))}
+            {optionCount.map((count, idx) => {
+              if (count > 0) {
+                return (
+                  <div className="option-list" key={optionContent[idx]}>
+                    <span>{`${optionContent[idx]} :`}</span>
+                    <p>
+                      {`${
+                        count > 1
+                          ? `${optionPrice[idx].toLocaleString()} KRW × ${count}개`
+                          : `${optionPrice[idx].toLocaleString()} KRW`
+                      }`}
+                    </p>
+                  </div>
+                )
+              }
+            })}
           </OptionBox>
         </ReservationInfo>
       </ReservationInfoBox>
@@ -246,14 +248,16 @@ const Payment = () => {
             <span>{`${totalUseDay}일 대여 :`}</span>
             <p>{(totalPrice * totalUseDay).toLocaleString()} KRW</p>
           </div>
-          {optionCount
-            .filter(count => count > 0)
-            .map((count, idx) => (
-              <div className="option-list" key={optionContent[idx]}>
-                <span>{`${optionContent[idx]} :`}</span>
-                <p>{`${(count * optionPrice[idx]).toLocaleString()} KRW`}</p>
-              </div>
-            ))}
+          {optionCount.map((count, idx) => {
+            if (count > 0) {
+              return (
+                <div className="option-list" key={optionContent[idx]}>
+                  <span>{`${optionContent[idx]} :`}</span>
+                  <p>{`${(count * optionPrice[idx]).toLocaleString()} KRW`}</p>
+                </div>
+              )
+            }
+          })}
           <div className="option-list">
             <span>총 합계 : </span>
             <strong>{`${needToPay.toLocaleString()} KRW`}</strong>

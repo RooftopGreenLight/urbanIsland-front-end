@@ -368,18 +368,12 @@ const ReservationDetail = () => {
 
 const Wrapper = styled.div`
   width: 60vw;
-  max-height: 100vh;
-  overflow: auto;
 
   display: flex;
   margin: 0vw auto 10vh auto;
 
   flex-wrap: wrap;
   justify-content: space-between;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
 `
 
 const RooftopInfoBox = styled.div`
@@ -563,7 +557,7 @@ const ReviewBox = styled.div`
 
       svg {
         margin: auto ${margins.xsm} auto 0vw;
-        color: ${colors.main.tertiary};
+        color: ${colors.white};
       }
 
       .content {
@@ -573,14 +567,23 @@ const ReviewBox = styled.div`
 
       .grade {
         margin-right: ${margins.sm};
-        color: ${colors.main.tertiary};
-        font-weight: bold;
+        padding: ${paddings.xsm} ${paddings.sm};
+
+        background-color: ${colors.main.tertiary};
+        border-radius: 2rem;
+        color: ${colors.white};
+
+        font-weight: 500;
       }
 
       pre {
-        padding: 0vw;
-        color: ${colors.black.quinary};
-        font-weight: 200;
+        padding: ${paddings.xsm} 0vw;
+        color: ${colors.black.tertiary};
+        font-weight: 300;
+      }
+
+      p {
+        padding: ${paddings.xsm} 0vw;
       }
     `
   }}
