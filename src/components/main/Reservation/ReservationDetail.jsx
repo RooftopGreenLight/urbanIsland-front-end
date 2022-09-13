@@ -100,6 +100,7 @@ const ReservationDetail = () => {
     const loadRooftopData = async () => {
       try {
         const result = await roofTopControl.getRooftopDetail(rooftopId)
+        console.log(result)
         const { startTime, endTime, rooftopOptions, reservations, totalPrice } = result
 
         // 이미 예약된 일자인 bookedDate를 Set에 하나씩 저장하는 과정.
@@ -160,7 +161,7 @@ const ReservationDetail = () => {
     }
   }
 
-  const imgAmount = useMemo(() => rooftopImages.length, [rooftopImages])
+  const imgAmount = useMemo(() => rooftopImages?.length, [rooftopImages])
 
   const SlickSettings = {
     autoplay: true,
@@ -217,7 +218,7 @@ const ReservationDetail = () => {
             <Slider {...SlickSettings}>
               {rooftopImages.map(({ fileUrl, uploadFilename }) => (
                 <div key={uploadFilename}>
-                  <img src={fileUrl} alt="Img" key={uploadFilename} />
+                  <img src={fileUrl} alt="Img" />
                 </div>
               ))}
             </Slider>
