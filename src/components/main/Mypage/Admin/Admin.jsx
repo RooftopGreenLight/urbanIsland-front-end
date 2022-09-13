@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
 import { ModalContext } from "module/Modal"
 import AdminGreenbeeModal from "./Modal/AdminGreenbeeModal"
@@ -7,6 +7,8 @@ import AdminRooftopModal from "./Modal/AdminRooftopModal"
 import AdminGreenedRooftopModal from "./Modal/AdminGreenedRooftopModal"
 import { adminControl } from "api/controls/adminControl"
 import Pagination from "../Pagination"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faBuilding, faSeedling, faUser } from "@fortawesome/free-solid-svg-icons"
 
 const Admin = () => {
   const { openModal } = useContext(ModalContext)
@@ -33,7 +35,7 @@ const Admin = () => {
   useEffect(() => {
     const getAdminInformation = async () => {
       const { greenbeePageLimit, greenbeeList } = await adminControl.getAdminGreenbee(greenbeePage)
-      // const { ownerPageLimit, ownerList } = await adminControl.getAdminOwner(ownerPage)
+      const { ownerPageLimit, ownerList } = await adminControl.getAdminOwner(ownerPage)
       const { rooftopPageLimit, rooftopList } = await adminControl.getAdminGreenedRooftop(
         rooftopPage,
       )
@@ -42,11 +44,11 @@ const Admin = () => {
         greenbeePageLimit,
         greenbeeList,
       })
-      // setOwnerInfo({
-      //   ...ownerInfo,
-      //   ownerPageLimit,
-      //   ownerList,
-      // })
+      setOwnerInfo({
+        ...ownerInfo,
+        ownerPageLimit,
+        ownerList,
+      })
       setRooftopInfo({
         ...rooftopInfo,
         rooftopPageLimit,
@@ -101,90 +103,103 @@ const Admin = () => {
     }
   }
 
-  console.log(rooftopList)
-
   return (
     <Wrapper>
       <ListBox>
-        <h1>대기중인 그린비</h1>
-        {greenbeeList ? (
-          <div>
-            {greenbeeList.map(({ memberId, officeNumber, confirmationImage, content }, index) => (
-              <Box
-                onClick={() => {
-                  openModal(
-                    <AdminGreenbeeModal
-                      id={memberId}
-                      phone={officeNumber}
-                      photo={confirmationImage.fileUrl}
-                      content={content}
-                      approve={applyGreenbeeApprove}
-                      disapprove={applyGreenbeeDisapprove}
-                    />,
-                  )
-                }}>
-                {memberId}
-              </Box>
-            ))}
-          </div>
+        <Title>
+          <h5>대기중인 그린비 신청</h5>
+        </Title>
+        {greenbeeList.length > 0 ? (
+          greenbeeList.map(({ memberId, officeNumber, confirmationImage, content }) => (
+            <Box
+              key={memberId}
+              onClick={() => {
+                openModal(
+                  <AdminGreenbeeModal
+                    id={memberId}
+                    phone={officeNumber}
+                    photo={confirmationImage.fileUrl}
+                    content={content}
+                    approve={applyGreenbeeApprove}
+                    disapprove={applyGreenbeeDisapprove}
+                  />,
+                )
+              }}>
+              {`memberId ${memberId} 번 : 그린비 승인 대기 중`}
+            </Box>
+          ))
         ) : (
-          <p>대기중인 그린비 없음</p>
+          <NoticeEmptyIcon>
+            <FontAwesomeIcon icon={faSeedling} />
+            <h5>그린비 신청자 목록 없음</h5>
+            <p>승인 대기 중인 그린비 신청자가 없습니다.</p>
+          </NoticeEmptyIcon>
         )}
         {greenbeePageLimit !== 0 && (
           <Pagination total={greenbeePageLimit} page={greenbeePage} setPage={setGreenbeeInfo} />
         )}
       </ListBox>
       <ListBox>
-        <h1>대기중인 옥상지기</h1>
-        {ownerList ? (
-          <div>
-            {ownerList.map(({ memberId, confirmationImage }, index) => (
-              <Box
-                onClick={() => {
-                  openModal(
-                    <AdminRooftopModal
-                      id={memberId}
-                      photo={confirmationImage.fileUrl}
-                      approve={applyRooftopApprove}
-                      disapprove={applyRooftopDisapprove}
-                    />,
-                  )
-                }}>
-                {memberId}
-              </Box>
-            ))}
-          </div>
+        <Title>
+          <h5>대기중인 옥상지기 신청</h5>
+        </Title>
+        {ownerList.length > 0 ? (
+          ownerList.map(({ memberId, confirmationImage }) => (
+            <Box
+              key={memberId}
+              onClick={() => {
+                openModal(
+                  <AdminRooftopModal
+                    id={memberId}
+                    photo={confirmationImage.fileUrl}
+                    approve={applyRooftopApprove}
+                    disapprove={applyRooftopDisapprove}
+                  />,
+                )
+              }}>
+              {`memberId ${memberId} 번 : 옥상지기 승인 대기 중`}
+            </Box>
+          ))
         ) : (
-          <p>대기중인 옥상지기 없음</p>
+          <NoticeEmptyIcon>
+            <FontAwesomeIcon icon={faUser} />
+            <h5>옥상지기 신청자 목록 없음</h5>
+            <p>승인 대기 중인 옥상지기 신청자가 없습니다.</p>
+          </NoticeEmptyIcon>
         )}
         {ownerPageLimit !== 0 && (
           <Pagination total={ownerPageLimit} page={ownerPage} setPage={setOwnerInfo} />
         )}
       </ListBox>
       <ListBox>
-        <h1>이미 녹화된 옥상 승인</h1>
-        {rooftopList ? (
-          <div>
-            {rooftopList.map(({ id, ownerContent, phoneNumber, structureImage }) => (
-              <Box
-                onClick={() => {
-                  openModal(
-                    <AdminGreenedRooftopModal
-                      id={id}
-                      photo={structureImage.fileUrl}
-                      phoneNum={phoneNumber}
-                      ment={ownerContent}
-                      approve={AdminGreenedRooftopApprove}
-                      disapprove={AdminGreenedRooftopDisapprove}
-                    />,
-                  )
-                }}>
-                {id}
-              </Box>
-            ))}
-          </div>
+        <Title>
+          <h5>승인 대기 중인 옥상 신청</h5>
+        </Title>
+        {rooftopList.length > 0 ? (
+          rooftopList.map(({ id: rooftopId, ownerContent, phoneNumber, structureImage }) => (
+            <Box
+              key={rooftopId}
+              onClick={() => {
+                openModal(
+                  <AdminGreenedRooftopModal
+                    id={rooftopId}
+                    photo={structureImage.fileUrl}
+                    phoneNum={phoneNumber}
+                    ment={ownerContent}
+                    approve={AdminGreenedRooftopApprove}
+                    disapprove={AdminGreenedRooftopDisapprove}
+                  />,
+                )
+              }}>
+              {`rooftopId ${rooftopId} 번 : 승인 대기 중`}
+            </Box>
+          ))
         ) : (
-          <p>대기중인 이미 녹화된 옥상 없음</p>
+          <NoticeEmptyIcon>
+            <FontAwesomeIcon icon={faBuilding} />
+            <h5>등록된 옥상 없음</h5>
+            <p>아직 승인 대기 중인 옥상이 없습니다.</p>
+          </NoticeEmptyIcon>
         )}
         {rooftopPageLimit !== 0 && (
           <Pagination total={rooftopPageLimit} page={rooftopPage} setPage={setRooftopInfo} />
@@ -195,21 +210,93 @@ const Admin = () => {
 }
 
 const Wrapper = styled.div`
-  width: 60vw;
+  width: 35vw;
+  margin: 7.5vh auto auto auto;
   display: flex;
   flex-direction: column;
-  margin-left: 10vw;
 `
-const Box = styled.div`
-  padding: 0.4rem;
-  border-top: 1px solid gray;
-  display: flex;
-  justify-content: space-between;
+const Box = styled.p`
+  ${({ theme }) => {
+    const { fonts, paddings } = theme
+    return css`
+      padding: ${paddings.sm};
+      display: flex;
+      justify-content: space-between;
+
+      font-weight: 200;
+      font-size: ${fonts.size.sm};
+    `
+  }}
 `
 const ListBox = styled.div`
-  margin: 2rem 0;
-  border-bottom: 1px solid gray;
-  width: 65%;
+  ${({ theme }) => {
+    const { colors, margins } = theme
+    return css`
+      width: 100%;
+      margin: ${margins.base} 0;
+
+      color: ${colors.main.primary};
+    `
+  }}
+`
+
+const Title = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin-bottom: ${margins.sm};
+
+      display: flex;
+      border-bottom: 1px solid ${colors.main.primary}77;
+
+      color: ${colors.main.primary};
+      text-align: center;
+
+      h5 {
+        width: 90%;
+
+        font-size: ${fonts.size.base};
+        font-weight: ${fonts.weight.bold};
+        text-align: left;
+      }
+    `
+  }}
+`
+
+const NoticeEmptyIcon = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      margin: ${margins.lg} auto;
+
+      color: ${colors.main.primary};
+      text-align: center;
+
+      h5 {
+        font-size: ${fonts.size.base};
+        margin-bottom: ${margins.sm};
+      }
+
+      p {
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
+
+      svg {
+        margin-bottom: ${margins.base};
+        padding: ${paddings.lg};
+
+        background-color: ${colors.main.secondary};
+        border-radius: 20vw;
+
+        color: ${colors.white};
+        font-size: ${fonts.size.xl};
+      }
+    `
+  }}
 `
 
 export default Admin
