@@ -95,7 +95,7 @@ const RequestToGreenBee = () => {
       return
     }
 
-    if (width * totalPrice * widthPrice === 0) {
+    if (width * widthPrice === 0) {
       feedbackMsg.current.innerText = "옥상의 넓이와 시공 가격은 필히 기입해야 합니다."
       return
     }

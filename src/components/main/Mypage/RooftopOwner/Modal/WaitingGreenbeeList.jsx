@@ -33,6 +33,11 @@ const WaitingGreenbeeList = ({ rooftopId }) => {
     }
   }
 
+  const spectateGreenbee = greenBeeId => {
+    navigate(`/mypage/greenbee/${greenBeeId}`)
+    closeModal()
+  }
+
   return (
     <Wrapper>
       {appliedGreenbees && appliedGreenbees.length > 0 ? (
@@ -52,7 +57,7 @@ const WaitingGreenbeeList = ({ rooftopId }) => {
             <AppliedGreenbeeInfo key={idx}>
               <div className="rooftop-title">
                 <h5>{`${officeCity} ${officeDistrict} ${officeDetail}`}</h5>
-                <FontAwesomeIcon icon={faHome} />
+                <FontAwesomeIcon icon={faHome} onClick={() => spectateGreenbee(greenBeeId)} />
               </div>
               <div className="greenbee-info">
                 <p>
