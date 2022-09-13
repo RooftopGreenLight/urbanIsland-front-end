@@ -19,7 +19,7 @@ const ReservationCard = ({ rooftopInfo, filterInfo }) => {
         <DetailInfo>
           <StarRate>
             <FontAwesomeIcon icon={faStar} />
-            <span>{parseInt(grade).toFixed(1)} / 5.0</span>
+            <span>{Number(grade).toFixed(1)} / 5.0</span>
           </StarRate>
           <p>
             <strong>{totalPrice.toLocaleString()}</strong> KRW

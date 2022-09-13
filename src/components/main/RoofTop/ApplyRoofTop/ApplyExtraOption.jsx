@@ -136,7 +136,7 @@ const OptionList = styled.div`
 
 const InsertNewOption = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
+    const { colors, paddings } = theme
     return css`
       width: 100%;
       background-color: ${colors.white};
@@ -146,7 +146,7 @@ const InsertNewOption = styled.div`
 
       input {
         border: 0px;
-        border-bottom: 1px solid #000000;
+        border-bottom: 1px solid ${colors.main.primary};
         text-align: center;
 
         &[name="option"] {
@@ -166,8 +166,9 @@ const InsertNewOption = styled.div`
         width: 15%;
         padding: ${paddings.sm};
 
-        border: 1px solid rgb(77, 77, 77);
+        border: 1px solid ${colors.main.secondary};
         border-radius: 2.5vw;
+        background-color: transparent;
         cursor: pointer;
 
         display: flex;
@@ -177,8 +178,9 @@ const InsertNewOption = styled.div`
         font-weight: 100;
 
         &:hover {
-          background: rgb(77, 77, 77);
-          color: #fff;
+          border: 1px solid ${colors.white};
+          background: ${colors.main.tertiary};
+          color: ${colors.white};
         }
       }
     `
