@@ -221,7 +221,7 @@ const SearchResult = styled.div`
     const { margins } = theme
     return css`
       width: 75vw;
-      margin: 0vw auto ${margins.xl} auto;
+      margin: ${margins.lg} auto;
       display: grid;
 
       grid-gap: 5vh ${margins.base};

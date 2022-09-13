@@ -132,85 +132,72 @@ const RequestToGreenBee = () => {
 
   return (
     <Wrapper>
-      <ViewPoint>
-        <ServiceList>
-          <Title>
-            <h5>기본 정보 기입하기</h5>
-          </Title>
-          <ApplySidoList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-          <ApplyBaseInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-        </ServiceList>
-        <ServiceList>
-          <Title>
-            <h5>시공 관련 정보 기입하기</h5>
-          </Title>
-          <InputBox>
-            <div className="title">
-              <h5>세부사항 : 필요 항목</h5>
-              <p>옥상 녹화 단계에 필요한 시설을 체크해주세요.</p>
-            </div>
-            <OpenModalBtn
-              onClick={() =>
-                openModal(
-                  <SetRequiredOptionModal applyInfo={requiredInfo} changeInfo={setRequiredInfo} />,
-                )
-              }>
-              수정하기
-            </OpenModalBtn>
-          </InputBox>
-          <RequestDeadLine requiredInfo={requiredInfo} setRequiredInfo={setRequiredInfo} />
-          <ApplyImgList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-          <ApplyDetailView applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-          <InputBox>
-            <div className="title">
-              <h5>세부사항 : 옥상 설명 멘트</h5>
-              <p>고객에게 옥상 시설을 설명해주세요!</p>
-            </div>
-            <textarea
-              name="explainContent"
-              rows="4"
-              cols="50"
-              value={explainContent}
-              placeholder="자유롭게 옥상 설명을 작성해주세요."
-              onChange={changeInput}
-            />
-          </InputBox>
-        </ServiceList>
-        <ServiceList>
-          <Title>
-            <h5>이용 관련 정보 기입하기</h5>
-          </Title>
-          <ApplyAvailableInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-          <ApplyDetailInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-          <ApplyExtraOption applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-        </ServiceList>
-        <FeedBackMsg ref={feedbackMsg} />
-        <ConfirmBtn onClick={submitRequest}>제출하기</ConfirmBtn>
-      </ViewPoint>
+      <ServiceList>
+        <Title>
+          <h5>기본 정보 기입하기</h5>
+        </Title>
+        <ApplySidoList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <ApplyBaseInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+      </ServiceList>
+      <ServiceList>
+        <Title>
+          <h5>시공 관련 정보 기입하기</h5>
+        </Title>
+        <InputBox>
+          <div className="title">
+            <h5>세부사항 : 필요 항목</h5>
+            <p>옥상 녹화 단계에 필요한 시설을 체크해주세요.</p>
+          </div>
+          <OpenModalBtn
+            onClick={() =>
+              openModal(
+                <SetRequiredOptionModal applyInfo={requiredInfo} changeInfo={setRequiredInfo} />,
+              )
+            }>
+            수정하기
+          </OpenModalBtn>
+        </InputBox>
+        <RequestDeadLine requiredInfo={requiredInfo} setRequiredInfo={setRequiredInfo} />
+        <ApplyImgList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <ApplyDetailView applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <InputBox>
+          <div className="title">
+            <h5>세부사항 : 옥상 설명 멘트</h5>
+            <p>고객에게 옥상 시설을 설명해주세요!</p>
+          </div>
+          <textarea
+            name="explainContent"
+            rows="4"
+            cols="50"
+            value={explainContent}
+            placeholder="자유롭게 옥상 설명을 작성해주세요."
+            onChange={changeInput}
+          />
+        </InputBox>
+      </ServiceList>
+      <ServiceList>
+        <Title>
+          <h5>이용 관련 정보 기입하기</h5>
+        </Title>
+        <ApplyAvailableInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <ApplyDetailInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <ApplyExtraOption applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+      </ServiceList>
+      <FeedBackMsg ref={feedbackMsg} />
+      <ConfirmBtn onClick={submitRequest}>제출하기</ConfirmBtn>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
   width: 50vw;
-  height: 80vh;
-
-  margin: auto;
+  margin: 7.5vh auto auto auto;
 
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 
   text-align: center;
-`
-
-const ViewPoint = styled.div`
-  max-height: 80vh;
-  overflow: auto;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
 `
 
 const Title = styled.div`

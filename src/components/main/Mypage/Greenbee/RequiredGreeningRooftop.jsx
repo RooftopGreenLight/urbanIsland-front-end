@@ -138,9 +138,8 @@ const RequiredGreeningRooftop = () => {
 
 const Wrapper = styled.div`
   width: 50vw;
-  height: 80vh;
+  margin: 7.5vh auto auto auto;
 
-  margin: auto;
   padding: 1rem;
   text-align: center;
 `

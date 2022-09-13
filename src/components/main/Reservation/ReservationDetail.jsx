@@ -368,18 +368,12 @@ const ReservationDetail = () => {
 
 const Wrapper = styled.div`
   width: 60vw;
-  max-height: 100vh;
-  overflow: auto;
 
   display: flex;
   margin: 0vw auto 10vh auto;
 
   flex-wrap: wrap;
   justify-content: space-between;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
 `
 
 const RooftopInfoBox = styled.div`

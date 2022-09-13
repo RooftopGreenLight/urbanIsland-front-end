@@ -126,55 +126,51 @@ const ApplyRoofTop = () => {
 
   return (
     <Wrapper>
-      <ViewPoint>
-        <ServiceList>
-          <Title>
-            <h5>기본 정보 기입하기</h5>
-          </Title>
-          <ApplySidoList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-          <ApplyBaseInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-        </ServiceList>
-        <ServiceList>
-          <Title>
-            <h5>시설 정보 기입하기</h5>
-          </Title>
-          <ApplyImgList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-          <ApplyDetailView applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-          <InputBox>
-            <div className="title">
-              <h5>세부사항 : 옥상 설명 멘트</h5>
-              <p>고객에게 옥상 시설을 설명해주세요!</p>
-            </div>
-            <textarea
-              name="explainContent"
-              rows="4"
-              cols="50"
-              value={explainContent}
-              placeholder="자유롭게 옥상 설명을 작성해주세요."
-              onChange={changeInput}
-            />
-          </InputBox>
-        </ServiceList>
-        <ServiceList>
-          <Title>
-            <h5>운영 정보 기입하기</h5>
-          </Title>
-          <ApplyAvailableInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-          <ApplyDetailInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-          <ApplyExtraOption applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-          <FeedBackMsg ref={feedbackMsg} />
-          <ConfirmBtn onClick={sendRoofTopData}>옥상 신청하기</ConfirmBtn>
-        </ServiceList>
-      </ViewPoint>
+      <ServiceList>
+        <Title>
+          <h5>신규 등록 시설 정보</h5>
+        </Title>
+        <ApplySidoList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyBaseInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+      </ServiceList>
+      <ServiceList>
+        <Title>
+          <h5>시설 관련 안내 정보</h5>
+        </Title>
+        <ApplyImgList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyDetailView applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <InputBox>
+          <div className="title">
+            <h5>세부사항 : 옥상 설명 멘트</h5>
+            <p>고객에게 옥상 시설을 설명해주세요!</p>
+          </div>
+          <textarea
+            name="explainContent"
+            rows="4"
+            cols="50"
+            value={explainContent}
+            placeholder="자유롭게 옥상 설명을 작성해주세요."
+            onChange={changeInput}
+          />
+        </InputBox>
+      </ServiceList>
+      <ServiceList>
+        <Title>
+          <h5>옥상 시설 운영 정보</h5>
+        </Title>
+        <ApplyAvailableInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyDetailInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyExtraOption applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <FeedBackMsg ref={feedbackMsg} />
+        <ConfirmBtn onClick={sendRoofTopData}>옥상 신청하기</ConfirmBtn>
+      </ServiceList>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
   width: 50vw;
-  height: 80vh;
-
-  margin: auto;
+  margin: 7.5vh auto auto auto;
   padding: 1rem;
 
   display: flex;
@@ -182,15 +178,6 @@ const Wrapper = styled.div`
   justify-content: space-between;
 
   text-align: center;
-`
-
-const ViewPoint = styled.div`
-  max-height: 80vh;
-  overflow: auto;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
 `
 
 const Title = styled.div`
