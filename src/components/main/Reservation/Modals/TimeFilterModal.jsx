@@ -10,23 +10,24 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 const TimeFilterModal = ({ filter, setFilter }) => {
   const { closeModal } = useContext(ModalContext)
+  const { startTime: prevStartTime, endTime: prevEndTime } = filter
   const [timeInfo, setTimeInfo] = useState({
-    startTime: parseInt(filter?.startTime.slice(0, 2)) || 0,
-    endTime: parseInt(filter?.endTime.slice(0, 2)) || 23,
+    startTime: parseInt(prevStartTime.slice(0, 2)) || 0,
+    endTime: parseInt(prevEndTime.slice(0, 2)) || 24,
   })
 
   const { startTime, endTime } = timeInfo
 
   const resetSelect = () => {
-    setTimeInfo({ startTime: 0, endTime: 23 })
+    setTimeInfo({ startTime: 0, endTime: 24 })
     setFilter(prevFilter => ({ ...prevFilter, startTime: "", endTime: "" }))
   }
 
   const confirmSelect = () => {
     setFilter(prevFilter => ({
       ...prevFilter,
-      startTime: `${String(startTime).padStart(2, "0")}:00:00`,
-      endTime: `${String(endTime).padStart(2, "0")}:00:00`,
+      startTime: startTime > 0 ? `${String(startTime).padStart(2, "0")}:00:00` : "",
+      endTime: endTime < 24 ? `${String(endTime).padStart(2, "0")}:00:00` : "",
     }))
     closeModal()
   }
@@ -47,7 +48,7 @@ const TimeFilterModal = ({ filter, setFilter }) => {
           <CustomRange
             STEP={1}
             MIN={0}
-            MAX={23}
+            MAX={24}
             unit={":00"}
             setValue={setTimeInfo}
             minOption="startTime"

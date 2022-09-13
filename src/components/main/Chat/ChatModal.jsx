@@ -22,6 +22,7 @@ const ChatModal = ({ roomId }) => {
   const [chatMessages, setChatMessages] = useState([])
   const [content, setContent] = useState("")
   const client = useRef({})
+  const chatMessageList = useRef(null)
 
   const accessToken = JSON.parse(localStorage.getItem("access_token"))
   const jwtHeader = { Authorization: `Bearer ${accessToken}` }
@@ -32,6 +33,10 @@ const ChatModal = ({ roomId }) => {
         const { messageResponses } = await chattingControl.getPreChattingLog(roomId)
         if (messageResponses.length > 0) {
           setChatMessages([...chatMessages, ...messageResponses])
+          setTimeout(
+            () => (chatMessageList.current.scrollTop = chatMessageList.current.scrollHeight),
+            10,
+          )
         }
       } catch (err) {
         console.error(err.message)
@@ -46,16 +51,15 @@ const ChatModal = ({ roomId }) => {
     const currentDate = moment()
     const passedDay = currentDate.date() - sendDate.date()
     console.log(sendDate, passedDay)
-    if (passedDay > 365) {
+    if (passedDay >= 365) {
       return `${parseInt(passedDay / 365)}년 전`
     }
-    if (passedDay > 30) {
+    if (passedDay >= 30) {
       return `${parseInt(passedDay / 30)}달 전`
     }
     if (currentDate.date() !== sendDate.date()) {
       return `${passedDay}일 전`
     }
-    console.log(sendDate)
     return moment(sendDate).format("HH:mm")
   }
 
@@ -140,7 +144,7 @@ const ChatModal = ({ roomId }) => {
         <ModalCloseBtn icon={faXmark} onClick={goBackToChatRoomPage} />
       </ModalHeader>
       <ModalContent>
-        <ViewPoint>
+        <ViewPoint ref={chatMessageList}>
           {chatMessages.length > 0 ? (
             <ChatMessageList>
               {chatMessages.slice(-10).map(({ memberId: senderId, content, sendTime }, idx) => {
@@ -190,9 +194,7 @@ const Wrapper = styled.section`
 `
 
 const ViewPoint = styled.div`
-  width: 33vw;
   max-height: 50vh;
-  padding: 0rem 1rem;
   overflow: auto;
 
   display: flex;

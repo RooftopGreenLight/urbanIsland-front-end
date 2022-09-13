@@ -33,8 +33,6 @@ const GreenbeeInfo = () => {
   const { addressCity, addressDetail, addressDistrict, content, greenBeeImages, officeNumber } =
     myGreenbeeInfo
 
-  console.log(greenBeeImages)
-
   return (
     <Wrapper>
       <GreenbeeInfoBox>
@@ -68,8 +66,8 @@ const GreenbeeInfo = () => {
         </Title>
         <SliderBox>
           <Slider {...SlickSettings}>
-            {[...Array(4).keys()].map(idx => (
-              <div>
+            {[...Array(5).keys()].map(idx => (
+              <div key={idx}>
                 {greenBeeImages && greenBeeImages.length > idx ? (
                   <img src={greenBeeImages[idx].fileUrl} alt="Img" key={idx} />
                 ) : (

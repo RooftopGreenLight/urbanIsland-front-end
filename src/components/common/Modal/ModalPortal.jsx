@@ -21,7 +21,9 @@ const ModalPortal = () => {
 }
 
 const preventClick = e => {
-  e.preventDefault()
+  if (!e.target instanceof HTMLElement) {
+    e.preventDefault()
+  }
 }
 
 const Wrapper = styled.div`
