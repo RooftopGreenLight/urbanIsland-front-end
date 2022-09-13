@@ -108,7 +108,7 @@ const SignupForm = () => {
         onChange={changeInput}
         value={verifiedPassword}
       />
-      <SignUpFeedback ref={feedbackMsg}>회원가입 정보를 입력해주세요.</SignUpFeedback>
+      <SignUpFeedback ref={feedbackMsg} />
       <SignupBtn onClick={submitRegister}>회원가입</SignupBtn>
     </Wrapper>
   )

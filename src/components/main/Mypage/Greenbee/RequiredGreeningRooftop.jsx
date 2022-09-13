@@ -125,7 +125,7 @@ const RequiredGreeningRooftop = () => {
               <h5>시설 이미지</h5>
             </Title>
             <img src={structureImage?.fileUrl} alt="Loading" />
-            <ApplyFeedback ref={feedbackMsg}></ApplyFeedback>
+            <ApplyFeedback ref={feedbackMsg} />
             <ApplyBtn onClick={applyRooftopGreening}>
               <FontAwesomeIcon icon={faSeedling} /> 시공 신청하기
             </ApplyBtn>
