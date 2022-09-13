@@ -6,6 +6,8 @@ import { greenbeeControl } from "api/controls/greenbeeControl"
 import { RequestDeadLineDate } from "constants/RequestDeadLineDate"
 import { RequiredRoofTopOption } from "constants/RequiredRoofTopOption"
 import { useRef } from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faSeedling } from "@fortawesome/free-solid-svg-icons"
 
 const RequiredGreeningRooftop = () => {
   const { rooftopId } = useParams()
@@ -124,7 +126,9 @@ const RequiredGreeningRooftop = () => {
             </Title>
             <img src={structureImage?.fileUrl} alt="Loading" />
             <ApplyFeedback ref={feedbackMsg}></ApplyFeedback>
-            <ApplyBtn onClick={applyRooftopGreening}>시공 신청하기</ApplyBtn>
+            <ApplyBtn onClick={applyRooftopGreening}>
+              <FontAwesomeIcon icon={faSeedling} /> 시공 신청하기
+            </ApplyBtn>
           </RooftopInfoBox>
         </ViewPoint>
       )}
@@ -149,6 +153,20 @@ const ViewPoint = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    padding-left: 1rem;
+    background: #ffffff;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #ced4da;
+    &:hover {
+      background-color: #adb5bd;
+    }
+  }
 `
 
 const Title = styled.div`
