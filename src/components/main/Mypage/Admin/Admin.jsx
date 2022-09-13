@@ -211,7 +211,7 @@ const Admin = () => {
 
 const Wrapper = styled.div`
   width: 35vw;
-  margin: 7.5vh auto auto auto;
+  margin: 7.5vh auto;
   display: flex;
   flex-direction: column;
 `
@@ -224,7 +224,7 @@ const Box = styled.p`
       justify-content: space-between;
 
       font-weight: 200;
-      font-size: ${fonts.size.sm};
+      font-size: ${fonts.size.xsm};
     `
   }}
 `
