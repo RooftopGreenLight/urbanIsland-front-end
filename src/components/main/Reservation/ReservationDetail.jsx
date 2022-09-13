@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useLocation } from "react-router-dom"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import styled, { css } from "styled-components"
 import moment from "moment"
 
@@ -80,7 +80,6 @@ const ReservationDetail = () => {
     kidCount,
     petCount,
     width,
-    mainImage,
     rooftopImages,
     structureImage,
     detailNums,
@@ -161,11 +160,15 @@ const ReservationDetail = () => {
     }
   }
 
+  const imgAmount = useMemo(() => rooftopImages.length, [rooftopImages])
+
   const SlickSettings = {
-    dots: true,
-    lazyLoad: true,
-    infinite: true,
-    speed: 500,
+    autoplay: true,
+    autoplaySpeed: 10000,
+    dots: imgAmount > 3,
+    infinite: imgAmount > 3,
+    lazyLoad: "progressive",
+    speed: 250,
     slidesToShow: 1,
     slidesToScroll: 1,
   }
@@ -210,17 +213,13 @@ const ReservationDetail = () => {
       </RooftopInfoBox>
       <ReservationInfoBox>
         <SliderBox>
-          {mainImage !== null && (
+          {rooftopImages && (
             <Slider {...SlickSettings}>
-              <div>
-                <img src={mainImage.fileUrl} alt="Img" key={mainImage.uploadFilename} />
-              </div>
-              {rooftopImages &&
-                rooftopImages.map(({ fileUrl, uploadFilename }) => (
-                  <div key={uploadFilename}>
-                    <img src={fileUrl} alt="Img" key={uploadFilename} />
-                  </div>
-                ))}
+              {rooftopImages.map(({ fileUrl, uploadFilename }) => (
+                <div key={uploadFilename}>
+                  <img src={fileUrl} alt="Img" key={uploadFilename} />
+                </div>
+              ))}
             </Slider>
           )}
         </SliderBox>

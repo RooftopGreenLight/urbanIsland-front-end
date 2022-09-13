@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import Slider from "react-slick"
 
@@ -20,6 +20,7 @@ const GreenbeeInfoEdit = () => {
     deleteImages: [],
     addImages: [],
   })
+  const feedbackMsg = useRef()
 
   useEffect(() => {
     const loadCurrentInfo = async () => {
@@ -36,7 +37,6 @@ const GreenbeeInfoEdit = () => {
   }, [])
 
   const { content, greenBeeImages, officeNumber, deleteImages, addImages } = currentInfo
-  const totalImgAmount = greenBeeImages.length + addImagesBase64.length
 
   // Blob 데이터를 추출하여 이미지를 띄우는 함수.
   const addGreenbeeImage = e => {
@@ -70,13 +70,14 @@ const GreenbeeInfoEdit = () => {
           ({ storeFilename }) => storeFilename !== selectedImage.storeFilename,
         ),
       }))
+      return
     }
+    feedbackMsg.current.innerText = "사무소 대표 사진은 변경할 수 없습니다."
   }
 
   const removeAddedImage = e => {
     const { name } = e.target
     const selectedImage = addImages[name]
-    console.log(name)
     setCurrentInfo(prevInfo => ({
       ...prevInfo,
       addImages: [...addImages].filter(({ name }) => name !== selectedImage.name),
@@ -110,12 +111,19 @@ const GreenbeeInfoEdit = () => {
     }
   }
 
+  const totalImgAmount = useMemo(
+    () => greenBeeImages.length + addImagesBase64.length,
+    [greenBeeImages, addImagesBase64],
+  )
+
+  console.log([...greenBeeImages, ...addImages])
+
   const SlickSettings = {
-    dots: true,
-    lazyLoad: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: totalImgAmount > 2 ? 3 : totalImgAmount,
+    dots: totalImgAmount > 3,
+    infinite: totalImgAmount > 3,
+    lazyLoad: "progressive",
+    speed: 250,
+    slidesToShow: 3,
     slidesToScroll: 1,
   }
 
@@ -170,6 +178,7 @@ const GreenbeeInfoEdit = () => {
               ))}
           </Slider>
         </SliderBox>
+        <FeedBackMsg ref={feedbackMsg} />
         <BtnList>
           <label htmlFor="imgList">
             <FileUploadBtn>
@@ -268,8 +277,8 @@ const SliderBox = styled.div`
   ${({ theme }) => {
     const { margins } = theme
     return css`
+      width: 33vw;
       margin: ${margins.lg} auto;
-      width: 90%;
 
       img {
         width: 10vw;
@@ -321,6 +330,20 @@ const BtnList = styled.div`
   #imgList {
     display: none;
   }
+`
+
+const FeedBackMsg = styled.p`
+  ${({ theme }) => {
+    const { fonts, margins } = theme
+    return css`
+      width: 100%;
+      margin: 0vw auto ${margins.base} auto;
+
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
+      text-align: center;
+    `
+  }}
 `
 
 const ModifyBtn = styled.div`

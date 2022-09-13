@@ -33,7 +33,7 @@ const ApplyDetailView = ({ changeInfo }) => {
       </div>
       <BtnList>
         <label htmlFor="detailView">
-          <FileUploadBtn>사진 업로드</FileUploadBtn>
+          <FileUploadBtn>{`사진 ${imgBase64 ? "재업로드" : "업로드"}`}</FileUploadBtn>
         </label>
         <input
           type="file"

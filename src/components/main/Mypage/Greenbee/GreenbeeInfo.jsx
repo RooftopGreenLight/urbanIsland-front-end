@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Slider from "react-slick"
 
@@ -12,7 +12,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 const GreenbeeInfo = () => {
   const navigate = useNavigate()
-  const [myGreenbeeInfo, setMyGreenbeeInfo] = useState({})
+  const [myGreenbeeInfo, setMyGreenbeeInfo] = useState({
+    addressCity: "",
+    addressDetail: "",
+    addressDistrict: "",
+    content: "",
+    greenBeeImages: [],
+    officeNumber: "",
+  })
   useEffect(() => {
     const loadGreenbeeInfo = async () => {
       const loadedGreenbeeInfo = await greenbeeControl.getGreenbeeInfo()
@@ -21,17 +28,19 @@ const GreenbeeInfo = () => {
     loadGreenbeeInfo()
   }, [])
 
+  const { addressCity, addressDetail, addressDistrict, content, greenBeeImages, officeNumber } =
+    myGreenbeeInfo
+
+  const imgAmount = useMemo(() => greenBeeImages.length ?? 0, [greenBeeImages])
+
   const SlickSettings = {
-    dots: true,
-    lazyLoad: true,
-    infinite: true,
-    speed: 500,
+    dots: imgAmount > 3,
+    infinite: imgAmount > 3,
+    lazyLoad: "progressive",
+    speed: 250,
     slidesToShow: 3,
     slidesToScroll: 1,
   }
-
-  const { addressCity, addressDetail, addressDistrict, content, greenBeeImages, officeNumber } =
-    myGreenbeeInfo
 
   return (
     <Wrapper>
@@ -65,17 +74,15 @@ const GreenbeeInfo = () => {
           <h5>사무소 대표 사진 목록</h5>
         </Title>
         <SliderBox>
-          <Slider {...SlickSettings}>
-            {[...Array(5).keys()].map(idx => (
-              <div key={idx}>
-                {greenBeeImages && greenBeeImages.length > idx ? (
-                  <img src={greenBeeImages[idx].fileUrl} alt="Img" key={idx} />
-                ) : (
-                  <Rectangle />
-                )}
-              </div>
-            ))}
-          </Slider>
+          {greenBeeImages && (
+            <Slider {...SlickSettings}>
+              {greenBeeImages.map(({ fileUrl }, idx) => (
+                <div key={idx}>
+                  <img src={fileUrl} alt="Img" key={idx} />
+                </div>
+              ))}
+            </Slider>
+          )}
         </SliderBox>
         <ModifyBtn onClick={() => navigate("/mypage/greenbee/edit")}>
           <FontAwesomeIcon icon={faEdit} /> 정보 수정하기
@@ -155,8 +162,8 @@ const SliderBox = styled.div`
   ${({ theme }) => {
     const { margins } = theme
     return css`
+      width: 33vw;
       margin: ${margins.lg} auto;
-      width: 90%;
 
       img {
         width: 10vw;
@@ -165,13 +172,6 @@ const SliderBox = styled.div`
       }
     `
   }}
-`
-
-const Rectangle = styled.div`
-  width: 10vw;
-  height: 10vw;
-  overflow: hidden;
-  background: linear-gradient(to top, grey, #d4d4d4);
 `
 
 const ModifyBtn = styled.div`
