@@ -191,7 +191,7 @@ const RequestToGreenBee = () => {
 
 const Wrapper = styled.div`
   width: 50vw;
-  margin: 7.5vh auto auto auto;
+  margin: 7.5vh auto;
 
   display: flex;
   flex-wrap: wrap;
@@ -228,7 +228,6 @@ const Title = styled.div`
 const ServiceList = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 7.5vh;
 `
 
 const InputBox = styled.div`
@@ -306,10 +305,11 @@ const FeedBackMsg = styled.p`
   ${({ theme }) => {
     const { fonts, margins } = theme
     return css`
+      width: 100%;
+      margin: ${margins.sm} auto;
+
       font-size: ${fonts.size.xsm};
       font-weight: 100;
-
-      margin: ${margins.sm} auto;
     `
   }}
 `
@@ -320,7 +320,7 @@ const ConfirmBtn = styled.button`
     return css`
       width: 50%;
       padding: ${paddings.sm} ${paddings.base};
-      margin: ${margins.sm} auto ${margins.lg} auto;
+      margin: auto;
 
       cursor: pointer;
       border-radius: ${fonts.size.sm};
