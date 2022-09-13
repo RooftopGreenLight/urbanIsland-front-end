@@ -66,7 +66,7 @@ const Schedule = () => {
         const loadedInfo = await reservationControl.getReservationInfo(
           moment(selectedDate).format("YYYY-MM-DD"),
         )
-        console.log(loadedWaitingInfo)
+
         setWaitingReservation(loadedWaitingInfo)
         setCompletedReservation(loadedCompletedInfo)
         loadedInfo && setReservationInfo(loadedInfo)
@@ -102,6 +102,10 @@ const Schedule = () => {
     try {
       await reservationControl.deleteCancelReservation(reservationId)
       const loadedWaitingInfo = await reservationControl.getWaitingResevationInfo()
+      const loadedInfo = await reservationControl.getReservationInfo(
+        moment(selectedDate).format("YYYY-MM-DD"),
+      )
+      setBookingDates(new Set())
       loadedWaitingInfo.map(({ startDate, endDate }) => {
         const betweenDates = DateUtil.getDatesBetweenTwoDates(
           DateUtil.createDate(startDate),
@@ -113,6 +117,20 @@ const Schedule = () => {
         )
       })
       setWaitingReservation(loadedWaitingInfo)
+      loadedInfo
+        ? setReservationInfo(loadedInfo)
+        : setReservationInfo({
+            city: "",
+            district: "",
+            detail: "",
+            startDate: [],
+            endDate: [],
+            startTime: [],
+            endTime: [],
+            adultCount: 0,
+            kidCount: 0,
+            reservationId: null,
+          })
     } catch (err) {
       console.log(err.message)
     }
@@ -334,7 +352,7 @@ const ScheduleDetail = styled.div`
 
 const BookingDot = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
+    const { colors, fonts, margins } = theme
     return css`
       height: ${fonts.size.xxsm};
       width: ${fonts.size.xxsm};
