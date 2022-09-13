@@ -57,7 +57,7 @@ const ApplyImgList = ({ applyInfo, changeInfo }) => {
           accept=".png,.jpg"
         />
       </BtnList>
-      <SliderBox>
+      <SliderBox imgAmount={imgBase64.length}>
         <Slider {...SlickSettings}>
           {imgBase64.map((item, idx) => (
             <div key={idx}>
@@ -128,11 +128,12 @@ const FileUploadBtn = styled.div`
 `
 
 const SliderBox = styled.div`
-  ${({ theme }) => {
+  ${({ theme, imgAmount }) => {
     const { margins } = theme
     return css`
       margin: ${margins.lg} auto 0vw auto;
       width: 90%;
+      display: ${imgAmount ? "block" : "none"};
 
       img {
         width: 10vw;

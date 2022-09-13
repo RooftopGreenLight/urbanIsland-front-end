@@ -51,7 +51,6 @@ const ReservationDetail = () => {
     rooftopImages: [],
     rooftopReviews: [],
     rooftopOptions: [],
-    rooftopReviews: [],
     structureImage: null,
     totalCount: 0,
     totalPrice: 0,
@@ -181,7 +180,7 @@ const ReservationDetail = () => {
           <div className="detail-list">
             <DetailInfo>
               <FontAwesomeIcon icon={faStar} />
-              <span>{parseInt(grade).toFixed(1)} / 5.0</span>
+              <span>{Number(grade).toFixed(1)} / 5.0</span>
             </DetailInfo>
             <DetailInfo>
               <FontAwesomeIcon icon={faMap} />
@@ -548,8 +547,7 @@ const ReviewBox = styled.div`
     const { colors, fonts, paddings, margins } = theme
     return css`
       width: 100%;
-      padding: ${paddings.sm} 0vw;
-      margin: ${margins.sm} 0vw;
+      margin: ${margins.base} 0vw 0vw 0vw;
 
       display: flex;
       flex-wrap: wrap;

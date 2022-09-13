@@ -168,7 +168,7 @@ const Schedule = () => {
 
 const Wrapper = styled.div`
   width: 35vw;
-  margin: 7.5vh auto auto auto;
+  margin: 7.5vh auto;
 
   display: flex;
   flex-direction: column;
@@ -201,18 +201,23 @@ const Title = styled.div`
 
 const CalenderBox = styled.div`
   ${({ theme }) => {
-    const { paddings, margins } = theme
+    const { margins } = theme
     return css`
-      margin: ${margins.sm} 0vw ${margins.base} 0vw;
-      padding: ${paddings.base} 0vw;
+      margin: ${margins.lg} 0vw;
     `
   }}
 `
 
 const InnerBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  ${({ theme }) => {
+    const { margins } = theme
+    return css`
+      margin: 0vw 0vw ${margins.lg} 0vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    `
+  }}
 `
 
 const ServiceBox = styled.div`
@@ -247,19 +252,20 @@ const ScheduleDetail = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
+      width: 100%;
+      margin: auto;
+      padding: ${paddings.sm};
+
       display: flex;
       justify-content: space-between;
-      padding: ${paddings.sm};
       color: ${colors.black.secondary};
 
       span {
-        width: 100%;
         font-weight: 300;
         text-align: right;
       }
 
       p {
-        width: 70%;
         margin: ${margins.xsm} 0vw;
         font-size: ${fonts.size.xsm};
         font-weight: ${fonts.weight.light};

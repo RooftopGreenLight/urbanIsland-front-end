@@ -44,7 +44,7 @@ const ApplyAvailableInfo = ({ applyInfo, changeInfo }) => {
           onClick={() =>
             openModal(<SetFacilitiesModal applyInfo={applyInfo} changeInfo={changeInfo} />)
           }>
-          세부 정보 설정하기
+          시설 체크하기
         </OpenModalBtn>
       </InputBox>
     </Wrapper>
@@ -83,7 +83,7 @@ const InputBox = styled.div`
       }
 
       h5 {
-        margin-bottom: 0.25rem;
+        margin-bottom: ${margins.xsm};
         color: ${colors.black.secondary};
         font-size: ${fonts.size.sm};
       }
@@ -126,7 +126,7 @@ const OpenModalBtn = styled.div`
       font-weight: 100;
 
       &:hover {
-        border: 0px;
+        border: 1px solid ${colors.white};
         background: ${colors.main.tertiary};
         color: ${colors.white};
       }
