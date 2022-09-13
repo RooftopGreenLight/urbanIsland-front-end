@@ -33,7 +33,7 @@ const Rooftop = () => {
     lazyLoad: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: ownRooftopList.length > 3 ? 3 : ownRooftopList.length,
     slidesToScroll: 1,
   }
 
