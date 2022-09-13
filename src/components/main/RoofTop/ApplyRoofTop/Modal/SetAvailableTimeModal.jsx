@@ -8,17 +8,19 @@ import { ModalContext } from "module/Modal"
 const SetAvailableTimeModal = ({ applyInfo, changeInfo }) => {
   const { closeModal } = useContext(ModalContext)
   const feedBackMsg = useRef()
+
+  const { startTime: appliedStartTime, endTime: appliedEndTime } = applyInfo
   const [availableTime, setAvailableTime] = useState({
-    startTime: applyInfo.startTime,
-    endTime: applyInfo.endTime,
+    startTime: appliedStartTime,
+    endTime: appliedEndTime,
   })
 
   const { startTime, endTime } = availableTime
 
   const changeTime = e => {
     const { name, value } = e.target
-    if (value < 0 || value > 23) {
-      feedBackMsg.current.innerText = "시간은 0시부터 23시까지 설정 가능합니다."
+    if (value < 0 || value > 24) {
+      feedBackMsg.current.innerText = "시간은 0시부터 24시까지 설정 가능합니다."
       return
     }
     setAvailableTime({ ...availableTime, [name]: value.padStart(2, "0") })
