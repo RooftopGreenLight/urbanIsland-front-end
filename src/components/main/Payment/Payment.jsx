@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useMemo, useRef, useState } from "react"
 import { useLocation, useParams } from "react-router-dom"
 import styled, { css } from "styled-components"
 import moment from "moment/moment"
@@ -16,9 +16,9 @@ import ReservationModal from "../Reservation/Modals/ReservationModal"
 const Payment = () => {
   const { rooftopId } = useParams()
   const location = useLocation()
-
   const feedbackMsg = useRef()
   const { openModal } = useContext(ModalContext)
+
   const [customerInfo, setCustomerInfo] = useState({
     name: "",
     phoneNumber: "",
@@ -40,7 +40,6 @@ const Payment = () => {
   const {
     adultCount,
     kidCount,
-    petCount,
     selectedTime,
     selectedDate,
     optionContent,
@@ -66,10 +65,16 @@ const Payment = () => {
     setPaymentInfo(prevInfo => ({ ...prevInfo, ...reservationData }))
   }, [])
 
-  const totalUseDay = moment(selectedDate[1]).diff(moment(selectedDate[0]), "days") + 1
-  const needToPay =
-    totalPrice * totalUseDay +
-    optionCount.reduce((sum, count, idx) => (sum += count * optionPrice[idx]), 0)
+  const totalUseDay = useMemo(
+    () => moment(selectedDate[1]).diff(moment(selectedDate[0]), "days") + 1,
+    [selectedDate],
+  )
+  const needToPay = useMemo(
+    () =>
+      totalPrice * totalUseDay +
+      optionCount.reduce((sum, count, idx) => (sum += count * optionPrice[idx]), 0),
+    [totalPrice, totalUseDay, optionCount, optionPrice],
+  )
 
   const changeInput = e => {
     const { name, value } = e.target
