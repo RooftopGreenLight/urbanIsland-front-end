@@ -116,7 +116,7 @@ const Payment = () => {
           <div className="detail-list">
             <DetailInfo>
               <FontAwesomeIcon icon={faStar} />
-              <span>{parseInt(grade).toFixed(1)} / 5.0</span>
+              <span>{Number(grade).toFixed(1)} / 5.0</span>
             </DetailInfo>
             <DetailInfo>
               <FontAwesomeIcon icon={faMap} />

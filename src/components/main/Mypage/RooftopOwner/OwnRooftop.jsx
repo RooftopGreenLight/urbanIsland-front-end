@@ -13,7 +13,7 @@ const OwnRooftop = ({ rooftopInfo }) => {
       </div>
       <div className="grade">
         <FontAwesomeIcon icon={faStar} />
-        <span> {` ${grade} / 5 점`}</span>
+        <span> {` ${Number(grade).toFixed(1)} / 5 점`}</span>
       </div>
     </Wrapper>
   )
