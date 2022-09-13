@@ -7,8 +7,6 @@ import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 
 import { greenbeeControl } from "api/controls/greenbeeControl"
-import { faEdit } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 const OtherGreenbeeInfo = () => {
   const navigate = useNavigate()
@@ -90,9 +88,6 @@ const OtherGreenbeeInfo = () => {
             </Slider>
           )}
         </SliderBox>
-        <ModifyBtn onClick={() => navigate("/mypage/greenbee/edit")}>
-          <FontAwesomeIcon icon={faEdit} /> 정보 수정하기
-        </ModifyBtn>
       </GreenbeeInfoBox>
     </Wrapper>
   )
@@ -180,31 +175,4 @@ const SliderBox = styled.div`
   }}
 `
 
-const ModifyBtn = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
-    return css`
-      width: 90%;
-      padding: ${paddings.sm} ${paddings.base};
-      margin: ${margins.base} auto;
-
-      cursor: pointer;
-      border-radius: ${fonts.size.sm};
-      background-color: ${colors.main.primary};
-
-      text-align: center;
-      color: ${colors.white};
-      font-size: ${fonts.size.sm};
-
-      svg {
-        margin: auto ${margins.sm} auto 0vw;
-      }
-
-      &:hover {
-        background-color: ${colors.main.tertiary};
-        font-weight: ${fonts.weight.bold};
-      }
-    `
-  }}
-`
 export default OtherGreenbeeInfo
