@@ -104,18 +104,24 @@ const Wrapper = styled.div`
 
 const NoticeEmptyList = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
       margin: ${margins.sm} 0vw;
-      border-radius: 25px;
+      padding: ${paddings.sm} 0vw;
+
+      border-radius: 0.25rem;
+      background-color: ${colors.main.tertiary}11;
       color: ${colors.main.secondary};
 
       h5 {
+        width: 100%;
         font-size: ${fonts.size.base};
+        text-align: center;
       }
       p {
         font-size: ${fonts.size.xsm};
         font-weight: ${fonts.weight.light};
+        padding-bottom: ${paddings.xsm};
       }
     `
   }}
