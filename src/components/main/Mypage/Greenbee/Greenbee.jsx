@@ -15,7 +15,7 @@ const Greenbee = () => {
     <Wrapper>
       <ServiceList>
         <Title>
-          <h5>내 서비스 관리하기</h5>
+          <h5>그린비 사무소 관리하기</h5>
         </Title>
         <ServiceBox onClick={() => openModal(<FindMyRooftopOwner />)}>
           <div className="introduce">

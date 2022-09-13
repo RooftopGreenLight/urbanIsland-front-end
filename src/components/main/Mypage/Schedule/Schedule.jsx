@@ -210,15 +210,9 @@ const CalenderBox = styled.div`
 `
 
 const InnerBox = styled.div`
-  ${({ theme }) => {
-    const { margins } = theme
-    return css`
-      margin: ${margins.base} 0vw;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    `
-  }}
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `
 
 const ServiceBox = styled.div`
@@ -303,7 +297,7 @@ const SendMessageBtn = styled.div`
     return css`
       width: 90%;
       padding: ${paddings.sm} ${paddings.base};
-      margin: ${margins.lg} auto;
+      margin: ${margins.lg} auto ${margins.xl} auto;
 
       cursor: pointer;
       border-radius: ${fonts.size.sm};

@@ -226,7 +226,9 @@ const ProfileLine = styled.div`
 
       button {
         width: 10%;
-        height: 75%;
+        height: 100%;
+
+        padding: ${paddings.xsm};
         margin: auto;
 
         border-radius: ${fonts.size.xsm};
