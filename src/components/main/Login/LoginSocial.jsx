@@ -27,7 +27,7 @@ const Wrapper = styled.div`
     const { fonts, margins } = theme
     return css`
       width: 70%;
-      margin: ${margins.lg} auto;
+      margin: ${margins.sm} auto;
       text-align: center;
 
       p {
@@ -50,10 +50,10 @@ const SocialImage = styled.img`
   ${({ theme }) => {
     const { paddings } = theme
     return css`
-      width: 4vw;
-      height: 4vw;
+      width: 3vw;
+      height: 3vw;
 
-      padding: ${paddings.sm};
+      padding: ${paddings.xsm};
       box-shadow: 0px 2px 2px #d5d5d5;
       border-radius: 100px;
 
