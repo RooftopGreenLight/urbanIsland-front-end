@@ -47,7 +47,7 @@ const IntroText = styled.div`
 
       h5 {
         display: inline-block;
-        margin: ${margins.base} 0vw;
+        margin: 0vw 0vw ${margins.base} 0vw;
         font-size: ${fonts.size.xxl};
         font-weight: bold;
       }
@@ -57,7 +57,7 @@ const IntroText = styled.div`
         margin: 0 0 1rem 0;
         white-space: pre-wrap;
 
-        font-size: 1.15rem;
+        font-size: 1.2rem;
         font-weight: 100;
         line-height: 1.3;
       }
