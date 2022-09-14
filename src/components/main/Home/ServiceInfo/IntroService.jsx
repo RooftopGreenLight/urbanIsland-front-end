@@ -9,7 +9,11 @@ const IntroService = () => {
     <Wrapper>
       <ServiceIntro>
         <h5>Urban Island</h5>
-        <p>도시 녹화 문화의 자생 정착 도움 웹 서비스입니다</p>
+        <p>Urban Island는 자생적 옥상 녹화 문화를 만들기 위해 노력합니다.</p>
+        <p>
+          소외된 이들과의 동행을 위한 서비스를 통해 상생을 추구하고, 모두를 위한 치유 공간을
+          만듭니다.
+        </p>
       </ServiceIntro>
       {ServiceInfoData.map((content, idx) => {
         return idx % 2 === 0 ? (
@@ -43,7 +47,7 @@ const ServiceIntro = styled.div`
       flex-direction: column;
 
       h5 {
-        margin: ${margins.base} auto ${margins.xsm} auto;
+        margin: ${margins.base} auto ${margins.sm} auto;
         font-size: ${fonts.size.xxl};
         font-weight: bold;
       }
