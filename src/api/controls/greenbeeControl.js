@@ -72,6 +72,17 @@ export const greenbeeControl = {
       throw new Error(err)
     }
   },
+  getOtherGreenbeeInfo: async memberId => {
+    try {
+      const greenbeeInfo = await axiosInstance({
+        method: "GET",
+        url: `/green-bees/${memberId}`,
+      })
+      return greenbeeInfo.data
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
   postGreenbeeModifiedInfo: async modifiedData => {
     try {
       await axiosInstance({

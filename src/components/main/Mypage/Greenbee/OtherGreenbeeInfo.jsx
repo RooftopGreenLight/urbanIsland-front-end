@@ -1,18 +1,17 @@
 import styled, { css } from "styled-components"
 import { useEffect, useMemo, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import Slider from "react-slick"
 
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 
 import { greenbeeControl } from "api/controls/greenbeeControl"
-import { faEdit } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-const GreenbeeInfo = () => {
+const OtherGreenbeeInfo = () => {
   const navigate = useNavigate()
-  const [myGreenbeeInfo, setMyGreenbeeInfo] = useState({
+  const { memberId } = useParams()
+  const [otherGreenbeeInfo, setOtherGreenbeeInfo] = useState({
     addressCity: "",
     addressDetail: "",
     addressDistrict: "",
@@ -22,14 +21,19 @@ const GreenbeeInfo = () => {
   })
   useEffect(() => {
     const loadGreenbeeInfo = async () => {
-      const loadedGreenbeeInfo = await greenbeeControl.getGreenbeeInfo()
-      setMyGreenbeeInfo(loadedGreenbeeInfo)
+      try {
+        const loadedGreenbeeInfo = await greenbeeControl.getOtherGreenbeeInfo(memberId)
+        setOtherGreenbeeInfo(loadedGreenbeeInfo)
+      } catch (err) {
+        console.log(err.message)
+        navigate("/mypage/greenbee/not_exist")
+      }
     }
     loadGreenbeeInfo()
   }, [])
 
   const { addressCity, addressDetail, addressDistrict, content, greenBeeImages, officeNumber } =
-    myGreenbeeInfo
+    otherGreenbeeInfo
 
   const imgAmount = useMemo(() => greenBeeImages.length ?? 0, [greenBeeImages])
 
@@ -46,26 +50,26 @@ const GreenbeeInfo = () => {
     <Wrapper>
       <GreenbeeInfoBox>
         <Title>
-          <h5>나의 그린비 정보</h5>
+          <h5>그린비 정보 안내</h5>
         </Title>
         <GreenbeeInfoLine>
           <div className="info">
             <span>사무소 주소</span>
             <p>
-              {myGreenbeeInfo ? `${addressCity} ${addressDistrict} ${addressDetail}` : `*******`}
+              {otherGreenbeeInfo ? `${addressCity} ${addressDistrict} ${addressDetail}` : `*******`}
             </p>
           </div>
         </GreenbeeInfoLine>
         <GreenbeeInfoLine>
           <div className="info">
             <span>사무소 연락처</span>
-            <p>{myGreenbeeInfo ? officeNumber : "*** - **** - ****"}</p>
+            <p>{otherGreenbeeInfo ? officeNumber : "*** - **** - ****"}</p>
           </div>
         </GreenbeeInfoLine>
         <GreenbeeInfoLine>
           <div className="info">
             <span>사무소 소개</span>
-            <pre>{myGreenbeeInfo ? content : "****"}</pre>
+            <pre>{otherGreenbeeInfo ? content : "****"}</pre>
           </div>
         </GreenbeeInfoLine>
       </GreenbeeInfoBox>
@@ -84,9 +88,6 @@ const GreenbeeInfo = () => {
             </Slider>
           )}
         </SliderBox>
-        <ModifyBtn onClick={() => navigate("/mypage/greenbee/edit")}>
-          <FontAwesomeIcon icon={faEdit} /> 정보 수정하기
-        </ModifyBtn>
       </GreenbeeInfoBox>
     </Wrapper>
   )
@@ -174,31 +175,4 @@ const SliderBox = styled.div`
   }}
 `
 
-const ModifyBtn = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
-    return css`
-      width: 90%;
-      padding: ${paddings.sm} ${paddings.base};
-      margin: ${margins.base} auto;
-
-      cursor: pointer;
-      border-radius: ${fonts.size.sm};
-      background-color: ${colors.main.primary};
-
-      text-align: center;
-      color: ${colors.white};
-      font-size: ${fonts.size.sm};
-
-      svg {
-        margin: auto ${margins.sm} auto 0vw;
-      }
-
-      &:hover {
-        background-color: ${colors.main.tertiary};
-        font-weight: ${fonts.weight.bold};
-      }
-    `
-  }}
-`
-export default GreenbeeInfo
+export default OtherGreenbeeInfo

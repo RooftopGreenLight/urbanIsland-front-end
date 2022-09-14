@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useLocation } from "react-router-dom"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import styled, { css } from "styled-components"
 import moment from "moment"
 
@@ -101,6 +101,7 @@ const ReservationDetail = () => {
     const loadRooftopData = async () => {
       try {
         const result = await roofTopControl.getRooftopDetail(rooftopId)
+        console.log(result)
         const { startTime, endTime, rooftopOptions, reservations, totalPrice } = result
 
         // 이미 예약된 일자인 bookedDate를 Set에 하나씩 저장하는 과정.
@@ -161,11 +162,15 @@ const ReservationDetail = () => {
     }
   }
 
+  const imgAmount = useMemo(() => rooftopImages?.length, [rooftopImages])
+
   const SlickSettings = {
-    dots: true,
-    lazyLoad: true,
-    infinite: true,
-    speed: 500,
+    autoplay: true,
+    autoplaySpeed: 10000,
+    dots: imgAmount > 3,
+    infinite: imgAmount > 3,
+    lazyLoad: "progressive",
+    speed: 250,
     slidesToShow: 1,
     slidesToScroll: 1,
   }
@@ -210,17 +215,19 @@ const ReservationDetail = () => {
       </RooftopInfoBox>
       <ReservationInfoBox>
         <SliderBox>
-          {mainImage !== null && (
+          {mainImage && (
             <Slider {...SlickSettings}>
-              <div>
-                <img src={mainImage.fileUrl} alt="Img" key={mainImage.uploadFilename} />
+              <div key={mainImage.uploadFilename}>
+                <img src={mainImage.fileUrl} alt="Img" />
               </div>
               {rooftopImages &&
-                rooftopImages.map(({ fileUrl, uploadFilename }) => (
-                  <div key={uploadFilename}>
-                    <img src={fileUrl} alt="Img" key={uploadFilename} />
-                  </div>
-                ))}
+                rooftopImages
+                  .filter(({ uploadFilename }) => uploadFilename !== mainImage.uploadFilename)
+                  .map(({ fileUrl, uploadFilename }) => (
+                    <div key={uploadFilename}>
+                      <img src={fileUrl} alt="Img" />
+                    </div>
+                  ))}
             </Slider>
           )}
         </SliderBox>
@@ -418,14 +425,14 @@ const RooftopDetail = styled.div`
       }
 
       .detail-list {
-        width: 32.5vw;
+        width: 30vw;
 
         display: flex;
         justify-content: space-between;
       }
 
       .btn-list {
-        width: 14.5vw;
+        width: 16vw;
         display: flex;
         justify-content: space-between;
       }
@@ -454,6 +461,7 @@ const CopyBtn = styled.button`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
+      width: 7.5vw;
       padding: ${paddings.sm} ${paddings.base};
 
       border-radius: 0.25rem;

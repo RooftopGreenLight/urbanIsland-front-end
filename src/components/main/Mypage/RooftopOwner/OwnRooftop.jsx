@@ -13,7 +13,7 @@ const OwnRooftop = ({ rooftopInfo }) => {
       </div>
       <div className="grade">
         <FontAwesomeIcon icon={faStar} />
-        <span> {` ${Number(grade).toFixed(1)} / 5 점`}</span>
+        <span> {` ${Number(grade).toFixed(1)} / 5.0`}</span>
       </div>
     </Wrapper>
   )
@@ -33,7 +33,7 @@ const Wrapper = styled.div`
       flex-direction: column;
       justify-content: space-between;
 
-      background: url(${fileUrl});
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.25)), url(${fileUrl});
       background-size: cover;
       border-radius: 5%;
 
