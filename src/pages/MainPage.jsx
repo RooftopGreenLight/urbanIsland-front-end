@@ -27,7 +27,7 @@ const MainPage = () => {
   const isLogin = useRecoilValue(AuthCheckLogin)
   return (
     <Routes>
-      <Route path="/" element={<HomeContainer />} />
+      <Route path="*" element={<HomeContainer />} />
       <Route element={<RestrictedRoute isLogin={isLogin} />}>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
