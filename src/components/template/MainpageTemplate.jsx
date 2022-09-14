@@ -1,6 +1,4 @@
 import styled from "styled-components"
-
-import Footer from "components/common/Footer"
 import Home from "components/main/Home/Home"
 
 const MainpageTemplate = ({ children }) => {
@@ -8,7 +6,6 @@ const MainpageTemplate = ({ children }) => {
     <Wrapper>
       <Home />
       <div className="content">{children}</div>
-      <Footer />
     </Wrapper>
   )
 }
