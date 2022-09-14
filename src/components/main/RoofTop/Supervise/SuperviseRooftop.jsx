@@ -7,7 +7,6 @@ import { useState, useEffect } from "react"
 import { roofTopControl } from "api/controls/roofTopControl"
 import moment from "moment/moment"
 import DateUtil from "util/DateUtil"
-import { reservationControl } from "api/controls/reservationControl"
 import {
   faBuilding,
   faCalendar,

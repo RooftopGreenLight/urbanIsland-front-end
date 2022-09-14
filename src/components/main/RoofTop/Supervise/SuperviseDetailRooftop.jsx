@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { roofTopControl } from "api/controls/roofTopControl"
 import styled, { css } from "styled-components"
@@ -15,7 +15,6 @@ import Calendar from "react-calendar"
 import { CalenderContainer } from "styles/calender"
 import SetAvailableTimeModal from "components/main/RoofTop/ApplyRoofTop/Modal/SetAvailableTimeModal"
 import SetAvailablePersonModal from "components/main/RoofTop/ApplyRoofTop/Modal/SetAvailablePersonModal"
-import { useNavigate } from "react-router-dom"
 import moment from "moment/moment"
 import DateUtil from "util/DateUtil"
 import { reservationControl } from "api/controls/reservationControl"
@@ -27,7 +26,7 @@ const SuperviseDetailRooftop = () => {
   const [tmpStructure, setTmpStructure] = useState([])
   const [selectedDate, setSeletedDate] = useState(new Date())
   const [bookingDates, setBookingDates] = useState(new Map())
-
+  //const [reservationDetail, setReservationDetail] = useState()
   const [input, setInput] = useState({
     adultCount: 0,
     kidCount: 0,
@@ -41,6 +40,8 @@ const SuperviseDetailRooftop = () => {
     rooftopImages: [],
     structureImage: null,
     rooftopReviews: [],
+    width: 0,
+    grade: 0,
   })
   const onChangeInput = e => {
     const { name, value } = e.target
@@ -54,44 +55,20 @@ const SuperviseDetailRooftop = () => {
     const loadCurrentInfo = async () => {
       try {
         const result = await roofTopControl.getRooftopDetail(id)
-        const {
-          rooftopImages,
-          kidCount,
-          adultCount,
-          petCount,
-          totalCount,
-          totalPrice,
-          startTime,
-          endTime,
-          rooftopReviews,
-          reservations,
-          structureImage,
-        } = result
+
+        const { reservations } = result
 
         setInput({
           ...result,
-          rooftopImages: rooftopImages.filter(
-            ({ rooftopImageType }) => rooftopImageType === "NORMAL",
-          ),
-          structureImage,
-          kidCount,
-          adultCount,
-          petCount,
-          totalCount,
-          totalPrice,
-          startTime,
-          endTime,
-          rooftopReviews,
         })
-        reservations.map(({ startDates, endDates }) => {
+        reservations.map(({ id, startDates, endDates }) => {
           const betweenDates = DateUtil.getDatesBetweenTwoDates(
             DateUtil.createDate(startDates),
             DateUtil.createDate(endDates),
           )
           betweenDates.map(date => {
             setBookingDates(
-              prevBookingDates =>
-                new Map([...prevBookingDates, [date.toDateString(), reservations.id]]),
+              prevBookingDates => new Map([...prevBookingDates, [date.toDateString(), id]]),
             )
           })
         })
@@ -102,23 +79,33 @@ const SuperviseDetailRooftop = () => {
     loadCurrentInfo()
   }, [])
 
-  useEffect(() => {
-    const loadReservationDetail = async () => {
-      try {
-        const result = await reservationControl.getReservationInfoById(id)
-      } catch (err) {
-        console.log(err.message)
-      }
-    }
-    loadReservationDetail()
-  }, [])
+  // useEffect(() => {
+  //   const clickDate = async () => {
+  //     try {
+  //       const result = await reservationControl.getReservationInfoById(
+  //         bookingDates.get(moment(selectedDate).format("ddd MMM DD YYYY")),
+  //       )
+  //       setReservationDetail(result)
+  //     } catch (err) {
+  //       console.log(err.message)
+  //     }
+  //   }
+  //   clickDate()
+  // }, [selectedDate])
 
-  console.log(bookingDates.get(selectedDate))
   useEffect(() => {
     console.log(input)
   }, [input])
-  const { totalCount, deleteImages, addImages, rooftopImages, structureImage, rooftopReviews } =
-    input
+  const {
+    totalCount,
+    width,
+    deleteImages,
+    addImages,
+    rooftopImages,
+    structureImage,
+    rooftopReviews,
+    grade,
+  } = input
 
   // Blob 데이터를 추출하여 이미지를 띄우는 함수.
   const addImage = e => {
@@ -263,6 +250,7 @@ const SuperviseDetailRooftop = () => {
                   />
                 </div>
               ))}
+            {addImagesBase64 && rooftopImages ? null : <p>이미지가 없습니다</p>}
           </Slider>
         </SliderBox>
         <div>
@@ -281,11 +269,11 @@ const SuperviseDetailRooftop = () => {
         <InfoLine>
           <div>
             <Icon icon={faArrowsLeftRight} />
-            <IconText>3333m2</IconText>
+            <IconText>{width}m2</IconText>
           </div>
           <div>
             <Icon icon={faStar} />
-            <IconText>3/5.0</IconText>
+            <IconText>{grade}/5.0</IconText>
           </div>
           <div>
             <Icon icon={faUser} />
@@ -358,12 +346,15 @@ const SuperviseDetailRooftop = () => {
         </BoxWrapper>
         <BoxWrapper>
           <Title>배치도</Title>
-          {structureImage && (
+          {structureImage ? (
             <img src={structureImage.fileUrl} id="STRUCTURE" onDoubleClick={removeGivenImage} />
+          ) : (
+            <p>배치도가 없습니다</p>
           )}
-          {tmpStructure && (
+          {tmpStructure && structureImage ? null : (
             <img src={tmpStructure} id="STRUCTURE" onDoubleClick={removeStructureImage} />
           )}
+
           <div>
             <label htmlFor="structureimg">
               <FileUploadBtn>사진 업로드</FileUploadBtn>
