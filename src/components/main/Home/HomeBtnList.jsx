@@ -14,7 +14,7 @@ const HomeBtnList = () => {
       <HomeBtn to="/reservation" delay={0}>
         옥상시설 예약
       </HomeBtn>
-      <HomeBtn to="/" delay={1}>
+      <HomeBtn to="/service" delay={1}>
         서비스 소개
       </HomeBtn>
       <HomeBtn to="/" delay={2}>
