@@ -41,7 +41,7 @@ const Wrapper = styled.div`
 
 const SocialIconList = styled.div`
   width: 100%;
-  margin: auto;
+  margin: 0.5rem auto;
   display: flex;
   justify-content: space-evenly;
 `
@@ -50,10 +50,10 @@ const SocialImage = styled.img`
   ${({ theme }) => {
     const { paddings } = theme
     return css`
-      width: 3vw;
-      height: 3vw;
+      width: 3.25vw;
+      height: 3.25vw;
 
-      padding: ${paddings.xsm};
+      padding: 0.4rem;
       box-shadow: 0px 2px 2px #d5d5d5;
       border-radius: 100px;
 

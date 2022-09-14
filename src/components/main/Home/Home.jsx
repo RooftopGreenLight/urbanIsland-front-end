@@ -8,28 +8,17 @@ import bgImg2 from "assets/img/background2.jpg"
 const Home = () => {
   return (
     <Wrapper>
-      <Homepage>
-        <HomeText>
-          <h3>Urban Island</h3>
-          <p>도심 속, 우리들의 숨겨진 쉼터</p>
-        </HomeText>
-        <HomeBtnList />
-        <HomeBottomText />
-      </Homepage>
-      <Information />
+      <HomeText>
+        <h3>Urban Island</h3>
+        <p>도심 속, 우리들의 숨겨진 쉼터</p>
+      </HomeText>
+      <HomeBtnList />
+      <HomeBottomText />
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 100vw;
-  min-height: 100vh;
-
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${bgImg2});
-  background-size: cover;
-`
-
-const Homepage = styled.div`
   width: 100vw;
   min-height: 100vh;
 
