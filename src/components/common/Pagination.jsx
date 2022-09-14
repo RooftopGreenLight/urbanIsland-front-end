@@ -8,7 +8,7 @@ const Pagination = ({ total, page, setPage }) => {
     if (current === 0 || current === numPages) {
       return
     }
-    setPage(current + value)
+    setPage(prevPage => ({ ...prevPage, page: current + value }))
   }
   return (
     <Wrapper>
