@@ -425,14 +425,14 @@ const RooftopDetail = styled.div`
       }
 
       .detail-list {
-        width: 32.5vw;
+        width: 30vw;
 
         display: flex;
         justify-content: space-between;
       }
 
       .btn-list {
-        width: 14.5vw;
+        width: 16vw;
         display: flex;
         justify-content: space-between;
       }
@@ -461,6 +461,7 @@ const CopyBtn = styled.button`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
+      width: 7.5vw;
       padding: ${paddings.sm} ${paddings.base};
 
       border-radius: 0.25rem;
