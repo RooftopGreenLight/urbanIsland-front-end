@@ -48,7 +48,13 @@ const Profile = () => {
             </div>
             <button
               onClick={() =>
-                openModal(<ProfileModifyModal content="nickname" placeholder="닉네임" />)
+                openModal(
+                  <ProfileModifyModal
+                    content="nickname"
+                    placeholder="닉네임"
+                    setUserData={setUserData}
+                  />,
+                )
               }>
               수정
             </button>
@@ -60,7 +66,13 @@ const Profile = () => {
             </div>
             <button
               onClick={() =>
-                openModal(<ProfileModifyModal content="phoneNumber" placeholder="전화번호" />)
+                openModal(
+                  <ProfileModifyModal
+                    content="phoneNumber"
+                    placeholder="전화번호"
+                    setUserData={setUserData}
+                  />,
+                )
               }>
               {phoneNumber ? "수정" : "추가"}
             </button>
@@ -72,7 +84,13 @@ const Profile = () => {
             </div>
             <button
               onClick={() =>
-                openModal(<ProfileModifyModal content="password" placeholder="비밀번호" />)
+                openModal(
+                  <ProfileModifyModal
+                    content="password"
+                    placeholder="비밀번호"
+                    setUserData={setUserData}
+                  />,
+                )
               }>
               변경
             </button>

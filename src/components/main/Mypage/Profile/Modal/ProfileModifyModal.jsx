@@ -8,7 +8,7 @@ import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import { mypageControl } from "api/controls/mypageControl"
 
-const ProfileModifyModal = ({ content, placeholder }) => {
+const ProfileModifyModal = ({ content, placeholder, setUserData }) => {
   const { closeModal } = useContext(ModalContext)
   const [input, setInput] = useState("")
   const feedbackMsg = useRef("")
@@ -22,6 +22,7 @@ const ProfileModifyModal = ({ content, placeholder }) => {
             return
           }
           await mypageControl.postMemberChangePhoneNum(input)
+          setUserData(prevData => ({ ...prevData, phoneNumber: input }))
           break
         case "password":
           if (input.length < 10) {
@@ -36,6 +37,7 @@ const ProfileModifyModal = ({ content, placeholder }) => {
             return
           }
           await mypageControl.postMemberChangeNickname(input)
+          setUserData(prevData => ({ ...prevData, name: input }))
           break
         default:
           return
