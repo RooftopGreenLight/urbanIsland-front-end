@@ -1,28 +1,22 @@
 import { useContext, useEffect, useState } from "react"
-import { useRecoilValue } from "recoil"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faXmark } from "@fortawesome/free-solid-svg-icons"
+import { faCommentDots, faXmark } from "@fortawesome/free-solid-svg-icons"
 
 import ChatRoomInfo from "components/main/Chat/ChatRoomInfo"
-import NoticeEmptyChatRoom from "components/main/Chat/NoticeEmpty/NoticeEmptyChatRoom"
 
 import { ModalContext } from "module/Modal"
-import { AuthCheckMemberId } from "module/Auth"
 import { chattingControl } from "api/controls/chattingControl"
 
 const ChatRoomPage = () => {
   const { closeModal } = useContext(ModalContext)
-  const memberId = useRecoilValue(AuthCheckMemberId)
-
   const [currentRoomList, setCurrentRoomList] = useState([])
-  const isEmpty = currentRoomList.length === 0
 
   useEffect(() => {
     const loadChatRoomList = async () => {
       try {
-        const loadedRoomList = await chattingControl.getChatRoomList(memberId)
+        const loadedRoomList = await chattingControl.getChatRoomList()
         setCurrentRoomList(loadedRoomList)
       } catch (err) {
         console.log(err.message)
@@ -33,17 +27,23 @@ const ChatRoomPage = () => {
 
   return (
     <Wrapper>
-      <ChatRoomHeader>
+      <ModalHeader>
         <h5>문의 내역 목록</h5>
-        <ChatCloseBtn icon={faXmark} onClick={closeModal} />
-      </ChatRoomHeader>
-      <ChatRoomList isEmpty={isEmpty}>
-        {!isEmpty ? (
-          currentRoomList.map((chatRoomElm, idx) => (
-            <ChatRoomInfo chatRoomElm={chatRoomElm} currentMemberId={memberId} key={idx} />
-          ))
+        <ModalCloseBtn icon={faXmark} onClick={closeModal} />
+      </ModalHeader>
+      <ChatRoomList isEmpty={currentRoomList.length > 0}>
+        {currentRoomList.length > 0 ? (
+          currentRoomList.map((chatRoomElm, idx) => {
+            if (chatRoomElm) {
+              return <ChatRoomInfo chatRoomElm={chatRoomElm} key={idx} />
+            }
+          })
         ) : (
-          <NoticeEmptyChatRoom />
+          <NoticeEmptyIcon>
+            <FontAwesomeIcon icon={faCommentDots} />
+            <h5>개설된 채팅방 없음</h5>
+            <p>새로운 채팅방을 개설하시면 목록이 나옵니다.</p>
+          </NoticeEmptyIcon>
         )}
       </ChatRoomList>
     </Wrapper>
@@ -57,29 +57,30 @@ const Wrapper = styled.div`
   background-color: #f5f5f5;
 `
 
-const ChatRoomHeader = styled.div`
+const ModalHeader = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`
       width: 100%;
       padding: ${paddings.base};
 
-      background-color: #000000;
+      background-color: ${colors.main.primary};
 
       display: flex;
       justify-content: space-between;
 
+      color: ${colors.white};
+      text-align: center;
+
       h5 {
-        color: ${colors.white};
         font-size: ${fonts.size.base};
-        text-align: center;
         vertical-align: center;
       }
     `
   }}
 `
 
-const ChatCloseBtn = styled(FontAwesomeIcon)`
+const ModalCloseBtn = styled(FontAwesomeIcon)`
   ${({ theme }) => {
     const { colors, fonts, paddings } = theme
     return css`
@@ -100,6 +101,42 @@ const ChatRoomList = styled.div`
       display: flex;
       justify-content: ${isEmpty ? "center" : "flex-start"};
       flex-direction: column;
+    `
+  }}
+`
+
+const NoticeEmptyIcon = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      margin: ${margins.base} auto;
+
+      color: ${colors.main.primary};
+      text-align: center;
+
+      h5 {
+        font-size: ${fonts.size.base};
+        margin-bottom: ${margins.sm};
+      }
+
+      p {
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
+
+      svg {
+        width: 2.5vw;
+        height: 2.5vw;
+
+        margin-bottom: ${margins.base};
+        padding: ${paddings.lg};
+
+        background-color: ${colors.main.secondary};
+        border-radius: 20vw;
+
+        color: ${colors.white};
+      }
     `
   }}
 `

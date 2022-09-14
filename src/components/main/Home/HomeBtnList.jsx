@@ -14,11 +14,11 @@ const HomeBtnList = () => {
       <HomeBtn to="/reservation" delay={0}>
         옥상시설 예약
       </HomeBtn>
-      <HomeBtn to="/" delay={1}>
-        지원사업 열람
+      <HomeBtn to="/service" delay={1}>
+        서비스 소개
       </HomeBtn>
       <HomeBtn to="/" delay={2}>
-        옥상지기 신청
+        녹색공모 조회
       </HomeBtn>
       {authenticated ? (
         <>
@@ -52,17 +52,17 @@ const HomeBtn = styled(Link)`
   ${({ theme, delay }) => {
     const { colors, fonts } = theme
     return css`
-      width: 50%;
+      width: 100%;
       height: 2.75vw;
 
-      margin: 0vw auto;
+      margin: 0.25rem auto 0vw 3rem;
       opacity: 0%;
 
       border: 0;
       background-color: transparent;
 
       color: ${colors.white};
-      font-size: ${fonts.size.xsm};
+      font-size: 1.25rem;
       font-weight: 100;
       mix-blend-mode: screen;
 

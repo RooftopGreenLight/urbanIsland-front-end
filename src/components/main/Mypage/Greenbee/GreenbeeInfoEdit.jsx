@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import Slider from "react-slick"
 
@@ -20,17 +20,17 @@ const GreenbeeInfoEdit = () => {
     deleteImages: [],
     addImages: [],
   })
+  const feedbackMsg = useRef()
 
   useEffect(() => {
     const loadCurrentInfo = async () => {
       const { content, officeNumber, greenBeeImages } = await greenbeeControl.getGreenbeeInfo()
+      console.log(greenBeeImages)
       setCurrentInfo({
         ...currentInfo,
         content,
         officeNumber,
-        greenBeeImages: greenBeeImages.filter(
-          ({ greenBeeImageType }) => greenBeeImageType === "NORMAL",
-        ),
+        greenBeeImages,
       })
     }
     loadCurrentInfo()
@@ -70,13 +70,14 @@ const GreenbeeInfoEdit = () => {
           ({ storeFilename }) => storeFilename !== selectedImage.storeFilename,
         ),
       }))
+      return
     }
+    feedbackMsg.current.innerText = "사무소 대표 사진은 변경할 수 없습니다."
   }
 
   const removeAddedImage = e => {
     const { name } = e.target
     const selectedImage = addImages[name]
-    console.log(name)
     setCurrentInfo(prevInfo => ({
       ...prevInfo,
       addImages: [...addImages].filter(({ name }) => name !== selectedImage.name),
@@ -110,11 +111,18 @@ const GreenbeeInfoEdit = () => {
     }
   }
 
+  const totalImgAmount = useMemo(
+    () => greenBeeImages.length + addImagesBase64.length,
+    [greenBeeImages, addImagesBase64],
+  )
+
+  console.log([...greenBeeImages, ...addImages])
+
   const SlickSettings = {
-    dots: true,
-    lazyLoad: true,
-    infinite: true,
-    speed: 500,
+    dots: totalImgAmount > 3,
+    infinite: totalImgAmount > 3,
+    lazyLoad: "progressive",
+    speed: 250,
     slidesToShow: 3,
     slidesToScroll: 1,
   }
@@ -146,7 +154,7 @@ const GreenbeeInfoEdit = () => {
           <Slider {...SlickSettings}>
             {greenBeeImages &&
               greenBeeImages.map(({ fileUrl }, idx) => (
-                <div>
+                <div key={fileUrl}>
                   <img
                     src={fileUrl}
                     alt="Img"
@@ -158,7 +166,7 @@ const GreenbeeInfoEdit = () => {
               ))}
             {addImagesBase64 &&
               addImagesBase64.map((base64, idx) => (
-                <div>
+                <div key={base64}>
                   <img
                     src={base64}
                     alt="Img"
@@ -170,15 +178,16 @@ const GreenbeeInfoEdit = () => {
               ))}
           </Slider>
         </SliderBox>
+        <FeedBackMsg ref={feedbackMsg} />
         <BtnList>
           <label htmlFor="imgList">
             <FileUploadBtn>
               <FontAwesomeIcon icon={faImage} /> 사진 업로드
             </FileUploadBtn>
-            <ModifyBtn onClick={confirmSaveInfo}>
-              <FontAwesomeIcon icon={faEdit} /> 정보 수정하기
-            </ModifyBtn>
           </label>
+          <ModifyBtn onClick={confirmSaveInfo}>
+            <FontAwesomeIcon icon={faEdit} /> 정보 수정하기
+          </ModifyBtn>
           <input
             id="imgList"
             type="file"
@@ -194,8 +203,7 @@ const GreenbeeInfoEdit = () => {
 
 const Wrapper = styled.div`
   width: 35vw;
-  height: 75vh;
-  margin: auto;
+  margin: 7.5vh auto auto auto;
 
   display: flex;
   flex-direction: column;
@@ -257,6 +265,7 @@ const GreenbeeInfoLine = styled.div`
 
         border: 0;
         border-bottom: 1px solid ${colors.main.secondary}44;
+        background-color: ${colors.main.tertiary}11;
         color: ${colors.black.secondary};
         font-size: ${fonts.size.sm};
       }
@@ -268,8 +277,8 @@ const SliderBox = styled.div`
   ${({ theme }) => {
     const { margins } = theme
     return css`
+      width: 33vw;
       margin: ${margins.lg} auto;
-      width: 90%;
 
       img {
         width: 10vw;
@@ -284,7 +293,7 @@ const FileUploadBtn = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 47.5%;
+      width: 80%;
       padding: ${paddings.sm} ${paddings.base};
       margin: ${margins.base} auto;
 
@@ -312,8 +321,7 @@ const BtnList = styled.div`
   display: flex;
 
   label {
-    width: 90%;
-    margin: auto;
+    width: 50%;
 
     display: flex;
     justify-content: space-between;
@@ -324,11 +332,25 @@ const BtnList = styled.div`
   }
 `
 
+const FeedBackMsg = styled.p`
+  ${({ theme }) => {
+    const { fonts, margins } = theme
+    return css`
+      width: 100%;
+      margin: 0vw auto ${margins.base} auto;
+
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
+      text-align: center;
+    `
+  }}
+`
+
 const ModifyBtn = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 47.5%;
+      width: 40%;
       padding: ${paddings.sm} ${paddings.base};
       margin: ${margins.base} auto;
 

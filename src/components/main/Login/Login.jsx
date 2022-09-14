@@ -40,7 +40,7 @@ const LoginTitle = styled.div`
     const { fonts, margins } = theme
     return css`
       width: 75%;
-      margin: ${margins.xl} ${margins.xl};
+      margin: ${margins.xl} ${margins.xl} ${margins.base} ${margins.xl};
 
       h5 {
         font-size: ${fonts.size.xxl};

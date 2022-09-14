@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faXmark } from "@fortawesome/free-solid-svg-icons"
+import { faQuestionCircle, faXmark } from "@fortawesome/free-solid-svg-icons"
 
 import { modalShow } from "styles/Animation"
 import { ownerControl } from "api/controls/ownerControl"
@@ -50,7 +50,11 @@ const WaitingRooftopModal = () => {
               </StatusList>
             ))
           ) : (
-            <h5>새롭게 도착한 정보가 없습니다.</h5>
+            <NoticeEmptyIcon>
+              <FontAwesomeIcon icon={faQuestionCircle} />
+              <h5>안내 없음</h5>
+              <p>새롭게 도착한 안내가 없습니다.</p>
+            </NoticeEmptyIcon>
           )}
         </ViewPoint>
       </ModalContent>
@@ -208,6 +212,42 @@ const StatusBox = styled.div`
       p {
         font-size: ${fonts.size.xsm};
         font-weight: 200;
+      }
+    `
+  }}
+`
+
+const NoticeEmptyIcon = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      margin: ${margins.base} auto;
+
+      color: ${colors.main.primary};
+      text-align: center;
+
+      h5 {
+        font-size: ${fonts.size.base};
+        margin-bottom: ${margins.sm};
+      }
+
+      p {
+        font-size: ${fonts.size.xsm};
+        font-weight: 100;
+      }
+
+      svg {
+        width: 2.5vw;
+        height: 2.5vw;
+
+        margin-bottom: ${margins.base};
+        padding: ${paddings.lg};
+
+        background-color: ${colors.main.secondary};
+        border-radius: 20vw;
+
+        color: ${colors.white};
       }
     `
   }}

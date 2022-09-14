@@ -78,10 +78,9 @@ const RequiredGreeningList = () => {
 }
 
 const Wrapper = styled.div`
-  width: 75vh;
-  height: 75vh;
+  width: 35vw;
+  margin: 7.5vh auto auto auto;
 
-  margin: auto;
   display: flex;
   flex-direction: column;
 
@@ -115,10 +114,11 @@ const Title = styled.div`
 
 const RooftopFilterBtn = styled.button`
   ${({ theme, isApplied }) => {
-    const { colors, fonts, margins } = theme
+    const { colors, fonts, paddings, margins } = theme
     return css`
       width: 17.5%;
       height: 90%;
+      padding: ${paddings.xsm};
       margin: auto;
 
       border-radius: ${fonts.size.xsm};
@@ -143,8 +143,8 @@ const GridRoofTopList = styled.div`
   ${({ theme }) => {
     const { paddings, margins } = theme
     return css`
-      width: 100%;
-      height: 100%;
+      width: 35vw;
+      height: 35vw;
       padding: 0vw ${paddings.base};
       margin-top: ${margins.lg};
 

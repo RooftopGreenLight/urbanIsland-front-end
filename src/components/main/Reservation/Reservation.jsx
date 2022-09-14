@@ -6,7 +6,14 @@ import { roofTopControl } from "api/controls/roofTopControl"
 import { SortingRooftop } from "constants/SortingRooftop"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faClock, faFilter, faMap, faAngleDown, faUser } from "@fortawesome/free-solid-svg-icons"
+import {
+  faClock,
+  faFilter,
+  faMap,
+  faAngleDown,
+  faUser,
+  faCircleQuestion,
+} from "@fortawesome/free-solid-svg-icons"
 
 import ReservationCard from "components/main/Reservation/ReservationCard"
 import DetailFilterModal from "./Modals/DetailFilterModal"
@@ -42,7 +49,7 @@ const Reservation = () => {
     const getFilteredData = async () => {
       const searchFilter = Object.entries(filter).filter(([option, value]) => {
         // page, cond의 경우 필수로 들어가는 값이므로 true.
-        if (option === "page" || option === "cond") {
+        if (["page", "cond"].includes(option)) {
           return true
         }
         // contentNum의 배열이 비었거나, 값이 0 또는 빈 문자열일 경우 넣지 않음.
@@ -83,10 +90,10 @@ const Reservation = () => {
             <div className="content">
               <FontAwesomeIcon icon={faClock} />
               <span>
-                {startTime
-                  ? endTime
-                    ? `${startTime.slice(0, 5)} - ${endTime.slice(0, 5)}`
-                    : `${startTime.slice(0, 5)} - 24:00`
+                {startTime || endTime
+                  ? `${startTime ? `${startTime.slice(0, 5)}` : `00:00`} - ${
+                      endTime ? `${endTime.slice(0, 5)}` : "24:00"
+                    }`
                   : "시간 선택"}
               </span>
             </div>
@@ -140,7 +147,11 @@ const Reservation = () => {
             />
           ))
         ) : (
-          <div>검색 결과가 없습니다</div>
+          <NoticeEmptyIcon>
+            <FontAwesomeIcon icon={faCircleQuestion} />
+            <h5>옥상 목록 없음</h5>
+            <p>설정하신 조건에 맞는 시설이 없습니다.</p>
+          </NoticeEmptyIcon>
         )}
       </SearchResult>
     </Wrapper>
@@ -210,7 +221,7 @@ const SearchResult = styled.div`
     const { margins } = theme
     return css`
       width: 75vw;
-      margin: 0vw auto ${margins.xl} auto;
+      margin: ${margins.lg} auto;
       display: grid;
 
       grid-gap: 5vh ${margins.base};
@@ -279,6 +290,45 @@ const FilterBtn = styled.button`
       svg {
         font-size: ${fonts.size.xsm};
         margin: auto ${margins.xsm} auto 0vw;
+      }
+    `
+  }}
+`
+
+const NoticeEmptyIcon = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      width: 100%;
+      margin: auto;
+
+      grid-column: 1 / 5;
+      grid-row: 2 / 3;
+
+      color: ${colors.main.primary};
+      text-align: center;
+
+      h5 {
+        font-size: ${fonts.size.xl};
+        margin-bottom: ${margins.sm};
+      }
+
+      p {
+        font-size: ${fonts.size.sm};
+        font-weight: 100;
+      }
+
+      svg {
+        width: 5vw;
+        height: 5vw;
+
+        margin-bottom: ${margins.lg};
+        padding: ${paddings.xl};
+
+        background-color: ${colors.main.secondary};
+        border-radius: 20vw;
+
+        color: ${colors.white};
       }
     `
   }}

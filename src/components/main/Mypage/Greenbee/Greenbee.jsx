@@ -15,7 +15,7 @@ const Greenbee = () => {
     <Wrapper>
       <ServiceList>
         <Title>
-          <h5>내 서비스 관리하기</h5>
+          <h5>그린비 사무소 관리하기</h5>
         </Title>
         <ServiceBox onClick={() => openModal(<FindMyRooftopOwner />)}>
           <div className="introduce">
@@ -54,8 +54,7 @@ const Greenbee = () => {
 
 const Wrapper = styled.div`
   width: 35vw;
-  height: 75vh;
-  margin: auto;
+  margin: 7.5vh auto auto auto;
 
   display: flex;
   flex-direction: column;

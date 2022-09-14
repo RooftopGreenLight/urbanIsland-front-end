@@ -52,7 +52,7 @@ const LoginForm = () => {
       <LoginInput name="login-pw">
         <input name="pw" placeholder="Password" onChange={insertInput} value={pw} type="password" />
       </LoginInput>
-      <LoginFeedBack ref={feedbackMsg}>ID / PW 를 입력해주세요.</LoginFeedBack>
+      <LoginFeedBack ref={feedbackMsg} />
       <LoginBtn onClick={submitLogin}>로그인</LoginBtn>
     </Wrapper>
   )

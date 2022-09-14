@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import styled, { css } from "styled-components"
 
@@ -19,6 +19,7 @@ import SetRequiredOptionModal from "components/main/RoofTop/RequestGreenBee/Moda
 const RequestToGreenBee = () => {
   const { openModal } = useContext(ModalContext)
   const navigate = useNavigate()
+  const feedbackMsg = useRef()
   const [requiredInfo, setRequiredInfo] = useState({
     rooftopType: "NG",
     width: 0,
@@ -49,9 +50,19 @@ const RequestToGreenBee = () => {
     optionPrice: [],
   })
 
-  console.log(requiredInfo)
-
-  const { explainContent } = requiredInfo
+  const {
+    city,
+    district,
+    detail,
+    adultCount,
+    explainContent,
+    normalFile,
+    structureFile,
+    width,
+    totalPrice,
+    widthPrice,
+    phoneNumber,
+  } = requiredInfo
 
   const changeInput = e => {
     const { name, value } = e.target
@@ -59,6 +70,41 @@ const RequestToGreenBee = () => {
   }
 
   const submitRequest = async () => {
+    if (!city || !district || !detail) {
+      feedbackMsg.current.innerText = "등록할 옥상 주소는 필히 설정해야 합니다."
+      return
+    }
+
+    if (phoneNumber === "") {
+      feedbackMsg.current.innerText = "소유주의 전화번호는 필히 기입해야 합니다."
+      return
+    }
+
+    if (adultCount === 0) {
+      feedbackMsg.current.innerText = "등록할 옥상의 이용 가능 인원을 설정해주세요."
+      return
+    }
+
+    if (normalFile.length < 1) {
+      feedbackMsg.current.innerText = "등록할 옥상의 이미지는 필히 올려야 합니다."
+      return
+    }
+
+    if (!structureFile) {
+      feedbackMsg.current.innerText = "등록할 옥상의 조경도는 필히 올려야 합니다."
+      return
+    }
+
+    if (width * widthPrice === 0) {
+      feedbackMsg.current.innerText = "옥상의 넓이와 시공 가격은 필히 기입해야 합니다."
+      return
+    }
+
+    if (totalPrice === 0) {
+      feedbackMsg.current.innerText = "옥상의 이용 가격은 필히 기입해야 합니다."
+      return
+    }
+
     const reqFormData = new FormData()
     for (const [option, value] of Object.entries(requiredInfo)) {
       // 배열의 경우 append를 통해 같은 옵션에 값을 추가해주어야 함
@@ -86,84 +132,72 @@ const RequestToGreenBee = () => {
 
   return (
     <Wrapper>
-      <ViewPoint>
-        <ServiceList>
-          <Title>
-            <h5>기본 정보 기입하기</h5>
-          </Title>
-          <ApplySidoList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-          <ApplyBaseInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-        </ServiceList>
-        <ServiceList>
-          <Title>
-            <h5>시공 관련 정보 기입하기</h5>
-          </Title>
-          <InputBox>
-            <div className="title">
-              <h5>세부사항 : 필요 항목</h5>
-              <p>옥상 녹화 단계에 필요한 시설을 체크해주세요.</p>
-            </div>
-            <OpenModalBtn
-              onClick={() =>
-                openModal(
-                  <SetRequiredOptionModal applyInfo={requiredInfo} changeInfo={setRequiredInfo} />,
-                )
-              }>
-              수정하기
-            </OpenModalBtn>
-          </InputBox>
-          <RequestDeadLine requiredInfo={requiredInfo} setRequiredInfo={setRequiredInfo} />
-          <ApplyImgList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-          <ApplyDetailView applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-          <InputBox>
-            <div className="title">
-              <h5>세부사항 : 옥상 설명 멘트</h5>
-              <p>고객에게 옥상 시설을 설명해주세요!</p>
-            </div>
-            <textarea
-              name="explainContent"
-              rows="4"
-              cols="50"
-              value={explainContent}
-              placeholder="자유롭게 옥상 설명을 작성해주세요."
-              onChange={changeInput}
-            />
-          </InputBox>
-        </ServiceList>
-        <ServiceList>
-          <Title>
-            <h5>이용 관련 정보 기입하기</h5>
-          </Title>
-          <ApplyAvailableInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-          <ApplyDetailInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-          <ApplyExtraOption applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
-        </ServiceList>
-        <ConfirmBtn onClick={submitRequest}>제출하기</ConfirmBtn>
-      </ViewPoint>
+      <ServiceList>
+        <Title>
+          <h5>기본 정보 기입하기</h5>
+        </Title>
+        <ApplySidoList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <ApplyBaseInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+      </ServiceList>
+      <ServiceList>
+        <Title>
+          <h5>시공 관련 정보 기입하기</h5>
+        </Title>
+        <InputBox>
+          <div className="title">
+            <h5>세부사항 : 필요 항목</h5>
+            <p>옥상 녹화 단계에 필요한 시설을 체크해주세요.</p>
+          </div>
+          <OpenModalBtn
+            onClick={() =>
+              openModal(
+                <SetRequiredOptionModal applyInfo={requiredInfo} changeInfo={setRequiredInfo} />,
+              )
+            }>
+            수정하기
+          </OpenModalBtn>
+        </InputBox>
+        <RequestDeadLine requiredInfo={requiredInfo} setRequiredInfo={setRequiredInfo} />
+        <ApplyImgList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <ApplyDetailView applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <InputBox>
+          <div className="title">
+            <h5>세부사항 : 옥상 설명 멘트</h5>
+            <p>고객에게 옥상 시설을 설명해주세요!</p>
+          </div>
+          <textarea
+            name="explainContent"
+            rows="4"
+            cols="50"
+            value={explainContent}
+            placeholder="자유롭게 옥상 설명을 작성해주세요."
+            onChange={changeInput}
+          />
+        </InputBox>
+      </ServiceList>
+      <ServiceList>
+        <Title>
+          <h5>이용 관련 정보 기입하기</h5>
+        </Title>
+        <ApplyAvailableInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <ApplyDetailInfo applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+        <ApplyExtraOption applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
+      </ServiceList>
+      <FeedBackMsg ref={feedbackMsg} />
+      <ConfirmBtn onClick={submitRequest}>제출하기</ConfirmBtn>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
   width: 50vw;
-  height: 80vh;
-
-  margin: auto;
+  margin: 7.5vh auto;
 
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 
   text-align: center;
-`
-
-const ViewPoint = styled.div`
-  max-height: 80vh;
-  overflow: auto;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
 `
 
 const Title = styled.div`
@@ -192,9 +226,9 @@ const Title = styled.div`
 `
 
 const ServiceList = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  margin-bottom: 7.5vh;
 `
 
 const InputBox = styled.div`
@@ -268,13 +302,26 @@ const OpenModalBtn = styled.button`
   }}
 `
 
+const FeedBackMsg = styled.p`
+  ${({ theme }) => {
+    const { fonts, margins } = theme
+    return css`
+      width: 100%;
+      margin: ${margins.sm} auto;
+
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
+    `
+  }}
+`
+
 const ConfirmBtn = styled.button`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
       width: 50%;
       padding: ${paddings.sm} ${paddings.base};
-      margin: ${margins.lg} auto;
+      margin: auto;
 
       cursor: pointer;
       border-radius: ${fonts.size.sm};
@@ -295,4 +342,5 @@ const ConfirmBtn = styled.button`
     `
   }}
 `
+
 export default RequestToGreenBee

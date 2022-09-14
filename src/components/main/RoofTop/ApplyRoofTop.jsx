@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { roofTopControl } from "api/controls/roofTopControl"
@@ -14,6 +14,7 @@ import ApplyExtraOption from "components/main/RoofTop/ApplyRoofTop/ApplyExtraOpt
 
 const ApplyRoofTop = () => {
   const navigate = useNavigate()
+  const feedbackMsg = useRef()
   const [applyRoofTopInfo, setApplyRoofTopInfo] = useState({
     rooftopType: "G",
     width: 0,
@@ -41,7 +42,18 @@ const ApplyRoofTop = () => {
     optionPrice: [],
   })
 
-  const { explainContent } = applyRoofTopInfo
+  const {
+    city,
+    district,
+    detail,
+    adultCount,
+    explainContent,
+    normalFile,
+    structureFile,
+    width,
+    totalPrice,
+    phoneNumber,
+  } = applyRoofTopInfo
 
   const changeInput = e => {
     const { name, value } = e.target
@@ -49,6 +61,41 @@ const ApplyRoofTop = () => {
   }
 
   const sendRoofTopData = async () => {
+    if (!city || !district || !detail) {
+      feedbackMsg.current.innerText = "등록할 옥상 주소는 필히 설정해야 합니다."
+      return
+    }
+
+    if (phoneNumber === "") {
+      feedbackMsg.current.innerText = "소유주의 전화번호는 필히 기입해야 합니다."
+      return
+    }
+
+    if (adultCount === 0) {
+      feedbackMsg.current.innerText = "등록할 옥상의 이용 가능 인원을 설정해주세요."
+      return
+    }
+
+    if (normalFile.length < 1) {
+      feedbackMsg.current.innerText = "등록할 옥상의 이미지는 필히 올려야 합니다."
+      return
+    }
+
+    if (!structureFile) {
+      feedbackMsg.current.innerText = "등록할 옥상의 조경도는 필히 올려야 합니다."
+      return
+    }
+
+    if (width === 0) {
+      feedbackMsg.current.innerText = "등록할 옥상의 넓이는 필히 기입해야 합니다."
+      return
+    }
+
+    if (totalPrice === 0) {
+      feedbackMsg.current.innerText = "옥상의 이용 가격은 필히 기입해야 합니다."
+      return
+    }
+
     const applyFormData = new FormData()
 
     for (const [option, value] of Object.entries(applyRoofTopInfo)) {
@@ -79,54 +126,51 @@ const ApplyRoofTop = () => {
 
   return (
     <Wrapper>
-      <ViewPoint>
-        <ServiceList>
-          <Title>
-            <h5>기본 정보 기입하기</h5>
-          </Title>
-          <ApplySidoList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-          <ApplyBaseInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-        </ServiceList>
-        <ServiceList>
-          <Title>
-            <h5>시설 정보 기입하기</h5>
-          </Title>
-          <ApplyImgList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-          <ApplyDetailView applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-          <InputBox>
-            <div className="title">
-              <h5>세부사항 : 옥상 설명 멘트</h5>
-              <p>고객에게 옥상 시설을 설명해주세요!</p>
-            </div>
-            <textarea
-              name="explainContent"
-              rows="4"
-              cols="50"
-              value={explainContent}
-              placeholder="자유롭게 옥상 설명을 작성해주세요."
-              onChange={changeInput}
-            />
-          </InputBox>
-        </ServiceList>
-        <ServiceList>
-          <Title>
-            <h5>운영 정보 기입하기</h5>
-          </Title>
-          <ApplyAvailableInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-          <ApplyDetailInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-          <ApplyExtraOption applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
-          <ConfirmBtn onClick={sendRoofTopData}>옥상 신청하기</ConfirmBtn>
-        </ServiceList>
-      </ViewPoint>
+      <ServiceList>
+        <Title>
+          <h5>신규 등록 시설 정보</h5>
+        </Title>
+        <ApplySidoList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyBaseInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+      </ServiceList>
+      <ServiceList>
+        <Title>
+          <h5>시설 관련 안내 정보</h5>
+        </Title>
+        <ApplyImgList applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyDetailView applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <InputBox>
+          <div className="title">
+            <h5>세부사항 : 옥상 설명 멘트</h5>
+            <p>고객에게 옥상 시설을 설명해주세요!</p>
+          </div>
+          <textarea
+            name="explainContent"
+            rows="4"
+            cols="50"
+            value={explainContent}
+            placeholder="자유롭게 옥상 설명을 작성해주세요."
+            onChange={changeInput}
+          />
+        </InputBox>
+      </ServiceList>
+      <ServiceList>
+        <Title>
+          <h5>옥상 시설 운영 정보</h5>
+        </Title>
+        <ApplyAvailableInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyDetailInfo applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <ApplyExtraOption applyInfo={applyRoofTopInfo} changeInfo={setApplyRoofTopInfo} />
+        <FeedBackMsg ref={feedbackMsg} />
+        <ConfirmBtn onClick={sendRoofTopData}>옥상 신청하기</ConfirmBtn>
+      </ServiceList>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
   width: 50vw;
-  height: 80vh;
-
-  margin: auto;
+  margin: 7.5vh auto;
   padding: 1rem;
 
   display: flex;
@@ -134,15 +178,6 @@ const Wrapper = styled.div`
   justify-content: space-between;
 
   text-align: center;
-`
-
-const ViewPoint = styled.div`
-  max-height: 80vh;
-  overflow: auto;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
 `
 
 const Title = styled.div`
@@ -171,9 +206,22 @@ const Title = styled.div`
 `
 
 const ServiceList = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  margin-bottom: 7.5vh;
+`
+
+const FeedBackMsg = styled.p`
+  ${({ theme }) => {
+    const { fonts, margins } = theme
+    return css`
+      width: 100%;
+      margin: ${margins.sm} auto;
+
+      font-size: ${fonts.size.xsm};
+      font-weight: 100;
+    `
+  }}
 `
 
 const ConfirmBtn = styled.button`
@@ -182,7 +230,7 @@ const ConfirmBtn = styled.button`
     return css`
       width: 50%;
       padding: ${paddings.sm} ${paddings.base};
-      margin: ${margins.lg} auto;
+      margin: auto;
 
       cursor: pointer;
       border-radius: ${fonts.size.sm};

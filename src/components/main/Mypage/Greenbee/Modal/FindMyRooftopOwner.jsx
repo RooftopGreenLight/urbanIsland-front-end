@@ -109,7 +109,7 @@ const FindMyRooftopOwner = () => {
               ),
             )
           ) : (
-            <p>녹화를 신청한 옥상이 없습니다.</p>
+            <p>녹화 작업을 신청한 시설이 없습니다.</p>
           )}
         </GreeningSection>
       </ModalContent>

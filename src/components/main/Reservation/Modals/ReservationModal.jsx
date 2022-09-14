@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react"
+import { useContext, useState } from "react"
 import styled, { css } from "styled-components"
 import moment from "moment"
 
@@ -10,11 +10,13 @@ import { faXmark, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons"
 
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
+import DateUtil from "util/DateUtil"
 import CustomSlider from "components/main/Reservation/CustomSlider"
 
 const ReservationModal = ({
   limitTime,
   limitCount,
+  bookedDate,
   rooftopOptions,
   reservationData,
   setReservationData,
@@ -22,8 +24,14 @@ const ReservationModal = ({
   const [modifiedData, setModifiedData] = useState(reservationData)
   const { closeModal } = useContext(ModalContext)
 
-  const { adultCount, kidCount, petCount, selectedDate, optionCount } = modifiedData
-  const limitExtraOptionCount = rooftopOptions.map(({ count }) => count)
+  const { adultCount, kidCount, petCount, selectedTime, selectedDate, optionCount } = modifiedData
+  const { startTime: limitStartTime, endTime: limitEndTime } = limitTime
+  const {
+    adultCount: limitAdultCount,
+    kidCount: limitKidCount,
+    petCount: limitPetCount,
+  } = limitCount
+  const limitExtraOptionCount = rooftopOptions?.map(({ count }) => count)
 
   const confirmModify = () => {
     setReservationData(prevData => ({ ...prevData, ...modifiedData }))
@@ -47,15 +55,16 @@ const ReservationModal = ({
   }
 
   const resetModifiedData = () => {
-    setModifiedData({
-      selectedDate: [new Date(), new Date()],
-      selectedTime: [0, 23],
-      extraOptions: {},
+    setModifiedData(prevData => ({
+      ...prevData,
+      selectedDate: [],
+      selectedTime: [limitStartTime, limitEndTime],
       adultCount: 1,
       kidCount: 0,
       petCount: 0,
       totalPrice: 0,
-    })
+      optionCount: [...Array(rooftopOptions.length).fill(0)],
+    }))
   }
 
   return (
@@ -75,10 +84,21 @@ const ReservationModal = ({
               <Calendar
                 formatDay={(_, date) => moment(date).format("DD")}
                 showNeighboringMonth={false}
-                navigationLabel={null}
                 minDate={new Date()}
-                onChange={newDate =>
-                  setModifiedData(prevData => ({ ...prevData, selectedDate: newDate }))
+                onChange={([startDate, endDate]) => {
+                  const selectedDates = [
+                    ...DateUtil.getDatesBetweenTwoDates(startDate, endDate),
+                  ].map(date => date.toDateString())
+                  // 만약 선택한 일자 범주에 예약 불가능한 일이 있다면, 선택을 취소함.
+                  if (selectedDates.every(selectedDate => !bookedDate.has(selectedDate))) {
+                    return setModifiedData(prevData => ({
+                      ...prevData,
+                      selectedDate: [startDate, endDate],
+                    }))
+                  }
+                }}
+                tileDisabled={({ date, view }) =>
+                  view === "month" && bookedDate.has(date.toDateString())
                 }
                 value={selectedDate}
                 selectRange={true}
@@ -93,14 +113,14 @@ const ReservationModal = ({
             </div>
             <CustomSlider
               STEP={1}
-              MIN={limitTime.startTime}
-              MAX={limitTime.endTime}
+              MIN={limitStartTime}
+              MAX={limitEndTime}
               unit={":00"}
               setValue={newSelectedTime =>
                 setModifiedData(prevData => ({ ...prevData, selectedTime: newSelectedTime }))
               }
-              imin={limitTime.startTime}
-              imax={limitTime.endTime}
+              imin={selectedTime[0]}
+              imax={selectedTime[1]}
             />
           </OptionBox>
           <OptionBox>
@@ -110,9 +130,9 @@ const ReservationModal = ({
             </div>
             <SetPersonSection>
               <h5>
-                성인 <span>{`(최대 ${limitCount.adultCount} 명)`}</span>
+                성인 <span>{`(최대 ${limitAdultCount} 명)`}</span>
               </h5>
-              <CounterBox isDisabled={limitCount.adultCount === 0}>
+              <CounterBox isDisabled={limitAdultCount === 0}>
                 <FontAwesomeIcon
                   icon={faMinus}
                   value={adultCount}
@@ -128,9 +148,12 @@ const ReservationModal = ({
             </SetPersonSection>
             <SetPersonSection>
               <h5>
-                유아 <span>{`(최대 ${limitCount.kidCount} 명)`}</span>
+                유아
+                <span>{` ${
+                  limitKidCount === 0 ? "(노 키즈 존)" : `(최대 ${limitKidCount} 명)`
+                }`}</span>
               </h5>
-              <CounterBox isDisabled={limitCount.kidCount === 0}>
+              <CounterBox isDisabled={limitKidCount === 0}>
                 <FontAwesomeIcon
                   icon={faMinus}
                   value={kidCount}
@@ -146,9 +169,12 @@ const ReservationModal = ({
             </SetPersonSection>
             <SetPersonSection>
               <h5>
-                반려 동물 <span>{`(최대 ${limitCount.petCount} 마리)`}</span>
+                반려 동물
+                <span>{` ${
+                  limitPetCount === 0 ? "(반려동물 출입 금지)" : `(최대 ${limitPetCount} 마리)`
+                }`}</span>
               </h5>
-              <CounterBox isDisabled={limitCount.petCount === 0}>
+              <CounterBox isDisabled={limitPetCount === 0}>
                 <FontAwesomeIcon
                   icon={faMinus}
                   value={petCount}
@@ -172,7 +198,7 @@ const ReservationModal = ({
               {rooftopOptions.map(({ content, count, price }, idx) => (
                 <SetPersonSection key={content}>
                   <h5>
-                    {content} <span>{`(${price.toLocaleString()} KRW, 최대 ${count} 개)`}</span>
+                    {content} <span>{`(${price.toLocaleString()} KRW, 최대 ${count}개)`}</span>
                   </h5>
                   <CounterBox>
                     <FontAwesomeIcon
@@ -284,7 +310,7 @@ const ModalContent = styled.main`
 
 const OptionBox = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { colors, fonts, margins } = theme
     return css`
       width: 90%;
       margin: ${margins.base} 0vw;

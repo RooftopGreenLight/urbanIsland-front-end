@@ -3,6 +3,10 @@ import styled, { css } from "styled-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGoogle } from "@fortawesome/free-brands-svg-icons"
 
+import kakaoLogo from "assets/icon/kakaotalk.png"
+import googleLogo from "assets/icon/google.png"
+import naverLogo from "assets/icon/naver.png"
+
 import { OAuthControl } from "api/oAuth"
 
 const LoginSocial = () => {
@@ -10,21 +14,9 @@ const LoginSocial = () => {
     <Wrapper>
       <p>다른 소셜 계정으로 로그인</p>
       <SocialIconList>
-        <SocialIcon
-          icon={faGoogle}
-          color={"#006aff"}
-          onClick={() => OAuthControl.getCodeFromSocial("google")}
-        />
-        <SocialIcon
-          icon={faGoogle}
-          color={"#09ff00"}
-          onClick={() => OAuthControl.getCodeFromSocial("naver")}
-        />
-        <SocialIcon
-          icon={faGoogle}
-          color={"#dbd800"}
-          onClick={() => OAuthControl.getCodeFromSocial("kakao")}
-        />
+        <SocialImage src={googleLogo} onClick={() => OAuthControl.getCodeFromSocial("google")} />
+        <SocialImage src={naverLogo} onClick={() => OAuthControl.getCodeFromSocial("naver")} />
+        <SocialImage src={kakaoLogo} onClick={() => OAuthControl.getCodeFromSocial("kakao")} />
       </SocialIconList>
     </Wrapper>
   )
@@ -34,8 +26,8 @@ const Wrapper = styled.div`
   ${({ theme }) => {
     const { fonts, margins } = theme
     return css`
-      width: 60%;
-      margin: ${margins.lg} auto;
+      width: 70%;
+      margin: ${margins.sm} auto;
       text-align: center;
 
       p {
@@ -49,23 +41,23 @@ const Wrapper = styled.div`
 
 const SocialIconList = styled.div`
   width: 100%;
-  margin: auto;
+  margin: 0.5rem auto;
   display: flex;
   justify-content: space-evenly;
 `
 
-const SocialIcon = styled(FontAwesomeIcon)`
-  ${({ theme, color }) => {
-    const { colors, fonts, paddings } = theme
+const SocialImage = styled.img`
+  ${({ theme }) => {
+    const { paddings } = theme
     return css`
-      width: 1.65vw;
-      height: 1.65vw;
+      width: 3.25vw;
+      height: 3.25vw;
 
-      padding: ${paddings.sm};
+      padding: 0.4rem;
+      box-shadow: 0px 2px 2px #d5d5d5;
       border-radius: 100px;
 
-      background-color: ${color};
-      color: ${colors.white};
+      cursor: pointer;
     `
   }}
 `

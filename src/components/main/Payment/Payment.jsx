@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useMemo, useRef, useState } from "react"
 import { useLocation, useParams } from "react-router-dom"
 import styled, { css } from "styled-components"
 import moment from "moment/moment"
@@ -9,9 +9,20 @@ import { reservationControl } from "api/controls/reservationControl"
 import { faMap, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
+import { ModalContext } from "module/Modal"
+import DateUtil from "util/DateUtil"
+import ReservationModal from "../Reservation/Modals/ReservationModal"
+
 const Payment = () => {
   const { rooftopId } = useParams()
   const location = useLocation()
+  const feedbackMsg = useRef()
+  const { openModal } = useContext(ModalContext)
+
+  const [customerInfo, setCustomerInfo] = useState({
+    name: "",
+    phoneNumber: "",
+  })
   const [paymentInfo, setPaymentInfo] = useState({
     userId: "",
     phoneNumber: "",
@@ -29,7 +40,6 @@ const Payment = () => {
   const {
     adultCount,
     kidCount,
-    petCount,
     selectedTime,
     selectedDate,
     optionContent,
@@ -38,19 +48,49 @@ const Payment = () => {
     totalPrice,
   } = paymentInfo
 
-  const { address, width, grade } = location.state
+  const { name, phoneNumber } = customerInfo
+  const {
+    address,
+    width,
+    grade,
+    limitTime,
+    limitCount,
+    bookedDate,
+    rooftopOptions,
+    reservationData,
+  } = location.state
 
   useEffect(() => {
-    console.log(location)
-    setPaymentInfo(prevInfo => ({ ...prevInfo, ...location.state.reservationData }))
+    console.log(location.state)
+    setPaymentInfo(prevInfo => ({ ...prevInfo, ...reservationData }))
   }, [])
 
-  const totalUseDay = moment(selectedDate[1]).diff(moment(selectedDate[0]), "days") + 1
-  const needToPay =
-    totalPrice * totalUseDay +
-    optionCount.reduce((sum, count, idx) => (sum += count * optionPrice[idx]), 0)
+  const totalUseDay = useMemo(
+    () => moment(selectedDate[1]).diff(moment(selectedDate[0]), "days") + 1,
+    [selectedDate],
+  )
+  const needToPay = useMemo(
+    () =>
+      totalPrice * totalUseDay +
+      optionCount.reduce((sum, count, idx) => (sum += count * optionPrice[idx]), 0),
+    [totalPrice, totalUseDay, optionCount, optionPrice],
+  )
+
+  const changeInput = e => {
+    const { name, value } = e.target
+    setCustomerInfo(prevInfo => ({ ...prevInfo, [name]: value }))
+  }
 
   const readyToSetPayment = async () => {
+    if (!name || !phoneNumber) {
+      feedbackMsg.current.innerText = "이름과 전화번호는 꼭 입력해주셔야 합니다."
+      return
+    }
+    // const phoneNumberReg = /d{2,3}-d{3,4}-d{4}/g
+    // if (!phoneNumberReg.test(phoneNumber)) {
+    //   feedbackMsg.current.innerText = "올바른 전화번호 양식이 아닙니다."
+    //   return
+    // }
     try {
       const { next_redirect_pc_url, tid } = await KakaoPayControl.postRequestToPay(
         rooftopId,
@@ -63,7 +103,8 @@ const Payment = () => {
         needToPay,
         paymentInfo,
       )
-      window.location.href = next_redirect_pc_url
+      // window.location.href = next_redirect_pc_url
+      window.open(next_redirect_pc_url, "카카오페이 결제")
       localStorage.setItem("reservationId", reservationId)
     } catch (err) {
       console.log(err)
@@ -80,7 +121,7 @@ const Payment = () => {
           <div className="detail-list">
             <DetailInfo>
               <FontAwesomeIcon icon={faStar} />
-              <span>{parseInt(grade).toFixed(1)} / 5.0</span>
+              <span>{Number(grade).toFixed(1)} / 5.0</span>
             </DetailInfo>
             <DetailInfo>
               <FontAwesomeIcon icon={faMap} />
@@ -92,9 +133,13 @@ const Payment = () => {
             <DetailInfo>
               <FontAwesomeIcon icon={faUser} />
               <span>
-                {`성인 ${adultCount}명, ${
-                  kidCount === 0 ? "노 키즈 존" : `유아 ${kidCount}명`
-                }, 반려동물 ${petCount === 0 ? "금지" : `${petCount}마리`}`}
+                {`성인 ${limitCount.adultCount}명, ${
+                  limitCount.kidCount === 0 ? "노 키즈 존" : `유아 ${limitCount.kidCount}명`
+                }, ${
+                  limitCount.petCount === 0
+                    ? "반려동물 금지"
+                    : `반려동물 ${limitCount.petCount}마리`
+                }`}
               </span>
             </DetailInfo>
           </div>
@@ -109,18 +154,43 @@ const Payment = () => {
           <OptionBox>
             <div className="option-list">
               <span>예약자 성함 : </span>
-              <p>백광인</p>
+              <input
+                value={name}
+                name="name"
+                onChange={changeInput}
+                placeholder="성함을 입력해주세요."
+              />
             </div>
             <div className="option-list">
               <span>예약자 전화번호 : </span>
-              <p>010 - 7167 - 0851</p>
+              <input
+                value={phoneNumber}
+                name="phoneNumber"
+                onChange={changeInput}
+                placeholder="전화번호를 입력해주세요."
+              />
             </div>
           </OptionBox>
         </ReservationInfo>
         <ReservationInfo>
           <div className="title">
             <h5>예약 안내</h5>
-            <p>옥상 시설 예약 정보를 안내합니다.</p>
+            <p>옥상 시설 예약 정보를 안내합니다.</p>{" "}
+            <span
+              onClick={() =>
+                openModal(
+                  <ReservationModal
+                    limitTime={limitTime}
+                    limitCount={limitCount}
+                    bookedDate={bookedDate}
+                    rooftopOptions={rooftopOptions}
+                    reservationData={paymentInfo}
+                    setReservationData={setPaymentInfo}
+                  />,
+                )
+              }>
+              수정하기
+            </span>
           </div>
           <OptionBox>
             <div className="option-list">
@@ -135,15 +205,15 @@ const Payment = () => {
             </div>
             <div className="option-list">
               <span>이용 일자 : </span>
-              <p>{`${moment(selectedDate[0]).format("YYYY.MM.DD")} - ${moment(
+              <p>{`${DateUtil.getDateFormat(selectedDate[0])} - ${DateUtil.getDateFormat(
                 selectedDate[1],
-              ).format("YYYY.MM.DD")}`}</p>
+              )}`}</p>
             </div>
             <div className="option-list">
               <span>이용 시간 : </span>
-              <p>{`${String(selectedTime[0]).padStart(2, "0")}:00 - ${String(
+              <p>{`${DateUtil.getTimeFormat(selectedTime[0])}:00 - ${DateUtil.getTimeFormat(
                 selectedTime[1],
-              ).padStart(2, "0")}:00`}</p>
+              )}:00`}</p>
             </div>
           </OptionBox>
         </ReservationInfo>
@@ -157,14 +227,22 @@ const Payment = () => {
               <span>시설 대여 비용 :</span>
               <p>{`${totalPrice.toLocaleString()} KRW × ${totalUseDay}일`}</p>
             </div>
-            {optionCount
-              .filter(count => count > 0)
-              .map((count, idx) => (
-                <div className="option-list">
-                  <span>{`${optionContent[idx]} :`}</span>
-                  <p>{`${(count * optionPrice[idx]).toLocaleString()} KRW`}</p>
-                </div>
-              ))}
+            {optionCount.map((count, idx) => {
+              if (count > 0) {
+                return (
+                  <div className="option-list" key={optionContent[idx]}>
+                    <span>{`${optionContent[idx]} :`}</span>
+                    <p>
+                      {`${
+                        count > 1
+                          ? `${optionPrice[idx].toLocaleString()} KRW × ${count}개`
+                          : `${optionPrice[idx].toLocaleString()} KRW`
+                      }`}
+                    </p>
+                  </div>
+                )
+              }
+            })}
           </OptionBox>
         </ReservationInfo>
       </ReservationInfoBox>
@@ -175,18 +253,21 @@ const Payment = () => {
             <span>{`${totalUseDay}일 대여 :`}</span>
             <p>{(totalPrice * totalUseDay).toLocaleString()} KRW</p>
           </div>
-          {optionCount
-            .filter(count => count > 0)
-            .map((count, idx) => (
-              <div className="option-list">
-                <span>{`${optionContent[idx]} :`}</span>
-                <p>{`${(count * optionPrice[idx]).toLocaleString()} KRW`}</p>
-              </div>
-            ))}
+          {optionCount.map((count, idx) => {
+            if (count > 0) {
+              return (
+                <div className="option-list" key={optionContent[idx]}>
+                  <span>{`${optionContent[idx]} :`}</span>
+                  <p>{`${(count * optionPrice[idx]).toLocaleString()} KRW`}</p>
+                </div>
+              )
+            }
+          })}
           <div className="option-list">
             <span>총 합계 : </span>
             <strong>{`${needToPay.toLocaleString()} KRW`}</strong>
           </div>
+          <ConfirmFeedBack ref={feedbackMsg} />
           <ConfirmBtn onClick={readyToSetPayment}>결제하기</ConfirmBtn>
         </OptionBox>
       </PaymentConfirm>
@@ -299,8 +380,36 @@ const ReservationInfo = styled.div`
 
       .title {
         border-bottom: 1px solid ${colors.main.primary}55;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        h5 {
+          width: 100%;
+          color: ${colors.main.secondary};
+          font-size: ${fonts.size.base};
+        }
+
         p {
+          width: 70%;
           margin: ${margins.xsm} 0vw ${margins.sm} 0vw;
+        }
+
+        span {
+          margin-bottom: auto;
+          padding: ${paddings.xsm};
+
+          background-color: ${colors.main.secondary};
+          border-radius: 0.5rem;
+
+          color: ${colors.white};
+          font-size: 0.8rem;
+          text-align: right;
+
+          &:hover {
+            background-color: ${colors.main.tertiary};
+            font-weight: ${fonts.weight.bold};
+          }
         }
       }
 
@@ -309,28 +418,18 @@ const ReservationInfo = styled.div`
         font-weight: ${fonts.weight.light};
       }
 
-      h5 {
-        width: 100%;
-        color: ${colors.main.secondary};
-        font-size: ${fonts.size.base};
-      }
+      input {
+        width: 45%;
+        padding: ${paddings.xsm} 0vw;
 
-      svg {
-        margin: auto 0vw;
-        color: ${colors.main.primary};
-      }
+        border: 0;
+        border-bottom: 1px solid ${colors.main.secondary}44;
+        background-color: ${colors.main.quaternary}11;
 
-      pre {
-        padding: ${paddings.base} 0vw;
-        color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
-      }
-
-      img {
-        width: 100%;
-        height: 40vh;
-        object-fit: cover;
-        margin: ${margins.lg} auto 0vw auto;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.xsm};
+        font-weight: 200;
+        text-align: center;
       }
     `
   }}
@@ -388,29 +487,43 @@ const OptionBox = styled.div`
         font-size: ${fonts.size.sm};
       }
 
-      p {
-        color: ${colors.black.tertiary};
-        font-size: 1.1rem;
-        font-weight: 500;
-      }
-
-      span {
-        color: ${colors.black.quinary};
-        font-size: 1.1rem;
-        font-weight: 300;
-      }
-
-      strong {
-        color: ${colors.main.secondary};
-        font-size: 1.1rem;
-      }
-
       .option-list {
         width: 100%;
         margin: ${margins.xsm} 0vw;
         display: flex;
         justify-content: space-between;
+
+        p {
+          color: ${colors.black.tertiary};
+          font-size: 1.1rem;
+          font-weight: 500;
+        }
+
+        span {
+          color: ${colors.black.quinary};
+          font-size: 1.1rem;
+          font-weight: 300;
+        }
+
+        strong {
+          color: ${colors.main.secondary};
+          font-size: 1.1rem;
+        }
       }
+    `
+  }}
+`
+
+const ConfirmFeedBack = styled.p`
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      margin: ${margins.lg} auto 0vw auto;
+
+      text-align: center;
+      color: ${colors.main.secondary};
+      font-size: ${fonts.size.xsm};
+      font-weight: 200;
     `
   }}
 `
@@ -421,7 +534,7 @@ const ConfirmBtn = styled.button`
     return css`
       width: 100%;
       padding: ${paddings.sm} ${paddings.lg};
-      margin: ${margins.lg} 0vw 0vw 0vw;
+      margin: ${margins.base} 0vw 0vw 0vw;
 
       border-radius: 0.75rem;
       background: ${colors.main.secondary};
