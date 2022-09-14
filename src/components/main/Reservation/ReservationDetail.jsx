@@ -80,6 +80,7 @@ const ReservationDetail = () => {
     kidCount,
     petCount,
     width,
+    mainImage,
     rooftopImages,
     structureImage,
     detailNums,
@@ -214,13 +215,19 @@ const ReservationDetail = () => {
       </RooftopInfoBox>
       <ReservationInfoBox>
         <SliderBox>
-          {rooftopImages && (
+          {mainImage && (
             <Slider {...SlickSettings}>
-              {rooftopImages.map(({ fileUrl, uploadFilename }) => (
-                <div key={uploadFilename}>
-                  <img src={fileUrl} alt="Img" />
-                </div>
-              ))}
+              <div key={mainImage.uploadFilename}>
+                <img src={mainImage.fileUrl} alt="Img" />
+              </div>
+              {rooftopImages &&
+                rooftopImages
+                  .filter(({ uploadFilename }) => uploadFilename !== mainImage.uploadFilename)
+                  .map(({ fileUrl, uploadFilename }) => (
+                    <div key={uploadFilename}>
+                      <img src={fileUrl} alt="Img" />
+                    </div>
+                  ))}
             </Slider>
           )}
         </SliderBox>
