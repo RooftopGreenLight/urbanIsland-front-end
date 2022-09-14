@@ -5,6 +5,7 @@ import moment from "moment"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faAngleRight,
+  faBan,
   faBook,
   faBuilding,
   faCalendar,
@@ -21,17 +22,35 @@ import { reservationControl } from "api/controls/reservationControl"
 import { chattingControl } from "api/controls/chattingControl"
 
 import DateUtil from "util/DateUtil"
+import Pagination from "components/common/Pagination"
 import ChatModal from "components/main/Chat/ChatModal"
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
 import ShowMyReservationModal from "./Modal/ShowMyReservationModal"
 
 const Schedule = () => {
+  const { openModal } = useContext(ModalContext)
+
   const [selectedDate, setSeletedDate] = useState(new Date())
   const [bookingDates, setBookingDates] = useState(new Set())
-  const [reservationInfo, setReservationInfo] = useState(null)
+
+  // 예정된 예약, 사용 완료된 예약, 선택한 일자의 예약 목록을 각각 담은 state
   const [waitingReservation, setWaitingReservation] = useState([])
   const [completedReservation, setCompletedReservation] = useState([])
-  const { openModal } = useContext(ModalContext)
+  const [currentReservation, setCurrentReservation] = useState([])
+
+  // 현재 일자의 예약 목록 중, 사용자가 열람 중인 예약 내역
+  const [selectedReservation, setSelectedReservation] = useState({
+    city: "",
+    district: "",
+    detail: "",
+    startDate: [],
+    endDate: [],
+    startTime: [],
+    endTime: [],
+    adultCount: 0,
+    kidCount: 0,
+    reservationId: null,
+  })
 
   useEffect(() => {
     const getReservationInfo = async () => {
@@ -43,17 +62,21 @@ const Schedule = () => {
             DateUtil.createDate(endDate),
           )
           setBookingDates(
-            new Set([...bookingDates, ...betweenDates.map(date => date.toDateString())]),
+            prevBookingDates =>
+              new Set([...prevBookingDates, ...betweenDates.map(date => date.toDateString())]),
           )
         })
 
         const loadedCompletedInfo = await reservationControl.getCompletedResevationInfo()
-        const loadedInfo = await reservationControl.getReservationInfo(
+        const loadedCurrentInfo = await reservationControl.getReservationInfo(
           moment(selectedDate).format("YYYY-MM-DD"),
         )
+
         setWaitingReservation(loadedWaitingInfo)
         setCompletedReservation(loadedCompletedInfo)
-        setReservationInfo(loadedInfo)
+        loadedCurrentInfo && setCurrentReservation([loadedCurrentInfo])
+        // 임시 작성 코드, 추후 수정해야 함 (pagination 적용 예정)
+        loadedCurrentInfo && setSelectedReservation(loadedCurrentInfo)
       } catch (err) {
         console.log(err)
       }
@@ -61,12 +84,51 @@ const Schedule = () => {
     getReservationInfo()
   }, [selectedDate])
 
+  console.log(currentReservation)
+
+  const {
+    city,
+    district,
+    detail,
+    startDate,
+    endDate,
+    startTime,
+    endTime,
+    adultCount,
+    kidCount,
+    reservationId,
+    ownerId,
+  } = selectedReservation
+
   const getChatroom = async () => {
-    console.log(reservationInfo)
-    const { reservationId, ownerId } = reservationInfo
     const roomId = await chattingControl.getCheckChatExist(reservationId, ownerId)
     if (roomId) {
       openModal(<ChatModal roomId={roomId} />)
+    }
+  }
+
+  const cancelReservation = async () => {
+    try {
+      await reservationControl.deleteCancelReservation(reservationId)
+      const loadedWaitingInfo = await reservationControl.getWaitingResevationInfo()
+      const loadedCurrentInfo = await reservationControl.getReservationInfo(
+        moment(selectedDate).format("YYYY-MM-DD"),
+      )
+      setBookingDates(new Set())
+      loadedWaitingInfo.map(({ startDate, endDate }) => {
+        const betweenDates = DateUtil.getDatesBetweenTwoDates(
+          DateUtil.createDate(startDate),
+          DateUtil.createDate(endDate),
+        )
+        setBookingDates(
+          prevBookingDates =>
+            new Set([...prevBookingDates, ...betweenDates.map(date => date.toDateString())]),
+        )
+      })
+      setWaitingReservation(loadedWaitingInfo)
+      loadedCurrentInfo ? setCurrentReservation(loadedCurrentInfo) : setCurrentReservation([])
+    } catch (err) {
+      console.log(err.message)
     }
   }
 
@@ -115,44 +177,48 @@ const Schedule = () => {
         <Title>
           <h5>예약 세부 정보</h5>
         </Title>
-        {reservationInfo ? (
+        {reservationId ? (
           <>
             <ScheduleDetail>
               <p>
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 예약 숙소
               </p>
-              <span>{`${reservationInfo.city} ${reservationInfo.district} ${reservationInfo.detail}`}</span>
+              <span>{`${city} ${district} ${detail}`}</span>
             </ScheduleDetail>
             <ScheduleDetail>
               <p>
                 <FontAwesomeIcon icon={faCalendar} size="lg" />
                 예약일자
               </p>
-              <span>{`${reservationInfo.startDate[0]}.${reservationInfo.startDate[1]}.${reservationInfo.startDate[2]} - ${reservationInfo.endDate[0]}.${reservationInfo.endDate[1]}.${reservationInfo.endDate[2]}`}</span>
+              <span>{`${startDate[0]}.${startDate[1]}.${startDate[2]} - ${endDate[0]}.${endDate[1]}.${endDate[2]}`}</span>
             </ScheduleDetail>
             <ScheduleDetail>
               <p>
                 <FontAwesomeIcon icon={faClock} size="lg" />
                 예약시간
               </p>
-              <span>{`${String(reservationInfo.startTime[0]).padStart(2, "0")}:00 ~ ${String(
-                reservationInfo.endTime[0],
-              ).padStart(2, "0")}:00`}</span>
+              <span>{`${String(startTime[0]).padStart(2, "0")}:00 ~ ${String(endTime[0]).padStart(
+                2,
+                "0",
+              )}:00`}</span>
             </ScheduleDetail>
             <ScheduleDetail>
               <p>
                 <FontAwesomeIcon icon={faUser} size="lg" /> 총 인원
               </p>
               <span>
-                {reservationInfo.kidCount > 0
-                  ? `어른 ${reservationInfo.adultCount}명, 유아 ${reservationInfo.kidCount}명`
-                  : `어른 ${reservationInfo.adultCount}명`}
+                {kidCount > 0 ? `어른 ${adultCount}명, 유아 ${kidCount}명` : `어른 ${adultCount}명`}
               </span>
             </ScheduleDetail>
-            <SendMessageBtn onClick={getChatroom}>
-              <FontAwesomeIcon icon={faComments} /> 채팅 목록 열기
-            </SendMessageBtn>
+            <BtnList>
+              <ScheduleBtn onClick={cancelReservation}>
+                <FontAwesomeIcon icon={faBan} /> 예약 일정 취소
+              </ScheduleBtn>
+              <ScheduleBtn onClick={getChatroom}>
+                <FontAwesomeIcon icon={faComments} /> 예약 문의 개설
+              </ScheduleBtn>
+            </BtnList>
           </>
         ) : (
           <NoticeEmptyIcon>
@@ -222,7 +288,7 @@ const InnerBox = styled.div`
 
 const ServiceBox = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { colors, fonts, paddings } = theme
     return css`
       display: flex;
       justify-content: space-between;
@@ -282,7 +348,7 @@ const ScheduleDetail = styled.div`
 
 const BookingDot = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
+    const { colors, fonts, margins } = theme
     return css`
       height: ${fonts.size.xxsm};
       width: ${fonts.size.xxsm};
@@ -297,11 +363,15 @@ const BookingDot = styled.div`
   }}
 `
 
-const SendMessageBtn = styled.div`
+const BtnList = styled.div`
+  display: flex;
+`
+
+const ScheduleBtn = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 90%;
+      width: 45%;
       padding: ${paddings.sm} ${paddings.base};
       margin: ${margins.lg} auto ${margins.xl} auto;
 

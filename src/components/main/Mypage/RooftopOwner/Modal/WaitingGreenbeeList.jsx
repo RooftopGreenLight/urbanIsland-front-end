@@ -33,6 +33,11 @@ const WaitingGreenbeeList = ({ rooftopId }) => {
     }
   }
 
+  const spectateGreenbee = greenBeeId => {
+    navigate(`/mypage/greenbee/${greenBeeId}`)
+    closeModal()
+  }
+
   return (
     <Wrapper>
       {appliedGreenbees && appliedGreenbees.length > 0 ? (
@@ -52,7 +57,7 @@ const WaitingGreenbeeList = ({ rooftopId }) => {
             <AppliedGreenbeeInfo key={idx}>
               <div className="rooftop-title">
                 <h5>{`${officeCity} ${officeDistrict} ${officeDetail}`}</h5>
-                <FontAwesomeIcon icon={faHome} />
+                <FontAwesomeIcon icon={faHome} onClick={() => spectateGreenbee(greenBeeId)} />
               </div>
               <div className="greenbee-info">
                 <p>
@@ -104,18 +109,24 @@ const Wrapper = styled.div`
 
 const NoticeEmptyList = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins } = theme
+    const { colors, fonts, margins, paddings } = theme
     return css`
       margin: ${margins.sm} 0vw;
-      border-radius: 25px;
+      padding: ${paddings.sm} 0vw;
+
+      border-radius: 0.25rem;
+      background-color: ${colors.main.tertiary}11;
       color: ${colors.main.secondary};
 
       h5 {
+        width: 100%;
         font-size: ${fonts.size.base};
+        text-align: center;
       }
       p {
         font-size: ${fonts.size.xsm};
         font-weight: ${fonts.weight.light};
+        padding-bottom: ${paddings.xsm};
       }
     `
   }}

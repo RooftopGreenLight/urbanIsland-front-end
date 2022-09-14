@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
 import styled, { css } from "styled-components"
 
@@ -28,11 +28,13 @@ const Rooftop = () => {
     loadMyOwnRooftop()
   }, [])
 
+  const rooftopAmount = useMemo(() => ownRooftopList?.length, [ownRooftopList])
+
   const SlickSettings = {
-    dots: true,
-    lazyLoad: true,
-    infinite: true,
-    speed: 500,
+    dots: rooftopAmount > 3,
+    infinite: rooftopAmount > 3,
+    lazyLoad: "progressive",
+    speed: 250,
     slidesToShow: 3,
     slidesToScroll: 1,
   }

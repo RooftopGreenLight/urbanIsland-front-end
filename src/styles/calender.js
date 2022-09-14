@@ -47,7 +47,7 @@ export const CalenderContainer = styled.div`
         color: ${colors.main.primary};
       }
       .react-calendar__tile--now {
-        background: ${colors.main.quaternary}55;
+        background: ${colors.main.quaternary}88;
         font-weight: bold;
         color: ${colors.main.primary};
       }
@@ -89,14 +89,8 @@ export const CalenderContainer = styled.div`
         border-radius: 0;
         font-weight: 300;
       }
-      .react-calendar__tile--rangeStart {
-        border-radius: 6px 0 0 6px;
-        background: ${colors.main.secondary};
-        color: ${colors.white};
-        font-weight: bold;
-      }
+      .react-calendar__tile--rangeStart,
       .react-calendar__tile--rangeEnd {
-        border-radius: 0 6px 6px 0;
         background: ${colors.main.secondary};
         color: ${colors.white};
         font-weight: bold;

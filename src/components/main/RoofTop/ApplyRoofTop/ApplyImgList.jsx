@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import Slider from "react-slick"
 
 import "slick-carousel/slick/slick.css"
@@ -30,12 +30,14 @@ const ApplyImgList = ({ applyInfo, changeInfo }) => {
     }
   }
 
+  const imgAmount = useMemo(() => imgBase64.length, [imgBase64])
+
   const SlickSettings = {
     dots: true,
-    infinite: true,
-    lazyLoad: true,
-    speed: 500,
-    slidesToShow: imgBase64.length > 2 ? 3 : imgBase64.length,
+    infinite: imgAmount > 3,
+    lazyLoad: "progressive",
+    speed: 250,
+    slidesToShow: 3,
     slidesToScroll: 1,
   }
 
@@ -47,7 +49,7 @@ const ApplyImgList = ({ applyInfo, changeInfo }) => {
       </div>
       <BtnList>
         <label htmlFor="imgList">
-          <FileUploadBtn>사진 업로드</FileUploadBtn>
+          <FileUploadBtn>{`사진 ${imgAmount > 0 ? "재업로드" : "업로드"}`}</FileUploadBtn>
         </label>
         <input
           type="file"
@@ -57,7 +59,7 @@ const ApplyImgList = ({ applyInfo, changeInfo }) => {
           accept=".png,.jpg"
         />
       </BtnList>
-      <SliderBox imgAmount={imgBase64.length}>
+      <SliderBox imgAmount={imgAmount}>
         <Slider {...SlickSettings}>
           {imgBase64.map((item, idx) => (
             <div key={idx}>
@@ -131,9 +133,9 @@ const SliderBox = styled.div`
   ${({ theme, imgAmount }) => {
     const { margins } = theme
     return css`
+      width: 36vw;
       margin: ${margins.lg} auto 0vw auto;
-      width: 90%;
-      display: ${imgAmount ? "block" : "none"};
+      display: ${imgAmount > 0 ? "block" : "none"};
 
       img {
         width: 10vw;

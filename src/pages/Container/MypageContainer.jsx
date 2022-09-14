@@ -11,6 +11,8 @@ import MakeGreenbeeAccount from "components/main/Mypage/Greenbee/MakeGreenbeeAcc
 import RequiredGreeningList from "components/main/Mypage/Greenbee/RequiredGreeningList"
 import RequiredGreeningRooftop from "components/main/Mypage/Greenbee/RequiredGreeningRooftop"
 import RequestToGreenBee from "components/main/RoofTop/RequestToGreenBee"
+import OtherGreenbeeInfo from "components/main/Mypage/Greenbee/OtherGreenbeeInfo"
+import NotExistGreenbeeInfo from "components/main/Mypage/Greenbee/NotExistGreenbeeInfo"
 import Rooftop from "components/main/Mypage/RooftopOwner/Rooftop"
 import ApplyRoofTop from "components/main/RoofTop/ApplyRoofTop"
 import SuperviseRooftop from "components/main/RoofTop/Supervise/SuperviseRooftop"
@@ -34,6 +36,8 @@ const GreenbeeContainer = () => {
   return (
     <Routes>
       <Route path="" element={<Greenbee />} />
+      <Route path=":memberId" element={<OtherGreenbeeInfo />} />
+      <Route path="not_exist" element={<NotExistGreenbeeInfo />} />
       <Route path="register" element={<MakeGreenbeeAccount />} />
       <Route path="info" element={<GreenbeeInfo />} />
       <Route path="edit" element={<GreenbeeInfoEdit />} />
