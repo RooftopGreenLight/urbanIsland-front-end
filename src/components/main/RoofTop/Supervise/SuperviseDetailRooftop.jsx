@@ -24,6 +24,7 @@ import ApplyAvailableInfo from "../ApplyRoofTop/ApplyAvailableInfo"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faEdit, faImage, faMap, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
+import ApplyDetailView from "../ApplyRoofTop/ApplyDetailView"
 
 const SuperviseDetailRooftop = () => {
   const { openModal } = useContext(ModalContext)
@@ -338,6 +339,7 @@ const SuperviseDetailRooftop = () => {
           onChange={changeInput}
         />
       </InputBox>
+      <ApplyDetailView applyInfo={rooftopData} changeInfo={setRooftopData} />
       <SliderBox>
         <div className="title">
           <h5>옥상 사진</h5>
