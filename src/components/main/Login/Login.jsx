@@ -1,12 +1,16 @@
 import styled, { css } from "styled-components"
+import { useContext } from "react"
 import bgImg from "assets/img/background2.jpg"
 import { fadeIn } from "styles/Animation"
 
 import LoginForm from "components/main/Login/LoginForm"
 import LoginSocial from "components/main/Login/LoginSocial"
 import RegisterSection from "components/main/Login/RegisterSection"
+import ChangePasswordModal from "components/main/Login/Modal/ChangePasswordModal"
+import { ModalContext } from "module/Modal"
 
 const Login = () => {
+  const { openModal } = useContext(ModalContext)
   return (
     <Wrapper>
       <LoginSection>
@@ -16,7 +20,8 @@ const Login = () => {
         <LoginForm />
         <LoginSocial />
         <ForgotPassword>
-          비밀번호를 잊으셨나요?<strong> 비밀번호 찾기</strong>
+          비밀번호를 잊으셨나요?
+          <strong onClick={() => openModal(<ChangePasswordModal />)}> 비밀번호 찾기</strong>
         </ForgotPassword>
       </LoginSection>
       <RegisterSection />
@@ -83,6 +88,7 @@ const ForgotPassword = styled.p`
 
       strong {
         color: #000000;
+        cursor: pointer;
       }
     `
   }}

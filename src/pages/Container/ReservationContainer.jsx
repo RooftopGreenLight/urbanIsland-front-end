@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom"
 import BaseTemplate from "components/template/BaseTemplate"
 import Reservation from "components/main/Reservation/Reservation"
 import ReservationDetail from "components/main/Reservation/ReservationDetail"
-import NotFound from "components/common/Modal/NotFound"
+import NotFound from "components/common/NotFound"
 
 export const ReservationContainer = () => {
   return (

@@ -9,6 +9,15 @@ import { reservationControl } from "api/controls/reservationControl"
 import { faMap, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
+import {
+  RooftopInfoBox,
+  RooftopTitle,
+  RooftopDetail,
+  DetailInfo,
+  PaymentInfoBox,
+  PaymentOptionBox,
+  RooftopUtilBtn,
+} from "components/common/Style/Rooftop/CommonStyle"
 import { ModalContext } from "module/Modal"
 import DateUtil from "util/DateUtil"
 import ReservationModal from "../Reservation/Modals/ReservationModal"
@@ -246,8 +255,8 @@ const Payment = () => {
           </OptionBox>
         </ReservationInfo>
       </ReservationInfoBox>
-      <PaymentConfirm>
-        <OptionBox>
+      <PaymentInfoBox>
+        <PaymentOptionBox>
           <h5>결제 항목</h5>
           <div className="option-list">
             <span>{`${totalUseDay}일 대여 :`}</span>
@@ -268,15 +277,15 @@ const Payment = () => {
             <strong>{`${needToPay.toLocaleString()} KRW`}</strong>
           </div>
           <ConfirmFeedBack ref={feedbackMsg} />
-          <ConfirmBtn onClick={readyToSetPayment}>결제하기</ConfirmBtn>
-        </OptionBox>
-      </PaymentConfirm>
+          <RooftopUtilBtn onClick={readyToSetPayment}>결제하기</RooftopUtilBtn>
+        </PaymentOptionBox>
+      </PaymentInfoBox>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 60vw;
+  width: 65vw;
   max-height: 100vh;
   overflow: auto;
 
@@ -285,79 +294,6 @@ const Wrapper = styled.div`
 
   flex-wrap: wrap;
   justify-content: space-between;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`
-
-const RooftopInfoBox = styled.div`
-  width: 60vw;
-  margin: 5vh auto 3.5vh auto;
-
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  align-items: left;
-`
-
-const RooftopTitle = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins } = theme
-    return css`
-      width: 100%;
-      margin-bottom: ${margins.sm};
-
-      h5 {
-        color: ${colors.main.primary};
-        font-size: ${fonts.size.lg};
-        font-weight: ${fonts.weight.bold};
-      }
-    `
-  }}
-`
-
-const RooftopDetail = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins } = theme
-    return css`
-      width: 100%;
-      margin-bottom: ${margins.sm};
-
-      display: flex;
-      justify-content: space-between;
-
-      h5 {
-        color: ${colors.main.primary};
-        font-size: ${fonts.size.lg};
-        font-weight: ${fonts.weight.bold};
-      }
-
-      .detail-list {
-        width: 32.5vw;
-
-        display: flex;
-        justify-content: space-between;
-      }
-    `
-  }}
-`
-
-const DetailInfo = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins } = theme
-    return css`
-      color: ${colors.main.secondary};
-      font-weight: ${fonts.weight.light};
-
-      svg {
-        margin-right: ${margins.sm};
-        color: ${colors.main.tertiary};
-        font-size: ${fonts.size.xsm};
-        font-weight: bold;
-      }
-    `
-  }}
 `
 
 const ReservationInfoBox = styled.div`
@@ -370,7 +306,7 @@ const ReservationInfo = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 32.5vw;
+      width: 35vw;
       padding: ${paddings.sm} 0vw;
       margin: ${margins.sm} 0vw auto 0vw;
 
@@ -435,36 +371,6 @@ const ReservationInfo = styled.div`
   }}
 `
 
-const PaymentConfirm = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      width: 22.5vw;
-      margin-bottom: auto;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      border: 1px solid ${colors.main.primary}33;
-      box-shadow: 0px 5px 8px ${colors.main.primary}33;
-
-      &::before {
-        width: 100%;
-        padding: 0vw;
-
-        background-color: ${colors.main.tertiary};
-        content: "최종 결제 내역";
-
-        color: ${colors.white};
-        font-size: ${fonts.size.base};
-        text-align: center;
-        line-height: 225%;
-      }
-    `
-  }}
-`
-
 const OptionBox = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
@@ -524,35 +430,6 @@ const ConfirmFeedBack = styled.p`
       color: ${colors.main.secondary};
       font-size: ${fonts.size.xsm};
       font-weight: 200;
-    `
-  }}
-`
-
-const ConfirmBtn = styled.button`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.sm} ${paddings.lg};
-      margin: ${margins.base} 0vw 0vw 0vw;
-
-      border-radius: 0.75rem;
-      background: ${colors.main.secondary};
-      cursor: pointer;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      color: ${colors.white};
-      font-size: ${fonts.size.sm};
-      font-weight: bold;
-
-      &:hover {
-        border: 0px;
-        background: ${colors.main.tertiary};
-        color: ${colors.white};
-      }
     `
   }}
 `

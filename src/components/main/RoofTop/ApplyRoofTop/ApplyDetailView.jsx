@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components"
 import { useState, useRef } from "react"
 
-const ApplyDetailView = ({ changeInfo }) => {
+const ApplyDetailView = ({ applyInfo, changeInfo }) => {
   const [imgBase64, setImgBase64] = useState(null)
   const fileUploadInput = useRef()
 
@@ -9,7 +9,6 @@ const ApplyDetailView = ({ changeInfo }) => {
   const addRoofTopDetailView = e => {
     const file = e.target.files[0]
     const reader = new FileReader()
-    console.log(file)
     changeInfo(prevInfo => ({ ...prevInfo, structureFile: file }))
     reader.readAsDataURL(file)
     reader.onloadend = () => {

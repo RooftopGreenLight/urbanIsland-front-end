@@ -7,8 +7,8 @@ import { Client } from "@stomp/stompjs"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark, faPaperPlane } from "@fortawesome/free-solid-svg-icons"
 
-import ChatRoomPage from "components/main/Chat/ChatRoomPage"
 import NoticeEmptyChatMessage from "components/main/Chat/NoticeEmpty/NoticeEmptyChatMessage"
+import { ModalHeader, ModalCloseBtn, ModalContent } from "components/common/Style/Modal/CommonStyle"
 
 import { ModalContext } from "module/Modal"
 import { AuthCheckMemberId } from "module/Auth"
@@ -17,7 +17,7 @@ import { chattingControl } from "api/controls/chattingControl"
 import DateUtil from "util/DateUtil"
 
 const ChatModal = ({ roomId }) => {
-  const { openModal } = useContext(ModalContext)
+  const { closeModal } = useContext(ModalContext)
   const memberId = useRecoilValue(AuthCheckMemberId)
   const [chatMessages, setChatMessages] = useState([])
   const [content, setContent] = useState("")
@@ -99,6 +99,7 @@ const ChatModal = ({ roomId }) => {
 
   const disconnect = () => {
     client.current.deactivate()
+    closeModal()
   }
 
   const subscribe = () => {
@@ -132,16 +133,11 @@ const ChatModal = ({ roomId }) => {
     }
   }
 
-  const goBackToChatRoomPage = () => {
-    disconnect()
-    openModal(<ChatRoomPage />)
-  }
-
   return (
     <Wrapper>
       <ModalHeader>
         <h5>옥상지기 문의 채팅</h5>
-        <ModalCloseBtn icon={faXmark} onClick={goBackToChatRoomPage} />
+        <ModalCloseBtn icon={faXmark} onClick={disconnect} />
       </ModalHeader>
       <ModalContent>
         <ViewPoint ref={chatMessageList}>
@@ -204,56 +200,6 @@ const ViewPoint = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
-`
-
-const ModalHeader = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.base};
-
-      background-color: ${colors.main.primary};
-
-      display: flex;
-      justify-content: space-between;
-
-      color: ${colors.white};
-      text-align: center;
-
-      h5 {
-        font-size: ${fonts.size.base};
-        vertical-align: center;
-      }
-    `
-  }}
-`
-
-const ModalCloseBtn = styled(FontAwesomeIcon)`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      padding: ${paddings.sm};
-      color: ${colors.white};
-      font-size: ${fonts.size.xsm};
-    `
-  }}
-`
-
-const ModalContent = styled.main`
-  ${({ theme }) => {
-    const { colors, paddings } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.sm};
-      border-top: 1px solid #dee2e6;
-      background-color: ${colors.white};
-
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    `
-  }}
 `
 
 const ChatMessageList = styled.div`

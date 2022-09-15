@@ -1,6 +1,8 @@
 import styled, { css } from "styled-components"
 import { useState } from "react"
 
+import { InputBox } from "components/common/Style/Mypage/CommonStyle"
+
 const ApplyDetailInfo = ({ applyInfo, changeInfo }) => {
   const [applyDetailInfo, setApplyDetailInfo] = useState(applyInfo)
   const { roleContent, refundContent } = applyDetailInfo
@@ -48,54 +50,6 @@ const ApplyDetailInfo = ({ applyInfo, changeInfo }) => {
 const Wrapper = styled.div`
   width: 100%;
   margin: auto;
-`
-
-const InputBox = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
-    return css`
-      width: 100%;
-      background-color: ${colors.white};
-      padding: ${paddings.base};
-
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-
-      .title {
-        width: 80%;
-        margin-bottom: ${margins.sm};
-        text-align: left;
-      }
-
-      p {
-        color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
-      }
-
-      h5 {
-        margin-bottom: 0.25rem;
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.sm};
-      }
-
-      input,
-      textarea {
-        width: 100%;
-        padding: ${paddings.sm} 0vw;
-        margin: ${margins.xsm} 0vw;
-
-        border: 0;
-        background-color: ${colors.main.tertiary}11;
-        border-bottom: 1px solid ${colors.main.secondary}44;
-
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
-        text-align: center;
-      }
-    `
-  }}
 `
 
 export default ApplyDetailInfo

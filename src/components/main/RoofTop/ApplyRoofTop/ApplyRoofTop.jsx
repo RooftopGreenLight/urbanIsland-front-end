@@ -3,6 +3,7 @@ import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { roofTopControl } from "api/controls/roofTopControl"
+import { Title, ServiceList, InputBox } from "components/common/Style/Mypage/CommonStyle"
 
 import ApplySidoList from "components/main/RoofTop/ApplyRoofTop/ApplySidoList"
 import ApplyBaseInfo from "components/main/RoofTop/ApplyRoofTop/ApplyBaseInfo"
@@ -180,37 +181,6 @@ const Wrapper = styled.div`
   text-align: center;
 `
 
-const Title = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.sm} ${paddings.base};
-      margin-bottom: ${margins.sm};
-
-      display: flex;
-      border-bottom: 1px solid ${colors.main.primary}77;
-
-      color: ${colors.main.primary};
-      text-align: center;
-
-      h5 {
-        width: 90%;
-
-        font-size: ${fonts.size.base};
-        font-weight: ${fonts.weight.bold};
-        text-align: left;
-      }
-    `
-  }}
-`
-
-const ServiceList = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`
-
 const FeedBackMsg = styled.p`
   ${({ theme }) => {
     const { fonts, margins } = theme
@@ -247,54 +217,6 @@ const ConfirmBtn = styled.button`
       &:hover {
         background-color: ${colors.main.tertiary};
         font-weight: ${fonts.weight.bold};
-      }
-    `
-  }}
-`
-
-const InputBox = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
-    return css`
-      width: 100%;
-      background-color: ${colors.white};
-      padding: ${paddings.base};
-
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-
-      .title {
-        width: 80%;
-        margin-bottom: ${margins.sm};
-        text-align: left;
-      }
-
-      p {
-        color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
-      }
-
-      h5 {
-        margin-bottom: 0.25rem;
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.sm};
-      }
-
-      input,
-      textarea {
-        width: 100%;
-        padding: ${paddings.sm} 0vw;
-        margin: ${margins.xsm} 0vw;
-
-        border: 0;
-        background-color: ${colors.main.tertiary}11;
-        border-bottom: 1px solid ${colors.main.secondary}44;
-
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
-        text-align: center;
       }
     `
   }}

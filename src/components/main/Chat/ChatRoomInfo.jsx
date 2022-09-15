@@ -10,7 +10,7 @@ import DateUtil from "util/DateUtil"
 
 const ChatRoomInfo = ({ chatRoomElm }) => {
   const { openModal } = useContext(ModalContext)
-  const { content, memberId: senderId, roomId, rooftopId, sendTime } = chatRoomElm
+  const { content, memberId: senderId, roomId, sendTime } = chatRoomElm
   const memberId = useRecoilValue(AuthCheckMemberId)
 
   const enterChatRoom = async () => {

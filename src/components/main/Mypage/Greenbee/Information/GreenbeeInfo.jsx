@@ -7,6 +7,8 @@ import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 
 import { greenbeeControl } from "api/controls/greenbeeControl"
+
+import { InfomationBox, InfomationLine } from "components/common/Style/Mypage/CommonStyle"
 import { faEdit } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
@@ -44,32 +46,32 @@ const GreenbeeInfo = () => {
 
   return (
     <Wrapper>
-      <GreenbeeInfoBox>
+      <InfomationBox>
         <Title>
           <h5>나의 그린비 정보</h5>
         </Title>
-        <GreenbeeInfoLine>
+        <InfomationLine>
           <div className="info">
             <span>사무소 주소</span>
             <p>
               {myGreenbeeInfo ? `${addressCity} ${addressDistrict} ${addressDetail}` : `*******`}
             </p>
           </div>
-        </GreenbeeInfoLine>
-        <GreenbeeInfoLine>
+        </InfomationLine>
+        <InfomationLine>
           <div className="info">
             <span>사무소 연락처</span>
             <p>{myGreenbeeInfo ? officeNumber : "*** - **** - ****"}</p>
           </div>
-        </GreenbeeInfoLine>
-        <GreenbeeInfoLine>
+        </InfomationLine>
+        <InfomationLine>
           <div className="info">
             <span>사무소 소개</span>
             <pre>{myGreenbeeInfo ? content : "****"}</pre>
           </div>
-        </GreenbeeInfoLine>
-      </GreenbeeInfoBox>
-      <GreenbeeInfoBox>
+        </InfomationLine>
+      </InfomationBox>
+      <InfomationBox>
         <Title>
           <h5>사무소 대표 사진 목록</h5>
         </Title>
@@ -87,7 +89,7 @@ const GreenbeeInfo = () => {
         <ModifyBtn onClick={() => navigate("/mypage/greenbee/edit")}>
           <FontAwesomeIcon icon={faEdit} /> 정보 수정하기
         </ModifyBtn>
-      </GreenbeeInfoBox>
+      </InfomationBox>
     </Wrapper>
   )
 }
@@ -120,39 +122,6 @@ const Title = styled.div`
         font-size: ${fonts.size.base};
         font-weight: ${fonts.weight.bold};
         text-align: left;
-      }
-    `
-  }}
-`
-
-const GreenbeeInfoBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 2.5vh;
-`
-
-const GreenbeeInfoLine = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      display: flex;
-      justify-content: space-between;
-      padding: ${paddings.base};
-
-      .info {
-        width: 90%;
-      }
-
-      span {
-        color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
-      }
-
-      p,
-      pre {
-        margin: ${margins.xsm} 0vw;
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.sm};
       }
     `
   }}

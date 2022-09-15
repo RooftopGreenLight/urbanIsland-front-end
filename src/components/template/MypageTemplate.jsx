@@ -1,8 +1,8 @@
 import React from "react"
 import styled from "styled-components"
 
-import Footer from "components/common/Footer"
-import Header from "components/common/Header"
+import Footer from "components/common/Layout/Footer"
+import Header from "components/common/Layout/Header"
 import MypageBox from "components/main/Mypage/Profile/MypageBox"
 
 const MypageTemplate = ({ children }) => {

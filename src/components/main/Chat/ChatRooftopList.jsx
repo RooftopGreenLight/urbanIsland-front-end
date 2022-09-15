@@ -10,14 +10,14 @@ import { ModalHeader, ModalCloseBtn } from "components/common/Style/Modal/Common
 import { ModalContext } from "module/Modal"
 import { chattingControl } from "api/controls/chattingControl"
 
-const ChatRoomPage = () => {
+const ChatRooftopList = ({ rooftopId }) => {
   const { closeModal } = useContext(ModalContext)
   const [currentRoomList, setCurrentRoomList] = useState([])
 
   useEffect(() => {
     const loadChatRoomList = async () => {
       try {
-        const loadedRoomList = await chattingControl.getChatRoomList()
+        const loadedRoomList = await chattingControl.getRooftopChat(rooftopId)
         setCurrentRoomList(loadedRoomList)
       } catch (err) {
         console.log(err.message)
@@ -29,7 +29,7 @@ const ChatRoomPage = () => {
   return (
     <Wrapper>
       <ModalHeader>
-        <h5>문의 내역 목록</h5>
+        <h5>옥상 문의 내역</h5>
         <ModalCloseBtn icon={faXmark} onClick={closeModal} />
       </ModalHeader>
       <ChatRoomList isEmpty={currentRoomList.length > 0}>
@@ -108,4 +108,4 @@ const NoticeEmptyIcon = styled.div`
   }}
 `
 
-export default ChatRoomPage
+export default ChatRooftopList
