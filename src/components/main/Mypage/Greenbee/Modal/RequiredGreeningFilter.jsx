@@ -1,16 +1,14 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
-import CustomRange from "./CustomRange"
-
 import { ModalContext } from "module/Modal"
 import { SidoGunguList } from "constants/SidoGunguList"
 import { RequestDeadLineDate } from "constants/RequestDeadLineDate"
 import { RequiredRoofTopOption } from "constants/RequiredRoofTopOption"
-import { useEffect } from "react"
+import CustomSlider from "components/common/CustomSlider"
 
 const RequiredGreeningFilter = ({ appliedFilter, setAppliedFilter }) => {
   const { closeModal } = useContext(ModalContext)
@@ -31,15 +29,21 @@ const RequiredGreeningFilter = ({ appliedFilter, setAppliedFilter }) => {
     minWidth: 0,
     maxWidth: 100000,
     minWidthPrice: 0,
-    maxWidthPrice: 1000000,
+    maxWidthPrice: 100000000,
     deadLineType: 0,
     contentNum: [],
   })
 
-  const { city, deadLineType, contentNum } = rooftopFilter
+  const { city, deadLineType, contentNum, minWidth, maxWidth, minWidthPrice, maxWidthPrice } =
+    rooftopFilter
 
-  const applyRooftopFilter = async () => {
+  const applyRooftopFilter = () => {
     setAppliedFilter(rooftopFilter)
+    closeModal()
+  }
+
+  const resetRooftopFilter = () => {
+    setAppliedFilter(null)
     closeModal()
   }
 
@@ -116,32 +120,32 @@ const RequiredGreeningFilter = ({ appliedFilter, setAppliedFilter }) => {
             <h5>
               시공 단가 <span>(KRW / m2)</span>
             </h5>
-            <CustomRange
+            <CustomSlider
               MAX={100000000}
               MIN={0}
               STEP={1}
               unit={"원 / m2"}
-              setValue={setRooftopFilter}
-              imin={0}
-              imax={100000000}
-              minOption="minWidthPrice"
-              maxOption="maxWidthPrice"
+              setValue={([minWidthPrice, maxWidthPrice]) =>
+                setRooftopFilter(prevData => ({ ...prevData, minWidthPrice, maxWidthPrice }))
+              }
+              imin={minWidthPrice}
+              imax={maxWidthPrice}
             />
           </OptionBox>
           <OptionBox>
             <h5>
               시설 넓이 <span>(m2)</span>
             </h5>
-            <CustomRange
-              MAX={1000000}
+            <CustomSlider
+              MAX={100000}
               MIN={0}
               STEP={1}
               unit={"m2"}
-              setValue={setRooftopFilter}
-              imin={0}
-              imax={1000000}
-              minOption="minWidth"
-              maxOption="maxWidth"
+              setValue={([minWidth, maxWidth]) =>
+                setRooftopFilter(prevData => ({ ...prevData, minWidth, maxWidth }))
+              }
+              imin={minWidth}
+              imax={maxWidth}
             />
           </OptionBox>
           <OptionBox>
@@ -179,7 +183,10 @@ const RequiredGreeningFilter = ({ appliedFilter, setAppliedFilter }) => {
               ))}
             </InputBoxList>
           </OptionBox>
-          <ConfirmBtn onClick={applyRooftopFilter}>필터 적용하기</ConfirmBtn>
+          <BtnList>
+            <ConfirmBtn onClick={resetRooftopFilter}>필터 초기화</ConfirmBtn>
+            <ConfirmBtn onClick={applyRooftopFilter}>필터 적용</ConfirmBtn>
+          </BtnList>
         </ViewPoint>
       </ModalContent>
     </Wrapper>
@@ -413,11 +420,18 @@ const InputBox = styled.div`
     `
   }}
 `
+
+const BtnList = styled.div`
+  width: 90%;
+  margin: auto;
+  display: flex;
+`
+
 const ConfirmBtn = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 60%;
+      width: 42.5%;
       padding: ${paddings.sm} ${paddings.base};
       margin: ${margins.lg} auto;
 

@@ -11,7 +11,7 @@ import { faXmark, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons"
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import DateUtil from "util/DateUtil"
-import CustomSlider from "components/main/Reservation/CustomSlider"
+import CustomSlider from "components/common/CustomSlider"
 
 const ReservationModal = ({
   limitTime,

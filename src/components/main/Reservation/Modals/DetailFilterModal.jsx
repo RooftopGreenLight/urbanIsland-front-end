@@ -8,7 +8,7 @@ import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import { RoofTopFacilities } from "constants/RoofTopFacilities"
 
-import CustomRange from "components/main/Mypage/Greenbee/Modal/CustomRange"
+import CustomSlider from "components/common/CustomSlider"
 import { useEffect } from "react"
 
 const DetailFilterModal = ({ filter, setFilter }) => {
@@ -71,14 +71,14 @@ const DetailFilterModal = ({ filter, setFilter }) => {
           <h5>
             가격 <span>(KRW)</span>
           </h5>
-          <CustomRange
+          <CustomSlider
             STEP={1}
             MIN={0}
             MAX={50000000}
             unit={"KRW"}
-            setValue={setDetailFilter}
-            minOption="minPrice"
-            maxOption="maxPrice"
+            setValue={([minPrice, maxPrice]) =>
+              setDetailFilter(prevFilter => ({ ...prevFilter, minPrice, maxPrice }))
+            }
             imin={minPrice}
             imax={maxPrice}
           />
@@ -87,14 +87,14 @@ const DetailFilterModal = ({ filter, setFilter }) => {
           <h5>
             넓이 <span>(m2)</span>
           </h5>
-          <CustomRange
+          <CustomSlider
             STEP={1}
             MIN={0}
             MAX={333333}
             unit={"m2"}
-            setValue={setDetailFilter}
-            minOption="minWidth"
-            maxOption="maxWidth"
+            setValue={([minWidth, maxWidth]) =>
+              setDetailFilter(prevFilter => ({ ...prevFilter, minWidth, maxWidth }))
+            }
             imin={minWidth}
             imax={maxWidth}
           />

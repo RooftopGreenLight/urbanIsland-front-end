@@ -3,7 +3,7 @@ import styled, { css } from "styled-components"
 
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
-import CustomRange from "components/main/Mypage/Greenbee/Modal/CustomRange"
+import CustomSlider from "components/common/CustomSlider"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
@@ -45,14 +45,14 @@ const TimeFilterModal = ({ filter, setFilter }) => {
           <h5>
             이용 시간 <span>(hr)</span>
           </h5>
-          <CustomRange
+          <CustomSlider
             STEP={1}
             MIN={0}
             MAX={24}
             unit={":00"}
-            setValue={setTimeInfo}
-            minOption="startTime"
-            maxOption="endTime"
+            setValue={([startTime, endTime]) =>
+              setTimeInfo(prevData => ({ ...prevData, startTime, endTime }))
+            }
             imin={startTime}
             imax={endTime}
           />
