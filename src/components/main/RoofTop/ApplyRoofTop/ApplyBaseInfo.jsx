@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { InputBox } from "components/common/Style/Mypage/CommonStyle"
 

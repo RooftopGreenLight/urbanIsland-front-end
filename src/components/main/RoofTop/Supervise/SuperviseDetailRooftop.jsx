@@ -1,77 +1,121 @@
 import { useParams, useNavigate } from "react-router-dom"
-import { useState, useEffect } from "react"
-import { roofTopControl } from "api/controls/roofTopControl"
+import { useContext, useState, useEffect, useMemo } from "react"
 import styled, { css } from "styled-components"
+
 import Slider from "react-slick"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faStar, faUser, faArrowsLeftRight } from "@fortawesome/free-solid-svg-icons"
-import { useContext } from "react"
+
+import { Title, ServiceList, InputBox } from "components/common/Style/Mypage/CommonStyle"
+import {
+  RooftopTitle,
+  RooftopDetail,
+  DetailInfo,
+  InformationBox,
+} from "components/common/Style/Rooftop/CommonStyle"
+
+import { roofTopControl } from "api/controls/roofTopControl"
 import { ModalContext } from "module/Modal"
-import FeeChangeModal from "components/main/RoofTop/Supervise/Modal/FeeChangeModal"
-import PayOptionChangeModal from "components/main/RoofTop/Supervise/Modal/PayOptionChangeModal"
-import Calendar from "react-calendar"
-import { CalenderContainer } from "styles/calender"
-import SetAvailableTimeModal from "components/main/RoofTop/ApplyRoofTop/Modal/SetAvailableTimeModal"
-import SetAvailablePersonModal from "components/main/RoofTop/ApplyRoofTop/Modal/SetAvailablePersonModal"
-import moment from "moment/moment"
 import DateUtil from "util/DateUtil"
-import { reservationControl } from "api/controls/reservationControl"
+import FeeChangeModal from "components/main/RoofTop/Supervise/Modal/FeeChangeModal"
+
+import PayOptionChangeModal from "components/main/RoofTop/Supervise/Modal/PayOptionChangeModal"
+import ApplyAvailableInfo from "../ApplyRoofTop/ApplyAvailableInfo"
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faEdit, faImage, faMap, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
+
 const SuperviseDetailRooftop = () => {
   const { openModal } = useContext(ModalContext)
   const { id } = useParams()
   const nav = useNavigate()
   const [addImagesBase64, setAddImagesBase64] = useState([])
-  const [tmpStructure, setTmpStructure] = useState([])
   const [selectedDate, setSeletedDate] = useState(new Date())
   const [bookingDates, setBookingDates] = useState(new Map())
-  //const [reservationDetail, setReservationDetail] = useState()
-  const [input, setInput] = useState({
+
+  const [rooftopData, setRooftopData] = useState({
     adultCount: 0,
     kidCount: 0,
     petCount: 0,
     totalCount: 0,
-    startTime: [],
-    endTime: [],
+    startTime: 0,
+    endTime: 23,
     totalPrice: 0,
+    explainContent: "",
+    refundContent: "",
+    roleContent: "",
+    detailInfoNum: [],
     deleteImages: [],
     addImages: [],
     rooftopImages: [],
-    structureImage: null,
+    structureFile: null,
     rooftopReviews: [],
     width: 0,
     grade: 0,
   })
-  const onChangeInput = e => {
-    const { name, value } = e.target
-    setInput({
-      ...input,
-      [name]: value,
-    })
-  }
 
   useEffect(() => {
     const loadCurrentInfo = async () => {
       try {
         const result = await roofTopControl.getRooftopDetail(id)
+        console.log(result)
+        const {
+          city,
+          district,
+          detail,
+          width,
+          grade,
+          adultCount,
+          kidCount,
+          petCount,
+          totalCount,
+          startTime,
+          endTime,
+          totalPrice,
+          mainImage,
+          rooftopImages,
+          structureImage: structureFile,
+          detailNums: detailInfoNum,
+          explainContent,
+          refundContent,
+          roleContent,
+          reservations,
+        } = result
 
-        const { reservations } = result
-
-        setInput({
-          ...result,
-        })
-        reservations.map(({ id, startDates, endDates }) => {
-          const betweenDates = DateUtil.getDatesBetweenTwoDates(
-            DateUtil.createDate(startDates),
-            DateUtil.createDate(endDates),
-          )
-          betweenDates.map(date => {
-            setBookingDates(
-              prevBookingDates => new Map([...prevBookingDates, [date.toDateString(), id]]),
+        if (reservations) {
+          reservations.map(({ id, startDates, endDates }) => {
+            const betweenDates = DateUtil.getDatesBetweenTwoDates(
+              DateUtil.createDate(startDates),
+              DateUtil.createDate(endDates),
+            )
+            return betweenDates.map(date =>
+              setBookingDates(prevData => new Map([...prevData, [date.toDateString(), id]])),
             )
           })
-        })
+        }
+
+        setRooftopData(prevData => ({
+          ...prevData,
+          city,
+          district,
+          detail,
+          width,
+          grade,
+          adultCount,
+          kidCount,
+          petCount,
+          totalCount,
+          totalPrice,
+          detailInfoNum,
+          startTime: startTime[0],
+          endTime: endTime[0],
+          explainContent,
+          refundContent,
+          roleContent,
+          mainImage,
+          rooftopImages,
+          structureFile,
+        }))
       } catch (err) {
         console.log(err.message)
       }
@@ -79,40 +123,62 @@ const SuperviseDetailRooftop = () => {
     loadCurrentInfo()
   }, [])
 
-  // useEffect(() => {
-  //   const clickDate = async () => {
-  //     try {
-  //       const result = await reservationControl.getReservationInfoById(
-  //         bookingDates.get(moment(selectedDate).format("ddd MMM DD YYYY")),
-  //       )
-  //       setReservationDetail(result)
-  //     } catch (err) {
-  //       console.log(err.message)
-  //     }
-  //   }
-  //   clickDate()
-  // }, [selectedDate])
-
-  useEffect(() => {
-    console.log(input)
-  }, [input])
   const {
-    totalCount,
     width,
+    city,
+    district,
+    detail,
+    grade,
+    adultCount,
+    kidCount,
+    petCount,
+    totalPrice,
+    rooftopImages,
     deleteImages,
     addImages,
-    rooftopImages,
-    structureImage,
+    explainContent,
+    roleContent,
+    refundContent,
     rooftopReviews,
-    grade,
-  } = input
+  } = rooftopData
+
+  const onFinish = async () => {
+    const formData = new FormData()
+    for (const [option, value] of Object.entries(rooftopData)) {
+      if (["startTime", "endTime"].includes(option)) {
+        formData.append(option, `${String(value).padStart(2, "0")}:00:00`)
+        continue
+      }
+      if (Array.isArray(value)) {
+        for (let idx = 0; idx < value.length; idx++) {
+          formData.append(option, value[idx])
+        }
+        continue
+      }
+      formData.append(option, value)
+    }
+    try {
+      await roofTopControl.patchRooftopDetail(id, formData)
+      nav(`/mypage/rooftop/supervise/${id}`)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const changeInput = e => {
+    const { name, value } = e.target
+    setRooftopData(prevData => ({
+      ...prevData,
+      [name]: value,
+    }))
+  }
 
   // Blob 데이터를 추출하여 이미지를 띄우는 함수.
-  const addImage = e => {
+  const addRooftopImage = e => {
     const fileList = e.target.files
     if (fileList.length > 0 && fileList.length <= 5 - rooftopImages.length) {
       setAddImagesBase64([])
-      setInput(prevInfo => ({
+      setRooftopData(prevInfo => ({
         ...prevInfo,
         addImages: Array.from(fileList),
       }))
@@ -127,300 +193,267 @@ const SuperviseDetailRooftop = () => {
       })
     }
   }
-  const setStruct = e => {
-    const files = e.target.files
-    if (!files[0]) return
-    const reader = new FileReader()
-    reader.readAsDataURL(files[0])
-    reader.onloadend = () => {
-      const base64Img = reader.result
-      const base64Sub = base64Img.toString()
-      setInput(prevInfo => ({
-        ...prevInfo,
-        addImages: Array.from(files),
-      }))
-      setTmpStructure(base64Sub)
-      console.log(tmpStructure)
-    }
-  }
 
-  const removeGivenImage = e => {
-    const { name, id } = e.target
-    if (id === "NORMAL") {
-      const selectedImage = rooftopImages[name]
-      setInput(prevInfo => ({
+  const removeRooftopImage = e => {
+    const { name } = e.target
+    const selectedImage = rooftopImages[name]
+    if (selectedImage.rooftopImageType === "NORMAL") {
+      setRooftopData(prevInfo => ({
         ...prevInfo,
         deleteImages: [...deleteImages, selectedImage.storeFilename],
         rooftopImages: [...rooftopImages].filter(
           ({ storeFilename }) => storeFilename !== selectedImage.storeFilename,
         ),
       }))
-    } else if (id === "STRUCTURE") {
-      const selectedImage = structureImage
-      setInput(prevInfo => ({
-        ...prevInfo,
-        deleteImages: [...deleteImages, selectedImage.storeFilename],
-        structureImage: [],
-      }))
+      return
     }
   }
 
   const removeAddedImage = e => {
     const { name } = e.target
     const selectedImage = addImages[name]
-    console.log(name)
-    setInput(prevInfo => ({
+    setRooftopData(prevInfo => ({
       ...prevInfo,
       addImages: [...addImages].filter(({ name }) => name !== selectedImage.name),
     }))
     setAddImagesBase64([...addImagesBase64].filter((_, idx) => idx !== parseInt(name)))
   }
 
-  const removeStructureImage = e => {
-    const { name } = e.target
-    const selectedImage = addImages[name]
-    console.log(name)
-    setInput(prevInfo => ({
-      ...prevInfo,
-      addImages: [...addImages].filter(({ name }) => name !== selectedImage.name),
-    }))
-    setTmpStructure([])
-  }
+  const totalImgAmount = useMemo(
+    () => rooftopImages.length + addImagesBase64.length,
+    [rooftopImages, addImagesBase64],
+  )
+
   const SlickSettings = {
-    dots: true,
-    lazyLoad: true,
-    infinite: false,
-    speed: 500,
+    dots: totalImgAmount > 3,
+    infinite: totalImgAmount > 3,
+    lazyLoad: "progressive",
+    speed: 250,
     slidesToShow: 3,
     slidesToScroll: 1,
   }
 
-  const onFinish = async () => {
-    const formData = new FormData()
-    for (const [option, value] of Object.entries(input)) {
-      if (option === "startTime" || option === "endTime") {
-        formData.append(option, `${value[0].toString().padStart(2, "0")}:00:00`)
-        continue
-      }
-      if (Array.isArray(value)) {
-        for (let idx = 0; idx < value.length; idx++) {
-          formData.append(option, value[idx])
-        }
-        continue
-      }
-      formData.append(option, value)
-      console.log(option, value)
-    }
-    try {
-      await roofTopControl.patchRooftopDetail(id, formData)
-      nav(`/mypage/rooftop/supervise/${id}`)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
   return (
     <Wrapper>
-      <ViewPoint>
-        <SliderBox>
-          <Slider {...SlickSettings}>
-            {rooftopImages &&
-              rooftopImages.map(({ fileUrl }, idx) => (
-                <div>
-                  <img
-                    src={fileUrl}
-                    alt="Img"
-                    key={idx}
-                    name={idx}
-                    id="NORMAL"
-                    onDoubleClick={removeGivenImage}
-                  />
-                </div>
-              ))}
-            {addImagesBase64 &&
-              addImagesBase64.map((base64, idx) => (
-                <div>
-                  <img
-                    src={base64}
-                    alt="Img"
-                    key={idx}
-                    id="NORMAL"
-                    name={idx}
-                    onDoubleClick={removeAddedImage}
-                  />
-                </div>
-              ))}
-            {addImagesBase64 && rooftopImages ? null : <p>이미지가 없습니다</p>}
-          </Slider>
-        </SliderBox>
-        <div>
-          <label htmlFor="imgList">
-            <FileUploadBtn>사진 업로드</FileUploadBtn>
-          </label>
-          <input
-            id="imgList"
-            type="file"
-            onChange={addImage}
-            multiple="multiple"
-            accept=".png,.jpg"
-            style={{ visibility: "hidden" }}
-          />
+      <RooftopInfoBox>
+        <RooftopTitle>
+          <h5>{`${city} ${district} ${detail}`}</h5>
+        </RooftopTitle>
+        <RooftopDetail>
+          <div className="detail-list">
+            <DetailInfo>
+              <FontAwesomeIcon icon={faStar} />
+              <span>{Number(grade).toFixed(1)} / 5.0</span>
+            </DetailInfo>
+            <DetailInfo>
+              <FontAwesomeIcon icon={faMap} />
+              <span>
+                {`${width?.toLocaleString()} m`}
+                <sup style={{ fontSize: "0.5rem" }}>2</sup>
+              </span>
+            </DetailInfo>
+            <DetailInfo>
+              <FontAwesomeIcon icon={faUser} />
+              <span>
+                {`성인 ${adultCount}명, ${
+                  kidCount === 0 ? "노 키즈 존" : `유아 ${kidCount}명`
+                }, 반려동물 ${petCount === 0 ? "금지" : `${petCount}마리`}`}
+              </span>
+            </DetailInfo>
+          </div>
+        </RooftopDetail>
+      </RooftopInfoBox>
+      <InputBox boxSize="base">
+        <div className="title">
+          <h5>건물 면적 </h5>
+          <p>
+            옥상의 면적을 입력해주세요. (단위 : m<sup style={{ fontSize: "0.5rem" }}>2</sup>)
+          </p>
         </div>
-        <InfoLine>
-          <div>
-            <Icon icon={faArrowsLeftRight} />
-            <IconText>{width}m2</IconText>
-          </div>
-          <div>
-            <Icon icon={faStar} />
-            <IconText>{grade}/5.0</IconText>
-          </div>
-          <div>
-            <Icon icon={faUser} />
-            <IconText>
-              <Input type="text" name="totalCount" value={totalCount} onChange={onChangeInput} />
-              까지
-            </IconText>
-          </div>
-        </InfoLine>
-        <BoxWrapper>
-          <InputBox>
-            <div className="title">
-              <h5>이용 가능 시간</h5>
-              <p>등록하려는 시설의 이용 가능 시간을 설정하세요.</p>
-            </div>
-            <OpenModalBtn
-              onClick={() =>
-                openModal(<SetAvailableTimeModal applyInfo={input} changeInfo={setInput} />)
-              }>
-              시간 설정하기
-            </OpenModalBtn>
-          </InputBox>
-          <InputBox>
-            <div className="title">
-              <h5>이용 가능 인원</h5>
-              <p>등록하려는 시설의 이용 가능 인원을 설정하세요.</p>
-            </div>
-            <OpenModalBtn
-              onClick={() =>
-                openModal(<SetAvailablePersonModal applyInfo={input} changeInfo={setInput} />)
-              }>
-              인원 설정하기
-            </OpenModalBtn>
-          </InputBox>
-        </BoxWrapper>
-        <BoxWrapper>
-          <CalenderContainer>
-            <Calendar
-              formatDay={(_, date) => moment(date).format("DD")}
-              navigationLabel={null}
-              onChange={setSeletedDate}
-              value={selectedDate}
-              tileContent={({ date }) => {
-                let html = []
-                if (bookingDates.has(date.toDateString())) {
-                  html.push(<BookingDot key={date} />)
-                }
-                return <>{html}</>
-              }}
-            />
-          </CalenderContainer>
-        </BoxWrapper>
-        <BoxWrapper>
-          <Title>리뷰</Title>
-          {rooftopReviews ? (
-            rooftopReviews.map(({ content, createTime, grade }) => (
-              <ReviewBox key={content}>
-                <div className="content">
-                  <p className="grade">
-                    <FontAwesomeIcon icon={faStar} /> {`${parseInt(grade).toFixed(1)} / 5.0`}
-                  </p>
-                  <pre> {content}</pre>
-                </div>
-                <p>{`${createTime[0]}년 ${createTime[1]}월 ${createTime[2]}일`}</p>
-              </ReviewBox>
-            ))
-          ) : (
-            <p>아직 리뷰가 없습니다</p>
-          )}
-        </BoxWrapper>
-        <BoxWrapper>
-          <Title>배치도</Title>
-          {structureImage ? (
-            <img src={structureImage.fileUrl} id="STRUCTURE" onDoubleClick={removeGivenImage} />
-          ) : (
-            <p>배치도가 없습니다</p>
-          )}
-          {tmpStructure && structureImage ? null : (
-            <img src={tmpStructure} id="STRUCTURE" onDoubleClick={removeStructureImage} />
-          )}
-
-          <div>
-            <label htmlFor="structureimg">
-              <FileUploadBtn>사진 업로드</FileUploadBtn>
+        <input name="width" value={width} placeholder="넓이" onChange={changeInput} />
+      </InputBox>
+      <InputBox boxSize="base">
+        <div className="title">
+          <h5>이용 가격</h5>
+          <p>옥상의 1일 당 이용 금액을 입력해주세요.</p>
+        </div>
+        <input name="totalPrice" value={totalPrice} placeholder="가격" onChange={changeInput} />
+      </InputBox>
+      <InputBox boxSize="lg">
+        <div className="title">
+          <h5>시설 설명</h5>
+          <p>고객에게 옥상 시설을 설명해주세요!</p>
+        </div>
+        <textarea
+          name="explainContent"
+          rows="4"
+          cols="50"
+          value={explainContent}
+          placeholder="자유롭게 옥상 설명을 작성해주세요."
+          onChange={changeInput}
+        />
+      </InputBox>
+      <ApplyAvailableInfo applyInfo={rooftopData} changeInfo={setRooftopData} />
+      {rooftopReviews && rooftopReviews.length > 0 && (
+        <InformationBox>
+          <h5>시설 리뷰</h5>
+          {rooftopReviews.map(({ content, createTime, grade }) => (
+            <ReviewBox key={content}>
+              <div className="content">
+                <p className="grade">
+                  <FontAwesomeIcon icon={faStar} /> {`${parseInt(grade).toFixed(1)} / 5.0`}
+                </p>
+                <pre> {content}</pre>
+              </div>
+              <p>{`${createTime[0]}년 ${createTime[1]}월 ${createTime[2]}일`}</p>
+            </ReviewBox>
+          ))}
+        </InformationBox>
+      )}
+      <InputBox boxSize="lg">
+        <div className="title">
+          <h5>환불 규정</h5>
+          <p>등록하려는 옥상 시설의 환불 규정을 작성해주세요.</p>
+        </div>
+        <textarea
+          name="refundContent"
+          rows="4"
+          cols="50"
+          value={refundContent}
+          placeholder="자유롭게 환불 규정을 작성해주세요."
+          onChange={changeInput}
+        />
+      </InputBox>
+      <InputBox boxSize="lg">
+        <div className="title">
+          <h5>이용 규칙</h5>
+          <p>등록하려는 옥상 시설의 이용 규칙을 작성해주세요.</p>
+        </div>
+        <textarea
+          name="roleContent"
+          rows="4"
+          cols="50"
+          value={roleContent}
+          placeholder="자유롭게 이용 규칙을 작성해주세요."
+          onChange={changeInput}
+        />
+      </InputBox>
+      <SliderBox>
+        <div className="title">
+          <h5>옥상 사진</h5>
+          <p>등록하려는 옥상 시설의 이미지를 작성해주세요.</p>
+        </div>
+        <Slider {...SlickSettings}>
+          {rooftopImages &&
+            rooftopImages.map(({ fileUrl }, idx) => (
+              <div key={fileUrl}>
+                <img
+                  src={fileUrl}
+                  alt="Img"
+                  key={idx}
+                  name={idx}
+                  onDoubleClick={removeRooftopImage}
+                />
+              </div>
+            ))}
+          {addImagesBase64 &&
+            addImagesBase64.map((base64, idx) => (
+              <div key={base64}>
+                <img src={base64} alt="Img" key={idx} name={idx} onDoubleClick={removeAddedImage} />
+              </div>
+            ))}
+        </Slider>
+        {totalImgAmount < 5 && (
+          <BtnList>
+            <label htmlFor="imgList">
+              <FileUploadBtn>
+                <FontAwesomeIcon icon={faImage} /> 사진 업로드
+              </FileUploadBtn>
             </label>
             <input
-              id="structureimg"
+              id="imgList"
               type="file"
-              onChange={setStruct}
+              onChange={addRooftopImage}
+              multiple="multiple"
               accept=".png,.jpg"
-              style={{ visibility: "hidden" }}
             />
-          </div>
-        </BoxWrapper>
-        <ButtonBox>
-          <Button
-            type="fee"
-            onClick={() => openModal(<FeeChangeModal input={input} setInput={setInput} />)}>
-            1일당 가격 변경하기
-          </Button>
-          <Button type="fee" onClick={() => openModal(<PayOptionChangeModal rooftopid={id} />)}>
-            결제 추가옵션 변경
-          </Button>
-          <Button type="fee">기타사항 문의하기</Button>
-          <Button onClick={onFinish}>적용 완료하기</Button>
-        </ButtonBox>
-      </ViewPoint>
+          </BtnList>
+        )}
+      </SliderBox>
+      <Button onClick={onFinish}>적용 완료하기</Button>
     </Wrapper>
   )
 }
 
-export default SuperviseDetailRooftop
+const Wrapper = styled.div`
+  width: 50vw;
+  margin: 7.5vh auto;
+  padding: 1rem;
 
-const OpenModalBtn = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`
+
+const RooftopInfoBox = styled.div`
+  width: 100%;
+  margin: 5vh 1rem 3.5vh 1rem;
+
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: left;
+`
+
+const SliderBox = styled.div`
   ${({ theme }) => {
-    const { colors, paddings } = theme
+    const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 20%;
-      padding: ${paddings.sm};
-      margin: 0.75vw auto 0.25vw auto;
+      width: 40vw;
+      padding: ${paddings.base};
 
-      border: 1px solid ${colors.main.primary};
-      border-radius: 2.5vw;
-      cursor: pointer;
+      img {
+        width: 13vw;
+        height: 13vw;
+        overflow: hidden;
+      }
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      .title {
+        margin-bottom: ${margins.base};
+        text-align: left;
+      }
 
-      font-weight: 100;
+      p {
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
 
-      &:hover {
-        border: 0px;
-        background: ${colors.main.tertiary};
-        color: ${colors.white};
+      h5 {
+        margin-bottom: 0.25rem;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
       }
     `
   }}
 `
-const ViewPoint = styled.div`
-  max-height: 80vh;
-  overflow: auto;
 
-  ::-webkit-scrollbar {
+const BtnList = styled.div`
+  display: flex;
+  margin: 2rem auto 0rem auto;
+
+  label {
+    width: 50%;
+    margin: auto;
+
+    display: flex;
+    justify-content: space-between;
+  }
+
+  #imgList {
     display: none;
   }
 `
+
 const ReviewBox = styled.div`
   ${({ theme }) => {
     const { colors, paddings, margins } = theme
@@ -465,75 +498,12 @@ const ReviewBox = styled.div`
     `
   }}
 `
-const BookingDot = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins } = theme
-    return css`
-      height: ${fonts.size.xxsm};
-      width: ${fonts.size.xxsm};
-      margin: ${margins.xsm} auto 0vw auto;
-
-      position: relative;
-      bottom: 0;
-
-      background-color: ${colors.main.tertiary};
-      border-radius: 50%;
-    `
-  }}
-`
-const InputBox = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
-    return css`
-      width: 100%;
-      background-color: ${colors.white};
-      padding: ${paddings.base};
-
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-
-      .title {
-        width: 80%;
-        margin-bottom: ${margins.sm};
-        text-align: left;
-      }
-
-      p {
-        color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
-      }
-
-      h5 {
-        margin-bottom: 0.25rem;
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.sm};
-      }
-
-      input,
-      textarea {
-        width: 100%;
-        padding: ${paddings.sm} 0vw;
-        margin: ${margins.xsm} 0vw;
-
-        border: 0;
-        background-color: ${colors.main.tertiary}11;
-        border-bottom: 1px solid ${colors.main.secondary}44;
-
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
-        text-align: center;
-      }
-    `
-  }}
-`
 
 const Button = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 90%;
+      width: 50%;
       padding: ${paddings.sm} ${paddings.base};
       margin: ${margins.lg} auto;
 
@@ -554,36 +524,6 @@ const Button = styled.div`
         background-color: ${colors.main.tertiary};
         font-weight: ${fonts.weight.bold};
       }
-    `
-  }}
-`
-const ButtonBox = styled.div`
-  ${({ theme }) => {
-    const { paddings } = theme
-    return css`
-      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
-      padding: ${paddings.lg};
-    `
-  }}
-`
-const BoxWrapper = styled.div`
-  ${({ theme }) => {
-    const { paddings, margins, colors } = theme
-    return css`
-      width: 100%;
-      background-color:${colors.black.white}
-      }
-      padding: ${paddings.base};
-      margin-top: ${margins.base};
-      border-radius: 1rem;
-      text-align:center;
-      img {
-        width: 100%;
-        height: 40vh;
-        object-fit: cover;
-        margin: ${margins.lg} auto 0vw auto;
-      }
-
     `
   }}
 `
@@ -613,86 +553,5 @@ const FileUploadBtn = styled.div`
     `
   }}
 `
-const Input = styled.input`
-  ${({ theme }) => {
-    const { paddings, margins, colors, fonts } = theme
-    return css`
-      width: 20%;
-      padding: ${paddings.sm} 0vw;
-      margin: ${margins.xsm} 0vw;
 
-      border: 0;
-      background-color: ${colors.main.tertiary}09;
-      border-bottom: 1px solid ${colors.main.secondary}44;
-
-      color: ${colors.black.secondary};
-      font-size: ${fonts.size.xsm};
-      font-weight: ${fonts.weight.light};
-      text-align: center;
-    `
-  }}
-`
-const Title = styled.h5`
-  ${({ theme }) => {
-    const { fonts, colors, paddings, margins } = theme
-    return css`
-      width: 100%;
-      padding-bottom: ${paddings.xsm};
-      border-bottom: 1px solid ${colors.main.primary}55;
-      margin-bottom: ${margins.base};
-      color: ${colors.main.secondary};
-      font-size: ${fonts.size.base};
-    `
-  }}
-`
-
-const InfoLine = styled.div`
-  ${({ theme }) => {
-    const { margins, paddings, fonts } = theme
-    return css`
-      display: flex;
-      justify-content: space-between;
-      padding: ${paddings.base};
-      font-size: ${fonts.size.sm}
-      border-radius: 1rem;
-      margin-bottom: ${margins.base};
-      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
-      div{
-        display: flex;
-        align-items: center;
-        
-      }
-    `
-  }}
-`
-const Wrapper = styled.div`
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  width: 35vw;
-  height: 80vh;
-  margin: 0vh auto;
-`
-const Icon = styled(FontAwesomeIcon)`
-  color: black;
-  display: inline-block;
-`
-
-const IconText = styled.div`
-  display: inline-block;
-`
-const SliderBox = styled.div`
-  ${({ theme }) => {
-    const { margins } = theme
-    return css`
-      margin: ${margins.lg} auto;
-      width: 90%;
-
-      img {
-        width: 10vw;
-        height: 10vw;
-        overflow: hidden;
-      }
-    `
-  }}
-`
+export default SuperviseDetailRooftop

@@ -90,6 +90,7 @@ const ChangePasswordModal = () => {
               placeholder="New Password"
               onChange={changeInput}
               value={password}
+              type="password"
             />
             <ModalFeedbackMsg ref={feedbackMsg} />
             <ApplyModifyBtn onClick={changePassword}>비밀번호 변경</ApplyModifyBtn>

@@ -118,8 +118,6 @@ const GreenbeeInfoEdit = () => {
     [greenBeeImages, addImagesBase64],
   )
 
-  console.log([...greenBeeImages, ...addImages])
-
   const SlickSettings = {
     dots: totalImgAmount > 3,
     infinite: totalImgAmount > 3,
