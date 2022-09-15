@@ -235,7 +235,7 @@ const SortingBtn = styled.select`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 7.5vw;
+      width: 9vw;
       height: 75%;
       margin: auto 0vw auto ${margins.sm};
       padding: 0vw ${paddings.base};
@@ -263,7 +263,6 @@ const SortingBtn = styled.select`
 
         &:focus {
           background: ${colors.main.quaternary};
-
           color: ${colors.white};
         }
       }
@@ -275,7 +274,7 @@ const FilterBtn = styled.button`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 7.5vw;
+      width: 9vw;
       height: 75%;
       margin: auto 0vw auto ${margins.sm};
       padding: 0vw ${paddings.base};

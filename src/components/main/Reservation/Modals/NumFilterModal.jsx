@@ -3,6 +3,7 @@ import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus, faMinus, faXmark } from "@fortawesome/free-solid-svg-icons"
+import { ModalHeader, ModalCloseBtn, ModalContent } from "components/common/Style/Modal/CommonStyle"
 
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
@@ -83,7 +84,7 @@ const NumFilterModal = ({ filter, setFilter }) => {
         </SetPersonSection>
         <SetPersonSection>
           <h5>
-            반려 동물 <span>(반려동물 출입 금지 시 0명)</span>
+            반려 동물 <span>(출입 금지 시 0명)</span>
           </h5>
           <CounterBox>
             <FontAwesomeIcon
@@ -118,62 +119,6 @@ const Wrapper = styled.div`
   overflow: hidden;
 `
 
-const ModalHeader = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.base};
-
-      background-color: ${colors.main.primary};
-
-      display: flex;
-      justify-content: space-between;
-
-      color: ${colors.white};
-      text-align: center;
-
-      h5 {
-        font-size: ${fonts.size.base};
-        vertical-align: center;
-      }
-    `
-  }}
-`
-
-const ModalCloseBtn = styled(FontAwesomeIcon)`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      padding: ${paddings.sm};
-      color: ${colors.white};
-      font-size: ${fonts.size.xsm};
-    `
-  }}
-`
-
-const ModalContent = styled.div`
-  ${({ theme }) => {
-    const { fonts, paddings, margins } = theme
-    return css`
-      padding: ${paddings.lg} ${paddings.xl};
-      margin: auto;
-
-      h5 {
-        font-size: ${fonts.size.sm};
-        text-align: center;
-      }
-
-      p {
-        margin-bottom: ${margins.lg};
-        font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
-        text-align: center;
-      }
-    `
-  }}
-`
-
 const SettingBtn = styled.button`
   ${({ theme }) => {
     const { colors, paddings, margins } = theme
@@ -204,18 +149,18 @@ const SettingBtn = styled.button`
 
 const SetPersonSection = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { fonts, margins } = theme
     return css`
       width: 90%;
       margin: auto;
-      padding: ${paddings.sm};
-      margin-bottom: ${margins.sm};
+      margin: ${margins.base} auto;
 
       display: flex;
       justify-content: space-between;
 
       h5 {
         width: 75%;
+        margin: 0;
 
         font-size: ${fonts.size.base};
         line-height: 150%;
@@ -232,7 +177,7 @@ const SetPersonSection = styled.div`
 
 const CounterBox = styled.div`
   ${({ theme }) => {
-    const { colors, paddings, margins } = theme
+    const { colors, paddings } = theme
     return css`
       width: 25%;
 

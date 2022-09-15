@@ -23,6 +23,9 @@ import { chattingControl } from "api/controls/chattingControl"
 
 import DateUtil from "util/DateUtil"
 import Pagination from "components/common/Pagination"
+import { Wrapper, Title, ServiceList, ServiceBox } from "components/common/Style/Mypage/CommonStyle"
+import { NoticeEmptyIcon } from "components/common/Style/NoticeEmpty/CommonStyle"
+
 import ChatModal from "components/main/Chat/ChatModal"
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
 import ShowMyReservationModal from "./Modal/ShowMyReservationModal"
@@ -133,7 +136,7 @@ const Schedule = () => {
 
   return (
     <Wrapper>
-      <InnerBox>
+      <ServiceList>
         <Title>
           <h5>내 예약 관리하기</h5>
         </Title>
@@ -151,7 +154,7 @@ const Schedule = () => {
           </div>
           <FontAwesomeIcon icon={faAngleRight} />
         </ServiceBox>
-      </InnerBox>
+      </ServiceList>
       <CalenderBox>
         <Title>
           <h5>내 예약 일정</h5>
@@ -172,7 +175,7 @@ const Schedule = () => {
           />
         </CalenderContainer>
       </CalenderBox>
-      <InnerBox>
+      <ServiceList>
         <Title>
           <h5>예약 세부 정보</h5>
         </Title>
@@ -226,89 +229,16 @@ const Schedule = () => {
             <p>해당 일자에 옥상을 예약한 기록이 없습니다.</p>
           </NoticeEmptyIcon>
         )}
-      </InnerBox>
+      </ServiceList>
     </Wrapper>
   )
 }
-
-const Wrapper = styled.div`
-  width: 35vw;
-  margin: 7.5vh auto;
-
-  display: flex;
-  flex-direction: column;
-`
-
-const Title = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.sm} ${paddings.base};
-      margin-bottom: ${margins.sm};
-
-      display: flex;
-      border-bottom: 1px solid ${colors.main.primary}77;
-
-      color: ${colors.main.primary};
-      text-align: center;
-
-      h5 {
-        width: 90%;
-
-        font-size: ${fonts.size.base};
-        font-weight: ${fonts.weight.bold};
-        text-align: left;
-      }
-    `
-  }}
-`
 
 const CalenderBox = styled.div`
   ${({ theme }) => {
     const { margins } = theme
     return css`
       margin: ${margins.lg} 0vw;
-    `
-  }}
-`
-
-const InnerBox = styled.div`
-  ${({ theme }) => {
-    const { margins } = theme
-    return css`
-      margin: 0vw 0vw ${margins.lg} 0vw;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    `
-  }}
-`
-
-const ServiceBox = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      display: flex;
-      justify-content: space-between;
-      padding: ${paddings.base};
-      border-bottom: 1px solid ${colors.main.primary}55;
-
-      p {
-        color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
-      }
-
-      h5 {
-        margin-bottom: 0.25rem;
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.sm};
-      }
-
-      svg {
-        margin: auto 0vw;
-        color: ${colors.main.primary};
-      }
     `
   }}
 `
@@ -389,42 +319,6 @@ const ScheduleBtn = styled.div`
       &:hover {
         background-color: ${colors.main.tertiary};
         font-weight: ${fonts.weight.bold};
-      }
-    `
-  }}
-`
-
-const NoticeEmptyIcon = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      width: 100%;
-      margin: ${margins.lg} auto 0vw auto;
-
-      color: ${colors.main.primary};
-      text-align: center;
-
-      h5 {
-        font-size: ${fonts.size.base};
-        margin-bottom: ${margins.sm};
-      }
-
-      p {
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
-      }
-
-      svg {
-        width: 2.5vw;
-        height: 2.5vw;
-
-        margin-bottom: ${margins.base};
-        padding: ${paddings.lg};
-
-        background-color: ${colors.main.secondary};
-        border-radius: 20vw;
-
-        color: ${colors.white};
       }
     `
   }}

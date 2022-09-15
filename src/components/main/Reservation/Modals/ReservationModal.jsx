@@ -73,8 +73,8 @@ const ReservationModal = ({
         <h5>예약 조건 설정</h5>
         <ModalCloseBtn icon={faXmark} onClick={closeModal} />
       </ModalHeader>
-      <ViewPoint>
-        <ModalContent>
+      <ModalContent>
+        <ViewPoint>
           <OptionBox>
             <div className="title">
               <h5>예약 일자</h5>
@@ -217,12 +217,12 @@ const ReservationModal = ({
               ))}
             </OptionBox>
           )}
-          <BtnList>
-            <SettingBtn onClick={resetModifiedData}>초기화</SettingBtn>
-            <SettingBtn onClick={confirmModify}>적용하기</SettingBtn>
-          </BtnList>
-        </ModalContent>
-      </ViewPoint>
+        </ViewPoint>
+        <BtnList>
+          <SettingBtn onClick={resetModifiedData}>초기화</SettingBtn>
+          <SettingBtn onClick={confirmModify}>적용하기</SettingBtn>
+        </BtnList>
+      </ModalContent>
     </Wrapper>
   )
 }
@@ -246,7 +246,8 @@ const Wrapper = styled.section`
 
 const ViewPoint = styled.div`
   width: 100%;
-  max-height: 80vh;
+  max-height: 70vh;
+  margin: auto;
   overflow: auto;
 
   display: flex;
@@ -313,7 +314,7 @@ const OptionBox = styled.div`
     const { colors, fonts, margins } = theme
     return css`
       width: 90%;
-      margin: ${margins.base} 0vw;
+      margin: ${margins.base} auto;
 
       .title {
         width: 100%;

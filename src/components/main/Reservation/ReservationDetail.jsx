@@ -19,6 +19,12 @@ import {
 
 import { ModalContext } from "module/Modal"
 import DateUtil from "util/DateUtil"
+import {
+  RooftopInfoBox,
+  RooftopTitle,
+  RooftopDetail,
+  DetailInfo,
+} from "components/common/Style/Reservation/CommonStyle"
 
 import { roofTopControl } from "api/controls/roofTopControl"
 import { chattingControl } from "api/controls/chattingControl"
@@ -372,88 +378,13 @@ const ReservationDetail = () => {
 }
 
 const Wrapper = styled.div`
-  width: 60vw;
+  width: 65vw;
 
   display: flex;
   margin: 0vw auto 10vh auto;
 
   flex-wrap: wrap;
   justify-content: space-between;
-`
-
-const RooftopInfoBox = styled.div`
-  width: 60vw;
-  margin: 5vh auto 3.5vh auto;
-
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  align-items: left;
-`
-
-const RooftopTitle = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins } = theme
-    return css`
-      width: 100%;
-      margin-bottom: ${margins.sm};
-
-      h5 {
-        color: ${colors.main.primary};
-        font-size: ${fonts.size.lg};
-        font-weight: ${fonts.weight.bold};
-      }
-    `
-  }}
-`
-
-const RooftopDetail = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins } = theme
-    return css`
-      width: 100%;
-      margin-bottom: ${margins.sm};
-
-      display: flex;
-      justify-content: space-between;
-
-      h5 {
-        color: ${colors.main.primary};
-        font-size: ${fonts.size.lg};
-        font-weight: ${fonts.weight.bold};
-      }
-
-      .detail-list {
-        width: 30vw;
-
-        display: flex;
-        justify-content: space-between;
-      }
-
-      .btn-list {
-        width: 16vw;
-        display: flex;
-        justify-content: space-between;
-      }
-    `
-  }}
-`
-
-const DetailInfo = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins } = theme
-    return css`
-      color: ${colors.main.secondary};
-      font-weight: ${fonts.weight.light};
-
-      svg {
-        margin-right: ${margins.sm};
-        color: ${colors.main.tertiary};
-        font-size: ${fonts.size.xsm};
-        font-weight: bold;
-      }
-    `
-  }}
 `
 
 const CopyBtn = styled.button`
@@ -507,8 +438,7 @@ const InformationBox = styled.div`
     const { colors, fonts, paddings, margins } = theme
     return css`
       width: 100%;
-      padding: ${paddings.sm} 0vw;
-      margin: ${margins.sm} 0vw;
+      margin: ${margins.base} 0vw;
 
       display: flex;
       flex-wrap: wrap;
@@ -596,7 +526,7 @@ const ReviewBox = styled.div`
 
 const DetailOptionList = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { fonts, paddings, margins } = theme
     return css`
       width: 100%;
       padding: ${paddings.base};
@@ -625,7 +555,7 @@ const PaymentInfoBox = styled.div`
   ${({ theme }) => {
     const { colors, fonts } = theme
     return css`
-      width: 22.5vw;
+      width: 25vw;
       margin-bottom: auto;
 
       display: flex;

@@ -9,6 +9,7 @@ import { faXmark, faPaperPlane } from "@fortawesome/free-solid-svg-icons"
 
 import ChatRoomPage from "components/main/Chat/ChatRoomPage"
 import NoticeEmptyChatMessage from "components/main/Chat/NoticeEmpty/NoticeEmptyChatMessage"
+import { ModalHeader, ModalCloseBtn, ModalContent } from "components/common/Style/Modal/CommonStyle"
 
 import { ModalContext } from "module/Modal"
 import { AuthCheckMemberId } from "module/Auth"
@@ -204,56 +205,6 @@ const ViewPoint = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
-`
-
-const ModalHeader = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.base};
-
-      background-color: ${colors.main.primary};
-
-      display: flex;
-      justify-content: space-between;
-
-      color: ${colors.white};
-      text-align: center;
-
-      h5 {
-        font-size: ${fonts.size.base};
-        vertical-align: center;
-      }
-    `
-  }}
-`
-
-const ModalCloseBtn = styled(FontAwesomeIcon)`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      padding: ${paddings.sm};
-      color: ${colors.white};
-      font-size: ${fonts.size.xsm};
-    `
-  }}
-`
-
-const ModalContent = styled.main`
-  ${({ theme }) => {
-    const { colors, paddings } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.sm};
-      border-top: 1px solid #dee2e6;
-      background-color: ${colors.white};
-
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    `
-  }}
 `
 
 const ChatMessageList = styled.div`

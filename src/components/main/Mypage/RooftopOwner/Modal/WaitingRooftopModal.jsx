@@ -4,6 +4,8 @@ import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faQuestionCircle, faXmark } from "@fortawesome/free-solid-svg-icons"
+import { ModalHeader, ModalCloseBtn } from "components/common/Style/Modal/CommonStyle"
+import { NoticeEmptyIcon } from "components/common/Style/NoticeEmpty/CommonStyle"
 
 import { modalShow } from "styles/Animation"
 import { ownerControl } from "api/controls/ownerControl"
@@ -34,8 +36,8 @@ const WaitingRooftopModal = () => {
         <h5>대기 옥상 진행 상황</h5>
         <ModalCloseBtn icon={faXmark} onClick={closeModal} />
       </ModalHeader>
-      <ModalContent>
-        <ViewPoint>
+      <ViewPoint>
+        <ModalContent>
           {rooftopStatus ? (
             rooftopStatus.map(({ city, detail, district, progress, rooftopDate }, idx) => (
               <StatusList>
@@ -56,8 +58,8 @@ const WaitingRooftopModal = () => {
               <p>새롭게 도착한 안내가 없습니다.</p>
             </NoticeEmptyIcon>
           )}
-        </ViewPoint>
-      </ModalContent>
+        </ModalContent>
+      </ViewPoint>
     </Wrapper>
   )
 }
@@ -97,40 +99,6 @@ const ViewPoint = styled.div`
   }
 `
 
-const ModalHeader = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.base};
-
-      background-color: ${colors.main.primary};
-
-      display: flex;
-      justify-content: space-between;
-
-      color: ${colors.white};
-      text-align: center;
-
-      h5 {
-        font-size: ${fonts.size.base};
-        vertical-align: center;
-      }
-    `
-  }}
-`
-
-const ModalCloseBtn = styled(FontAwesomeIcon)`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      padding: ${paddings.sm};
-      color: ${colors.white};
-      font-size: ${fonts.size.xsm};
-    `
-  }}
-`
-
 const ModalContent = styled.main`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
@@ -164,7 +132,7 @@ const StatusList = styled.div`
       margin-bottom: 1.5vh;
 
       h5 {
-        width: 75%;
+        width: 85%;
         padding-bottom: ${paddings.sm};
         margin: 0vw auto ${margins.sm} auto;
 
@@ -180,7 +148,7 @@ const StatusBox = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 75%;
+      width: 85%;
       padding: ${paddings.base};
       margin: ${margins.sm} auto;
 
@@ -212,42 +180,6 @@ const StatusBox = styled.div`
       p {
         font-size: ${fonts.size.xsm};
         font-weight: 200;
-      }
-    `
-  }}
-`
-
-const NoticeEmptyIcon = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      width: 100%;
-      margin: ${margins.base} auto;
-
-      color: ${colors.main.primary};
-      text-align: center;
-
-      h5 {
-        font-size: ${fonts.size.base};
-        margin-bottom: ${margins.sm};
-      }
-
-      p {
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
-      }
-
-      svg {
-        width: 2.5vw;
-        height: 2.5vw;
-
-        margin-bottom: ${margins.base};
-        padding: ${paddings.lg};
-
-        background-color: ${colors.main.secondary};
-        border-radius: 20vw;
-
-        color: ${colors.white};
       }
     `
   }}

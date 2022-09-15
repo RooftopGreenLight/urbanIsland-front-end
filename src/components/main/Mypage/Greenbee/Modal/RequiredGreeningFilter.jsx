@@ -1,13 +1,14 @@
 import { useContext, useEffect, useState } from "react"
 import styled, { css } from "styled-components"
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
-
 import { ModalContext } from "module/Modal"
 import { SidoGunguList } from "constants/SidoGunguList"
 import { RequestDeadLineDate } from "constants/RequestDeadLineDate"
 import { RequiredRoofTopOption } from "constants/RequiredRoofTopOption"
+
+import { ModalHeader, ModalCloseBtn, ModalContent } from "components/common/Style/Modal/CommonStyle"
+import { CheckBox } from "components/common/Style/Common/CommonStyle"
 import CustomSlider from "components/common/CustomSlider"
 
 const RequiredGreeningFilter = ({ appliedFilter, setAppliedFilter }) => {
@@ -170,7 +171,7 @@ const RequiredGreeningFilter = ({ appliedFilter, setAppliedFilter }) => {
             <h5>세부 옵션 설정</h5>
             <InputBoxList>
               {RequiredRoofTopOption.map((option, idx) => (
-                <InputBox key={option}>
+                <CheckBox key={option}>
                   <p>{option}</p>
                   <input
                     key={`${option} + ${contentNum.includes(idx)}`}
@@ -179,7 +180,7 @@ const RequiredGreeningFilter = ({ appliedFilter, setAppliedFilter }) => {
                     checked={contentNum.includes(idx)}
                     onChange={changeCheck}
                   />
-                </InputBox>
+                </CheckBox>
               ))}
             </InputBoxList>
           </OptionBox>
@@ -194,7 +195,7 @@ const RequiredGreeningFilter = ({ appliedFilter, setAppliedFilter }) => {
 }
 
 const Wrapper = styled.div`
-  width: 33vw;
+  width: 40vw;
 
   margin: auto;
   background-color: #ffffff;
@@ -224,87 +225,6 @@ const ViewPoint = styled.div`
   }
 `
 
-const ModalHeader = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.base};
-
-      background-color: ${colors.main.primary};
-
-      display: flex;
-      justify-content: space-between;
-
-      color: ${colors.white};
-      text-align: center;
-
-      h5 {
-        font-size: ${fonts.size.base};
-        vertical-align: center;
-      }
-    `
-  }}
-`
-
-const ModalCloseBtn = styled(FontAwesomeIcon)`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      padding: ${paddings.sm};
-      color: ${colors.white};
-      font-size: ${fonts.size.xsm};
-    `
-  }}
-`
-
-const ModalContent = styled.main`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
-      padding: ${paddings.sm};
-      border-top: 1px solid #dee2e6;
-      background-color: ${colors.white};
-
-      h5 {
-        margin: ${margins.base} 0vw ${margins.xsm} 0vw;
-        font-size: ${fonts.size.sm};
-        text-align: center;
-      }
-
-      p {
-        font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
-        text-align: center;
-      }
-
-      input {
-        width: 70%;
-        padding: ${paddings.sm};
-        margin: ${margins.lg} auto;
-
-        background-color: transparent;
-        border: 0;
-        border-bottom: 1px solid #232323;
-        text-align: center;
-
-        &::placeholder {
-          color: #3e3e3e;
-          font-weight: 100;
-        }
-
-        &::before {
-          background-color: #d9d9d9;
-        }
-      }
-    `
-  }}
-`
-
 const OptionBox = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
@@ -317,6 +237,7 @@ const OptionBox = styled.div`
         border-bottom: 1px solid ${colors.main.secondary};
         margin-bottom: ${margins.sm};
 
+        color: ${colors.main.primary};
         font-size: ${fonts.size.base};
         line-height: 150%;
         text-align: left;
@@ -334,7 +255,7 @@ const SelectBox = styled.select`
   ${({ theme }) => {
     const { fonts, margins, paddings } = theme
     return css`
-      width: 40%;
+      width: 45%;
       margin: ${margins.sm} 0vw;
       padding: ${paddings.sm} 0vw;
 
@@ -357,7 +278,7 @@ const SelectBox = styled.select`
 `
 
 const InputBoxList = styled.div`
-  width: 75%;
+  width: 90%;
   margin: 1vw auto 0vw auto;
 
   display: flex;
@@ -369,7 +290,7 @@ const InputBox = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins } = theme
     return css`
-      width: 47.5%;
+      width: 40%;
       margin: ${margins.xsm} auto;
 
       display: flex;
@@ -403,10 +324,11 @@ const InputBox = styled.div`
 
           width: 4px;
           height: 6px;
+          margin: 0;
 
           position: relative;
-          right: 3px;
-          top: -4px;
+          right: -5px;
+          top: 2px;
           transform: rotate(45deg);
         }
 

@@ -3,6 +3,7 @@ import styled, { css } from "styled-components"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBuilding, faXmark } from "@fortawesome/free-solid-svg-icons"
+import { ModalHeader, ModalCloseBtn, ModalContent } from "components/common/Style/Modal/CommonStyle"
 
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
@@ -56,10 +57,8 @@ const ApplyRooftopOwnerModal = () => {
         <ModalCloseBtn icon={faXmark} onClick={closeModal} />
       </ModalHeader>
       <ModalContent>
-        <Title>
-          <h5>옥상지기 등록하기</h5>
-          <p>본인 명의의 건축물대장 확인증을 업로드 합니다.</p>
-        </Title>
+        <h5>옥상지기 등록하기</h5>
+        <p>본인 명의의 건축물대장 확인증을 업로드 합니다.</p>
         <BtnList>
           <label htmlFor="imgList">
             <FileUploadBtn>사진 업로드</FileUploadBtn>
@@ -94,85 +93,6 @@ const Wrapper = styled.section`
       animation: ${modalShow} 0.3s;
       animation-fill-mode: forwards;
       overflow: hidden;
-    `
-  }}
-`
-const ModalHeader = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.base};
-
-      background-color: ${colors.main.primary};
-
-      display: flex;
-      justify-content: space-between;
-
-      color: ${colors.white};
-      text-align: center;
-
-      h5 {
-        font-size: ${fonts.size.base};
-        vertical-align: center;
-      }
-    `
-  }}
-`
-
-const ModalCloseBtn = styled(FontAwesomeIcon)`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      padding: ${paddings.sm};
-      color: ${colors.white};
-      font-size: ${fonts.size.xsm};
-    `
-  }}
-`
-
-const ModalContent = styled.main`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
-      padding: ${paddings.sm};
-      border-top: 1px solid #dee2e6;
-      background-color: ${colors.white};
-
-      h5 {
-        margin: ${margins.base} 0vw ${margins.xsm} 0vw;
-        font-size: ${fonts.size.sm};
-        text-align: center;
-      }
-
-      p {
-        font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
-        text-align: center;
-      }
-    `
-  }}
-`
-
-const Title = styled.div`
-  ${({ theme }) => {
-    const { fonts, margins } = theme
-    return css`
-      text-align: center;
-
-      h5 {
-        font-size: ${fonts.size.base};
-      }
-
-      p {
-        margin: ${margins.sm} auto;
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
-      }
     `
   }}
 `

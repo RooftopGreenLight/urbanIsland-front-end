@@ -9,6 +9,12 @@ import { reservationControl } from "api/controls/reservationControl"
 import { faMap, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
+import {
+  RooftopInfoBox,
+  RooftopTitle,
+  RooftopDetail,
+  DetailInfo,
+} from "components/common/Style/Reservation/CommonStyle"
 import { ModalContext } from "module/Modal"
 import DateUtil from "util/DateUtil"
 import ReservationModal from "../Reservation/Modals/ReservationModal"
@@ -276,7 +282,7 @@ const Payment = () => {
 }
 
 const Wrapper = styled.div`
-  width: 60vw;
+  width: 65vw;
   max-height: 100vh;
   overflow: auto;
 
@@ -285,79 +291,6 @@ const Wrapper = styled.div`
 
   flex-wrap: wrap;
   justify-content: space-between;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`
-
-const RooftopInfoBox = styled.div`
-  width: 60vw;
-  margin: 5vh auto 3.5vh auto;
-
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  align-items: left;
-`
-
-const RooftopTitle = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins } = theme
-    return css`
-      width: 100%;
-      margin-bottom: ${margins.sm};
-
-      h5 {
-        color: ${colors.main.primary};
-        font-size: ${fonts.size.lg};
-        font-weight: ${fonts.weight.bold};
-      }
-    `
-  }}
-`
-
-const RooftopDetail = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins } = theme
-    return css`
-      width: 100%;
-      margin-bottom: ${margins.sm};
-
-      display: flex;
-      justify-content: space-between;
-
-      h5 {
-        color: ${colors.main.primary};
-        font-size: ${fonts.size.lg};
-        font-weight: ${fonts.weight.bold};
-      }
-
-      .detail-list {
-        width: 32.5vw;
-
-        display: flex;
-        justify-content: space-between;
-      }
-    `
-  }}
-`
-
-const DetailInfo = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins } = theme
-    return css`
-      color: ${colors.main.secondary};
-      font-weight: ${fonts.weight.light};
-
-      svg {
-        margin-right: ${margins.sm};
-        color: ${colors.main.tertiary};
-        font-size: ${fonts.size.xsm};
-        font-weight: bold;
-      }
-    `
-  }}
 `
 
 const ReservationInfoBox = styled.div`
@@ -370,7 +303,7 @@ const ReservationInfo = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 32.5vw;
+      width: 35vw;
       padding: ${paddings.sm} 0vw;
       margin: ${margins.sm} 0vw auto 0vw;
 
@@ -437,9 +370,9 @@ const ReservationInfo = styled.div`
 
 const PaymentConfirm = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
+    const { colors, fonts } = theme
     return css`
-      width: 22.5vw;
+      width: 25vw;
       margin-bottom: auto;
 
       display: flex;

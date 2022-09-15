@@ -5,7 +5,7 @@ import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
 import CustomSlider from "components/common/CustomSlider"
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { ModalHeader, ModalCloseBtn, ModalContent } from "components/common/Style/Modal/CommonStyle"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 const TimeFilterModal = ({ filter, setFilter }) => {
@@ -75,68 +75,6 @@ const Wrapper = styled.div`
   animation: ${modalShow} 0.3s;
   animation-fill-mode: forwards;
   overflow: hidden;
-`
-
-const ModalHeader = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.base};
-
-      background-color: ${colors.main.primary};
-
-      display: flex;
-      justify-content: space-between;
-
-      color: ${colors.white};
-      text-align: center;
-
-      h5 {
-        font-size: ${fonts.size.base};
-        vertical-align: center;
-      }
-    `
-  }}
-`
-
-const ModalCloseBtn = styled(FontAwesomeIcon)`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      padding: ${paddings.sm};
-      color: ${colors.white};
-      font-size: ${fonts.size.xsm};
-    `
-  }}
-`
-
-const ModalContent = styled.main`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
-      padding: ${paddings.sm};
-      border-top: 1px solid #dee2e6;
-      background-color: ${colors.white};
-      text-align: center;
-
-      h5 {
-        margin: ${margins.base} 0vw ${margins.xsm} 0vw;
-        font-size: ${fonts.size.sm};
-        text-align: center;
-      }
-
-      p {
-        font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
-        text-align: center;
-      }
-    `
-  }}
 `
 
 const OptionBox = styled.div`

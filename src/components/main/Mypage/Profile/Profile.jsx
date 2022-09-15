@@ -7,6 +7,7 @@ import { ModalContext } from "module/Modal"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleRight, faCircleCheck } from "@fortawesome/free-solid-svg-icons"
+import { Wrapper, Title, ServiceList, ServiceBox } from "components/common/Style/Mypage/CommonStyle"
 
 import ApplyRooftopOwnerModal from "./Modal/ApplyRooftopOwnerModal"
 import ProfileModifyModal from "./Modal/ProfileModifyModal"
@@ -143,80 +144,11 @@ const Profile = () => {
   )
 }
 
-const Wrapper = styled.div`
-  width: 35vw;
-  margin: 7.5vh auto auto auto;
-
-  display: flex;
-  flex-direction: column;
-`
-
-const Title = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.sm} ${paddings.base};
-      margin-bottom: ${margins.sm};
-
-      display: flex;
-      border-bottom: 1px solid ${colors.main.primary}77;
-
-      color: ${colors.main.primary};
-      text-align: center;
-
-      h5 {
-        width: 90%;
-
-        font-size: ${fonts.size.base};
-        font-weight: ${fonts.weight.bold};
-        text-align: left;
-      }
-    `
-  }}
-`
-
 const ProfileBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-`
-
-const ServiceList = styled(ProfileBox)`
-  ${({ theme }) => {
-    const { margins } = theme
-    return css`
-      margin-top: ${margins.xl};
-    `
-  }}
-`
-
-const ServiceBox = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      display: flex;
-      justify-content: space-between;
-      padding: ${paddings.base};
-      border-bottom: 1px solid ${colors.main.primary}55;
-
-      p {
-        color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
-      }
-
-      h5 {
-        margin-bottom: 0.25rem;
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.sm};
-      }
-
-      svg {
-        margin: auto 0vw;
-        color: ${colors.main.primary};
-      }
-    `
-  }}
+  margin-bottom: 5vh;
 `
 
 const ProfileLine = styled.div`

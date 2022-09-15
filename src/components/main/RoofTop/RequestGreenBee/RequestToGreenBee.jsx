@@ -4,6 +4,13 @@ import styled, { css } from "styled-components"
 
 import { ModalContext } from "module/Modal"
 import { roofTopControl } from "api/controls/roofTopControl"
+import {
+  Title,
+  ServiceList,
+  InputBox,
+  ModalBtnBox,
+  OpenModalBtn,
+} from "components/common/Style/Mypage/CommonStyle"
 
 import ApplySidoList from "components/main/RoofTop/ApplyRoofTop/ApplySidoList"
 import ApplyBaseInfo from "components/main/RoofTop/ApplyRoofTop/ApplyBaseInfo"
@@ -143,7 +150,7 @@ const RequestToGreenBee = () => {
         <Title>
           <h5>시공 관련 정보 기입하기</h5>
         </Title>
-        <InputBox>
+        <ModalBtnBox>
           <div className="title">
             <h5>세부사항 : 필요 항목</h5>
             <p>옥상 녹화 단계에 필요한 시설을 체크해주세요.</p>
@@ -156,7 +163,7 @@ const RequestToGreenBee = () => {
             }>
             수정하기
           </OpenModalBtn>
-        </InputBox>
+        </ModalBtnBox>
         <RequestDeadLine requiredInfo={requiredInfo} setRequiredInfo={setRequiredInfo} />
         <ApplyImgList applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
         <ApplyDetailView applyInfo={requiredInfo} changeInfo={setRequiredInfo} />
@@ -198,108 +205,6 @@ const Wrapper = styled.div`
   justify-content: space-between;
 
   text-align: center;
-`
-
-const Title = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.sm} ${paddings.base};
-      margin-bottom: ${margins.sm};
-
-      display: flex;
-      border-bottom: 1px solid ${colors.main.primary}77;
-
-      color: ${colors.main.primary};
-      text-align: center;
-
-      h5 {
-        width: 90%;
-
-        font-size: ${fonts.size.base};
-        font-weight: ${fonts.weight.bold};
-        text-align: left;
-      }
-    `
-  }}
-`
-
-const ServiceList = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`
-
-const InputBox = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, margins, paddings } = theme
-    return css`
-      width: 100%;
-      background-color: ${colors.white};
-      padding: ${paddings.base};
-
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-
-      .title {
-        width: 80%;
-        margin-bottom: ${margins.sm};
-        text-align: left;
-      }
-
-      p {
-        color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
-      }
-
-      h5 {
-        margin-bottom: 0.25rem;
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.sm};
-      }
-
-      input,
-      textarea {
-        width: 100%;
-        padding: ${paddings.sm} 0vw;
-        margin: ${margins.xsm} 0vw;
-
-        border: 0;
-        background-color: ${colors.main.tertiary}11;
-        border-bottom: 1px solid ${colors.main.secondary}44;
-
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
-        text-align: center;
-      }
-    `
-  }}
-`
-
-const OpenModalBtn = styled.button`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      width: 10%;
-      padding: 0vw ${paddings.xsm};
-      margin-bottom: 0.25rem;
-
-      border-radius: ${fonts.size.xsm};
-      background-color: ${colors.main.secondary};
-
-      color: ${colors.white};
-      font-size: ${fonts.size.xsm};
-      font-weight: ${fonts.weight.light};
-
-      &:hover {
-        background-color: ${colors.main.tertiary};
-        font-weight: ${fonts.weight.bold};
-      }
-    `
-  }}
 `
 
 const FeedBackMsg = styled.p`

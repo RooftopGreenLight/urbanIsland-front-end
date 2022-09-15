@@ -1,6 +1,8 @@
 import styled, { css } from "styled-components"
 import { useState } from "react"
 
+import { InputBox } from "components/common/Style/Mypage/CommonStyle"
+
 const ApplyBaseInfo = ({ applyInfo, changeInfo }) => {
   const [applyBaseInfo, setApplyBaseInfo] = useState(applyInfo)
   const { phoneNumber, width, widthPrice, totalPrice, ownerContent, rooftopType } = applyBaseInfo
@@ -100,51 +102,4 @@ const Wrapper = styled.div`
   flex-wrap: wrap;
 `
 
-const InputBox = styled.div`
-  ${({ theme, boxSize }) => {
-    const boxWidth = new Map([
-      ["sm", "25%"],
-      ["base", "47.5%"],
-      ["lg", "100%"],
-    ])
-    const { colors, fonts, margins, paddings } = theme
-    return css`
-      width: ${boxWidth.get(boxSize)};
-      background-color: ${colors.white};
-      padding: ${paddings.base};
-
-      .title {
-        margin-bottom: ${margins.sm};
-        text-align: left;
-      }
-
-      p {
-        color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
-      }
-
-      h5 {
-        margin-bottom: 0.25rem;
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.sm};
-      }
-
-      input,
-      textarea {
-        width: 100%;
-        padding: ${paddings.sm} 0vw;
-        margin: ${margins.xsm} 0vw;
-
-        border: 0;
-        background-color: ${colors.main.tertiary}09;
-        border-bottom: 1px solid ${colors.main.secondary}44;
-
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
-        text-align: center;
-      }
-    `
-  }}
-`
 export default ApplyBaseInfo
