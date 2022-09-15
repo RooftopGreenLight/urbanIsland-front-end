@@ -7,7 +7,6 @@ import { Client } from "@stomp/stompjs"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark, faPaperPlane } from "@fortawesome/free-solid-svg-icons"
 
-import ChatRoomPage from "components/main/Chat/ChatRoomPage"
 import NoticeEmptyChatMessage from "components/main/Chat/NoticeEmpty/NoticeEmptyChatMessage"
 import { ModalHeader, ModalCloseBtn, ModalContent } from "components/common/Style/Modal/CommonStyle"
 
@@ -18,7 +17,7 @@ import { chattingControl } from "api/controls/chattingControl"
 import DateUtil from "util/DateUtil"
 
 const ChatModal = ({ roomId }) => {
-  const { openModal } = useContext(ModalContext)
+  const { closeModal } = useContext(ModalContext)
   const memberId = useRecoilValue(AuthCheckMemberId)
   const [chatMessages, setChatMessages] = useState([])
   const [content, setContent] = useState("")
@@ -100,6 +99,7 @@ const ChatModal = ({ roomId }) => {
 
   const disconnect = () => {
     client.current.deactivate()
+    closeModal()
   }
 
   const subscribe = () => {
@@ -133,16 +133,11 @@ const ChatModal = ({ roomId }) => {
     }
   }
 
-  const goBackToChatRoomPage = () => {
-    disconnect()
-    openModal(<ChatRoomPage />)
-  }
-
   return (
     <Wrapper>
       <ModalHeader>
         <h5>옥상지기 문의 채팅</h5>
-        <ModalCloseBtn icon={faXmark} onClick={goBackToChatRoomPage} />
+        <ModalCloseBtn icon={faXmark} onClick={disconnect} />
       </ModalHeader>
       <ModalContent>
         <ViewPoint ref={chatMessageList}>

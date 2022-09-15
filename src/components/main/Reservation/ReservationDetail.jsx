@@ -24,7 +24,11 @@ import {
   RooftopTitle,
   RooftopDetail,
   DetailInfo,
-} from "components/common/Style/Reservation/CommonStyle"
+  InformationBox,
+  PaymentInfoBox,
+  PaymentOptionBox,
+  RooftopUtilBtn,
+} from "components/common/Style/Rooftop/CommonStyle"
 
 import { roofTopControl } from "api/controls/roofTopControl"
 import { chattingControl } from "api/controls/chattingControl"
@@ -106,7 +110,6 @@ const ReservationDetail = () => {
     const loadRooftopData = async () => {
       try {
         const result = await roofTopControl.getRooftopDetail(rooftopId)
-        console.log(result)
         const { startTime, endTime, rooftopOptions, reservations, totalPrice } = result
 
         // 이미 예약된 일자인 bookedDate를 Set에 하나씩 저장하는 과정.
@@ -312,7 +315,7 @@ const ReservationDetail = () => {
               selectedTime[1],
             ).padStart(2, "0")}:00`}</p>
           </div>
-          <ReservationBtn
+          <RooftopUtilBtn
             onClick={() =>
               openModal(
                 <ReservationModal
@@ -326,7 +329,7 @@ const ReservationDetail = () => {
               )
             }>
             수정 하기
-          </ReservationBtn>
+          </RooftopUtilBtn>
         </PaymentOptionBox>
         <PaymentOptionBox>
           <h5>결제 항목</h5>
@@ -354,7 +357,7 @@ const ReservationDetail = () => {
               ).toLocaleString()} KRW`}
             </strong>
           </div>
-          <ReservationBtn
+          <RooftopUtilBtn
             onClick={() =>
               navigate(`/payment/${rooftopId}`, {
                 state: {
@@ -370,7 +373,7 @@ const ReservationDetail = () => {
               })
             }>
             예약 하기
-          </ReservationBtn>
+          </RooftopUtilBtn>
         </PaymentOptionBox>
       </PaymentInfoBox>
     </Wrapper>
@@ -431,52 +434,6 @@ const SliderBox = styled.div`
     height: 100%;
     overflow: hidden;
   }
-`
-
-const InformationBox = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      width: 100%;
-      margin: ${margins.base} 0vw;
-
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-
-      p {
-        color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
-      }
-
-      h5 {
-        width: 100%;
-        padding-bottom: ${paddings.xsm};
-        border-bottom: 1px solid ${colors.main.primary}55;
-
-        color: ${colors.main.secondary};
-        font-size: ${fonts.size.base};
-      }
-
-      svg {
-        margin: auto 0vw;
-        color: ${colors.main.primary};
-      }
-
-      pre {
-        padding: ${paddings.base} 0vw;
-        color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
-      }
-
-      img {
-        width: 100%;
-        height: 40vh;
-        object-fit: cover;
-        margin: ${margins.lg} auto 0vw auto;
-      }
-    `
-  }}
 `
 
 const ReviewBox = styled.div`
@@ -546,114 +503,6 @@ const DetailOptionList = styled.div`
         font-size: ${fonts.size.xsm};
         font-weight: ${fonts.weight.light};
         text-align: left;
-      }
-    `
-  }}
-`
-
-const PaymentInfoBox = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts } = theme
-    return css`
-      width: 25vw;
-      margin-bottom: auto;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      border: 1px solid ${colors.main.primary}33;
-      box-shadow: 0px 5px 8px ${colors.main.primary}33;
-
-      &::before {
-        width: 100%;
-        padding: 0vw;
-
-        background-color: ${colors.main.tertiary};
-        content: "예약 결제 정보";
-
-        color: ${colors.white};
-        font-size: ${fonts.size.base};
-        text-align: center;
-        line-height: 225%;
-      }
-    `
-  }}
-`
-
-const PaymentOptionBox = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.base} ${paddings.lg};
-      margin: ${margins.sm} 0vw;
-
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-
-      h5 {
-        width: 100%;
-        padding-bottom: ${paddings.xsm};
-        margin-bottom: ${margins.base};
-        border-bottom: 1px solid ${colors.main.primary}55;
-
-        color: ${colors.main.secondary};
-        font-size: ${fonts.size.sm};
-      }
-
-      p {
-        color: ${colors.black.tertiary};
-        font-size: 1.1rem;
-        font-weight: 500;
-      }
-
-      span {
-        color: ${colors.black.quinary};
-        font-size: 1.1rem;
-        font-weight: 300;
-      }
-
-      strong {
-        color: ${colors.main.secondary};
-        font-size: 1.1rem;
-      }
-
-      .option-list {
-        width: 100%;
-        margin: ${margins.xsm} 0vw;
-        display: flex;
-        justify-content: space-between;
-      }
-    `
-  }}
-`
-
-const ReservationBtn = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.sm} ${paddings.lg};
-      margin: ${margins.lg} 0vw 0vw 0vw;
-
-      border-radius: 0.75rem;
-      background: ${colors.main.secondary};
-      cursor: pointer;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      color: ${colors.white};
-      font-size: ${fonts.size.sm};
-      font-weight: bold;
-
-      &:hover {
-        border: 0px;
-        background: ${colors.main.tertiary};
-        color: ${colors.white};
       }
     `
   }}

@@ -14,7 +14,10 @@ import {
   RooftopTitle,
   RooftopDetail,
   DetailInfo,
-} from "components/common/Style/Reservation/CommonStyle"
+  PaymentInfoBox,
+  PaymentOptionBox,
+  RooftopUtilBtn,
+} from "components/common/Style/Rooftop/CommonStyle"
 import { ModalContext } from "module/Modal"
 import DateUtil from "util/DateUtil"
 import ReservationModal from "../Reservation/Modals/ReservationModal"
@@ -252,8 +255,8 @@ const Payment = () => {
           </OptionBox>
         </ReservationInfo>
       </ReservationInfoBox>
-      <PaymentConfirm>
-        <OptionBox>
+      <PaymentInfoBox>
+        <PaymentOptionBox>
           <h5>결제 항목</h5>
           <div className="option-list">
             <span>{`${totalUseDay}일 대여 :`}</span>
@@ -274,9 +277,9 @@ const Payment = () => {
             <strong>{`${needToPay.toLocaleString()} KRW`}</strong>
           </div>
           <ConfirmFeedBack ref={feedbackMsg} />
-          <ConfirmBtn onClick={readyToSetPayment}>결제하기</ConfirmBtn>
-        </OptionBox>
-      </PaymentConfirm>
+          <RooftopUtilBtn onClick={readyToSetPayment}>결제하기</RooftopUtilBtn>
+        </PaymentOptionBox>
+      </PaymentInfoBox>
     </Wrapper>
   )
 }
@@ -368,36 +371,6 @@ const ReservationInfo = styled.div`
   }}
 `
 
-const PaymentConfirm = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts } = theme
-    return css`
-      width: 25vw;
-      margin-bottom: auto;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      border: 1px solid ${colors.main.primary}33;
-      box-shadow: 0px 5px 8px ${colors.main.primary}33;
-
-      &::before {
-        width: 100%;
-        padding: 0vw;
-
-        background-color: ${colors.main.tertiary};
-        content: "최종 결제 내역";
-
-        color: ${colors.white};
-        font-size: ${fonts.size.base};
-        text-align: center;
-        line-height: 225%;
-      }
-    `
-  }}
-`
-
 const OptionBox = styled.div`
   ${({ theme }) => {
     const { colors, fonts, paddings, margins } = theme
@@ -457,35 +430,6 @@ const ConfirmFeedBack = styled.p`
       color: ${colors.main.secondary};
       font-size: ${fonts.size.xsm};
       font-weight: 200;
-    `
-  }}
-`
-
-const ConfirmBtn = styled.button`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.sm} ${paddings.lg};
-      margin: ${margins.base} 0vw 0vw 0vw;
-
-      border-radius: 0.75rem;
-      background: ${colors.main.secondary};
-      cursor: pointer;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      color: ${colors.white};
-      font-size: ${fonts.size.sm};
-      font-weight: bold;
-
-      &:hover {
-        border: 0px;
-        background: ${colors.main.tertiary};
-        color: ${colors.white};
-      }
     `
   }}
 `

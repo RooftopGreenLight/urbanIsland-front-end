@@ -86,6 +86,73 @@ export const ServiceBox = styled.div`
   }}
 `
 
+export const InfomationBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 5vh;
+`
+
+export const InfomationLine = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, paddings, margins } = theme
+    return css`
+      display: flex;
+      justify-content: space-between;
+      padding: ${paddings.base};
+
+      .info {
+        width: 90%;
+      }
+
+      span {
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      p,
+      pre {
+        margin: ${margins.xsm} 0vw;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: ${paddings.sm} 0vw;
+        margin: ${margins.xsm} 0vw;
+
+        border: 0;
+        border-bottom: 1px solid ${colors.main.secondary}44;
+        background-color: ${colors.main.tertiary}11;
+        color: ${colors.black.secondary};
+        font-size: ${fonts.size.sm};
+      }
+
+      button {
+        width: 10%;
+        height: 100%;
+
+        padding: ${paddings.xsm};
+        margin: auto;
+
+        border-radius: ${fonts.size.xsm};
+        background-color: ${colors.main.secondary};
+
+        color: ${colors.white};
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+
+        &:hover {
+          background-color: ${colors.main.tertiary};
+          font-weight: ${fonts.weight.bold};
+        }
+      }
+    `
+  }}
+`
+
 export const InputBox = styled.div`
   ${({ theme, boxSize }) => {
     const boxWidth = new Map([

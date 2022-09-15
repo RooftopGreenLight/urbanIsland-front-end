@@ -79,7 +79,7 @@ const Schedule = () => {
         setCompletedReservation(loadedCompletedInfo)
         setCurrentReservation(loadedCurrentInfo)
         // 임시 작성 코드, 추후 수정해야 함 (pagination 적용 예정)
-        loadedCurrentInfo.length > 0 && setSelectedReservation(loadedCurrentInfo[0])
+        loadedCurrentInfo?.length > 0 && setSelectedReservation(loadedCurrentInfo[0])
       } catch (err) {
         console.log(err)
       }

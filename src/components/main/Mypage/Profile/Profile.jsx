@@ -1,13 +1,19 @@
 import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import styled, { css } from "styled-components"
 
 import { mypageControl } from "api/controls/mypageControl"
 import { ModalContext } from "module/Modal"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleRight, faCircleCheck } from "@fortawesome/free-solid-svg-icons"
-import { Wrapper, Title, ServiceList, ServiceBox } from "components/common/Style/Mypage/CommonStyle"
+import {
+  Wrapper,
+  Title,
+  ServiceList,
+  ServiceBox,
+  InfomationBox,
+  InfomationLine,
+} from "components/common/Style/Mypage/CommonStyle"
 
 import ApplyRooftopOwnerModal from "./Modal/ApplyRooftopOwnerModal"
 import ProfileModifyModal from "./Modal/ProfileModifyModal"
@@ -32,17 +38,17 @@ const Profile = () => {
   return (
     <Wrapper>
       {userData && (
-        <ProfileBox>
+        <InfomationBox>
           <Title>
             <h5>내 프로필 관리하기</h5>
           </Title>
-          <ProfileLine>
+          <InfomationLine>
             <div className="info">
               <span>이메일</span>
               <p>{email}</p>
             </div>
-          </ProfileLine>
-          <ProfileLine>
+          </InfomationLine>
+          <InfomationLine>
             <div className="info">
               <span>닉네임</span>
               <p>{name}</p>
@@ -59,8 +65,8 @@ const Profile = () => {
               }>
               수정
             </button>
-          </ProfileLine>
-          <ProfileLine>
+          </InfomationLine>
+          <InfomationLine>
             <div className="info">
               <span>전화 번호</span>
               <p>{phoneNumber ?? "정보 없음"}</p>
@@ -77,8 +83,8 @@ const Profile = () => {
               }>
               {phoneNumber ? "수정" : "추가"}
             </button>
-          </ProfileLine>
-          <ProfileLine>
+          </InfomationLine>
+          <InfomationLine>
             <div className="info">
               <p>비밀번호 변경</p>
               <span>주기적으로 비밀번호를 변경하여 보안을 지키세요.</span>
@@ -95,8 +101,8 @@ const Profile = () => {
               }>
               변경
             </button>
-          </ProfileLine>
-        </ProfileBox>
+          </InfomationLine>
+        </InfomationBox>
       )}
       <ServiceList>
         <Title>
@@ -143,58 +149,5 @@ const Profile = () => {
     </Wrapper>
   )
 }
-
-const ProfileBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-bottom: 5vh;
-`
-
-const ProfileLine = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      display: flex;
-      justify-content: space-between;
-      padding: ${paddings.base};
-
-      .info {
-        width: 90%;
-      }
-
-      span {
-        color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
-      }
-
-      p {
-        margin: ${margins.xsm} 0vw;
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.sm};
-      }
-
-      button {
-        width: 10%;
-        height: 100%;
-
-        padding: ${paddings.xsm};
-        margin: auto;
-
-        border-radius: ${fonts.size.xsm};
-        background-color: ${colors.main.secondary};
-
-        color: ${colors.white};
-        font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
-
-        &:hover {
-          background-color: ${colors.main.tertiary};
-          font-weight: ${fonts.weight.bold};
-        }
-      }
-    `
-  }}
-`
 
 export default Profile
