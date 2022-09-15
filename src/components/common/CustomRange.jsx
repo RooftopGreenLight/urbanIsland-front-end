@@ -118,6 +118,8 @@ const Display = styled.div`
   width: 100%;
 `
 const Wrapper = styled.div`
+  width: 90%;
+  margin: auto;
   padding: 0 1rem 1rem 1rem;
   display: flex;
   justify-content: center;

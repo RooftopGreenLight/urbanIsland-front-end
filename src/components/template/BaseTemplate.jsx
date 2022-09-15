@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
-import Footer from "components/common/Footer"
-import Header from "components/common/Header"
+import Footer from "components/common/Layout/Footer"
+import Header from "components/common/Layout/Header"
 
 const BaseTemplate = ({ children }) => {
   return (
