@@ -45,6 +45,21 @@ export const accountControl = {
       throw new Error(err)
     }
   },
+  postChangePassword: async (email, password) => {
+    try {
+      const response = await axiosInstance({
+        method: "POST",
+        url: "/auth/change-password",
+        data: {
+          email,
+          password,
+        },
+      })
+      return response
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
   getVerifyEmail: async email => {
     try {
       const response = await axiosInstance({
