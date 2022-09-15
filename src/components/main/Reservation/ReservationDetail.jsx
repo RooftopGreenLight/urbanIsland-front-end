@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useLocation } from "react-router-dom"
-import { useState, useEffect, useMemo } from "react"
+import { useContext, useState, useEffect, useMemo } from "react"
 import styled, { css } from "styled-components"
 import moment from "moment"
 
@@ -17,7 +17,6 @@ import {
   faComment,
 } from "@fortawesome/free-solid-svg-icons"
 
-import { useContext } from "react"
 import { ModalContext } from "module/Modal"
 import DateUtil from "util/DateUtil"
 
@@ -552,7 +551,7 @@ const InformationBox = styled.div`
 
 const ReviewBox = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { colors, paddings, margins } = theme
     return css`
       width: 100%;
       margin: ${margins.base} 0vw 0vw 0vw;

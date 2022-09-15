@@ -74,17 +74,15 @@ const Schedule = () => {
 
         setWaitingReservation(loadedWaitingInfo)
         setCompletedReservation(loadedCompletedInfo)
-        loadedCurrentInfo && setCurrentReservation([loadedCurrentInfo])
+        setCurrentReservation(loadedCurrentInfo)
         // 임시 작성 코드, 추후 수정해야 함 (pagination 적용 예정)
-        loadedCurrentInfo && setSelectedReservation(loadedCurrentInfo)
+        loadedCurrentInfo.length > 0 && setSelectedReservation(loadedCurrentInfo[0])
       } catch (err) {
         console.log(err)
       }
     }
     getReservationInfo()
   }, [selectedDate])
-
-  console.log(currentReservation)
 
   const {
     city,
@@ -126,7 +124,8 @@ const Schedule = () => {
         )
       })
       setWaitingReservation(loadedWaitingInfo)
-      loadedCurrentInfo ? setCurrentReservation(loadedCurrentInfo) : setCurrentReservation([])
+      setCurrentReservation(loadedCurrentInfo)
+      loadedCurrentInfo.length > 0 && setSelectedReservation(loadedCurrentInfo[0])
     } catch (err) {
       console.log(err.message)
     }

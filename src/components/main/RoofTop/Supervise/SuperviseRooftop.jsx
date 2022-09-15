@@ -5,6 +5,8 @@ import Calendar from "react-calendar"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useState, useEffect } from "react"
 import { roofTopControl } from "api/controls/roofTopControl"
+import moment from "moment/moment"
+import DateUtil from "util/DateUtil"
 import {
   faBuilding,
   faCalendar,
@@ -17,20 +19,35 @@ import "react-calendar/dist/Calendar.css"
 const SuperviseRooftop = () => {
   const { id } = useParams()
   const [data, setData] = useState({ mainImage: [], city: "", district: "", detail: "" })
+  const [selectedDate, setSeletedDate] = useState(new Date())
+  const [bookingDates, setBookingDates] = useState(new Set())
 
   useEffect(() => {
     const loadCurrentInfo = async () => {
       try {
         const result = await roofTopControl.getRooftopDetail(id)
-        const { mainImage, city, district, detail } = result
+        const { mainImage, city, district, detail, reservations } = result
         setData({ mainImage, city, district, detail })
+
+        reservations.map(({ startDates, endDates }) => {
+          const betweenDates = DateUtil.getDatesBetweenTwoDates(
+            DateUtil.createDate(startDates),
+            DateUtil.createDate(endDates),
+          )
+          setBookingDates(
+            prevBookingDates =>
+              new Set([...prevBookingDates, ...betweenDates.map(date => date.toDateString())]),
+          )
+        })
       } catch (err) {
         console.log(err.message)
       }
     }
     loadCurrentInfo()
   }, [])
+  const [value, onChange] = useState(new Date())
   const { mainImage, city, district, detail } = data
+
   return (
     <Wrapper>
       {data && (
@@ -44,7 +61,19 @@ const SuperviseRooftop = () => {
         <BoxWrapper>
           <CalenderContainer>
             <Title>캘린더</Title>
-            <Calendar />
+            <Calendar
+              formatDay={(_, date) => moment(date).format("DD")}
+              navigationLabel={null}
+              onChange={setSeletedDate}
+              value={selectedDate}
+              tileContent={({ date }) => {
+                let html = []
+                if (bookingDates.has(date.toDateString())) {
+                  html.push(<BookingDot key={date} />)
+                }
+                return <>{html}</>
+              }}
+            />
           </CalenderContainer>
         </BoxWrapper>
         <BoxWrapper>
@@ -112,8 +141,7 @@ const SuperviseRooftop = () => {
           <Title>수수료 산정 공지</Title>
           <p>현재 옥상에 대한 수수료 10%</p>
           <span>
-            수수료 재산정의 경우 어쩌구
-            ㅁㄴㅇㅁㄴㅇㅁㄴㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㅇㄴㄴㅇㅁㅇㅁㄴㅇㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇ
+            수수료 재산정의 경우 추후 옥상지기측에서 수수료 재산정 요청시 자체 검토를 통해 진행
           </span>
           <Button type="fee">수수료 재산정 요청</Button>
         </BoxWrapper>
@@ -154,7 +182,22 @@ const Button = styled.div`
     `
   }}
 `
+const BookingDot = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      height: ${fonts.size.xxsm};
+      width: ${fonts.size.xxsm};
+      margin: ${margins.xsm} auto 0vw auto;
 
+      position: relative;
+      bottom: 0;
+
+      background-color: ${colors.main.tertiary};
+      border-radius: 50%;
+    `
+  }}
+`
 const ScheduleDetail = styled.div`
   ${({ theme }) => {
     const { colors, paddings, margins } = theme
