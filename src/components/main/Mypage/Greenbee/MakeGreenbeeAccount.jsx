@@ -2,8 +2,8 @@ import React, { useState } from "react"
 import styled, { css } from "styled-components"
 
 import { mypageControl } from "api/controls/mypageControl"
-import GreenbeeImgList from "./GreenbeeImgList"
-import GreenbeeSidoList from "./GreenbeeSidoList"
+import GreenbeeImgList from "./Information/GreenbeeImgList"
+import GreenbeeSidoList from "./Information/GreenbeeSidoList"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSeedling } from "@fortawesome/free-solid-svg-icons"

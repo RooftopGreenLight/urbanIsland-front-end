@@ -6,7 +6,7 @@ import { roofTopControl } from "api/controls/roofTopControl"
 import { useNavigate } from "react-router-dom"
 import { ModalContext } from "module/Modal"
 
-import RequiredGreeningFilter from "./Modal/RequiredGreeningFilter"
+import RequiredGreeningFilter from "../Modal/RequiredGreeningFilter"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleXmark, faFilter, faFilterCircleXmark } from "@fortawesome/free-solid-svg-icons"
 
