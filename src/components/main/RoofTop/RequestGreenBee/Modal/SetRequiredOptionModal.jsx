@@ -1,8 +1,10 @@
 import { useContext, useEffect, useState } from "react"
 import styled, { css } from "styled-components"
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
+
+import { ModalHeader, ModalCloseBtn, ModalContent } from "components/common/Style/Modal/CommonStyle"
+import { CheckBox } from "components/common/Style/Common/CommonStyle"
 
 import { ModalContext } from "module/Modal"
 import { RequiredRoofTopOption } from "constants/RequiredRoofTopOption"
@@ -33,13 +35,15 @@ const SetRequiredOptionModal = ({ applyInfo, changeInfo }) => {
   return (
     <Wrapper>
       <ModalHeader>
-        <h5>세부 옵션 설정</h5>
+        <h5>시공 옵션 설정</h5>
         <ModalCloseBtn icon={faXmark} onClick={closeModal} />
       </ModalHeader>
       <ModalContent>
-        <ShowOptionList>
+        <h5>녹화 시공 필요 옵션</h5>
+        <p>녹화 시공에 필요한 옵션을 선택해주세요.</p>
+        <SetDetailSection>
           {RequiredRoofTopOption.map((option, idx) => (
-            <div className="select-section" key={option}>
+            <CheckBox key={option}>
               <p>{option}</p>
               <input
                 key={`${option} + ${requiredOptions.includes(idx)}`}
@@ -48,144 +52,69 @@ const SetRequiredOptionModal = ({ applyInfo, changeInfo }) => {
                 checked={requiredOptions.includes(idx)}
                 onChange={changeCheck}
               />
-            </div>
+            </CheckBox>
           ))}
-        </ShowOptionList>
-        <ApplySection>
-          <button onClick={confirmRequiredList}>세부 정보 저장</button>
-        </ApplySection>
+        </SetDetailSection>
+        <ApplyDetailSection>
+          <ApplyDetailBtn onClick={confirmRequiredList}>세부 정보 저장</ApplyDetailBtn>
+        </ApplyDetailSection>
       </ModalContent>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 30vw;
+  width: 33vw;
 
   margin: auto;
   background-color: #f5f5f5;
 `
 
-const ModalHeader = styled.div`
+const SetDetailSection = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
+    const { margins } = theme
     return css`
-      width: 100%;
-      padding: ${paddings.base};
-
-      background-color: #000000;
-
-      display: flex;
-      justify-content: space-between;
-
-      h5 {
-        color: ${colors.white};
-        font-size: ${fonts.size.base};
-        text-align: center;
-        vertical-align: center;
-      }
-    `
-  }}
-`
-
-const ModalCloseBtn = styled(FontAwesomeIcon)`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      padding: ${paddings.sm};
-      color: ${colors.white};
-      font-size: ${fonts.size.xsm};
-    `
-  }}
-`
-
-const ModalContent = styled.div`
-  ${({ theme }) => {
-    const { fonts, margins, paddings } = theme
-    return css`
-      padding: ${paddings.xl};
-      margin: auto;
-
-      h5 {
-        font-size: ${fonts.size.base};
-        text-align: center;
-        margin: ${margins.base} 0vw;
-      }
-    `
-  }}
-`
-
-const ShowOptionList = styled.div`
-  ${({ theme }) => {
-    const { fonts, margins } = theme
-    return css`
-      width: 90%;
-      margin: auto;
+      width: 95%;
+      margin: ${margins.base} auto;
 
       display: flex;
       justify-content: space-evenly;
       flex-wrap: wrap;
 
       text-align: center;
-
-      .select-section {
-        width: 40%;
-
-        display: flex;
-        justify-content: space-between;
-
-        h5 {
-          margin-bottom: ${margins.sm};
-          font-size: ${fonts.size.base};
-        }
-
-        p {
-          margin: ${margins.sm} 0vw;
-          font-size: ${fonts.size.xsm};
-          font-weight: 100;
-        }
-
-        input {
-          margin-left: auto;
-
-          text-align: center;
-          font-size: ${fonts.size.sm};
-
-          &::placeholder {
-            font-weight: 100;
-          }
-        }
-      }
     `
   }}
 `
 
-const ApplySection = styled.div`
+const ApplyDetailSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
+
+const ApplyDetailBtn = styled.button`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { colors, paddings, margins } = theme
     return css`
+      width: 40%;
+      padding: ${paddings.sm};
+      margin: ${margins.base} auto;
+
+      background: ${colors.white};
+      border: 1px solid ${colors.main.primary};
+      border-radius: 2.5vw;
+      cursor: pointer;
+
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      align-items: center;
+      justify-content: center;
 
-      button {
-        width: 25%;
-        padding: ${paddings.sm};
-        margin: ${margins.base} auto;
+      font-weight: 100;
 
-        background-color: ${colors.white};
-        border: 1px solid #7d7d7d;
-        border-radius: 25px;
-
-        text-align: center;
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
-
-        &:hover {
-          background: rgb(77, 77, 77);
-          border: 1px solid ${colors.white};
-          color: ${colors.white};
-        }
+      &:hover {
+        border: 0px;
+        background: ${colors.main.tertiary};
+        color: ${colors.white};
       }
     `
   }}

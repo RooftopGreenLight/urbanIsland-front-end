@@ -17,6 +17,21 @@ export const chattingControl = {
       throw new Error(errorMessage)
     }
   },
+  getRooftopChat: async rooftopId => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/chat/inquiry/owner/response/${rooftopId}`,
+        params: {
+          rooftopId,
+        },
+      })
+      return response.data ?? []
+    } catch (err) {
+      const errorMessage = err.response.data.message
+      throw new Error(errorMessage)
+    }
+  },
   getCheckChatExist: async (reservationId, ownerId) => {
     try {
       const response = await axiosInstance({

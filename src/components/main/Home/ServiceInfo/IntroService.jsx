@@ -2,7 +2,6 @@ import styled, { css } from "styled-components"
 
 import { ServiceInfoData } from "constants/ServiceInfoData"
 import ServiceContent from "components/main/Home/ServiceInfo/ServiceContent"
-import ServiceContentDarken from "components/main/Home/ServiceInfo/ServiceContentDarken"
 
 const IntroService = () => {
   return (
@@ -15,19 +14,15 @@ const IntroService = () => {
           만듭니다.
         </p>
       </ServiceIntro>
-      {ServiceInfoData.map((content, idx) => {
-        return idx % 2 === 0 ? (
-          <ServiceContentDarken key={idx} content={content} />
-        ) : (
-          <ServiceContent key={idx} content={content} />
-        )
-      })}
+      {ServiceInfoData.map((content, idx) => (
+        <ServiceContent key={idx} content={content} />
+      ))}
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
 
   background-color: #ffffff;

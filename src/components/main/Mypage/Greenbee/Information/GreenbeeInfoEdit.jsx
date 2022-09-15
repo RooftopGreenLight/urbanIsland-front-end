@@ -7,6 +7,8 @@ import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 
 import { greenbeeControl } from "api/controls/greenbeeControl"
+
+import { InfomationBox, InfomationLine } from "components/common/Style/Mypage/CommonStyle"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faEdit, faImage } from "@fortawesome/free-solid-svg-icons"
 
@@ -116,8 +118,6 @@ const GreenbeeInfoEdit = () => {
     [greenBeeImages, addImagesBase64],
   )
 
-  console.log([...greenBeeImages, ...addImages])
-
   const SlickSettings = {
     dots: totalImgAmount > 3,
     infinite: totalImgAmount > 3,
@@ -129,24 +129,24 @@ const GreenbeeInfoEdit = () => {
 
   return (
     <Wrapper>
-      <GreenbeeInfoBox>
+      <InfomationBox>
         <Title>
           <h5>내 그린비 정보 수정</h5>
         </Title>
-        <GreenbeeInfoLine>
+        <InfomationLine>
           <div className="info">
             <span>사무소 연락처</span>
             <input name="officeNumber" value={officeNumber} onChange={changeInput} />
           </div>
-        </GreenbeeInfoLine>
-        <GreenbeeInfoLine>
+        </InfomationLine>
+        <InfomationLine>
           <div className="info">
             <span>사무소 소개</span>
             <textarea name="content" rows="4" cols="50" value={content} onChange={changeInput} />
           </div>
-        </GreenbeeInfoLine>
-      </GreenbeeInfoBox>
-      <GreenbeeInfoBox>
+        </InfomationLine>
+      </InfomationBox>
+      <InfomationBox>
         <Title>
           <h5>사무소 대표 이미지 수정</h5>
         </Title>
@@ -196,7 +196,7 @@ const GreenbeeInfoEdit = () => {
             accept=".png,.jpg"
           />
         </BtnList>
-      </GreenbeeInfoBox>
+      </InfomationBox>
     </Wrapper>
   )
 }
@@ -229,45 +229,6 @@ const Title = styled.div`
         font-size: ${fonts.size.base};
         font-weight: ${fonts.weight.bold};
         text-align: left;
-      }
-    `
-  }}
-`
-
-const GreenbeeInfoBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 2.5vh;
-`
-
-const GreenbeeInfoLine = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      display: flex;
-      justify-content: space-between;
-      padding: ${paddings.base};
-
-      .info {
-        width: 100%;
-      }
-
-      span {
-        color: ${colors.black.quinary};
-        font-weight: ${fonts.weight.light};
-      }
-
-      input,
-      textarea {
-        width: 100%;
-        padding: ${paddings.sm} 0vw;
-        margin: ${margins.xsm} 0vw;
-
-        border: 0;
-        border-bottom: 1px solid ${colors.main.secondary}44;
-        background-color: ${colors.main.tertiary}11;
-        color: ${colors.black.secondary};
-        font-size: ${fonts.size.sm};
       }
     `
   }}

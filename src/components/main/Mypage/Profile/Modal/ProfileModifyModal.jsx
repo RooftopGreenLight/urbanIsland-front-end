@@ -1,7 +1,7 @@
 import { useContext, useState, useRef } from "react"
 import styled, { css } from "styled-components"
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { ModalHeader, ModalCloseBtn } from "components/common/Style/Modal/CommonStyle"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 import { modalShow } from "styles/Animation"
@@ -68,7 +68,7 @@ const ProfileModifyModal = ({ content, placeholder, setUserData }) => {
           onChange={e => setInput(e.target.value)}
           placeholder={`변경할 ${placeholder} 입력`}
         />
-        <ModalFeedBack ref={feedbackMsg}></ModalFeedBack>
+        <ModalFeedBack ref={feedbackMsg} />
         <ApplyModifyBtn onClick={() => editProfile(input)}>변동사항 저장</ApplyModifyBtn>
       </ModalContent>
     </Wrapper>
@@ -88,40 +88,6 @@ const Wrapper = styled.section`
       animation: ${modalShow} 0.3s;
       animation-fill-mode: forwards;
       overflow: hidden;
-    `
-  }}
-`
-
-const ModalHeader = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.base};
-
-      background-color: ${colors.main.primary};
-
-      display: flex;
-      justify-content: space-between;
-
-      color: ${colors.white};
-      text-align: center;
-
-      h5 {
-        font-size: ${fonts.size.base};
-        vertical-align: center;
-      }
-    `
-  }}
-`
-
-const ModalCloseBtn = styled(FontAwesomeIcon)`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      padding: ${paddings.sm};
-      color: ${colors.white};
-      font-size: ${fonts.size.xsm};
     `
   }}
 `

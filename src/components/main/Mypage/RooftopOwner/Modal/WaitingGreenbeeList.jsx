@@ -89,7 +89,7 @@ const Wrapper = styled.div`
     const { colors, fonts, margins } = theme
     return css`
       width: 100%;
-      margin: ${margins.base} auto;
+      margin: ${margins.base} auto 0vw auto;
 
       color: ${colors.black.primary};
       cursor: pointer;

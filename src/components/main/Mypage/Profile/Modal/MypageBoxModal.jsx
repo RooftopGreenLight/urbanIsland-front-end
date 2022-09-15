@@ -1,9 +1,13 @@
 import { useContext, useRef, useState } from "react"
 import styled, { css } from "styled-components"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBuilding, faXmark } from "@fortawesome/free-solid-svg-icons"
+
+import { ModalHeader, ModalCloseBtn, ModalContent } from "components/common/Style/Modal/CommonStyle"
 import { modalShow } from "styles/Animation"
 import { ModalContext } from "module/Modal"
+
 import { mypageControl } from "api/controls/mypageControl"
 import defaultProfile from "assets/img/defaultProfile.png"
 
@@ -92,89 +96,15 @@ const MypageBoxModal = ({ userData, setUserData }) => {
 }
 
 const Wrapper = styled.section`
-  ${({ theme }) => {
-    const { paddings } = theme
-    return css`
-      width: 30%;
-      margin: auto;
+  width: 33vw;
+  margin: auto;
 
-      border-radius: 0.3rem;
-      background-color: #fff;
+  border-radius: 0.3rem;
+  background-color: #fff;
 
-      animation: ${modalShow} 0.3s;
-      animation-fill-mode: forwards;
-      overflow: hidden;
-
-      header {
-        display: flex;
-        flex-direction: row-reverse;
-
-        padding: ${paddings.sm} ${paddings.base};
-        background-color: #f1f1f1;
-        font-weight: 700;
-      }
-    `
-  }}
-`
-const ModalHeader = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.base};
-
-      background-color: ${colors.main.primary};
-
-      display: flex;
-      justify-content: space-between;
-
-      color: ${colors.white};
-      text-align: center;
-
-      h5 {
-        font-size: ${fonts.size.base};
-        vertical-align: center;
-      }
-    `
-  }}
-`
-
-const ModalCloseBtn = styled(FontAwesomeIcon)`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      padding: ${paddings.sm};
-      color: ${colors.white};
-      font-size: ${fonts.size.xsm};
-    `
-  }}
-`
-
-const ModalContent = styled.main`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
-      padding: ${paddings.sm};
-      border-top: 1px solid #dee2e6;
-      background-color: ${colors.white};
-
-      h5 {
-        margin: ${margins.base} 0vw ${margins.xsm} 0vw;
-        font-size: ${fonts.size.sm};
-        text-align: center;
-      }
-
-      p {
-        font-size: ${fonts.size.xsm};
-        font-weight: ${fonts.weight.light};
-        text-align: center;
-      }
-    `
-  }}
+  animation: ${modalShow} 0.3s;
+  animation-fill-mode: forwards;
+  overflow: hidden;
 `
 
 const FileUploadBtn = styled.div`

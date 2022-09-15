@@ -136,7 +136,7 @@ const SelectBox = styled.select`
   ${({ theme }) => {
     const { fonts, margins, paddings } = theme
     return css`
-      width: 20%;
+      width: 22.5%;
       margin: ${margins.sm} 0vw;
       padding: ${paddings.sm};
 

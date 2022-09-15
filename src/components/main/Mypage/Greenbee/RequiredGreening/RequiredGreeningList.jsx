@@ -6,7 +6,7 @@ import { roofTopControl } from "api/controls/roofTopControl"
 import { useNavigate } from "react-router-dom"
 import { ModalContext } from "module/Modal"
 
-import RequiredGreeningFilter from "./Modal/RequiredGreeningFilter"
+import RequiredGreeningFilter from "../Modal/RequiredGreeningFilter"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleXmark, faFilter, faFilterCircleXmark } from "@fortawesome/free-solid-svg-icons"
 
@@ -39,14 +39,12 @@ const RequiredGreeningList = () => {
         <RooftopFilterBtn
           isApplied={appliedFilter ? true : false}
           onClick={() =>
-            !appliedFilter
-              ? openModal(
-                  <RequiredGreeningFilter
-                    appliedFilter={appliedFilter}
-                    setAppliedFilter={setAppliedFilter}
-                  />,
-                )
-              : setAppliedFilter(null)
+            openModal(
+              <RequiredGreeningFilter
+                appliedFilter={appliedFilter}
+                setAppliedFilter={setAppliedFilter}
+              />,
+            )
           }>
           <FontAwesomeIcon icon={appliedFilter ? faFilter : faFilterCircleXmark} />
           필터 {appliedFilter ? "ON" : "OFF"}
@@ -55,8 +53,8 @@ const RequiredGreeningList = () => {
       <GridRoofTopList>
         {rooftopList.map(({ city, detail, district, mainImage, id }, idx) => (
           <RoofTopInfo
+            key={id}
             fileUrl={mainImage.fileUrl}
-            key={idx}
             onClick={() => navigate(`/mypage/greenbee/required-greening/${id}`)}>
             <div className="rooftop-info">
               <h5>{`${city} ${district}`}</h5>
@@ -65,8 +63,8 @@ const RequiredGreeningList = () => {
           </RoofTopInfo>
         ))}
         {rooftopList.length < 9 &&
-          [...Array(9 - rooftopList.length).keys()].map(_ => (
-            <EmptyRooftop>
+          [...Array(9 - rooftopList.length).keys()].map((_, idx) => (
+            <EmptyRooftop key={idx}>
               <FontAwesomeIcon icon={faCircleXmark} />
               <h5>항목 없음</h5>
               <p>옥상 정보가 없습니다.</p>
@@ -93,7 +91,6 @@ const Title = styled.div`
     return css`
       width: 100%;
       padding: ${paddings.sm} ${paddings.base};
-      margin-bottom: ${margins.sm};
 
       display: flex;
       border-bottom: 1px solid ${colors.main.primary}77;
@@ -102,8 +99,6 @@ const Title = styled.div`
       text-align: center;
 
       h5 {
-        width: 90%;
-
         font-size: ${fonts.size.base};
         font-weight: ${fonts.weight.bold};
         text-align: left;
@@ -116,10 +111,9 @@ const RooftopFilterBtn = styled.button`
   ${({ theme, isApplied }) => {
     const { colors, fonts, paddings, margins } = theme
     return css`
-      width: 17.5%;
       height: 90%;
-      padding: ${paddings.xsm};
-      margin: auto;
+      padding: ${paddings.xsm} ${paddings.sm};
+      margin: auto 0vw auto auto;
 
       border-radius: ${fonts.size.xsm};
       background-color: ${!isApplied ? colors.main.secondary : colors.main.tertiary};

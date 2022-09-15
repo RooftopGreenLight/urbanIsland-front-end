@@ -15,6 +15,9 @@ import {
 import { ModalContext } from "module/Modal"
 import { reservationControl } from "api/controls/reservationControl"
 import { modalShow } from "styles/Animation"
+
+import { ModalHeader, ModalCloseBtn, ModalContent } from "components/common/Style/Modal/CommonStyle"
+import { NoticeEmptyIcon } from "components/common/Style/NoticeEmpty/CommonStyle"
 import WriteRooftopReviewModal from "./WriteRooftopReview"
 
 const ShowMyReservationModal = () => {
@@ -145,59 +148,6 @@ const ViewPoint = styled.div`
   }
 `
 
-const ModalHeader = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      width: 100%;
-      padding: ${paddings.base};
-
-      background-color: ${colors.main.primary};
-
-      display: flex;
-      justify-content: space-between;
-
-      color: ${colors.white};
-      text-align: center;
-
-      h5 {
-        font-size: ${fonts.size.base};
-        vertical-align: center;
-      }
-    `
-  }}
-`
-
-const ModalCloseBtn = styled(FontAwesomeIcon)`
-  ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
-    return css`
-      padding: ${paddings.sm};
-      color: ${colors.white};
-      font-size: ${fonts.size.xsm};
-    `
-  }}
-`
-
-const ModalContent = styled.main`
-  ${({ theme }) => {
-    const { colors, paddings } = theme
-    return css`
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
-      padding: ${paddings.lg} ${paddings.base};
-      border-top: 1px solid #dee2e6;
-      background-color: ${colors.white};
-
-      max-height: 100%;
-      overflow-y: auto;
-      text-align: center;
-    `
-  }}
-`
-
 const RooftopStatus = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
@@ -301,42 +251,6 @@ const WriteReviewBtn = styled.div`
       &:hover {
         background-color: ${colors.main.tertiary};
         font-weight: ${fonts.weight.bold};
-      }
-    `
-  }}
-`
-
-const NoticeEmptyIcon = styled.div`
-  ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
-    return css`
-      width: 100%;
-      margin: ${margins.base} auto;
-
-      color: ${colors.main.primary};
-      text-align: center;
-
-      h5 {
-        font-size: ${fonts.size.base};
-        margin-bottom: ${margins.sm};
-      }
-
-      p {
-        font-size: ${fonts.size.xsm};
-        font-weight: 100;
-      }
-
-      svg {
-        width: 2.5vw;
-        height: 2.5vw;
-
-        margin-bottom: ${margins.base};
-        padding: ${paddings.lg};
-
-        background-color: ${colors.main.secondary};
-        border-radius: 20vw;
-
-        color: ${colors.white};
       }
     `
   }}

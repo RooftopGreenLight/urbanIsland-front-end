@@ -1,12 +1,12 @@
 import { useRef } from "react"
 import styled, { css } from "styled-components"
 
-const ServiceContent = ({ content }) => {
+const ServiceContentDarken = ({ content }) => {
   const { title, desc, bottomText, img } = content
   const contentRef = useRef()
 
   return (
-    <Wrapper ref={contentRef}>
+    <Wrapper ref={contentRef} imgSrc={img}>
       <IntroText>
         <h5>{title}</h5>
         <p>{desc}</p>
@@ -14,27 +14,34 @@ const ServiceContent = ({ content }) => {
           <p>{bottomText}</p>
         </BottomText>
       </IntroText>
-      <IntroImg img={img} />
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  width: 100%;
-  height: 100vh;
-  margin: auto;
+  ${({ imgSrc }) => {
+    return css`
+      width: 100%;
+      height: 100vh;
+      padding: 10vw auto;
 
-  display: flex;
-  justify-content: space-between;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${imgSrc});
+      background-size: cover;
+      color: #ffffff;
+    `
+  }}
 `
 
 const IntroText = styled.div`
   ${({ theme }) => {
     const { fonts, margins } = theme
     return css`
-      width: 30vw;
-      height: 50%;
-      margin: auto auto auto 15vw;
+      width: 35%;
+      margin: auto auto auto 10vw;
 
       display: flex;
       flex-direction: column;
@@ -73,7 +80,7 @@ const BottomText = styled.div`
     margin: 0;
     display: inline;
 
-    border-top: 1px solid #000000;
+    border-top: 1px solid #ffffff;
     white-space: pre-wrap;
 
     font-size: 1.25rem;
@@ -82,17 +89,4 @@ const BottomText = styled.div`
   }
 `
 
-const IntroImg = styled.div`
-  ${({ img }) => {
-    return css`
-      width: 35%;
-      height: 75%;
-      margin: auto;
-
-      background-image: url(${img});
-      background-size: cover;
-    `
-  }}
-`
-
-export default ServiceContent
+export default ServiceContentDarken
