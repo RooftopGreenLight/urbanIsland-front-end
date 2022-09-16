@@ -1,8 +1,5 @@
 import styled, { css } from "styled-components"
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faGoogle } from "@fortawesome/free-brands-svg-icons"
-
 import kakaoLogo from "assets/icon/kakaotalk.png"
 import googleLogo from "assets/icon/google.png"
 import naverLogo from "assets/icon/naver.png"
@@ -47,19 +44,14 @@ const SocialIconList = styled.div`
 `
 
 const SocialImage = styled.img`
-  ${({ theme }) => {
-    const { paddings } = theme
-    return css`
-      width: 3.25vw;
-      height: 3.25vw;
+  width: 3.25vw;
+  height: 3.25vw;
 
-      padding: 0.4rem;
-      box-shadow: 0px 2px 2px #d5d5d5;
-      border-radius: 100px;
+  padding: 0.4rem;
+  box-shadow: 0px 2px 2px #d5d5d5;
+  border-radius: 100px;
 
-      cursor: pointer;
-    `
-  }}
+  cursor: pointer;
 `
 
 export default LoginSocial

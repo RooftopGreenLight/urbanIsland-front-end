@@ -1,12 +1,12 @@
 import { useParams, useNavigate } from "react-router-dom"
-import { useContext, useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo } from "react"
 import styled, { css } from "styled-components"
 
 import Slider from "react-slick"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 
-import { Title, ServiceList, InputBox } from "components/common/Style/Mypage/CommonStyle"
+import { InputBox } from "components/common/Style/Mypage/CommonStyle"
 import {
   RooftopTitle,
   RooftopDetail,
@@ -15,24 +15,16 @@ import {
 } from "components/common/Style/Rooftop/CommonStyle"
 
 import { roofTopControl } from "api/controls/roofTopControl"
-import { ModalContext } from "module/Modal"
-import DateUtil from "util/DateUtil"
-import FeeChangeModal from "components/main/RoofTop/Supervise/Modal/FeeChangeModal"
-
-import PayOptionChangeModal from "components/main/RoofTop/Supervise/Modal/PayOptionChangeModal"
 import ApplyAvailableInfo from "../ApplyRoofTop/ApplyAvailableInfo"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faEdit, faImage, faMap, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
+import { faImage, faMap, faStar, faUser, faBuilding } from "@fortawesome/free-solid-svg-icons"
 import ApplyDetailView from "../ApplyRoofTop/ApplyDetailView"
 
 const SuperviseDetailRooftop = () => {
-  const { openModal } = useContext(ModalContext)
-  const { id } = useParams()
+  const { rooftopId } = useParams()
   const nav = useNavigate()
   const [addImagesBase64, setAddImagesBase64] = useState([])
-  const [selectedDate, setSeletedDate] = useState(new Date())
-  const [bookingDates, setBookingDates] = useState(new Map())
 
   const [rooftopData, setRooftopData] = useState({
     adultCount: 0,
@@ -58,8 +50,7 @@ const SuperviseDetailRooftop = () => {
   useEffect(() => {
     const loadCurrentInfo = async () => {
       try {
-        const result = await roofTopControl.getRooftopDetail(id)
-        console.log(result)
+        const result = await roofTopControl.getRooftopDetail(rooftopId)
         const {
           city,
           district,
@@ -80,20 +71,7 @@ const SuperviseDetailRooftop = () => {
           explainContent,
           refundContent,
           roleContent,
-          reservations,
         } = result
-
-        if (reservations) {
-          reservations.map(({ id, startDates, endDates }) => {
-            const betweenDates = DateUtil.getDatesBetweenTwoDates(
-              DateUtil.createDate(startDates),
-              DateUtil.createDate(endDates),
-            )
-            return betweenDates.map(date =>
-              setBookingDates(prevData => new Map([...prevData, [date.toDateString(), id]])),
-            )
-          })
-        }
 
         setRooftopData(prevData => ({
           ...prevData,
@@ -146,6 +124,7 @@ const SuperviseDetailRooftop = () => {
   const onFinish = async () => {
     const formData = new FormData()
     for (const [option, value] of Object.entries(rooftopData)) {
+      console.log(option, value)
       if (["startTime", "endTime"].includes(option)) {
         formData.append(option, `${String(value).padStart(2, "0")}:00:00`)
         continue
@@ -159,8 +138,8 @@ const SuperviseDetailRooftop = () => {
       formData.append(option, value)
     }
     try {
-      await roofTopControl.patchRooftopDetail(id, formData)
-      nav(`/mypage/rooftop/supervise/${id}`)
+      await roofTopControl.patchRooftopDetail(rooftopId, formData)
+      nav(`/mypage/rooftop/supervise/${rooftopId}`)
     } catch (err) {
       console.log(err)
     }
@@ -264,7 +243,7 @@ const SuperviseDetailRooftop = () => {
           </div>
         </RooftopDetail>
       </RooftopInfoBox>
-      <InputBox boxSize="base">
+      {/* <InputBox boxSize="base">
         <div className="title">
           <h5>건물 면적 </h5>
           <p>
@@ -272,15 +251,15 @@ const SuperviseDetailRooftop = () => {
           </p>
         </div>
         <input name="width" value={width} placeholder="넓이" onChange={changeInput} />
-      </InputBox>
-      <InputBox boxSize="base">
+      </InputBox> */}
+      <InputBox boxSize="lg">
         <div className="title">
           <h5>이용 가격</h5>
           <p>옥상의 1일 당 이용 금액을 입력해주세요.</p>
         </div>
         <input name="totalPrice" value={totalPrice} placeholder="가격" onChange={changeInput} />
       </InputBox>
-      <InputBox boxSize="lg">
+      {/* <InputBox boxSize="lg">
         <div className="title">
           <h5>시설 설명</h5>
           <p>고객에게 옥상 시설을 설명해주세요!</p>
@@ -293,7 +272,7 @@ const SuperviseDetailRooftop = () => {
           placeholder="자유롭게 옥상 설명을 작성해주세요."
           onChange={changeInput}
         />
-      </InputBox>
+      </InputBox> */}
       <ApplyAvailableInfo applyInfo={rooftopData} changeInfo={setRooftopData} />
       {rooftopReviews && rooftopReviews.length > 0 && (
         <InformationBox>
@@ -311,7 +290,7 @@ const SuperviseDetailRooftop = () => {
           ))}
         </InformationBox>
       )}
-      <InputBox boxSize="lg">
+      {/* <InputBox boxSize="lg">
         <div className="title">
           <h5>환불 규정</h5>
           <p>등록하려는 옥상 시설의 환불 규정을 작성해주세요.</p>
@@ -338,7 +317,7 @@ const SuperviseDetailRooftop = () => {
           placeholder="자유롭게 이용 규칙을 작성해주세요."
           onChange={changeInput}
         />
-      </InputBox>
+      </InputBox> */}
       <ApplyDetailView applyInfo={rooftopData} changeInfo={setRooftopData} />
       <SliderBox>
         <div className="title">
@@ -382,7 +361,9 @@ const SuperviseDetailRooftop = () => {
           </BtnList>
         )}
       </SliderBox>
-      <Button onClick={onFinish}>적용 완료하기</Button>
+      <ModifyBtn onClick={onFinish}>
+        <FontAwesomeIcon icon={faBuilding} /> 적용 완료하기
+      </ModifyBtn>
     </Wrapper>
   )
 }
@@ -501,18 +482,17 @@ const ReviewBox = styled.div`
   }}
 `
 
-const Button = styled.div`
+const ModifyBtn = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 50%;
+      width: 100%;
       padding: ${paddings.sm} ${paddings.base};
-      margin: ${margins.lg} auto;
+      margin: ${margins.base} auto;
 
       cursor: pointer;
       border-radius: ${fonts.size.sm};
-      background-color: ${props =>
-        props.type === "fee" ? colors.main.tertiary : colors.main.primary};
+      background-color: ${colors.main.primary};
 
       text-align: center;
       color: ${colors.white};

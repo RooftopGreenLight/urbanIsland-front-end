@@ -17,10 +17,23 @@ export const RooftopTitle = styled.div`
       width: 100%;
       margin-bottom: ${margins.sm};
 
+      display: flex;
+      justify-content: space-between;
+
       h5 {
         color: ${colors.main.primary};
         font-size: ${fonts.size.lg};
         font-weight: ${fonts.weight.bold};
+      }
+
+      p {
+        color: ${colors.main.secondary};
+        font-size: ${fonts.size.xsm};
+        font-weight: ${fonts.weight.light};
+      }
+
+      strong {
+        font-weight: 600;
       }
     `
   }}

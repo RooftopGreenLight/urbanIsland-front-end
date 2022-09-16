@@ -57,16 +57,17 @@ export const roofTopControl = {
     }
   },
 
-  patchRooftopDetail: async (id, formdata) => {
+  patchRooftopDetail: async (rooftopId, formdata) => {
     try {
       const response = await axiosInstance({
         method: "PATCH",
-        url: `/rooftops/detail/${id}`,
+        url: `/rooftops/detail/${rooftopId}`,
         headers: {
           "Content-Type": "multipart/form-data",
         },
         data: formdata,
       })
+      console.log(response)
       return response.data
     } catch (err) {
       throw new Error(err)

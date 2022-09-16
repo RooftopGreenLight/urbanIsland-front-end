@@ -34,7 +34,7 @@ const Wrapper = styled.div`
 
 const SignupTitle = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, margins } = theme
+    const { fonts, margins } = theme
     return css`
       width: 75%;
       margin: ${margins.xl} ${margins.xl};

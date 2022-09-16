@@ -22,7 +22,6 @@ export const reservationControl = {
         method: "GET",
         url: `/reservations/${reservationId}`,
       })
-      console.log(response)
       return response?.data ?? null
     } catch (err) {
       const errorMessage = err.response.data.message
