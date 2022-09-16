@@ -90,8 +90,10 @@ export const accountControl = {
       addTokenToLocalStorage(accessToken, refreshToken, id, authority)
       return { accessToken, memberId: id, memberRole: authority }
     } catch (err) {
-      console.log(err)
-      const errorMessage = err.response.data.message
+      let errorMessage = err.response.data.message
+      if (err.response.data.errorCode === 500) {
+        errorMessage = "잘못된 로그인 요청입니다."
+      }
       throw new Error(errorMessage)
     }
   },

@@ -31,6 +31,7 @@ const LoginForm = () => {
       confirmLogin({ token: accessToken, authenticated: true, memberId, memberRole })
       navigate("/")
     } catch (err) {
+      console.log(err)
       feedbackMsg.current.innerText = err.message
     }
   }
