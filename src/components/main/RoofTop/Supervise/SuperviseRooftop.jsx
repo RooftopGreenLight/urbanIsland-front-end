@@ -16,11 +16,9 @@ import {
   faAngleRight,
   faBan,
   faBook,
-  faBuilding,
   faCalendar,
   faCircleCheck,
   faClock,
-  faComments,
   faMap,
   faReceipt,
   faStar,
@@ -43,7 +41,7 @@ import ChatRooftopList from "components/main/Chat/ChatRooftopList"
 import { reservationControl } from "api/controls/reservationControl"
 
 const SuperviseRooftop = () => {
-  const { id } = useParams()
+  const { rooftopId } = useParams()
   const { openModal } = useContext(ModalContext)
 
   const [selectedDate, setSeletedDate] = useState(new Date())
@@ -69,20 +67,22 @@ const SuperviseRooftop = () => {
     totalPrice: 0,
     width: 0,
   })
-  // 현재 일자의 예약 목록 중, 사용자가 열람 중인 예약 내역
-  const [selectedReservation, setSelectedReservation] = useState({
+
+  // selectedReservation의 초기 값을 변수로 미리 저장해둠.
+  const defaultSelectedReservation = {
     startDates: [],
     endDates: [],
     startTimes: [],
     endTimes: [],
     id: null,
     tid: null,
-  })
+  }
+  const [selectedReservation, setSelectedReservation] = useState(defaultSelectedReservation)
 
   useEffect(() => {
     const loadCurrentInfo = async () => {
       try {
-        const result = await roofTopControl.getRooftopDetail(id)
+        const result = await roofTopControl.getRooftopDetail(rooftopId)
         const { startTime, endTime, reservations } = result
 
         // 이미 예약된 일자인 bookedDate를 Set에 하나씩 저장하는 과정.
@@ -124,17 +124,10 @@ const SuperviseRooftop = () => {
         }
         return
       }
-      setSelectedReservation({
-        startDates: [],
-        endDates: [],
-        startTimes: [],
-        endTimes: [],
-        id: null,
-        tid: null,
-      })
+      setSelectedReservation(defaultSelectedReservation)
     }
     getReservationInfo()
-  }, [selectedDate])
+  }, [rooftopData, selectedDate])
 
   const {
     city,
@@ -171,10 +164,31 @@ const SuperviseRooftop = () => {
     slidesToScroll: 1,
   }
 
-  const cancelReservation = async reservationId => {
+  const cancelReservation = async () => {
     try {
       await reservationControl.deleteCancelReservation(reservationId)
-      alert("성공적으로 예약을 취소시켰습니다.")
+      const result = await roofTopControl.getRooftopDetail(rooftopId)
+      console.log("delete done.")
+      const { reservations } = result
+      setBookingDates(new Map())
+      setSelectedReservation(defaultSelectedReservation)
+      if (reservations && reservations.length > 0) {
+        reservations.map(({ id, startDates, endDates, startTimes, endTimes }) => {
+          const betweenDates = DateUtil.getDatesBetweenTwoDates(
+            DateUtil.createDate(startDates),
+            DateUtil.createDate(endDates),
+          )
+          return betweenDates.map(date =>
+            setBookingDates(
+              prevData =>
+                new Map([
+                  ...prevData,
+                  [date.toDateString(), { id, startDates, endDates, startTimes, endTimes }],
+                ]),
+            ),
+          )
+        })
+      }
     } catch (err) {
       console.log(err.message)
     }
@@ -307,7 +321,7 @@ const SuperviseRooftop = () => {
               </p>
               <strong>{`${tid}`}</strong>
             </ScheduleDetail>
-            <ScheduleBtn onClick={() => cancelReservation(reservationId)}>
+            <ScheduleBtn onClick={cancelReservation}>
               <FontAwesomeIcon icon={faBan} /> 예약 일정 취소
             </ScheduleBtn>
           </>
@@ -339,7 +353,8 @@ const SuperviseRooftop = () => {
         <Title>
           <h5>옥상 관리하기</h5>
         </Title>
-        <ServiceBox onClick={() => openModal(<ChatRooftopList rooftopId={id} ownerId={ownerId} />)}>
+        <ServiceBox
+          onClick={() => openModal(<ChatRooftopList rooftopId={rooftopId} ownerId={ownerId} />)}>
           <div className="introduce">
             <h5>옥상 문의 확인하기</h5>
             <p>이용자에게서 온 옥상 문의를 확인합니다.</p>
@@ -362,7 +377,7 @@ const SuperviseRooftop = () => {
         </ServiceBox>
       </ServiceList>
       <Button>
-        <Link to={`/mypage/rooftop/supervise/detail/${id}`}>내 옥상 수정하기</Link>
+        <Link to={`/mypage/rooftop/supervise/detail/${rooftopId}`}>내 옥상 수정하기</Link>
       </Button>
     </Wrapper>
   )
@@ -430,10 +445,6 @@ const ScheduleBox = styled.div`
   }}
 `
 
-const BtnList = styled.div`
-  display: flex;
-`
-
 const ScheduleBtn = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
@@ -477,7 +488,7 @@ const Button = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 90%;
+      width: 100%;
       padding: ${paddings.sm} ${paddings.base};
       margin: 0vw auto;
 
