@@ -188,6 +188,9 @@ const ReservationDetail = () => {
       <RooftopInfoBox>
         <RooftopTitle>
           <h5>{`${city} ${district} ${detail}`}</h5>
+          <p>
+            관리 협약 : <strong>인천광역시 중구 노인인력개발센터</strong>
+          </p>
         </RooftopTitle>
         <RooftopDetail>
           <div className="detail-list">

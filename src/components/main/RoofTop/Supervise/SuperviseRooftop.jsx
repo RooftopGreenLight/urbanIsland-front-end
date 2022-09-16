@@ -414,7 +414,7 @@ const CalenderBox = styled.div`
 
 const ScheduleBox = styled.div`
   ${({ theme }) => {
-    const { colors, fonts, paddings, margins } = theme
+    const { colors, fonts, margins } = theme
     return css`
       width: 100%;
       margin: ${margins.base} 0vw;
