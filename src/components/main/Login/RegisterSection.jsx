@@ -66,7 +66,7 @@ const RegisterContent = styled.div`
 
 const RegisterBtn = styled(Link)`
   ${({ theme }) => {
-    const { colors, fonts, paddings } = theme
+    const { fonts, paddings } = theme
     return css`
       width: 100%;
       padding: ${paddings.sm} 7.5vw;

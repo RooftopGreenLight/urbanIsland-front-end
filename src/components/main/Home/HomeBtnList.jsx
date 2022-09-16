@@ -17,7 +17,7 @@ const HomeBtnList = () => {
       <HomeBtn to="/service" delay={1}>
         서비스 소개
       </HomeBtn>
-      <HomeBtn to="/" delay={2}>
+      <HomeBtn to="/greening" delay={2}>
         녹색공모 조회
       </HomeBtn>
       {authenticated ? (

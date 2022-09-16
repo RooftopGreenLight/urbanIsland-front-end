@@ -42,20 +42,15 @@ const SignupModal = ({ code, verifiedEmail }) => {
 }
 
 const Wrapper = styled.section`
-  ${({ theme }) => {
-    const { paddings } = theme
-    return css`
-      width: 30%;
-      margin: auto;
+  width: 33vw;
+  margin: auto;
 
-      border-radius: 0.3rem;
-      background-color: #fff;
+  border-radius: 0.3rem;
+  background-color: #fff;
 
-      animation: ${modalShow} 0.3s;
-      animation-fill-mode: forwards;
-      overflow: hidden;
-    `
-  }}
+  animation: ${modalShow} 0.3s;
+  animation-fill-mode: forwards;
+  overflow: hidden;
 `
 const ModalHeader = styled.header`
   ${({ theme }) => {

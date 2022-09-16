@@ -95,11 +95,6 @@ const Payment = () => {
       feedbackMsg.current.innerText = "이름과 전화번호는 꼭 입력해주셔야 합니다."
       return
     }
-    // const phoneNumberReg = /d{2,3}-d{3,4}-d{4}/g
-    // if (!phoneNumberReg.test(phoneNumber)) {
-    //   feedbackMsg.current.innerText = "올바른 전화번호 양식이 아닙니다."
-    //   return
-    // }
     try {
       const { next_redirect_pc_url, tid } = await KakaoPayControl.postRequestToPay(
         rooftopId,
@@ -112,8 +107,7 @@ const Payment = () => {
         needToPay,
         paymentInfo,
       )
-      // window.location.href = next_redirect_pc_url
-      window.open(next_redirect_pc_url, "카카오페이 결제")
+      window.location.href = next_redirect_pc_url
       localStorage.setItem("reservationId", reservationId)
     } catch (err) {
       console.log(err)

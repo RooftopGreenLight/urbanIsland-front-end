@@ -71,10 +71,10 @@ const CardBtn = styled(Link)`
       width: 100%;
       padding: ${paddings.sm} 7.5vw;
 
-      background-color: #ffffff;
+      background-color: ${colors.white};
       border-radius: 100px;
 
-      color: #000000;
+      color: ${colors.black.primary};
       font-size: ${fonts.size.sm};
       font-weight: 700;
     `

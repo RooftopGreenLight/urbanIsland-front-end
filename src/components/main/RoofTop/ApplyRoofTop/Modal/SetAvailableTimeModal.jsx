@@ -1,7 +1,6 @@
 import { useContext, useRef, useState } from "react"
 import styled, { css } from "styled-components"
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { ModalHeader, ModalCloseBtn } from "components/common/Style/Modal/CommonStyle"
 
@@ -148,7 +147,7 @@ const ApplyTimeBtn = styled.button`
 
 const ModalFeedback = styled.p`
   ${({ theme }) => {
-    const { fonts, paddings } = theme
+    const { fonts } = theme
     return css`
       text-align: center;
       font-size: ${fonts.size.xsm};

@@ -238,7 +238,7 @@ const ApplyPersonBtn = styled.button`
 
 const ModalFeedback = styled.p`
   ${({ theme }) => {
-    const { fonts, paddings } = theme
+    const { fonts } = theme
     return css`
       text-align: center;
       font-size: ${fonts.size.xsm};

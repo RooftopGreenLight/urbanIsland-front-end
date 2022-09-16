@@ -14,12 +14,13 @@ import "slick-carousel/slick/slick-theme.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faAngleRight,
+  faBan,
   faBook,
-  faBuilding,
   faCalendar,
   faCircleCheck,
   faClock,
   faMap,
+  faReceipt,
   faStar,
   faUser,
 } from "@fortawesome/free-solid-svg-icons"
@@ -40,7 +41,7 @@ import ChatRooftopList from "components/main/Chat/ChatRooftopList"
 import { reservationControl } from "api/controls/reservationControl"
 
 const SuperviseRooftop = () => {
-  const { id } = useParams()
+  const { rooftopId } = useParams()
   const { openModal } = useContext(ModalContext)
 
   const [selectedDate, setSeletedDate] = useState(new Date())
@@ -66,36 +67,39 @@ const SuperviseRooftop = () => {
     totalPrice: 0,
     width: 0,
   })
-  // 현재 일자의 예약 목록 중, 사용자가 열람 중인 예약 내역
-  const [selectedReservation, setSelectedReservation] = useState({
-    city: "",
-    district: "",
-    detail: "",
-    startDate: [],
-    endDate: [],
-    startTime: [],
-    endTime: [],
-    adultCount: 0,
-    kidCount: 0,
-    reservationId: null,
-  })
+
+  // selectedReservation의 초기 값을 변수로 미리 저장해둠.
+  const defaultSelectedReservation = {
+    startDates: [],
+    endDates: [],
+    startTimes: [],
+    endTimes: [],
+    id: null,
+    tid: null,
+  }
+  const [selectedReservation, setSelectedReservation] = useState(defaultSelectedReservation)
 
   useEffect(() => {
     const loadCurrentInfo = async () => {
       try {
-        const result = await roofTopControl.getRooftopDetail(id)
-        console.log(result)
+        const result = await roofTopControl.getRooftopDetail(rooftopId)
         const { startTime, endTime, reservations } = result
 
         // 이미 예약된 일자인 bookedDate를 Set에 하나씩 저장하는 과정.
         if (reservations && reservations.length > 0) {
-          reservations.map(({ id, startDates, endDates }) => {
+          reservations.map(({ id, startDates, endDates, startTimes, endTimes }) => {
             const betweenDates = DateUtil.getDatesBetweenTwoDates(
               DateUtil.createDate(startDates),
               DateUtil.createDate(endDates),
             )
             return betweenDates.map(date =>
-              setBookingDates(prevData => new Map([...prevData, [date.toDateString(), id]])),
+              setBookingDates(
+                prevData =>
+                  new Map([
+                    ...prevData,
+                    [date.toDateString(), { id, startDates, endDates, startTimes, endTimes }],
+                  ]),
+              ),
             )
           })
         }
@@ -109,20 +113,21 @@ const SuperviseRooftop = () => {
 
   useEffect(() => {
     const getReservationInfo = async () => {
-      try {
-        const loadedCurrentInfo = await reservationControl.getReservationInfoById(
-          bookingDates.get(selectedDate.toDateString()),
-        )
-        setSelectedReservation(loadedCurrentInfo)
-        loadedCurrentInfo?.length > 0 && setSelectedReservation(loadedCurrentInfo[0])
-      } catch (err) {
-        console.log(err)
+      const bookedReservationInfo = bookingDates.get(selectedDate.toDateString())
+      if (bookedReservationInfo) {
+        const { id } = bookedReservationInfo
+        try {
+          const { tid } = await reservationControl.getReservationInfoById(id)
+          setSelectedReservation({ ...bookedReservationInfo, tid })
+        } catch (err) {
+          console.log(err)
+        }
+        return
       }
+      setSelectedReservation(defaultSelectedReservation)
     }
-    if (bookingDates.get(selectedDate.toDateString())) {
-      getReservationInfo()
-    }
-  }, [selectedDate])
+    getReservationInfo()
+  }, [rooftopData, selectedDate])
 
   const {
     city,
@@ -144,7 +149,7 @@ const SuperviseRooftop = () => {
     ownerId,
   } = rooftopData
 
-  const { startDate, endDate, startTime, endTime, reservationId } = selectedReservation
+  const { startDates, endDates, startTimes, endTimes, id: reservationId, tid } = selectedReservation
 
   const imgAmount = useMemo(() => rooftopImages?.length, [rooftopImages])
 
@@ -157,6 +162,36 @@ const SuperviseRooftop = () => {
     speed: 250,
     slidesToShow: 1,
     slidesToScroll: 1,
+  }
+
+  const cancelReservation = async () => {
+    try {
+      await reservationControl.deleteCancelReservation(reservationId)
+      const result = await roofTopControl.getRooftopDetail(rooftopId)
+      console.log("delete done.")
+      const { reservations } = result
+      setBookingDates(new Map())
+      setSelectedReservation(defaultSelectedReservation)
+      if (reservations && reservations.length > 0) {
+        reservations.map(({ id, startDates, endDates, startTimes, endTimes }) => {
+          const betweenDates = DateUtil.getDatesBetweenTwoDates(
+            DateUtil.createDate(startDates),
+            DateUtil.createDate(endDates),
+          )
+          return betweenDates.map(date =>
+            setBookingDates(
+              prevData =>
+                new Map([
+                  ...prevData,
+                  [date.toDateString(), { id, startDates, endDates, startTimes, endTimes }],
+                ]),
+            ),
+          )
+        })
+      }
+    } catch (err) {
+      console.log(err.message)
+    }
   }
 
   return (
@@ -265,36 +300,30 @@ const SuperviseRooftop = () => {
           <>
             <ScheduleDetail>
               <p>
-                <FontAwesomeIcon icon={faBuilding} size="lg" />
-                예약 숙소
-              </p>
-              <span>{`${city} ${district} ${detail}`}</span>
-            </ScheduleDetail>
-            <ScheduleDetail>
-              <p>
                 <FontAwesomeIcon icon={faCalendar} size="lg" />
                 예약일자
               </p>
-              <span>{`${startDate[0]}.${startDate[1]}.${startDate[2]} - ${endDate[0]}.${endDate[1]}.${endDate[2]}`}</span>
+              <strong>{`${startDates[0]}.${startDates[1]}.${startDates[2]} - ${endDates[0]}.${endDates[1]}.${endDates[2]}`}</strong>
             </ScheduleDetail>
             <ScheduleDetail>
               <p>
                 <FontAwesomeIcon icon={faClock} size="lg" />
                 예약시간
               </p>
-              <span>{`${String(startTime[0]).padStart(2, "0")}:00 ~ ${String(endTime[0]).padStart(
-                2,
-                "0",
-              )}:00`}</span>
+              <strong>{`${String(startTimes[0]).padStart(2, "0")}:00 ~ ${String(
+                endTimes[0],
+              ).padStart(2, "0")}:00`}</strong>
             </ScheduleDetail>
             <ScheduleDetail>
               <p>
-                <FontAwesomeIcon icon={faUser} size="lg" /> 총 인원
+                <FontAwesomeIcon icon={faReceipt} size="lg" />
+                TID (예약 넘버)
               </p>
-              <span>
-                {kidCount > 0 ? `어른 ${adultCount}명, 유아 ${kidCount}명` : `어른 ${adultCount}명`}
-              </span>
+              <strong>{`${tid}`}</strong>
             </ScheduleDetail>
+            <ScheduleBtn onClick={cancelReservation}>
+              <FontAwesomeIcon icon={faBan} /> 예약 일정 취소
+            </ScheduleBtn>
           </>
         ) : (
           <NoticeEmptyIcon>
@@ -324,7 +353,8 @@ const SuperviseRooftop = () => {
         <Title>
           <h5>옥상 관리하기</h5>
         </Title>
-        <ServiceBox onClick={() => openModal(<ChatRooftopList rooftopId={id} ownerId={ownerId} />)}>
+        <ServiceBox
+          onClick={() => openModal(<ChatRooftopList rooftopId={rooftopId} ownerId={ownerId} />)}>
           <div className="introduce">
             <h5>옥상 문의 확인하기</h5>
             <p>이용자에게서 온 옥상 문의를 확인합니다.</p>
@@ -347,7 +377,7 @@ const SuperviseRooftop = () => {
         </ServiceBox>
       </ServiceList>
       <Button>
-        <Link to={`/mypage/rooftop/supervise/detail/${id}`}>내 옥상 수정하기</Link>
+        <Link to={`/mypage/rooftop/supervise/detail/${rooftopId}`}>내 옥상 수정하기</Link>
       </Button>
     </Wrapper>
   )
@@ -377,17 +407,70 @@ const CalenderBox = styled.div`
   ${({ theme }) => {
     const { margins } = theme
     return css`
-      margin: ${margins.lg} 0vw;
+      margin: ${margins.lg} 0vw ${margins.sm} 0vw;
     `
   }}
 `
 
 const ScheduleBox = styled.div`
-  margin: 0vw auto 5vh auto;
+  ${({ theme }) => {
+    const { colors, fonts, margins } = theme
+    return css`
+      width: 100%;
+      margin: ${margins.base} 0vw;
 
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      p {
+        color: ${colors.black.quinary};
+        font-weight: ${fonts.weight.light};
+      }
+
+      h5 {
+        width: 100%;
+        margin: 0 0 ${margins.xsm} 0;
+
+        color: ${colors.main.secondary};
+        font-size: ${fonts.size.base};
+      }
+
+      strong {
+        font-weight: 600;
+        color: ${colors.main.secondary};
+      }
+    `
+  }}
+`
+
+const ScheduleBtn = styled.div`
+  ${({ theme }) => {
+    const { colors, fonts, margins, paddings } = theme
+    return css`
+      width: 45%;
+      padding: ${paddings.sm} ${paddings.base};
+      margin: ${margins.lg} auto ${margins.xl} auto;
+
+      cursor: pointer;
+      border-radius: ${fonts.size.sm};
+      background-color: ${colors.main.primary};
+
+      text-align: center;
+      color: ${colors.white};
+      font-size: ${fonts.size.sm};
+
+      svg {
+        margin: auto ${margins.sm} auto 0vw;
+      }
+
+      &:hover {
+        background-color: ${colors.main.tertiary};
+        font-weight: ${fonts.weight.bold};
+      }
+    `
+  }}
 `
 
 const SliderBox = styled.div`
@@ -405,7 +488,7 @@ const Button = styled.div`
   ${({ theme }) => {
     const { colors, fonts, margins, paddings } = theme
     return css`
-      width: 90%;
+      width: 100%;
       padding: ${paddings.sm} ${paddings.base};
       margin: 0vw auto;
 

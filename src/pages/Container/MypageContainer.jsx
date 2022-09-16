@@ -53,8 +53,8 @@ const RooftopContainer = () => {
       <Route path="" element={<Rooftop />} />
       <Route path="apply" element={<ApplyRoofTop />} />
       <Route path="request" element={<RequestToGreenBee />} />
-      <Route path="supervise/:id" element={<SuperviseRooftop />} />
-      <Route path="supervise/detail/:id" element={<SuperviseDetailRooftop />} />
+      <Route path="supervise/:rooftopId" element={<SuperviseRooftop />} />
+      <Route path="supervise/detail/:rooftopId" element={<SuperviseDetailRooftop />} />
     </Routes>
   )
 }
